@@ -5,6 +5,66 @@ import (
 	"strconv"
 )
 
+var assetSchema = map[string]*schema.Schema{
+	"id": &schema.Schema{
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"name": &schema.Schema{
+		Type:     schema.TypeString,
+		Required: true,
+	},
+	"description": &schema.Schema{
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"created_at": &schema.Schema{
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"created_by": &schema.Schema{
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"last_modified_at": &schema.Schema{
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"last_modified_by": &schema.Schema{
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"parent_node_id": &schema.Schema{
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"type": &schema.Schema{
+		Type:     schema.TypeString,
+		Required: true,
+	},
+	"kind": &schema.Schema{
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"tags": tagsSchema,
+	"norad_id": &schema.Schema{
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"international_designator": &schema.Schema{
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"tle": &schema.Schema{
+		Type:     schema.TypeList,
+		MaxItems: 2,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
+		},
+	},
+}
+
 var sortSchema = &schema.Schema{
 	Type:     schema.TypeList,
 	Computed: true,
@@ -198,6 +258,7 @@ var propertySchema = map[string]*schema.Schema{
 	"node_id": &schema.Schema{
 		Type:     schema.TypeString,
 		Required: true,
+		ForceNew: true,
 	},
 	"created_at": &schema.Schema{
 		Type:     schema.TypeString,
@@ -275,6 +336,7 @@ var propertySchema = map[string]*schema.Schema{
 	"type": &schema.Schema{
 		Type:     schema.TypeString,
 		Required: true,
+		ForceNew: true,
 	},
 }
 
@@ -286,6 +348,7 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 	"node_id": &schema.Schema{
 		Type:     schema.TypeString,
 		Required: true,
+		ForceNew: true,
 	},
 	"name": &schema.Schema{
 		Type:     schema.TypeString,

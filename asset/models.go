@@ -1,18 +1,21 @@
 package asset
 
 type Asset struct {
-	ID             string  `json:"id"`
-	Name           string  `json:"name"`
-	Description    string  `json:"description,omitempty"`
-	CreatedAt      string  `json:"createdAt"`
-	CreatedBy      string  `json:"createdBy"`
-	LastModifiedAt string  `json:"lastModifiedAt"`
-	LastModifiedBy string  `json:"lastModifiedBy"`
-	ParentNodeId   string  `json:"parentNodeId,omitempty"`
-	Tags           []Tag   `json:"tags,omitempty"`
-	Nodes          []Asset `json:"nodes,omitempty"`
-	Type           string  `json:"type"`
-	Kind           string  `json:"kind"`
+	ID                      string   `json:"id"`
+	Name                    string   `json:"name"`
+	Description             string   `json:"description,omitempty"`
+	CreatedAt               string   `json:"createdAt"`
+	CreatedBy               string   `json:"createdBy"`
+	LastModifiedAt          string   `json:"lastModifiedAt"`
+	LastModifiedBy          string   `json:"lastModifiedBy"`
+	ParentNodeId            string   `json:"parentNodeId,omitempty"`
+	Tags                    []Tag    `json:"tags,omitempty"`
+	Nodes                   []Asset  `json:"nodes,omitempty"`
+	Type                    string   `json:"type"`
+	Kind                    string   `json:"kind,omitempty"`
+	NoradId                 string   `json:"noradId,omitempty"`
+	InternationalDesignator string   `json:"internationalDesignator,omitempty"`
+	Tle                     []string `json:"tle,omitempty"`
 }
 
 type PaginatedList[T interface{}] struct {

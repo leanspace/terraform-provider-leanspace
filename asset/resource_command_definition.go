@@ -16,7 +16,7 @@ func resourceCommandDefinition() *schema.Resource {
 			"command_definition": &schema.Schema{
 				Type:     schema.TypeList,
 				MaxItems: 1,
-				Optional: true,
+				Required: true,
 				Elem: &schema.Resource{
 					Schema: commandDefinitionSchema,
 				},
