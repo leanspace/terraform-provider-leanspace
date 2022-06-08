@@ -143,7 +143,7 @@ func assetStructToInterface(asset *Asset, level int) interface{} {
 	assetMap["type"] = asset.Type
 	assetMap["kind"] = asset.Kind
 	assetMap["tags"] = tagsStructToInterface(asset.Tags)
-	if asset.Nodes != nil && level == 0{
+	if asset.Nodes != nil && level == 0 {
 		nodes := make([]interface{}, len(asset.Nodes))
 		for i, node := range asset.Nodes {
 			nodes[i] = assetStructToInterface(&node, level+1)

@@ -2,7 +2,7 @@ terraform {
   required_providers {
     leanspace = {
       version = "0.2"
-      source  = "leanspace.io/edu/asset"
+      source  = "leanspace.io/io/asset"
     }
   }
 }
