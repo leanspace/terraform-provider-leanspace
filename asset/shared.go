@@ -652,9 +652,26 @@ func commandDefinitionStructToInterface(commandDefinition CommandDefinition) map
 			metadataMap["name"] = metadata.Name
 			metadataMap["description"] = metadata.Description
 			metadataMap["unit_id"] = metadata.UnitId
-			metadataMap["value"] = metadata.Value
-			metadataMap["required"] = metadata.Required
 			metadataMap["type"] = metadata.Type
+			switch metadata.Type {
+			case "NUMERIC":
+				if metadata.Value != nil {
+					metadataMap["value"] = strconv.FormatFloat(metadata.Value.(float64), 'g', -1, 64)
+				}
+			case "TEXT":
+				if metadata.Value != nil {
+					metadataMap["value"] = metadata.Value.(string)
+				}
+			case "TIMESTAMP", "DATE", "TIME":
+				if metadata.Value != nil {
+					metadataMap["value"] = metadata.Value.(string)
+				}
+			case "BOOLEAN":
+				if metadata.Value != nil {
+					metadataMap["value"] = strconv.FormatBool(metadata.Value.(bool))
+				}
+			}
+			metadataMap["required"] = metadata.Required
 			commandDefinitionMap["metadata"].([]interface{})[i] = metadataMap
 		}
 	}
