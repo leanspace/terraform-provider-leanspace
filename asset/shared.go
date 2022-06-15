@@ -2,7 +2,10 @@ package asset
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"strconv"
+	"fmt"
+	"regexp"
 )
 
 var nodeSchema = map[string]*schema.Schema{
@@ -41,23 +44,35 @@ var nodeSchema = map[string]*schema.Schema{
 	"type": &schema.Schema{
 		Type:     schema.TypeString,
 		Required: true,
+		ForceNew: true,
+		ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+			value := val.(string)
+			if !(value == "ASSET" || value == "GROUP" || value == "COMPONENT") {
+			  errs = append(errs, fmt.Errorf("%q must be either ASSET, GROUP ou COMPONENT, got: %q", key, value))
+			}
+			return
+		  },
 	},
 	"kind": &schema.Schema{
 		Type:     schema.TypeString,
 		Optional: true,
+		ForceNew: true,
 	},
 	"tags": tagsSchema,
 	"norad_id": &schema.Schema{
 		Type:     schema.TypeString,
 		Optional: true,
+		ValidateFunc: validation.StringMatch(regexp.MustCompile(`^\d{5}$`),"It must be 5 digits"),
 	},
 	"international_designator": &schema.Schema{
 		Type:     schema.TypeString,
 		Optional: true,
+		ValidateFunc: validation.StringMatch(regexp.MustCompile(`^(\d{4}-|\d{2})[0-9]{3}[A-Za-z]{0,3}$`),""),
 	},
 	"tle": &schema.Schema{
 		Type:     schema.TypeList,
 		MaxItems: 2,
+		MinItems: 2,
 		Optional: true,
 		Elem: &schema.Schema{
 			Type: schema.TypeString,
@@ -166,7 +181,7 @@ var tagsSchema = &schema.Schema{
 		Schema: map[string]*schema.Schema{
 			"key": &schema.Schema{
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 			},
 			"value": &schema.Schema{
 				Type:     schema.TypeString,

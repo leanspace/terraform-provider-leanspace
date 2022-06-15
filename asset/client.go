@@ -122,7 +122,7 @@ func (c *Client) doRequest(req *http.Request, authToken *string) ([]byte, error,
 	}
 
 	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("status: %d, body: %s", res.StatusCode, body), res.StatusCode
+		return nil, fmt.Errorf("status: %d, body: %s, req [method: %s, url: %s, body: %s]", res.StatusCode, body, req.Method, req.URL, req.Body), res.StatusCode
 	}
 
 	return body, err, res.StatusCode

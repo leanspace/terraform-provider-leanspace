@@ -2,9 +2,15 @@ package asset
 
 import (
 	"context"
+	"fmt"
+	"regexp"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
+
+var tle1stLine = `^1 (?P<noradId>[ 0-9]{5})[A-Z] [ 0-9]{5}[ A-Z]{3} [ 0-9]{5}[.][ 0-9]{8} (?:(?:[ 0+-][.][ 0-9]{8})|(?: [ +-][.][ 0-9]{7})) [ +-][ 0-9]{5}[+-][ 0-9] [ +-][ 0-9]{5}[+-][ 0-9] [ 0-9] [ 0-9]{4}[ 0-9]$`
+var tle2ndLine = `^2 (?P<noradId>[ 0-9]{5}) [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{7} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{2}[.][ 0-9]{13}[ 0-9]$`
 
 func resourceNode() *schema.Resource {
 	return &schema.Resource{
@@ -54,7 +60,13 @@ func resourceNode() *schema.Resource {
 						"type": &schema.Schema{
 							Type:     schema.TypeString,
 							Required: true,
-							ForceNew: true,
+							ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+								value := val.(string)
+								if !(value == "ASSET" || value == "GROUP" || value == "COMPONENT") {
+								  errs = append(errs, fmt.Errorf("%q must be either ASSET, GROUP ou COMPONENT, got: %q", key, value))
+								}
+								return
+							  },
 						},
 						"kind": &schema.Schema{
 							Type:     schema.TypeString,
@@ -72,10 +84,12 @@ func resourceNode() *schema.Resource {
 						"norad_id": &schema.Schema{
 							Type:     schema.TypeString,
 							Optional: true,
+							ValidateFunc: validation.StringMatch(regexp.MustCompile(`^\d{5}$`),"It must be 5 digits"),
 						},
 						"international_designator": &schema.Schema{
 							Type:     schema.TypeString,
 							Optional: true,
+							ValidateFunc: validation.StringMatch(regexp.MustCompile(`^(\d{4}-|\d{2})[0-9]{3}[A-Za-z]{0,3}$`),""),
 						},
 						"tle": &schema.Schema{
 							Type:     schema.TypeList,
@@ -102,7 +116,11 @@ func resourceNodeCreate(ctx context.Context, d *schema.ResourceData, m interface
 	var diags diag.Diagnostics
 
 	node := d.Get("node").([]interface{})
-	createNode, err := client.CreateNode(getNodeData(node))
+	nodeData, err := getNodeData(node)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	createNode, err := client.CreateNode(nodeData)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -170,7 +188,7 @@ func setNodeData(node *Node, d *schema.ResourceData) {
 	d.Set("node", nodeList)
 }
 
-func nodeInterfaceToStruct(node map[string]interface{}) Node {
+func nodeInterfaceToStruct(node map[string]interface{}) (Node, error) {
 	nodeStruct := Node{}
 
 	nodeStruct.Name = node["name"].(string)
@@ -181,28 +199,43 @@ func nodeInterfaceToStruct(node map[string]interface{}) Node {
 	nodeStruct.LastModifiedAt = node["last_modified_at"].(string)
 	nodeStruct.LastModifiedBy = node["last_modified_by"].(string)
 	nodeStruct.Type = node["type"].(string)
+	if nodeStruct.Type == "ASSET" && !(node["kind"] == "GENERIC" || node["kind"] == "SATELLITE" || node["kind"] == "GROUND_STATION") {
+		return nodeStruct, fmt.Errorf("kind must be either GENERIC, SATELLITE ou GROUND_STATION, got: %q", node["kind"])
+	}
 	nodeStruct.Kind = node["kind"].(string)
 	nodeStruct.Tags = tagsInterfaceToStruct(node["tags"])
 	if node["nodes"] != nil {
 		nodeStruct.Nodes = make([]Node, len(node["nodes"].([]interface{})))
 		for i, node := range node["nodes"].([]interface{}) {
-			nodeStruct.Nodes[i] = nodeInterfaceToStruct(node.(map[string]interface{}))
+			childNodeStruct, err := nodeInterfaceToStruct(node.(map[string]interface{}))
+			if err != nil {
+				return nodeStruct, err
+			}
+			nodeStruct.Nodes[i] = childNodeStruct
 		}
 	}
 	nodeStruct.NoradId = node["norad_id"].(string)
 	nodeStruct.InternationalDesignator = node["international_designator"].(string)
 	if node["tle"] != nil && len(node["tle"].([]interface{})) == 2 {
 		nodeStruct.Tle = make([]string, 2)
+		matched, _ := regexp.MatchString(tle1stLine,node["tle"].([]interface{})[0].(string))
+		if !matched {
+			return nodeStruct, fmt.Errorf("TLE first line mutch match %q, got: %q", tle1stLine, node["tle"].([]interface{})[0].(string))
+		}
+		matched, _ =regexp.MatchString(tle2ndLine,node["tle"].([]interface{})[1].(string))
+		if !matched {
+			return nodeStruct, fmt.Errorf("TLE second line mutch match %q, got: %q", tle2ndLine, node["tle"].([]interface{})[1].(string))
+		}
 		for i, tle := range node["tle"].([]interface{}) {
 			nodeStruct.Tle[i] = tle.(string)
 		}
 
 	}
 
-	return nodeStruct
+	return nodeStruct, nil
 }
 
-func getNodeData(nodeList []interface{}) Node {
+func getNodeData(nodeList []interface{}) (Node, error) {
 	return nodeInterfaceToStruct(nodeList[0].(map[string]interface{}))
 }
 
@@ -214,7 +247,11 @@ func resourceNodeUpdate(ctx context.Context, d *schema.ResourceData, m interface
 	if d.HasChange("node") {
 		nodeId := d.Id()
 		node := d.Get("node").([]interface{})
-		_, err := client.UpdateNode(nodeId, getNodeData(node))
+		nodeData, err := getNodeData(node)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		_, err = client.UpdateNode(nodeId, nodeData)
 		if err != nil {
 			return diag.FromErr(err)
 		}

@@ -52,7 +52,7 @@ type Pageable struct {
 
 type Tag struct {
 	Key   string `json:"key"`
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 type Property[T interface{}] struct {
