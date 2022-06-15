@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func (client *Client) GetAllAssets() (*PaginatedList[Asset], error) {
+func (client *Client) GetAllNodes() (*PaginatedList[Node], error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/asset-repository/nodes", client.HostURL), nil)
 	if err != nil {
 		return nil, err
@@ -18,17 +18,17 @@ func (client *Client) GetAllAssets() (*PaginatedList[Asset], error) {
 		return nil, err
 	}
 
-	assets := PaginatedList[Asset]{}
-	err = json.Unmarshal(body, &assets)
+	nodes := PaginatedList[Node]{}
+	err = json.Unmarshal(body, &nodes)
 	if err != nil {
 		return nil, err
 	}
 
-	return &assets, nil
+	return &nodes, nil
 }
 
-func (client *Client) GetAsset(assetId string) (*Asset, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/asset-repository/nodes/%s", client.HostURL, assetId), nil)
+func (client *Client) GetNode(nodeId string) (*Node, error) {
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/asset-repository/nodes/%s", client.HostURL, nodeId), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -38,17 +38,17 @@ func (client *Client) GetAsset(assetId string) (*Asset, error) {
 		return nil, err
 	}
 
-	asset := Asset{}
-	err = json.Unmarshal(body, &asset)
+	node := Node{}
+	err = json.Unmarshal(body, &node)
 	if err != nil {
 		return nil, err
 	}
 
-	return &asset, nil
+	return &node, nil
 }
 
-func (client *Client) CreateOrder(createAsset Asset) (*Asset, error) {
-	rb, err := json.Marshal(createAsset)
+func (client *Client) CreateNode(createNode Node) (*Node, error) {
+	rb, err := json.Marshal(createNode)
 	if err != nil {
 		return nil, err
 	}
@@ -64,22 +64,22 @@ func (client *Client) CreateOrder(createAsset Asset) (*Asset, error) {
 		return nil, err
 	}
 
-	asset := Asset{}
-	err = json.Unmarshal(body, &asset)
+	node := Node{}
+	err = json.Unmarshal(body, &node)
 	if err != nil {
 		return nil, err
 	}
 
-	return &asset, nil
+	return &node, nil
 }
 
-func (client *Client) UpdateAsset(assetId string, createAsset Asset) (*Asset, error) {
-	rb, err := json.Marshal(createAsset)
+func (client *Client) UpdateNode(nodeId string, createNode Node) (*Node, error) {
+	rb, err := json.Marshal(createNode)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PUT", fmt.Sprintf("%s/asset-repository/nodes/%s", client.HostURL, assetId), strings.NewReader(string(rb)))
+	req, err := http.NewRequest("PUT", fmt.Sprintf("%s/asset-repository/nodes/%s", client.HostURL, nodeId), strings.NewReader(string(rb)))
 	req.Header.Set("Content-Type", "application/json")
 	if err != nil {
 		return nil, err
@@ -90,17 +90,17 @@ func (client *Client) UpdateAsset(assetId string, createAsset Asset) (*Asset, er
 		return nil, err
 	}
 
-	asset := Asset{}
-	err = json.Unmarshal(body, &asset)
+	node := Node{}
+	err = json.Unmarshal(body, &node)
 	if err != nil {
 		return nil, err
 	}
 
-	return &asset, nil
+	return &node, nil
 }
 
-func (client *Client) DeleteAsset(assetId string) error {
-	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/asset-repository/nodes/%s", client.HostURL, assetId), nil)
+func (client *Client) DeleteNode(nodeId string) error {
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/asset-repository/nodes/%s", client.HostURL, nodeId), nil)
 	if err != nil {
 		return err
 	}

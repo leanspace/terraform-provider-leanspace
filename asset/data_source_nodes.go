@@ -9,11 +9,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourceAssets() *schema.Resource {
+func dataSourceNodes() *schema.Resource {
 	return &schema.Resource{
-		ReadContext: dataSourceAssetsRead,
+		ReadContext: dataSourceNodesRead,
 		Schema: map[string]*schema.Schema{
-			"assets": &schema.Schema{
+			"nodes": &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
@@ -79,45 +79,45 @@ func dataSourceAssets() *schema.Resource {
 	}
 }
 
-func dataSourceAssetsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func dataSourceNodesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	assets, err := client.GetAllAssets()
+	nodes, err := client.GetAllNodes()
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	setAssetsData(assets, d)
+	setNodesData(nodes, d)
 	d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
 
 	return diags
 }
 
-func setAssetsData(assets *PaginatedList[Asset], d *schema.ResourceData) {
-	assetList := make([]map[string]interface{}, len(assets.Content))
+func setNodesData(nodes *PaginatedList[Node], d *schema.ResourceData) {
+	nodeList := make([]map[string]interface{}, len(nodes.Content))
 
-	for i, asset := range assets.Content {
-		assetMap := make(map[string]interface{})
-		assetMap["id"] = asset.ID
-		assetMap["type"] = asset.Type
-		assetMap["kind"] = asset.Kind
-		assetMap["name"] = asset.Name
-		assetMap["description"] = asset.Description
-		assetList[i] = assetMap
+	for i, node := range nodes.Content {
+		nodeMap := make(map[string]interface{})
+		nodeMap["id"] = node.ID
+		nodeMap["type"] = node.Type
+		nodeMap["kind"] = node.Kind
+		nodeMap["name"] = node.Name
+		nodeMap["description"] = node.Description
+		nodeList[i] = nodeMap
 	}
-	d.Set("assets", assetList)
+	d.Set("nodes", nodeList)
 
-	d.Set("total_elements", assets.TotalElements)
-	d.Set("total_pages", assets.TotalPages)
-	d.Set("number_of_elements", assets.NumberOfElements)
-	d.Set("number", assets.Number)
-	d.Set("size", assets.Size)
-	d.Set("first", assets.First)
-	d.Set("last", assets.Last)
-	d.Set("empty", assets.Empty)
+	d.Set("total_elements", nodes.TotalElements)
+	d.Set("total_pages", nodes.TotalPages)
+	d.Set("number_of_elements", nodes.NumberOfElements)
+	d.Set("number", nodes.Number)
+	d.Set("size", nodes.Size)
+	d.Set("first", nodes.First)
+	d.Set("last", nodes.Last)
+	d.Set("empty", nodes.Empty)
 
-	sort := sortStructToInterface(assets.Sort)
+	sort := sortStructToInterface(nodes.Sort)
 	d.Set("sort", sort)
-	d.Set("pageable", pageableStructToInterface(assets.Pageable, sort))
+	d.Set("pageable", pageableStructToInterface(nodes.Pageable, sort))
 }

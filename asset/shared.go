@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-var assetSchema = map[string]*schema.Schema{
+var nodeSchema = map[string]*schema.Schema{
 	"id": &schema.Schema{
 		Type:     schema.TypeString,
 		Computed: true,

@@ -7,19 +7,19 @@ terraform {
   }
 }
 
-data "leanspace_assets" "all" {}
+data "leanspace_nodes" "all" {}
 
 # Returns all assets
-output "all_assets" {
-  value = data.leanspace_assets.all.assets
+output "all_nodes" {
+  value = data.leanspace_nodes.all.nodes
 }
 
-output "first_asset" {
-  value =  data.leanspace_assets.all.assets[0]
+output "first_node" {
+  value =  data.leanspace_nodes.all.nodes[0]
 }
 
-resource "leanspace_assets" "test" {
-  asset {
+resource "leanspace_nodes" "test" {
+  node {
     name = "TestTerraform"
     description = "TestTerraformUpdated"
     type = "GROUP"
@@ -41,8 +41,8 @@ resource "leanspace_assets" "test" {
   }
 }
 
-resource "leanspace_assets" "test_nested" {
-  asset {
+resource "leanspace_nodes" "test_nested" {
+  node {
     name = "TestTerraformNested"
     description = "TestTerraformUpdated"
     type = "GROUP"
@@ -84,6 +84,6 @@ resource "leanspace_assets" "test_nested" {
   }
 }
 
-output "test_asset" {
-  value = leanspace_assets.test
+output "test_node" {
+  value = leanspace_nodes.test
 }

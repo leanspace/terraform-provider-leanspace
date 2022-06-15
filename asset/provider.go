@@ -33,12 +33,12 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"leanspace_assets":              resourceAsset(),
+			"leanspace_nodes":              resourceNode(),
 			"leanspace_properties":          resourceProperty(),
 			"leanspace_command_definitions": resourceCommandDefinition(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"leanspace_assets":              dataSourceAssets(),
+			"leanspace_nodes":              dataSourceNodes(),
 			"leanspace_properties":          dataSourceProperties(),
 			"leanspace_command_definitions": dataSourceCommandDefinitions(),
 		},

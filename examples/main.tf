@@ -15,9 +15,9 @@ provider "leanspace" {
 }
 
 module "assets" {
-  source = "./command_definition"
+  source = "./node"
 }
 
 output "assets" {
-  value = module.assets.test_command_definition
+  value = module.assets.test_node
 }

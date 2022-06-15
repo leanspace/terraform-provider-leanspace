@@ -4,7 +4,7 @@ This repository enables the use of Terraform for the service Topology & Asset of
 
 ## Requirements
 
-- terraform (`choco install terraform` (windows) `brew install terraform` (mac)): >=1.2.1
+- terraform (`choco install terraform` (windows) or `brew install terraform` (mac)): >=1.2.1
 - go (for plugin development): >=1.18
 
 ## How to use
@@ -16,10 +16,13 @@ Run `make install` or `make install-windows` if you are on windows to apply the 
 ### Run the plugin
 
 Either run the examples (navigate to `examples`, if so you can modify the master `main.tf` to point to the correct resource) or create custom files.
+
 Then run `terraform init && terraform apply --auto-approve`: this will create the required resources.
 If you made some changes you can run it again to update the resources.
+
 You can use `terraform init && terraform destroy --auto-approve`: this will delete the created resources.
 You can also import existing resources (navigate to `examples/imports`)
+You can use `terraform init && terraform import leanspace_nodes.sample_node 3563e0f6-03e3-416f-96f5-6c7102e37a11`: this will import the node with the id 3563e0f6-03e3-416f-96f5-6c7102e37a11 in the resource named sample_node
 
 ## Provider
 
@@ -41,7 +44,7 @@ tags:
 - key
 - value
 
-### leanspace_assets
+### leanspace_nodes
 
 One asset block containing:
 - id (filled by the API)
@@ -61,6 +64,8 @@ One asset block containing:
 - international_designator: optional, only usefull for ASSET
 - tle: optional, only usefull for ASSET
     - list of exactly 2 strings
+
+It is possible to create nodes within nodes but it's also possible to create them separately and set the `parent_node_id` on the child node to the id of the parent node
 
 ### leanspace_properties
 
@@ -224,9 +229,9 @@ One command_definition block containing:
     - paged: boolean
     - unpaged: boolean
 
-### leanspace_assets
+### leanspace_nodes
 
-- content: list of one or multiple blocks of assets (snapshot representation of the resource `leanspace_assets`)
+- content: list of one or multiple blocks of assets (snapshot representation of the resource `leanspace_nodes`)
     - id (filled by the API)
     - type: `GROUP||ASSET||COMPONENT`
     - kind: optional if not an `ASSET`
@@ -250,7 +255,7 @@ You can find examples in the `/examples` folder
 There is the `main.tf` that defines which module it should other terraform file to call.
 
 There's 3 folders for each resource:
-- asset: it has 2 `leanspace_assets` resources, the first one is a "normal" node and the second one has a node instead itself (thus creating 2 nodes)
+- asset: it has 2 `leanspace_nodes` resources, the first one is a "normal" node and the second one has a node instead itself (thus creating 2 nodes)
 - property: it has as many `leanspace_properties` resources as available types (8)
 - command definition: it has as 1 `leanspace_command_definitions` resource which has all possible metadata types (6) and all possible argument types (7)
 
