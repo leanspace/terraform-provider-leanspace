@@ -365,6 +365,7 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Required: true,
 		ForceNew: true,
+		ValidateFunc: validation.IsUUID,
 	},
 	"name": &schema.Schema{
 		Type:     schema.TypeString,
@@ -398,6 +399,7 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 				"unit_id": &schema.Schema{
 					Type:     schema.TypeString,
 					Optional: true,
+					ValidateFunc: validation.IsUUID,
 				},
 				"value": &schema.Schema{
 					Type:     schema.TypeString,
@@ -410,6 +412,7 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 				"type": &schema.Schema{
 					Type:     schema.TypeString,
 					Required: true,
+					ValidateFunc: validation.StringInSlice([]string{"NUMERIC","TEXT","TIMESTAMP","DATE","TIME","BOOLEAN"}, false),
 				},
 			},
 		},
@@ -438,6 +441,7 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 				"min_length": &schema.Schema{
 					Type:     schema.TypeInt,
 					Optional: true,
+					ValidateFunc: validation.IntAtLeast(1),
 				},
 				"max_length": &schema.Schema{
 					Type:     schema.TypeInt,
@@ -450,10 +454,12 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 				"before": &schema.Schema{
 					Type:     schema.TypeString,
 					Optional: true,
+					ValidateFunc: validation.IsRFC3339Time,
 				},
 				"after": &schema.Schema{
 					Type:     schema.TypeString,
 					Optional: true,
+					ValidateFunc: validation.IsRFC3339Time,
 				},
 				"options": &schema.Schema{
 					Type:     schema.TypeMap,
@@ -478,6 +484,7 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 				"unit_id": &schema.Schema{
 					Type:     schema.TypeString,
 					Optional: true,
+					ValidateFunc: validation.IsUUID,
 				},
 				"default_value": &schema.Schema{
 					Type:     schema.TypeString,
@@ -486,6 +493,7 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 				"type": &schema.Schema{
 					Type:     schema.TypeString,
 					Required: true,
+					ValidateFunc: validation.StringInSlice([]string{"NUMERIC","ENUM","TEXT","TIMESTAMP","DATE","TIME","BOOLEAN"}, false),
 				},
 				"required": &schema.Schema{
 					Type:     schema.TypeBool,

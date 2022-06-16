@@ -137,6 +137,8 @@ func argumentInterfaceToStruct(argument map[string]interface{}) Argument[interfa
 	case "TIMESTAMP", "DATE", "TIME":
 		argumentStruct.Before = argument["before"].(string)
 		argumentStruct.After = argument["after"].(string)
+	case "BOOLEAN":
+		// no extra field
 	}
 	argumentStruct.DefaultValue = argument["default_value"]
 
