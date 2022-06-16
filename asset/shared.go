@@ -4,7 +4,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"strconv"
-	"fmt"
 	"regexp"
 )
 
@@ -40,18 +39,13 @@ var nodeSchema = map[string]*schema.Schema{
 	"parent_node_id": &schema.Schema{
 		Type:     schema.TypeString,
 		Optional: true,
+		ValidateFunc: validation.IsUUID,
 	},
 	"type": &schema.Schema{
 		Type:     schema.TypeString,
 		Required: true,
 		ForceNew: true,
-		ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-			value := val.(string)
-			if !(value == "ASSET" || value == "GROUP" || value == "COMPONENT") {
-			  errs = append(errs, fmt.Errorf("%q must be either ASSET, GROUP ou COMPONENT, got: %q", key, value))
-			}
-			return
-		  },
+		ValidateFunc: validation.StringInSlice([]string{"ASSET","GROUP","COMPONENT"}, false),
 	},
 	"kind": &schema.Schema{
 		Type:     schema.TypeString,
@@ -227,6 +221,7 @@ var propertyFieldSchema = map[string]*schema.Schema{
 	"type": &schema.Schema{
 		Type:     schema.TypeString,
 		Required: true,
+		ValidateFunc: validation.StringInSlice([]string{"NUMERIC","ENUM","TEXT","TIMESTAMP","DATE","TIME","BOOLEAN","GEOPOINT"}, false),
 	},
 }
 
@@ -274,6 +269,7 @@ var propertySchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Required: true,
 		ForceNew: true,
+		ValidateFunc: validation.IsUUID,
 	},
 	"created_at": &schema.Schema{
 		Type:     schema.TypeString,
@@ -295,6 +291,7 @@ var propertySchema = map[string]*schema.Schema{
 	"min_length": &schema.Schema{
 		Type:     schema.TypeInt,
 		Optional: true,
+		ValidateFunc: validation.IntAtLeast(1),
 	},
 	"max_length": &schema.Schema{
 		Type:     schema.TypeInt,
@@ -307,10 +304,12 @@ var propertySchema = map[string]*schema.Schema{
 	"before": &schema.Schema{
 		Type:     schema.TypeString,
 		Optional: true,
+		ValidateFunc: validation.IsRFC3339Time,
 	},
 	"after": &schema.Schema{
 		Type:     schema.TypeString,
 		Optional: true,
+		ValidateFunc: validation.IsRFC3339Time,
 	},
 	"fields": &schema.Schema{
 		Type:     schema.TypeList,
@@ -343,6 +342,7 @@ var propertySchema = map[string]*schema.Schema{
 	"unit_id": &schema.Schema{
 		Type:     schema.TypeString,
 		Optional: true,
+		ValidateFunc: validation.IsUUID,
 	},
 	"value": &schema.Schema{
 		Type:     schema.TypeString,
@@ -352,6 +352,7 @@ var propertySchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Required: true,
 		ForceNew: true,
+		ValidateFunc: validation.StringInSlice([]string{"NUMERIC","ENUM","TEXT","TIMESTAMP","DATE","TIME","BOOLEAN","GEOPOINT"}, false),
 	},
 }
 

@@ -119,6 +119,7 @@ func getPropertyData(propertyList []interface{}) Property[interface{}] {
 		propertyMap.Before = property["before"].(string)
 		propertyMap.After = property["after"].(string)
 	case "BOOLEAN":
+		// no extra property for booleans
 	case "GEOPOINT":
 		if property["fields"] != nil {
 			propertyMap.Fields = &Fields{}
