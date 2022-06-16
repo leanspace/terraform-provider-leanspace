@@ -3,10 +3,10 @@ package asset
 import (
 	"context"
 	"fmt"
-	"regexp"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"regexp"
 )
 
 var tle1stLine = `^1 (?P<noradId>[ 0-9]{5})[A-Z] [ 0-9]{5}[ A-Z]{3} [ 0-9]{5}[.][ 0-9]{8} (?:(?:[ 0+-][.][ 0-9]{8})|(?: [ +-][.][ 0-9]{7})) [ +-][ 0-9]{5}[+-][ 0-9] [ +-][ 0-9]{5}[+-][ 0-9] [ 0-9] [ 0-9]{4}[ 0-9]$`
@@ -63,10 +63,10 @@ func resourceNode() *schema.Resource {
 							ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
 								value := val.(string)
 								if !(value == "ASSET" || value == "GROUP" || value == "COMPONENT") {
-								  errs = append(errs, fmt.Errorf("%q must be either ASSET, GROUP ou COMPONENT, got: %q", key, value))
+									errs = append(errs, fmt.Errorf("%q must be either ASSET, GROUP ou COMPONENT, got: %q", key, value))
 								}
 								return
-							  },
+							},
 						},
 						"kind": &schema.Schema{
 							Type:     schema.TypeString,
@@ -82,14 +82,14 @@ func resourceNode() *schema.Resource {
 							},
 						},
 						"norad_id": &schema.Schema{
-							Type:     schema.TypeString,
-							Optional: true,
-							ValidateFunc: validation.StringMatch(regexp.MustCompile(`^\d{5}$`),"It must be 5 digits"),
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.StringMatch(regexp.MustCompile(`^\d{5}$`), "It must be 5 digits"),
 						},
 						"international_designator": &schema.Schema{
-							Type:     schema.TypeString,
-							Optional: true,
-							ValidateFunc: validation.StringMatch(regexp.MustCompile(`^(\d{4}-|\d{2})[0-9]{3}[A-Za-z]{0,3}$`),""),
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.StringMatch(regexp.MustCompile(`^(\d{4}-|\d{2})[0-9]{3}[A-Za-z]{0,3}$`), ""),
 						},
 						"tle": &schema.Schema{
 							Type:     schema.TypeList,
@@ -218,11 +218,11 @@ func nodeInterfaceToStruct(node map[string]interface{}) (Node, error) {
 	nodeStruct.InternationalDesignator = node["international_designator"].(string)
 	if node["tle"] != nil && len(node["tle"].([]interface{})) == 2 {
 		nodeStruct.Tle = make([]string, 2)
-		matched, _ := regexp.MatchString(tle1stLine,node["tle"].([]interface{})[0].(string))
+		matched, _ := regexp.MatchString(tle1stLine, node["tle"].([]interface{})[0].(string))
 		if !matched {
 			return nodeStruct, fmt.Errorf("TLE first line mutch match %q, got: %q", tle1stLine, node["tle"].([]interface{})[0].(string))
 		}
-		matched, _ =regexp.MatchString(tle2ndLine,node["tle"].([]interface{})[1].(string))
+		matched, _ = regexp.MatchString(tle2ndLine, node["tle"].([]interface{})[1].(string))
 		if !matched {
 			return nodeStruct, fmt.Errorf("TLE second line mutch match %q, got: %q", tle2ndLine, node["tle"].([]interface{})[1].(string))
 		}

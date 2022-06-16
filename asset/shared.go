@@ -3,8 +3,8 @@ package asset
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"strconv"
 	"regexp"
+	"strconv"
 )
 
 var nodeSchema = map[string]*schema.Schema{
@@ -37,15 +37,15 @@ var nodeSchema = map[string]*schema.Schema{
 		Computed: true,
 	},
 	"parent_node_id": &schema.Schema{
-		Type:     schema.TypeString,
-		Optional: true,
+		Type:         schema.TypeString,
+		Optional:     true,
 		ValidateFunc: validation.IsUUID,
 	},
 	"type": &schema.Schema{
-		Type:     schema.TypeString,
-		Required: true,
-		ForceNew: true,
-		ValidateFunc: validation.StringInSlice([]string{"ASSET","GROUP","COMPONENT"}, false),
+		Type:         schema.TypeString,
+		Required:     true,
+		ForceNew:     true,
+		ValidateFunc: validation.StringInSlice([]string{"ASSET", "GROUP", "COMPONENT"}, false),
 	},
 	"kind": &schema.Schema{
 		Type:     schema.TypeString,
@@ -54,14 +54,14 @@ var nodeSchema = map[string]*schema.Schema{
 	},
 	"tags": tagsSchema,
 	"norad_id": &schema.Schema{
-		Type:     schema.TypeString,
-		Optional: true,
-		ValidateFunc: validation.StringMatch(regexp.MustCompile(`^\d{5}$`),"It must be 5 digits"),
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: validation.StringMatch(regexp.MustCompile(`^\d{5}$`), "It must be 5 digits"),
 	},
 	"international_designator": &schema.Schema{
-		Type:     schema.TypeString,
-		Optional: true,
-		ValidateFunc: validation.StringMatch(regexp.MustCompile(`^(\d{4}-|\d{2})[0-9]{3}[A-Za-z]{0,3}$`),""),
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: validation.StringMatch(regexp.MustCompile(`^(\d{4}-|\d{2})[0-9]{3}[A-Za-z]{0,3}$`), ""),
 	},
 	"tle": &schema.Schema{
 		Type:     schema.TypeList,
@@ -219,9 +219,9 @@ var propertyFieldSchema = map[string]*schema.Schema{
 		Required: true,
 	},
 	"type": &schema.Schema{
-		Type:     schema.TypeString,
-		Required: true,
-		ValidateFunc: validation.StringInSlice([]string{"NUMERIC","ENUM","TEXT","TIMESTAMP","DATE","TIME","BOOLEAN","GEOPOINT"}, false),
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.StringInSlice([]string{"NUMERIC", "ENUM", "TEXT", "TIMESTAMP", "DATE", "TIME", "BOOLEAN", "GEOPOINT"}, false),
 	},
 }
 
@@ -266,9 +266,9 @@ var propertySchema = map[string]*schema.Schema{
 		Optional: true,
 	},
 	"node_id": &schema.Schema{
-		Type:     schema.TypeString,
-		Required: true,
-		ForceNew: true,
+		Type:         schema.TypeString,
+		Required:     true,
+		ForceNew:     true,
 		ValidateFunc: validation.IsUUID,
 	},
 	"created_at": &schema.Schema{
@@ -289,8 +289,8 @@ var propertySchema = map[string]*schema.Schema{
 	},
 	"tags": tagsSchema,
 	"min_length": &schema.Schema{
-		Type:     schema.TypeInt,
-		Optional: true,
+		Type:         schema.TypeInt,
+		Optional:     true,
 		ValidateFunc: validation.IntAtLeast(1),
 	},
 	"max_length": &schema.Schema{
@@ -302,13 +302,13 @@ var propertySchema = map[string]*schema.Schema{
 		Optional: true,
 	},
 	"before": &schema.Schema{
-		Type:     schema.TypeString,
-		Optional: true,
+		Type:         schema.TypeString,
+		Optional:     true,
 		ValidateFunc: validation.IsRFC3339Time,
 	},
 	"after": &schema.Schema{
-		Type:     schema.TypeString,
-		Optional: true,
+		Type:         schema.TypeString,
+		Optional:     true,
 		ValidateFunc: validation.IsRFC3339Time,
 	},
 	"fields": &schema.Schema{
@@ -340,8 +340,8 @@ var propertySchema = map[string]*schema.Schema{
 		Optional: true,
 	},
 	"unit_id": &schema.Schema{
-		Type:     schema.TypeString,
-		Optional: true,
+		Type:         schema.TypeString,
+		Optional:     true,
 		ValidateFunc: validation.IsUUID,
 	},
 	"value": &schema.Schema{
@@ -349,10 +349,10 @@ var propertySchema = map[string]*schema.Schema{
 		Optional: true,
 	},
 	"type": &schema.Schema{
-		Type:     schema.TypeString,
-		Required: true,
-		ForceNew: true,
-		ValidateFunc: validation.StringInSlice([]string{"NUMERIC","ENUM","TEXT","TIMESTAMP","DATE","TIME","BOOLEAN","GEOPOINT"}, false),
+		Type:         schema.TypeString,
+		Required:     true,
+		ForceNew:     true,
+		ValidateFunc: validation.StringInSlice([]string{"NUMERIC", "ENUM", "TEXT", "TIMESTAMP", "DATE", "TIME", "BOOLEAN", "GEOPOINT"}, false),
 	},
 }
 
@@ -362,9 +362,9 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 		Computed: true,
 	},
 	"node_id": &schema.Schema{
-		Type:     schema.TypeString,
-		Required: true,
-		ForceNew: true,
+		Type:         schema.TypeString,
+		Required:     true,
+		ForceNew:     true,
 		ValidateFunc: validation.IsUUID,
 	},
 	"name": &schema.Schema{
@@ -397,8 +397,8 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 					Optional: true,
 				},
 				"unit_id": &schema.Schema{
-					Type:     schema.TypeString,
-					Optional: true,
+					Type:         schema.TypeString,
+					Optional:     true,
 					ValidateFunc: validation.IsUUID,
 				},
 				"value": &schema.Schema{
@@ -410,9 +410,9 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 					Optional: true,
 				},
 				"type": &schema.Schema{
-					Type:     schema.TypeString,
-					Required: true,
-					ValidateFunc: validation.StringInSlice([]string{"NUMERIC","TEXT","TIMESTAMP","DATE","TIME","BOOLEAN"}, false),
+					Type:         schema.TypeString,
+					Required:     true,
+					ValidateFunc: validation.StringInSlice([]string{"NUMERIC", "TEXT", "TIMESTAMP", "DATE", "TIME", "BOOLEAN"}, false),
 				},
 			},
 		},
@@ -439,8 +439,8 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 					Optional: true,
 				},
 				"min_length": &schema.Schema{
-					Type:     schema.TypeInt,
-					Optional: true,
+					Type:         schema.TypeInt,
+					Optional:     true,
 					ValidateFunc: validation.IntAtLeast(1),
 				},
 				"max_length": &schema.Schema{
@@ -452,13 +452,13 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 					Optional: true,
 				},
 				"before": &schema.Schema{
-					Type:     schema.TypeString,
-					Optional: true,
+					Type:         schema.TypeString,
+					Optional:     true,
 					ValidateFunc: validation.IsRFC3339Time,
 				},
 				"after": &schema.Schema{
-					Type:     schema.TypeString,
-					Optional: true,
+					Type:         schema.TypeString,
+					Optional:     true,
 					ValidateFunc: validation.IsRFC3339Time,
 				},
 				"options": &schema.Schema{
@@ -482,8 +482,8 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 					Optional: true,
 				},
 				"unit_id": &schema.Schema{
-					Type:     schema.TypeString,
-					Optional: true,
+					Type:         schema.TypeString,
+					Optional:     true,
 					ValidateFunc: validation.IsUUID,
 				},
 				"default_value": &schema.Schema{
@@ -491,9 +491,9 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 					Optional: true,
 				},
 				"type": &schema.Schema{
-					Type:     schema.TypeString,
-					Required: true,
-					ValidateFunc: validation.StringInSlice([]string{"NUMERIC","ENUM","TEXT","TIMESTAMP","DATE","TIME","BOOLEAN"}, false),
+					Type:         schema.TypeString,
+					Required:     true,
+					ValidateFunc: validation.StringInSlice([]string{"NUMERIC", "ENUM", "TEXT", "TIMESTAMP", "DATE", "TIME", "BOOLEAN"}, false),
 				},
 				"required": &schema.Schema{
 					Type:     schema.TypeBool,
