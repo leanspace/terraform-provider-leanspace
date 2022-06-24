@@ -2,6 +2,8 @@ package asset
 
 import (
 	"context"
+	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -35,7 +37,8 @@ func resourceCommandDefinitionCreate(ctx context.Context, d *schema.ResourceData
 
 	commandDefinition := d.Get("command_definition").([]interface{})
 	commandDefinitionData := getCommandDefinitionData(commandDefinition)
-	createCommandDefinition, err := client.CreateCommandDefinition(commandDefinitionData.NodeId, commandDefinitionData)
+	path := fmt.Sprintf("asset-repository/nodes/%s/command-definitions", commandDefinitionData.NodeId)
+	createCommandDefinition, err := client.forCommandDefinitions().CreateForPath(path, commandDefinitionData)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -53,7 +56,7 @@ func resourceCommandDefinitionRead(ctx context.Context, d *schema.ResourceData, 
 	var diags diag.Diagnostics
 
 	commandDefinitionId := d.Id()
-	commandDefinition, err := client.GetCommandDefinition(commandDefinitionId)
+	commandDefinition, err := client.forCommandDefinitions().Get(commandDefinitionId)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -153,7 +156,7 @@ func resourceCommandDefinitionUpdate(ctx context.Context, d *schema.ResourceData
 	if d.HasChange("command_definition") {
 		commandDefinitionId := d.Id()
 		commandDefinition := d.Get("command_definition").([]interface{})
-		_, err := client.UpdateCommandDefinition(commandDefinitionId, getCommandDefinitionData(commandDefinition))
+		_, err := client.forCommandDefinitions().Update(commandDefinitionId, getCommandDefinitionData(commandDefinition))
 		if err != nil {
 			return diag.FromErr(err)
 		}
@@ -174,7 +177,7 @@ func resourceCommandDefinitionDelete(ctx context.Context, d *schema.ResourceData
 	var diags diag.Diagnostics
 
 	commandDefinitionId := d.Id()
-	err := client.DeleteCommandDefinition(commandDefinitionId)
+	err := client.forCommandDefinitions().Delete(commandDefinitionId)
 	if err != nil {
 		return diag.FromErr(err)
 	}

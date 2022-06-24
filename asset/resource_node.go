@@ -3,10 +3,11 @@ package asset
 import (
 	"context"
 	"fmt"
+	"regexp"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"regexp"
 )
 
 var tle1stLine = `^1 (?P<noradId>[ 0-9]{5})[A-Z] [ 0-9]{5}[ A-Z]{3} [ 0-9]{5}[.][ 0-9]{8} (?:(?:[ 0+-][.][ 0-9]{8})|(?: [ +-][.][ 0-9]{7})) [ +-][ 0-9]{5}[+-][ 0-9] [ +-][ 0-9]{5}[+-][ 0-9] [ 0-9] [ 0-9]{4}[ 0-9]$`
@@ -120,7 +121,7 @@ func resourceNodeCreate(ctx context.Context, d *schema.ResourceData, m interface
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	createNode, err := client.CreateNode(nodeData)
+	createNode, err := client.forNodes().Create(nodeData)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -138,7 +139,7 @@ func resourceNodeRead(ctx context.Context, d *schema.ResourceData, m interface{}
 	var diags diag.Diagnostics
 
 	nodeId := d.Id()
-	node, err := client.GetNode(nodeId)
+	node, err := client.forNodes().Get(nodeId)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -251,7 +252,7 @@ func resourceNodeUpdate(ctx context.Context, d *schema.ResourceData, m interface
 		if err != nil {
 			return diag.FromErr(err)
 		}
-		_, err = client.UpdateNode(nodeId, nodeData)
+		_, err = client.forNodes().Update(nodeId, nodeData)
 		if err != nil {
 			return diag.FromErr(err)
 		}
@@ -272,7 +273,7 @@ func resourceNodeDelete(ctx context.Context, d *schema.ResourceData, m interface
 	var diags diag.Diagnostics
 
 	nodeId := d.Id()
-	err := client.DeleteNode(nodeId)
+	err := client.forNodes().Delete(nodeId)
 	if err != nil {
 		return diag.FromErr(err)
 	}

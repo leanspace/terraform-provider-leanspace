@@ -2,6 +2,8 @@ package asset
 
 import (
 	"context"
+	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -35,7 +37,8 @@ func resourcePropertyCreate(ctx context.Context, d *schema.ResourceData, m inter
 
 	property := d.Get("property").([]interface{})
 	propertyData := getPropertyData(property)
-	createProperty, err := client.CreateProperty(propertyData.NodeId, propertyData)
+	path := fmt.Sprintf("asset-repository/nodes/%s/properties", propertyData.NodeId)
+	createProperty, err := client.forProperties().CreateForPath(path, propertyData)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -53,7 +56,7 @@ func resourcePropertyRead(ctx context.Context, d *schema.ResourceData, m interfa
 	var diags diag.Diagnostics
 
 	propertyId := d.Id()
-	property, err := client.GetProperty(propertyId)
+	property, err := client.forProperties().Get(propertyId)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -140,7 +143,7 @@ func resourcePropertyUpdate(ctx context.Context, d *schema.ResourceData, m inter
 	if d.HasChange("property") {
 		propertyId := d.Id()
 		property := d.Get("property").([]interface{})
-		_, err := client.UpdateProperty(propertyId, getPropertyData(property))
+		_, err := client.forProperties().Update(propertyId, getPropertyData(property))
 		if err != nil {
 			return diag.FromErr(err)
 		}
@@ -161,7 +164,7 @@ func resourcePropertyDelete(ctx context.Context, d *schema.ResourceData, m inter
 	var diags diag.Diagnostics
 
 	propertyId := d.Id()
-	err := client.DeleteProperty(propertyId)
+	err := client.forProperties().Delete(propertyId)
 	if err != nil {
 		return diag.FromErr(err)
 	}

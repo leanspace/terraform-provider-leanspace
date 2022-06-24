@@ -63,7 +63,7 @@ func dataSourceCommandDefinitionsRead(ctx context.Context, d *schema.ResourceDat
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	commandDefinitions, err := client.GetAllCommandDefinitions()
+	commandDefinitions, err := client.forCommandDefinitions().GetAll()
 	if err != nil {
 		return diag.FromErr(err)
 	}

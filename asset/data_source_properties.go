@@ -63,7 +63,7 @@ func dataSourcePropertiesRead(ctx context.Context, d *schema.ResourceData, m int
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	properties, err := client.GetAllProperties()
+	properties, err := client.forProperties().GetAll()
 	if err != nil {
 		return diag.FromErr(err)
 	}
