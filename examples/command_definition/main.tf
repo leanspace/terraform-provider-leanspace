@@ -9,58 +9,54 @@ terraform {
 
 data "leanspace_command_definitions" "all" {}
 
-# Returns all properties
-output "all_command_definition" {
-  value = data.leanspace_command_definitions.all.command_definitions
-}
-
-output "first_command_definition" {
-  value =  data.leanspace_command_definitions.all.command_definitions[0]
+variable "node_id" {
+  type = string
+  description = "The ID of the node to which the properties will be added."
 }
 
 resource "leanspace_command_definitions" "test" {
   command_definition {
-    name = "TestTerraform"
-    description = "TestTerraformUpdated"
-    node_id = "62e5449d-57a3-46bc-906b-b51e970bfdc9"
-    identifier = "TEST"
+    name = "Terraform Command"
+    description = "A complex command definition, entirely created under terraform."
+    node_id = var.node_id
+    identifier = "TERRA_CMD"
     metadata {
         name = "TestMetadataNumeric"
-        description = "TestMetadataUpdated"
+        description = "A numeric metadata value"
         value = 2
         required = true
         type = "NUMERIC"
     }
     metadata {
         name = "TestMetadataText"
-        description = "TestMetadataUpdated"
+        description = "A text metadata value"
         value = "test"
         type = "TEXT"
     }
     metadata {
         name = "TestMetadataBool"
-        description = "TestMetadataUpdated"
+        description = "A boolean metadata value"
         value = true
         required = true
         type = "BOOLEAN"
     }
     metadata {
         name = "TestMetadataTimestamp"
-        description = "TestMetadataUpdated"
+        description = "A timestamp metadata value"
         value = "2022-06-30T13:57:23Z"
         required = true
         type = "TIMESTAMP"
     }
     metadata {
         name = "TestMetadataDate"
-        description = "TestMetadataUpdated"
+        description = "A date metadata value"
         value = "2022-06-30"
         required = true
         type = "DATE"
     }
     metadata {
         name = "TestMetadataTime"
-        description = "TestMetadataUpdated"
+        description = "A time metadata value"
         value = "10:37:19"
         required = true
         type = "TIME"
@@ -68,7 +64,7 @@ resource "leanspace_command_definitions" "test" {
     arguments {
         name = "TestArgumentNumeric"
         identifier = "NUMERIC"
-        description = "TestArgumentUpdated"
+        description = "A numeric input"
         default_value = 2
         type = "NUMERIC"
         required = true
@@ -76,14 +72,14 @@ resource "leanspace_command_definitions" "test" {
     arguments {
         name = "TestArgumentText"
         identifier = "TEXT"
-        description = "TestArgumentUpdated"
+        description = "A text input"
         default_value = "test"
         type = "TEXT"
     }
     arguments {
         name = "TestArgumentBool"
         identifier = "BOOL"
-        description = "TestArgumentUpdated"
+        description = "A boolean input"
         default_value = true
         type = "BOOLEAN"
         required = true
@@ -91,7 +87,7 @@ resource "leanspace_command_definitions" "test" {
     arguments {
         name = "TestArgumentTimestamp"
         identifier = "TIMESTAMP"
-        description = "TestArgumentUpdated"
+        description = "A timestamp input"
         default_value = "2022-06-30T13:57:23Z"
         type = "TIMESTAMP"
         required = true
@@ -99,7 +95,7 @@ resource "leanspace_command_definitions" "test" {
     arguments {
         name = "TestArgumentDate"
         identifier = "DATE"
-        description = "TestArgumentUpdated"
+        description = "A date input"
         default_value = "2022-06-30"
         type = "DATE"
         required = true
@@ -107,7 +103,7 @@ resource "leanspace_command_definitions" "test" {
     arguments {
         name = "TestArgumentTime"
         identifier = "TIME"
-        description = "TestArgumentUpdated"
+        description = "A time input"
         default_value = "10:37:19"
         type = "TIME"
         required = true
@@ -115,7 +111,7 @@ resource "leanspace_command_definitions" "test" {
     arguments {
         name = "TestArgumentEnum"
         identifier = "ENUM"
-        description = "TestArgumentUpdated"
+        description = "An enum input"
         default_value = 1
         options = {1="test"}
         type = "ENUM"

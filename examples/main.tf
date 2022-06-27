@@ -14,10 +14,22 @@ provider "leanspace" {
   client_secret = "d762kk9862jn0j1qr4c2u3o8bjkv70o45pld3200ek89qtul6kg"
 }
 
-module "assets" {
-  source = "./node"
+module "assets_node" { 
+  source = "./node" 
 }
 
-output "assets" {
-  value = module.assets.test_node
+module "assets_property" { 
+  source = "./property"
+  node_id = module.assets_node.test_node.node[0].nodes[0].id
+  depends_on = [
+    module.assets_node
+  ]
+}
+
+module "assets_commands" {
+  source = "./command_definition"
+  node_id = module.assets_node.test_node.node[0].nodes[0].id
+  depends_on = [
+    module.assets_node
+  ]
 }

@@ -9,20 +9,16 @@ terraform {
 
 data "leanspace_properties" "all" {}
 
-# Returns all properties
-output "all_properties" {
-  value = data.leanspace_properties.all.properties
-}
-
-output "first_property" {
-  value =  data.leanspace_properties.all.properties[0]
+variable "node_id" {
+  type = string
+  description = "The ID of the node to which the properties will be added."
 }
 
 resource "leanspace_properties" "test_text" {
   property {
     name = "TestTerraformText"
     description = "TestTerraformUpdated2"
-    node_id = "62e5449d-57a3-46bc-906b-b51e970bfdc9"
+    node_id = var.node_id
     type = "TEXT"
     value = "test"
     tags {
@@ -40,7 +36,7 @@ resource "leanspace_properties" "test_numeric" {
   property {
     name = "TestTerraformNumeric"
     description = "TestTerraformUpdated2"
-    node_id = "62e5449d-57a3-46bc-906b-b51e970bfdc9"
+    node_id = var.node_id
     type = "NUMERIC"
     value = 2
     tags {
@@ -58,7 +54,7 @@ resource "leanspace_properties" "test_bool" {
   property {
     name = "TestTerraformBool"
     description = "TestTerraformUpdated2"
-    node_id = "62e5449d-57a3-46bc-906b-b51e970bfdc9"
+    node_id = var.node_id
     type = "BOOLEAN"
     value = true
     tags {
@@ -76,7 +72,7 @@ resource "leanspace_properties" "test_timestamp" {
   property {
     name = "TestTerraformTimestamp"
     description = "TestTerraformUpdated2"
-    node_id = "62e5449d-57a3-46bc-906b-b51e970bfdc9"
+    node_id = var.node_id
     type = "TIMESTAMP"
     value = "2022-06-30T13:57:23Z"
     tags {
@@ -94,7 +90,7 @@ resource "leanspace_properties" "test_date" {
   property {
     name = "TestTerraformDate"
     description = "TestTerraformUpdated2"
-    node_id = "62e5449d-57a3-46bc-906b-b51e970bfdc9"
+    node_id = var.node_id
     type = "DATE"
     value = "2022-06-30"
     tags {
@@ -112,7 +108,7 @@ resource "leanspace_properties" "test_time" {
   property {
     name = "TestTerraformTime"
     description = "TestTerraformUpdated2"
-    node_id = "62e5449d-57a3-46bc-906b-b51e970bfdc9"
+    node_id = var.node_id
     type = "TIME"
     value = "10:37:19"
     tags {
@@ -130,7 +126,7 @@ resource "leanspace_properties" "test_geopoint" {
   property {
     name = "TestTerraformGeoPoint"
     description = "TestTerraformUpdated2"
-    node_id = "62e5449d-57a3-46bc-906b-b51e970bfdc9"
+    node_id = var.node_id
     type = "GEOPOINT"
     fields {
       elevation {
@@ -164,7 +160,7 @@ resource "leanspace_properties" "test_enum" {
   property {
     name = "TestTerraformEnum"
     description = "TestTerraformUpdated2"
-    node_id = "62e5449d-57a3-46bc-906b-b51e970bfdc9"
+    node_id = var.node_id
     type = "ENUM"
     value = 1
     options = {1="test"}
