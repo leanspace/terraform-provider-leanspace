@@ -2,7 +2,6 @@ package asset
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -37,8 +36,7 @@ func resourceCommandDefinitionCreate(ctx context.Context, d *schema.ResourceData
 
 	commandDefinition := d.Get("command_definition").([]interface{})
 	commandDefinitionData := getCommandDefinitionData(commandDefinition)
-	path := fmt.Sprintf("asset-repository/nodes/%s/command-definitions", commandDefinitionData.NodeId)
-	createCommandDefinition, err := client.forCommandDefinitions().CreateForPath(path, commandDefinitionData)
+	createCommandDefinition, err := client.forCommandDefinitions().Create(commandDefinitionData)
 	if err != nil {
 		return diag.FromErr(err)
 	}

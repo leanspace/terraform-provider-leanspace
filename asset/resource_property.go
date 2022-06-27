@@ -2,7 +2,6 @@ package asset
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -37,8 +36,7 @@ func resourcePropertyCreate(ctx context.Context, d *schema.ResourceData, m inter
 
 	property := d.Get("property").([]interface{})
 	propertyData := getPropertyData(property)
-	path := fmt.Sprintf("asset-repository/nodes/%s/properties", propertyData.NodeId)
-	createProperty, err := client.forProperties().CreateForPath(path, propertyData)
+	createProperty, err := client.forProperties().Create(propertyData)
 	if err != nil {
 		return diag.FromErr(err)
 	}

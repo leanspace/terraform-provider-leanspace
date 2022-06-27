@@ -47,10 +47,15 @@ func (resource GenericResourceType[T]) Get(id string) (*T, error) {
 	return &value, nil
 }
 
-func (resource GenericResourceType[T]) CreateForPath(path string, createElement T) (*T, error) {
+func (resource GenericResourceType[T]) Create(createElement T) (*T, error) {
 	rb, err := json.Marshal(createElement)
 	if err != nil {
 		return nil, err
+	}
+
+	path := resource.Path
+	if resource.CreatePath != nil {
+		path = resource.CreatePath(createElement)
 	}
 
 	req, err := http.NewRequest("POST", fmt.Sprintf("%s/%s", resource.Client.HostURL, path), strings.NewReader(string(rb)))
@@ -71,10 +76,6 @@ func (resource GenericResourceType[T]) CreateForPath(path string, createElement 
 	}
 
 	return &element, nil
-}
-
-func (resource GenericResourceType[T]) Create(createElement T) (*T, error) {
-	return resource.CreateForPath(resource.Path, createElement)
 }
 
 func (resource GenericResourceType[T]) Update(nodeId string, createElement T) (*T, error) {
