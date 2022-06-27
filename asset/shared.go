@@ -1,10 +1,12 @@
 package asset
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"fmt"
 	"regexp"
 	"strconv"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 var nodeSchema = map[string]*schema.Schema{
@@ -53,6 +55,84 @@ var nodeSchema = map[string]*schema.Schema{
 		ForceNew: true,
 	},
 	"tags": tagsSchema,
+	"norad_id": &schema.Schema{
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: validation.StringMatch(regexp.MustCompile(`^\d{5}$`), "It must be 5 digits"),
+	},
+	"international_designator": &schema.Schema{
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: validation.StringMatch(regexp.MustCompile(`^(\d{4}-|\d{2})[0-9]{3}[A-Za-z]{0,3}$`), ""),
+	},
+	"tle": &schema.Schema{
+		Type:     schema.TypeList,
+		MaxItems: 2,
+		MinItems: 2,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
+		},
+	},
+}
+
+var rootNodeSchema = map[string]*schema.Schema{
+	"id": &schema.Schema{
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"name": &schema.Schema{
+		Type:     schema.TypeString,
+		Required: true,
+	},
+	"description": &schema.Schema{
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"created_at": &schema.Schema{
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"created_by": &schema.Schema{
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"last_modified_at": &schema.Schema{
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"last_modified_by": &schema.Schema{
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"parent_node_id": &schema.Schema{
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"type": &schema.Schema{
+		Type:     schema.TypeString,
+		Required: true,
+		ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+			value := val.(string)
+			if !(value == "ASSET" || value == "GROUP" || value == "COMPONENT") {
+				errs = append(errs, fmt.Errorf("%q must be either ASSET, GROUP ou COMPONENT, got: %q", key, value))
+			}
+			return
+		},
+	},
+	"kind": &schema.Schema{
+		Type:     schema.TypeString,
+		Optional: true,
+		ForceNew: true,
+	},
+	"tags": tagsSchema,
+	"nodes": &schema.Schema{
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Resource{
+			Schema: nodeSchema,
+		},
+	},
 	"norad_id": &schema.Schema{
 		Type:         schema.TypeString,
 		Optional:     true,
@@ -750,4 +830,231 @@ func commandDefinitionStructToInterface(commandDefinition CommandDefinition) map
 	}
 
 	return commandDefinitionMap
+}
+
+func nodeStructToInterfaceBase(node Node) map[string]interface{} {
+	return nodeStructToInterface(&node, 0)
+}
+
+func nodeStructToInterface(node *Node, level int) map[string]interface{} {
+	nodeMap := make(map[string]interface{})
+
+	nodeMap["id"] = node.ID
+	nodeMap["name"] = node.Name
+	nodeMap["description"] = node.Description
+	nodeMap["created_at"] = node.CreatedAt
+	nodeMap["created_by"] = node.CreatedBy
+	nodeMap["parent_node_id"] = node.ParentNodeId
+	nodeMap["last_modified_at"] = node.LastModifiedAt
+	nodeMap["last_modified_by"] = node.LastModifiedBy
+	nodeMap["type"] = node.Type
+	nodeMap["kind"] = node.Kind
+	nodeMap["tags"] = tagsStructToInterface(node.Tags)
+	// Here we seemed to lock going to depth > 1?
+	// Any reason for this ? Would need to ask @Gerome
+	if node.Nodes != nil && level == 0 {
+		nodes := make([]interface{}, len(node.Nodes))
+		for i, node := range node.Nodes {
+			nodes[i] = nodeStructToInterface(&node, level+1)
+		}
+		nodeMap["nodes"] = nodes
+	}
+	if len(node.NoradId) != 0 {
+		nodeMap["norad_id"] = node.NoradId
+	}
+	if len(node.InternationalDesignator) != 0 {
+		nodeMap["international_designator"] = node.InternationalDesignator
+	}
+	if len(node.Tle) != 2 {
+		nodeMap["tle"] = node.Tle
+	}
+
+	return nodeMap
+}
+
+var tle1stLine = `^1 (?P<noradId>[ 0-9]{5})[A-Z] [ 0-9]{5}[ A-Z]{3} [ 0-9]{5}[.][ 0-9]{8} (?:(?:[ 0+-][.][ 0-9]{8})|(?: [ +-][.][ 0-9]{7})) [ +-][ 0-9]{5}[+-][ 0-9] [ +-][ 0-9]{5}[+-][ 0-9] [ 0-9] [ 0-9]{4}[ 0-9]$`
+var tle2ndLine = `^2 (?P<noradId>[ 0-9]{5}) [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{7} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{2}[.][ 0-9]{13}[ 0-9]$`
+
+func nodeInterfaceToStruct(node map[string]interface{}) (Node, error) {
+	nodeStruct := Node{}
+
+	nodeStruct.Name = node["name"].(string)
+	nodeStruct.Description = node["description"].(string)
+	nodeStruct.CreatedAt = node["created_at"].(string)
+	nodeStruct.CreatedBy = node["created_by"].(string)
+	nodeStruct.ParentNodeId = node["parent_node_id"].(string)
+	nodeStruct.LastModifiedAt = node["last_modified_at"].(string)
+	nodeStruct.LastModifiedBy = node["last_modified_by"].(string)
+	nodeStruct.Type = node["type"].(string)
+	if nodeStruct.Type == "ASSET" && !(node["kind"] == "GENERIC" || node["kind"] == "SATELLITE" || node["kind"] == "GROUND_STATION") {
+		return nodeStruct, fmt.Errorf("kind must be either GENERIC, SATELLITE ou GROUND_STATION, got: %q", node["kind"])
+	}
+	nodeStruct.Kind = node["kind"].(string)
+	nodeStruct.Tags = tagsInterfaceToStruct(node["tags"])
+	if node["nodes"] != nil {
+		nodeStruct.Nodes = make([]Node, len(node["nodes"].([]interface{})))
+		for i, node := range node["nodes"].([]interface{}) {
+			childNodeStruct, err := nodeInterfaceToStruct(node.(map[string]interface{}))
+			if err != nil {
+				return nodeStruct, err
+			}
+			nodeStruct.Nodes[i] = childNodeStruct
+		}
+	}
+	nodeStruct.NoradId = node["norad_id"].(string)
+	nodeStruct.InternationalDesignator = node["international_designator"].(string)
+	if node["tle"] != nil && len(node["tle"].([]interface{})) == 2 {
+		nodeStruct.Tle = make([]string, 2)
+		matched, _ := regexp.MatchString(tle1stLine, node["tle"].([]interface{})[0].(string))
+		if !matched {
+			return nodeStruct, fmt.Errorf("TLE first line mutch match %q, got: %q", tle1stLine, node["tle"].([]interface{})[0].(string))
+		}
+		matched, _ = regexp.MatchString(tle2ndLine, node["tle"].([]interface{})[1].(string))
+		if !matched {
+			return nodeStruct, fmt.Errorf("TLE second line mutch match %q, got: %q", tle2ndLine, node["tle"].([]interface{})[1].(string))
+		}
+		for i, tle := range node["tle"].([]interface{}) {
+			nodeStruct.Tle[i] = tle.(string)
+		}
+
+	}
+
+	return nodeStruct, nil
+}
+
+func fieldInterfaceToStruct(fieldList []interface{}) Field[interface{}] {
+	field := fieldList[0].(map[string]interface{})
+	fieldStruct := Field[interface{}]{}
+	fieldStruct.ID = field["id"].(string)
+	fieldStruct.Name = field["name"].(string)
+	fieldStruct.Description = field["description"].(string)
+	fieldStruct.CreatedAt = field["created_at"].(string)
+	fieldStruct.CreatedBy = field["created_by"].(string)
+	fieldStruct.LastModifiedAt = field["last_modified_at"].(string)
+	fieldStruct.LastModifiedBy = field["last_modified_by"].(string)
+	fieldStruct.Type = field["type"].(string)
+	fieldStruct.Value = field["value"]
+
+	return fieldStruct
+}
+
+func getPropertyData(property map[string]interface{}) (Property[interface{}], error) {
+	propertyMap := Property[interface{}]{}
+
+	propertyMap.Name = property["name"].(string)
+	propertyMap.Description = property["description"].(string)
+	propertyMap.NodeId = property["node_id"].(string)
+	propertyMap.CreatedAt = property["created_at"].(string)
+	propertyMap.CreatedBy = property["created_by"].(string)
+	propertyMap.LastModifiedAt = property["last_modified_at"].(string)
+	propertyMap.LastModifiedBy = property["last_modified_by"].(string)
+	propertyMap.Value = property["value"]
+	propertyMap.Type = property["type"].(string)
+	propertyMap.Tags = tagsInterfaceToStruct(property["tags"])
+	switch propertyMap.Type {
+	case "NUMERIC":
+		propertyMap.Min = property["min"].(float64)
+		propertyMap.Max = property["max"].(float64)
+		propertyMap.Scale = property["scale"].(int)
+		propertyMap.Precision = property["precision"].(int)
+		propertyMap.UnitId = property["unit_id"].(string)
+	case "ENUM":
+		if property["options"] != nil {
+			option := property["options"].(map[string]interface{})
+			propertyMap.Options = &option
+		}
+	case "TEXT":
+		propertyMap.MinLength = property["min_length"].(int)
+		propertyMap.MaxLength = property["max_length"].(int)
+		propertyMap.Pattern = property["pattern"].(string)
+	case "TIMESTAMP", "DATE", "TIME":
+		propertyMap.Before = property["before"].(string)
+		propertyMap.After = property["after"].(string)
+	case "BOOLEAN":
+		// no extra property for booleans
+	case "GEOPOINT":
+		if property["fields"] != nil {
+			propertyMap.Fields = &Fields{}
+			propertyMap.Fields.Elevation = fieldInterfaceToStruct(property["fields"].([]interface{})[0].(map[string]interface{})["elevation"].([]interface{}))
+			propertyMap.Fields.Latitude = fieldInterfaceToStruct(property["fields"].([]interface{})[0].(map[string]interface{})["latitude"].([]interface{}))
+			propertyMap.Fields.Longitude = fieldInterfaceToStruct(property["fields"].([]interface{})[0].(map[string]interface{})["longitude"].([]interface{}))
+		}
+	}
+
+	return propertyMap, nil
+}
+
+func metadataInterfaceToStruct(metadata map[string]interface{}) Metadata[interface{}] {
+	metadataStruct := Metadata[interface{}]{}
+	metadataStruct.ID = metadata["id"].(string)
+	metadataStruct.Name = metadata["name"].(string)
+	metadataStruct.Description = metadata["description"].(string)
+	metadataStruct.UnitId = metadata["unit_id"].(string)
+	metadataStruct.Value = metadata["value"]
+	metadataStruct.Required = metadata["required"].(bool)
+	metadataStruct.Type = metadata["type"].(string)
+
+	return metadataStruct
+}
+
+func argumentInterfaceToStruct(argument map[string]interface{}) Argument[interface{}] {
+	argumentStruct := Argument[interface{}]{}
+	argumentStruct.ID = argument["id"].(string)
+	argumentStruct.Name = argument["name"].(string)
+	argumentStruct.Identifier = argument["identifier"].(string)
+	argumentStruct.Description = argument["description"].(string)
+	argumentStruct.Type = argument["type"].(string)
+	argumentStruct.Required = argument["required"].(bool)
+	switch argumentStruct.Type {
+	case "NUMERIC":
+		argumentStruct.Min = argument["min"].(float64)
+		argumentStruct.Max = argument["max"].(float64)
+		argumentStruct.Scale = argument["scale"].(int)
+		argumentStruct.Precision = argument["precision"].(int)
+		argumentStruct.UnitId = argument["unit_id"].(string)
+	case "ENUM":
+		if argument["options"] != nil {
+			option := argument["options"].(map[string]interface{})
+			argumentStruct.Options = &option
+		}
+	case "TEXT":
+		argumentStruct.MinLength = argument["min_length"].(int)
+		argumentStruct.MaxLength = argument["max_length"].(int)
+		argumentStruct.Pattern = argument["pattern"].(string)
+	case "TIMESTAMP", "DATE", "TIME":
+		argumentStruct.Before = argument["before"].(string)
+		argumentStruct.After = argument["after"].(string)
+	case "BOOLEAN":
+		// no extra field
+	}
+	argumentStruct.DefaultValue = argument["default_value"]
+
+	return argumentStruct
+}
+
+func getCommandDefinitionData(commandDefinition map[string]interface{}) (CommandDefinition, error) {
+	commandDefinitionMap := CommandDefinition{}
+
+	commandDefinitionMap.NodeId = commandDefinition["node_id"].(string)
+	commandDefinitionMap.Name = commandDefinition["name"].(string)
+	commandDefinitionMap.Description = commandDefinition["description"].(string)
+	commandDefinitionMap.Identifier = commandDefinition["identifier"].(string)
+	commandDefinitionMap.CreatedAt = commandDefinition["created_at"].(string)
+	commandDefinitionMap.CreatedBy = commandDefinition["created_by"].(string)
+	commandDefinitionMap.LastModifiedAt = commandDefinition["last_modified_at"].(string)
+	commandDefinitionMap.LastModifiedBy = commandDefinition["last_modified_by"].(string)
+	if commandDefinition["metadata"] != nil {
+		commandDefinitionMap.Metadata = []Metadata[interface{}]{}
+		for _, metadata := range commandDefinition["metadata"].([]interface{}) {
+			commandDefinitionMap.Metadata = append(commandDefinitionMap.Metadata, metadataInterfaceToStruct(metadata.(map[string]interface{})))
+		}
+	}
+	if commandDefinition["arguments"] != nil {
+		commandDefinitionMap.Arguments = []Argument[interface{}]{}
+		for _, argument := range commandDefinition["arguments"].([]interface{}) {
+			commandDefinitionMap.Arguments = append(commandDefinitionMap.Arguments, argumentInterfaceToStruct(argument.(map[string]interface{})))
+		}
+	}
+
+	return commandDefinitionMap, nil
 }

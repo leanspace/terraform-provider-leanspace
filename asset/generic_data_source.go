@@ -11,29 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type DataSourceType[T any] struct {
-	schema        map[string]*schema.Schema
-	clientConvert func(*Client) GenericResourceType[T]
-}
-
-// A data source type for properties
-var propertyDataSource = DataSourceType[Property[any]]{
-	schema:        propertySchema,
-	clientConvert: (*Client).forProperties,
-}
-
-// A data source type for nodes
-var nodeDataSource = DataSourceType[Node]{
-	schema:        nodeSchema,
-	clientConvert: (*Client).forNodes,
-}
-
-// A data source type for command definitions
-var commandDefinitionDataSource = DataSourceType[CommandDefinition]{
-	schema:        commandDefinitionSchema,
-	clientConvert: (*Client).forCommandDefinitions,
-}
-
 func (dataSourceType DataSourceType[T]) toDataSource() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceType.read,
@@ -42,7 +19,7 @@ func (dataSourceType DataSourceType[T]) toDataSource() *schema.Resource {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
-					Schema: dataSourceType.schema,
+					Schema: dataSourceType.Schema,
 				},
 			},
 			"total_elements": {
@@ -88,7 +65,7 @@ func (dataSourceType DataSourceType[T]) read(ctx context.Context, d *schema.Reso
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	values, err := dataSourceType.clientConvert(client).GetAll()
+	values, err := dataSourceType.convert(client).GetAll()
 	if err != nil {
 		return diag.FromErr(err)
 	}

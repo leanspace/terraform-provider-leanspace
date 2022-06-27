@@ -34,14 +34,14 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"leanspace_nodes":               resourceNode(),
-			"leanspace_properties":          resourceProperty(),
-			"leanspace_command_definitions": resourceCommandDefinition(),
+			"leanspace_nodes":               NodeDataType.resourceGenericDefinition(),
+			"leanspace_properties":          PropertyDataType.resourceGenericDefinition(),
+			"leanspace_command_definitions": CommandDataType.resourceGenericDefinition(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"leanspace_nodes":               nodeDataSource.toDataSource(),
-			"leanspace_properties":          propertyDataSource.toDataSource(),
-			"leanspace_command_definitions": commandDefinitionDataSource.toDataSource(),
+			"leanspace_nodes":               NodeDataType.toDataSource(),
+			"leanspace_properties":          PropertyDataType.toDataSource(),
+			"leanspace_command_definitions": CommandDataType.toDataSource(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
