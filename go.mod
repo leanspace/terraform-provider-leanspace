@@ -2,7 +2,10 @@ module terraform-provider-asset
 
 go 1.18
 
-require github.com/hashicorp/terraform-plugin-sdk/v2 v2.16.0
+require (
+	github.com/hashicorp/terraform-plugin-sdk/v2 v2.16.0
+	github.com/mitchellh/mapstructure v1.5.0
+)
 
 require (
 	github.com/agext/levenshtein v1.2.2 // indirect
@@ -29,7 +32,6 @@ require (
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.0 // indirect
-	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/oklog/run v1.0.0 // indirect
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect

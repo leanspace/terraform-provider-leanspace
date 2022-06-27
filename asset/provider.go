@@ -2,6 +2,7 @@ package asset
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -38,9 +39,9 @@ func Provider() *schema.Provider {
 			"leanspace_command_definitions": resourceCommandDefinition(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"leanspace_nodes":               dataSourceNodes(),
-			"leanspace_properties":          dataSourceProperties(),
-			"leanspace_command_definitions": dataSourceCommandDefinitions(),
+			"leanspace_nodes":               nodeDataSource.toDataSource(),
+			"leanspace_properties":          propertyDataSource.toDataSource(),
+			"leanspace_command_definitions": commandDefinitionDataSource.toDataSource(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
