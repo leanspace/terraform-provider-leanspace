@@ -7,8 +7,7 @@ var NodeDataType = asset.DataSourceType[Node]{
 	Name:               "node",
 	Path:               "asset-repository/nodes",
 
-	Schema:     nodeSchema,
-	RootSchema: rootNodeSchema,
+	Schema: rootNodeSchema,
 
 	GetID:       func(n *Node) string { return n.ID },
 	MapToStruct: nodeInterfaceToStruct,

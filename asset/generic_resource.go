@@ -19,7 +19,7 @@ func (dataSource DataSourceType[T]) resourceGenericDefinition() *schema.Resource
 				MaxItems: 1,
 				Required: true,
 				Elem: &schema.Resource{
-					Schema: dataSource.RootSchema,
+					Schema: dataSource.Schema,
 				},
 			},
 		},

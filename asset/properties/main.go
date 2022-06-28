@@ -13,8 +13,7 @@ var PropertyDataType = asset.DataSourceType[Property[any]]{
 		return fmt.Sprintf("asset-repository/nodes/%s/properties", p.NodeId)
 	},
 
-	Schema:     propertySchema,
-	RootSchema: propertySchema,
+	Schema: propertySchema,
 
 	GetID:       func(p *Property[any]) string { return p.ID },
 	MapToStruct: getPropertyData,

@@ -13,8 +13,7 @@ var CommandDataType = asset.DataSourceType[CommandDefinition]{
 		return fmt.Sprintf("asset-repository/nodes/%s/command-definitions", c.NodeId)
 	},
 
-	Schema:     commandDefinitionSchema,
-	RootSchema: commandDefinitionSchema,
+	Schema: commandDefinitionSchema,
 
 	GetID:       func(c *CommandDefinition) string { return c.ID },
 	MapToStruct: getCommandDefinitionData,
