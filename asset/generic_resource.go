@@ -14,7 +14,7 @@ func (dataSource DataSourceType[T]) resourceGenericDefinition() *schema.Resource
 		UpdateContext: dataSource.update,
 		DeleteContext: dataSource.delete,
 		Schema: map[string]*schema.Schema{
-			dataSource.Name: &schema.Schema{
+			dataSource.Name: {
 				Type:     schema.TypeList,
 				MaxItems: 1,
 				Required: true,
@@ -29,26 +29,24 @@ func (dataSource DataSourceType[T]) resourceGenericDefinition() *schema.Resource
 	}
 }
 
-func (dataSource DataSourceType[T]) create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func (dataSource DataSourceType[T]) create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	value := d.Get(dataSource.Name).([]interface{})
+	value := d.Get(dataSource.Name).([]any)
 	valueData := dataSource.getValueData(value)
 	createdValue, err := dataSource.convert(client).Create(valueData)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(dataSource.GetID(createdValue))
-	for _, diag := range dataSource.get(ctx, d, m) {
-		diags = append(diags, diag)
-	}
+	diags = append(diags, dataSource.get(ctx, d, m)...)
 
 	return diags
 }
 
-func (dataSource DataSourceType[T]) get(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func (dataSource DataSourceType[T]) get(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
@@ -64,32 +62,30 @@ func (dataSource DataSourceType[T]) get(ctx context.Context, d *schema.ResourceD
 }
 
 func (dataSource DataSourceType[T]) setValueData(value *T, d *schema.ResourceData) {
-	valueList := make([]map[string]interface{}, 1)
+	valueList := make([]map[string]any, 1)
 
 	valueList[0] = dataSource.StructToMap(*value)
 	d.Set(dataSource.Name, valueList)
 }
 
-func (dataSource DataSourceType[T]) getValueData(valueList []interface{}) T {
-	value, _ := dataSource.MapToStruct(valueList[0].(map[string]interface{}))
+func (dataSource DataSourceType[T]) getValueData(valueList []any) T {
+	value, _ := dataSource.MapToStruct(valueList[0].(map[string]any))
 	return value
 }
 
-func (dataSource DataSourceType[T]) update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func (dataSource DataSourceType[T]) update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
 	if d.HasChange(dataSource.Name) {
 		valueId := d.Id()
-		value := d.Get(dataSource.Name).([]interface{})
+		value := d.Get(dataSource.Name).([]any)
 		_, err := dataSource.convert(client).Update(valueId, dataSource.getValueData(value))
 		if err != nil {
 			return diag.FromErr(err)
 		}
-		for _, diag := range dataSource.get(ctx, d, m) {
-			diags = append(diags, diag)
-		}
+		diags = append(diags, dataSource.get(ctx, d, m)...)
 
 		return diags
 	}
@@ -98,7 +94,7 @@ func (dataSource DataSourceType[T]) update(ctx context.Context, d *schema.Resour
 
 }
 
-func (dataSource DataSourceType[T]) delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func (dataSource DataSourceType[T]) delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics

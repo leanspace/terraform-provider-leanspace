@@ -7,47 +7,48 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var resourceMap = make(map[string]*schema.Resource)
+var dataSourceMap = make(map[string]*schema.Resource)
+
+// Subscribes this data type, adding it to the valid terraform resources and data types.
+func (dataType DataSourceType[T]) Subscribe() {
+	resourceMap[dataType.ResourceIdentifier] = dataType.resourceGenericDefinition()
+	dataSourceMap[dataType.ResourceIdentifier] = dataType.toDataSource()
+}
+
 // Provider -
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
-			"env": &schema.Schema{
+			"env": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("ENV", nil),
 			},
-			"tenant": &schema.Schema{
+			"tenant": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("TENANT", nil),
 			},
-			"client_id": &schema.Schema{
+			"client_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("CLIENT_ID", nil),
 			},
-			"client_secret": &schema.Schema{
+			"client_secret": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc("CLIENT_SECRET", nil),
 			},
 		},
-		ResourcesMap: map[string]*schema.Resource{
-			"leanspace_nodes":               NodeDataType.resourceGenericDefinition(),
-			"leanspace_properties":          PropertyDataType.resourceGenericDefinition(),
-			"leanspace_command_definitions": CommandDataType.resourceGenericDefinition(),
-		},
-		DataSourcesMap: map[string]*schema.Resource{
-			"leanspace_nodes":               NodeDataType.toDataSource(),
-			"leanspace_properties":          PropertyDataType.toDataSource(),
-			"leanspace_command_definitions": CommandDataType.toDataSource(),
-		},
+		ResourcesMap:         resourceMap,
+		DataSourcesMap:       dataSourceMap,
 		ConfigureContextFunc: providerConfigure,
 	}
 }
 
-func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
+func providerConfigure(ctx context.Context, d *schema.ResourceData) (any, diag.Diagnostics) {
 	env := d.Get("env").(string)
 	tenant := d.Get("tenant").(string)
 	clientId := d.Get("client_id").(string)

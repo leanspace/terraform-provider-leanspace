@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+
+	"terraform-provider-asset/asset/general_objects"
 )
 
-func (resource GenericResourceType[T]) GetAll() (*PaginatedList[T], error) {
+func (resource GenericResourceType[T]) GetAll() (*general_objects.PaginatedList[T], error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s", resource.Client.HostURL, resource.Path), nil)
 	if err != nil {
 		return nil, err
@@ -18,7 +20,7 @@ func (resource GenericResourceType[T]) GetAll() (*PaginatedList[T], error) {
 		return nil, err
 	}
 
-	elements := PaginatedList[T]{}
+	elements := general_objects.PaginatedList[T]{}
 	err = json.Unmarshal(body, &elements)
 	if err != nil {
 		return nil, err

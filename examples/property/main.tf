@@ -50,6 +50,16 @@ resource "leanspace_properties" "test_numeric" {
   }
 }
 
+resource "leanspace_properties" "test_numeric_large" {
+  property {
+    name = "TestTerraformNumericLarge"
+    description = "TestTerraformUpdated2"
+    node_id = var.node_id
+    type = "NUMERIC"
+    value = "2e+10"
+  }
+}
+
 resource "leanspace_properties" "test_bool" {
   property {
     name = "TestTerraformBool"
@@ -177,6 +187,10 @@ resource "leanspace_properties" "test_enum" {
 
 output "test_numeric_property" {
   value = leanspace_properties.test_numeric
+}
+
+output "test_numeric_property_large" {
+  value = leanspace_properties.test_numeric_large
 }
 
 output "test_text_property" {

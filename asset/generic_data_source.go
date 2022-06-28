@@ -9,58 +9,18 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
+	"terraform-provider-asset/asset/general_objects"
 )
 
 func (dataSourceType DataSourceType[T]) toDataSource() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceType.read,
-		Schema: map[string]*schema.Schema{
-			"content": {
-				Type:     schema.TypeList,
-				Computed: true,
-				Elem: &schema.Resource{
-					Schema: dataSourceType.Schema,
-				},
-			},
-			"total_elements": {
-				Type:     schema.TypeInt,
-				Computed: true,
-			},
-			"total_pages": {
-				Type:     schema.TypeInt,
-				Computed: true,
-			},
-			"number_of_elements": {
-				Type:     schema.TypeInt,
-				Computed: true,
-			},
-			"number": {
-				Type:     schema.TypeInt,
-				Computed: true,
-			},
-			"size": {
-				Type:     schema.TypeInt,
-				Computed: true,
-			},
-			"sort": sortSchema,
-			"first": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
-			"last": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
-			"empty": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
-			"pageable": pageableSchema,
-		},
+		Schema:      general_objects.PaginatedListSchema(dataSourceType.Schema),
 	}
 }
 
-func (dataSourceType DataSourceType[T]) read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func (dataSourceType DataSourceType[T]) read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
@@ -75,7 +35,7 @@ func (dataSourceType DataSourceType[T]) read(ctx context.Context, d *schema.Reso
 	return diags
 }
 
-func (dataSourceType DataSourceType[T]) setData(paginated_list *PaginatedList[T], d *schema.ResourceData) {
+func (dataSourceType DataSourceType[T]) setData(paginated_list *general_objects.PaginatedList[T], d *schema.ResourceData) {
 
 	data_as_map := make(map[string]any)
 	decoder, _ := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
