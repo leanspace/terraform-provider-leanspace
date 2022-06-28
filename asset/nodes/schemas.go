@@ -45,6 +45,7 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 		"parent_node_id": {
 			Type:         schema.TypeString,
 			Optional:     true,
+			Computed:     true,
 			ValidateFunc: validation.IsUUID,
 		},
 		"type": {
