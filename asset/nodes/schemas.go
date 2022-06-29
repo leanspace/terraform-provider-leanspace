@@ -17,6 +17,7 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 		"id": {
 			Type:     schema.TypeString,
 			Computed: true,
+			ForceNew: true,
 		},
 		"name": {
 			Type:     schema.TypeString,
@@ -85,6 +86,7 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 		baseSchema["nodes"] = &schema.Schema{
 			Type:     schema.TypeSet,
 			Optional: true,
+			Computed: true,
 			Elem: &schema.Resource{
 				Schema: recursiveNodes,
 			},

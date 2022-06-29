@@ -65,7 +65,8 @@ One asset block containing:
 - tle: optional, only usefull for ASSET
     - list of exactly 2 strings
 
-It is possible to create nodes within nodes but it's also possible to create them separately and set the `parent_node_id` on the child node to the id of the parent node
+It is possible to create nodes within nodes but it's also possible to create them separately and set the `parent_node_id` on the child node to the id of the parent node.
+The maximum depth allowed for nested nodes is 1. It is strongly recommended to create them separately (see `examples/nodes_neighbours`).
 
 ### leanspace_properties
 
