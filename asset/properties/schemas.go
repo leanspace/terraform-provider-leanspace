@@ -4,7 +4,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	. "terraform-provider-asset/asset/general_objects"
+	"terraform-provider-asset/asset/general_objects"
 )
 
 var propertyFieldSchema = map[string]*schema.Schema{
@@ -109,7 +109,7 @@ var propertySchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Computed: true,
 	},
-	"tags": TagsSchema,
+	"tags": general_objects.TagsSchema,
 	"min_length": {
 		Type:         schema.TypeInt,
 		Optional:     true,

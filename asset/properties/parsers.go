@@ -31,7 +31,7 @@ func propertyStructToInterface(property Property[any]) map[string]any {
 	propertyMap["last_modified_at"] = property.LastModifiedAt
 	propertyMap["last_modified_by"] = property.LastModifiedBy
 	propertyMap["type"] = property.Type
-	propertyMap["tags"] = general_objects.TagsStructToInterface(property.Tags)
+	propertyMap["tags"] = general_objects.TagsStructToMap(property.Tags)
 	switch property.Type {
 	case "NUMERIC":
 		if property.Value != nil {

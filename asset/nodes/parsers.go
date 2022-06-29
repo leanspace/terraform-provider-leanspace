@@ -5,6 +5,8 @@ import (
 	"regexp"
 
 	"terraform-provider-asset/asset/general_objects"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func nodeStructToInterfaceBase(node Node) map[string]any {
@@ -24,7 +26,7 @@ func nodeStructToInterface(node *Node, level int) map[string]any {
 	nodeMap["last_modified_by"] = node.LastModifiedBy
 	nodeMap["type"] = node.Type
 	nodeMap["kind"] = node.Kind
-	nodeMap["tags"] = general_objects.TagsStructToInterface(node.Tags)
+	nodeMap["tags"] = general_objects.TagsStructToMap(node.Tags)
 	// Here we seemed to lock going to depth > 1?
 	// Any reason for this ? Would need to ask @Jerome
 	if node.Nodes != nil && level == 0 {
@@ -67,8 +69,8 @@ func nodeInterfaceToStruct(node map[string]any) (Node, error) {
 	nodeStruct.Kind = node["kind"].(string)
 	nodeStruct.Tags = general_objects.TagsInterfaceToStruct(node["tags"])
 	if node["nodes"] != nil {
-		nodeStruct.Nodes = make([]Node, len(node["nodes"].([]any)))
-		for i, node := range node["nodes"].([]any) {
+		nodeStruct.Nodes = make([]Node, node["nodes"].(*schema.Set).Len())
+		for i, node := range node["nodes"].(*schema.Set).List() {
 			childNodeStruct, err := nodeInterfaceToStruct(node.(map[string]any))
 			if err != nil {
 				return nodeStruct, err

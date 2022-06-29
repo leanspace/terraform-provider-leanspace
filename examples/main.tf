@@ -20,7 +20,7 @@ module "assets_node" {
 
 module "assets_property" { 
   source = "./property"
-  node_id = module.assets_node.test_node.node[0].nodes[0].id
+  node_id = module.assets_node.satellite_node.id
   depends_on = [
     module.assets_node
   ]
@@ -28,7 +28,7 @@ module "assets_property" {
 
 module "assets_commands" {
   source = "./command_definition"
-  node_id = module.assets_node.test_node.node[0].nodes[0].id
+  node_id = module.assets_node.satellite_node.id
   depends_on = [
     module.assets_node
   ]

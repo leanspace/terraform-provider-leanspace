@@ -83,7 +83,7 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 
 	if recursiveNodes != nil {
 		baseSchema["nodes"] = &schema.Schema{
-			Type:     schema.TypeList,
+			Type:     schema.TypeSet,
 			Optional: true,
 			Elem: &schema.Resource{
 				Schema: recursiveNodes,

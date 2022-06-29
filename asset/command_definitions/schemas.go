@@ -29,7 +29,7 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 		Optional: true,
 	},
 	"metadata": {
-		Type:     schema.TypeList,
+		Type:     schema.TypeSet,
 		Optional: true,
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
@@ -54,10 +54,6 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 					Type:     schema.TypeString,
 					Optional: true,
 				},
-				"required": {
-					Type:     schema.TypeBool,
-					Optional: true,
-				},
 				"type": {
 					Type:         schema.TypeString,
 					Required:     true,
@@ -67,7 +63,7 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 		},
 	},
 	"arguments": {
-		Type:     schema.TypeList,
+		Type:     schema.TypeSet,
 		Optional: true,
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{

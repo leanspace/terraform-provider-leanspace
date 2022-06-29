@@ -153,7 +153,6 @@ One command_definition block containing:
     - description: optional
     - unit_id: optional
     - value: optional
-    - required: optional
     - type: `NUMERIC||TEXT||BOOLEAN||TIMESTAMP||DATE||TIME`
 - arguments: one or multiple blocks
     - id (filled by the API)

@@ -24,7 +24,6 @@ resource "leanspace_command_definitions" "test" {
         name = "TestMetadataNumeric"
         description = "A numeric metadata value"
         value = 2
-        required = true
         type = "NUMERIC"
     }
     metadata {
@@ -37,28 +36,24 @@ resource "leanspace_command_definitions" "test" {
         name = "TestMetadataBool"
         description = "A boolean metadata value"
         value = true
-        required = true
         type = "BOOLEAN"
     }
     metadata {
         name = "TestMetadataTimestamp"
         description = "A timestamp metadata value"
         value = "2022-06-30T13:57:23Z"
-        required = true
         type = "TIMESTAMP"
     }
     metadata {
         name = "TestMetadataDate"
         description = "A date metadata value"
         value = "2022-06-30"
-        required = true
         type = "DATE"
     }
     metadata {
         name = "TestMetadataTime"
         description = "A time metadata value"
         value = "10:37:19"
-        required = true
         type = "TIME"
     }
     arguments {

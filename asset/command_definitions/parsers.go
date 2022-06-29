@@ -1,6 +1,10 @@
 package command_definitions
 
-import "strconv"
+import (
+	"strconv"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
 
 func commandDefinitionStructToInterface(commandDefinition CommandDefinition) map[string]any {
 	commandDefinitionMap := make(map[string]any)
@@ -40,7 +44,6 @@ func commandDefinitionStructToInterface(commandDefinition CommandDefinition) map
 					metadataMap["value"] = strconv.FormatBool(metadata.Value.(bool))
 				}
 			}
-			metadataMap["required"] = metadata.Required
 			commandDefinitionMap["metadata"].([]any)[i] = metadataMap
 		}
 	}
@@ -110,13 +113,13 @@ func getCommandDefinitionData(commandDefinition map[string]any) (CommandDefiniti
 	commandDefinitionMap.LastModifiedBy = commandDefinition["last_modified_by"].(string)
 	if commandDefinition["metadata"] != nil {
 		commandDefinitionMap.Metadata = []Metadata[any]{}
-		for _, metadata := range commandDefinition["metadata"].([]any) {
+		for _, metadata := range commandDefinition["metadata"].(*schema.Set).List() {
 			commandDefinitionMap.Metadata = append(commandDefinitionMap.Metadata, metadataInterfaceToStruct(metadata.(map[string]any)))
 		}
 	}
 	if commandDefinition["arguments"] != nil {
 		commandDefinitionMap.Arguments = []Argument[any]{}
-		for _, argument := range commandDefinition["arguments"].([]any) {
+		for _, argument := range commandDefinition["arguments"].(*schema.Set).List() {
 			commandDefinitionMap.Arguments = append(commandDefinitionMap.Arguments, argumentInterfaceToStruct(argument.(map[string]any)))
 		}
 	}
@@ -131,7 +134,6 @@ func metadataInterfaceToStruct(metadata map[string]any) Metadata[any] {
 	metadataStruct.Description = metadata["description"].(string)
 	metadataStruct.UnitId = metadata["unit_id"].(string)
 	metadataStruct.Value = metadata["value"]
-	metadataStruct.Required = metadata["required"].(bool)
 	metadataStruct.Type = metadata["type"].(string)
 
 	return metadataStruct

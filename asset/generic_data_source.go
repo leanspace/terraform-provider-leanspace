@@ -5,10 +5,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/mitchellh/mapstructure"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/mitchellh/mapstructure"
 
 	"terraform-provider-asset/asset/general_objects"
 )
@@ -35,14 +34,13 @@ func (dataSourceType DataSourceType[T]) read(ctx context.Context, d *schema.Reso
 	return diags
 }
 
-func (dataSourceType DataSourceType[T]) setData(paginated_list *general_objects.PaginatedList[T], d *schema.ResourceData) {
-
+func (dataSourceType DataSourceType[T]) setData(paginatedList *general_objects.PaginatedList[T], d *schema.ResourceData) {
 	data_as_map := make(map[string]any)
 	decoder, _ := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
 		TagName: "terra",
 		Result:  &data_as_map,
 	})
-	decoder.Decode(paginated_list)
+	decoder.Decode(paginatedList)
 
 	for key, value := range data_as_map {
 		d.Set(key, value)

@@ -42,3 +42,7 @@ resource "leanspace_nodes" "test_nested" {
 output "test_node" {
   value = leanspace_nodes.test_nested
 }
+
+output "satellite_node" {
+  value = one(one(leanspace_nodes.test_nested.node).nodes)
+}

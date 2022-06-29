@@ -20,7 +20,6 @@ type Metadata[T any] struct {
 	Description string `json:"description,omitempty" terra:"description"`
 	UnitId      string `json:"unit_id,omitempty" terra:"unit_id"`
 	Value       T      `json:"value,omitempty" terra:"value"`
-	Required    bool   `json:"required,omitempty" terra:"required"`
 	Type        string `json:"type" terra:"type"`
 }
 
