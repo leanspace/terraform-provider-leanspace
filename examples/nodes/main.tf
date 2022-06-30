@@ -7,6 +7,8 @@ terraform {
   }
 }
 
+data "leanspace_nodes" "all" {}
+
 resource "leanspace_nodes" "test_nodes_1" {
   node {
     name = "TerraMission - 0.1"

@@ -2,6 +2,7 @@ package command_definitions
 
 import (
 	"strconv"
+	"terraform-provider-asset/asset"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -18,91 +19,107 @@ func commandDefinitionStructToInterface(commandDefinition CommandDefinition) map
 	commandDefinitionMap["last_modified_at"] = commandDefinition.LastModifiedAt
 	commandDefinitionMap["last_modified_by"] = commandDefinition.LastModifiedBy
 	if commandDefinition.Metadata != nil {
-		commandDefinitionMap["metadata"] = make([]any, len(commandDefinition.Metadata))
-		for i, metadata := range commandDefinition.Metadata {
-			metadataMap := make(map[string]any)
-			metadataMap["id"] = metadata.ID
-			metadataMap["name"] = metadata.Name
-			metadataMap["description"] = metadata.Description
-			metadataMap["unit_id"] = metadata.UnitId
-			metadataMap["type"] = metadata.Type
-			switch metadata.Type {
-			case "NUMERIC":
-				if metadata.Value != nil {
-					metadataMap["value"] = strconv.FormatFloat(metadata.Value.(float64), 'g', -1, 64)
-				}
-			case "TEXT":
-				if metadata.Value != nil {
-					metadataMap["value"] = metadata.Value.(string)
-				}
-			case "TIMESTAMP", "DATE", "TIME":
-				if metadata.Value != nil {
-					metadataMap["value"] = metadata.Value.(string)
-				}
-			case "BOOLEAN":
-				if metadata.Value != nil {
-					metadataMap["value"] = strconv.FormatBool(metadata.Value.(bool))
-				}
-			}
-			commandDefinitionMap["metadata"].([]any)[i] = metadataMap
-		}
+		commandDefinitionMap["metadata"] = asset.Map(
+			commandDefinition.Metadata,
+			metadataStructToInterface,
+		)
 	}
-
 	if commandDefinition.Arguments != nil {
-		commandDefinitionMap["arguments"] = make([]any, len(commandDefinition.Arguments))
-		for i, argument := range commandDefinition.Arguments {
-			argumentMap := make(map[string]any)
-			argumentMap["id"] = argument.ID
-			argumentMap["name"] = argument.Name
-			argumentMap["identifier"] = argument.Identifier
-			argumentMap["description"] = argument.Description
-			argumentMap["type"] = argument.Type
-			argumentMap["required"] = argument.Required
-			switch argument.Type {
-			case "NUMERIC":
-				if argument.DefaultValue != nil {
-					argumentMap["default_value"] = strconv.FormatFloat(argument.DefaultValue.(float64), 'g', -1, 64)
-				}
-				argumentMap["min"] = argument.Min
-				argumentMap["max"] = argument.Max
-				argumentMap["scale"] = argument.Scale
-				argumentMap["precision"] = argument.Precision
-				argumentMap["unit_id"] = argument.UnitId
-			case "ENUM":
-				if argument.DefaultValue != nil {
-					argumentMap["default_value"] = strconv.FormatFloat(argument.DefaultValue.(float64), 'g', -1, 64)
-				}
-				if argument.Options != nil {
-					argumentMap["options"] = *argument.Options
-				}
-			case "TEXT":
-				if argument.DefaultValue != nil {
-					argumentMap["default_value"] = argument.DefaultValue.(string)
-				}
-				argumentMap["min_length"] = argument.MinLength
-				argumentMap["max_length"] = argument.MaxLength
-				argumentMap["pattern"] = argument.Pattern
-			case "TIMESTAMP", "DATE", "TIME":
-				if argument.DefaultValue != nil {
-					argumentMap["default_value"] = argument.DefaultValue.(string)
-				}
-				argumentMap["before"] = argument.Before
-				argumentMap["after"] = argument.After
-			case "BOOLEAN":
-				if argument.DefaultValue != nil {
-					argumentMap["default_value"] = strconv.FormatBool(argument.DefaultValue.(bool))
-				}
-			}
-			commandDefinitionMap["arguments"].([]any)[i] = argumentMap
-		}
+		commandDefinitionMap["arguments"] = asset.Map(
+			commandDefinition.Arguments,
+			argumentStructToInterface,
+		)
 	}
 
 	return commandDefinitionMap
 }
 
+func metadataStructToInterface(metadata Metadata[any]) map[string]any {
+	metadataMap := make(map[string]any)
+	metadataMap["id"] = metadata.ID
+	metadataMap["name"] = metadata.Name
+	metadataMap["description"] = metadata.Description
+
+	attributes := make(map[string]any)
+
+	attributes["type"] = metadata.Attributes.Type
+	if metadata.Attributes.Type == "NUMERIC" {
+		attributes["unit_id"] = metadata.Attributes.UnitId
+	}
+	if metadata.Attributes.Value != nil {
+		switch metadata.Attributes.Type {
+		case "NUMERIC":
+			attributes["value"] = strconv.FormatFloat(metadata.Attributes.Value.(float64), 'g', -1, 64)
+		case "TEXT":
+			attributes["value"] = metadata.Attributes.Value.(string)
+		case "BOOLEAN":
+			attributes["value"] = strconv.FormatBool(metadata.Attributes.Value.(bool))
+		case "TIMESTAMP", "DATE", "TIME":
+			attributes["value"] = metadata.Attributes.Value.(string)
+		}
+	}
+	metadataMap["attributes"] = []map[string]any{attributes}
+
+	return metadataMap
+}
+
+func argumentStructToInterface(argument Argument[any]) map[string]any {
+	argumentMap := make(map[string]any)
+	argumentMap["id"] = argument.ID
+	argumentMap["name"] = argument.Name
+	argumentMap["identifier"] = argument.Identifier
+	argumentMap["description"] = argument.Description
+
+	attributes := make(map[string]any)
+
+	attributes["type"] = argument.Attributes.Type
+	attributes["required"] = argument.Attributes.Required
+
+	switch argument.Attributes.Type {
+	case "TEXT":
+		if argument.Attributes.DefaultValue != nil {
+			attributes["default_value"] = argument.Attributes.DefaultValue.(string)
+		}
+		attributes["min_length"] = argument.Attributes.MinLength
+		attributes["max_length"] = argument.Attributes.MaxLength
+		attributes["pattern"] = argument.Attributes.Pattern
+	case "NUMERIC":
+		if argument.Attributes.DefaultValue != nil {
+			attributes["default_value"] = asset.ParseFloat(argument.Attributes.DefaultValue.(float64))
+		}
+		attributes["min"] = argument.Attributes.Min
+		attributes["max"] = argument.Attributes.Max
+		attributes["scale"] = argument.Attributes.Scale
+		attributes["precision"] = argument.Attributes.Precision
+		attributes["unit_id"] = argument.Attributes.UnitId
+	case "BOOLEAN":
+		if argument.Attributes.DefaultValue != nil {
+			attributes["default_value"] = strconv.FormatBool(argument.Attributes.DefaultValue.(bool))
+		}
+	case "TIMESTAMP", "DATE", "TIME":
+		if argument.Attributes.DefaultValue != nil {
+			attributes["default_value"] = argument.Attributes.DefaultValue.(string)
+		}
+		attributes["before"] = argument.Attributes.Before
+		attributes["after"] = argument.Attributes.After
+	case "ENUM":
+		if argument.Attributes.DefaultValue != nil {
+			attributes["default_value"] = asset.ParseFloat(argument.Attributes.DefaultValue.(float64))
+		}
+		if argument.Attributes.Options != nil {
+			attributes["options"] = *argument.Attributes.Options
+		}
+	}
+
+	argumentMap["attributes"] = []map[string]any{attributes}
+
+	return argumentMap
+}
+
 func getCommandDefinitionData(commandDefinition map[string]any) (CommandDefinition, error) {
 	commandDefinitionMap := CommandDefinition{}
 
+	commandDefinitionMap.ID = commandDefinition["id"].(string)
 	commandDefinitionMap.NodeId = commandDefinition["node_id"].(string)
 	commandDefinitionMap.Name = commandDefinition["name"].(string)
 	commandDefinitionMap.Description = commandDefinition["description"].(string)
@@ -112,16 +129,16 @@ func getCommandDefinitionData(commandDefinition map[string]any) (CommandDefiniti
 	commandDefinitionMap.LastModifiedAt = commandDefinition["last_modified_at"].(string)
 	commandDefinitionMap.LastModifiedBy = commandDefinition["last_modified_by"].(string)
 	if commandDefinition["metadata"] != nil {
-		commandDefinitionMap.Metadata = []Metadata[any]{}
-		for _, metadata := range commandDefinition["metadata"].(*schema.Set).List() {
-			commandDefinitionMap.Metadata = append(commandDefinitionMap.Metadata, metadataInterfaceToStruct(metadata.(map[string]any)))
-		}
+		commandDefinitionMap.Metadata = asset.CastMap(
+			commandDefinition["metadata"].(*schema.Set).List(),
+			metadataInterfaceToStruct,
+		)
 	}
 	if commandDefinition["arguments"] != nil {
-		commandDefinitionMap.Arguments = []Argument[any]{}
-		for _, argument := range commandDefinition["arguments"].(*schema.Set).List() {
-			commandDefinitionMap.Arguments = append(commandDefinitionMap.Arguments, argumentInterfaceToStruct(argument.(map[string]any)))
-		}
+		commandDefinitionMap.Arguments = asset.CastMap(
+			commandDefinition["arguments"].(*schema.Set).List(),
+			argumentInterfaceToStruct,
+		)
 	}
 
 	return commandDefinitionMap, nil
@@ -132,9 +149,13 @@ func metadataInterfaceToStruct(metadata map[string]any) Metadata[any] {
 	metadataStruct.ID = metadata["id"].(string)
 	metadataStruct.Name = metadata["name"].(string)
 	metadataStruct.Description = metadata["description"].(string)
-	metadataStruct.UnitId = metadata["unit_id"].(string)
-	metadataStruct.Value = metadata["value"]
-	metadataStruct.Type = metadata["type"].(string)
+
+	attributes := metadata["attributes"].([]any)[0].(map[string]any)
+	metadataStruct.Attributes.Value = attributes["value"]
+	metadataStruct.Attributes.Type = attributes["type"].(string)
+	if metadata["type"] == "NUMERIC" {
+		metadataStruct.Attributes.UnitId = attributes["unit_id"].(string)
+	}
 
 	return metadataStruct
 }
@@ -145,31 +166,33 @@ func argumentInterfaceToStruct(argument map[string]any) Argument[any] {
 	argumentStruct.Name = argument["name"].(string)
 	argumentStruct.Identifier = argument["identifier"].(string)
 	argumentStruct.Description = argument["description"].(string)
-	argumentStruct.Type = argument["type"].(string)
-	argumentStruct.Required = argument["required"].(bool)
-	switch argumentStruct.Type {
+
+	attributes := argument["attributes"].([]any)[0].(map[string]any)
+	argumentStruct.Attributes.Type = attributes["type"].(string)
+	argumentStruct.Attributes.Required = attributes["required"].(bool)
+	argumentStruct.Attributes.DefaultValue = attributes["default_value"]
+	switch argumentStruct.Attributes.Type {
 	case "NUMERIC":
-		argumentStruct.Min = argument["min"].(float64)
-		argumentStruct.Max = argument["max"].(float64)
-		argumentStruct.Scale = argument["scale"].(int)
-		argumentStruct.Precision = argument["precision"].(int)
-		argumentStruct.UnitId = argument["unit_id"].(string)
+		argumentStruct.Attributes.Min = attributes["min"].(float64)
+		argumentStruct.Attributes.Max = attributes["max"].(float64)
+		argumentStruct.Attributes.Scale = attributes["scale"].(int)
+		argumentStruct.Attributes.Precision = attributes["precision"].(int)
+		argumentStruct.Attributes.UnitId = attributes["unit_id"].(string)
 	case "ENUM":
-		if argument["options"] != nil {
-			option := argument["options"].(map[string]any)
-			argumentStruct.Options = &option
+		if attributes["options"] != nil {
+			option := attributes["options"].(map[string]any)
+			argumentStruct.Attributes.Options = &option
 		}
 	case "TEXT":
-		argumentStruct.MinLength = argument["min_length"].(int)
-		argumentStruct.MaxLength = argument["max_length"].(int)
-		argumentStruct.Pattern = argument["pattern"].(string)
+		argumentStruct.Attributes.MinLength = attributes["min_length"].(int)
+		argumentStruct.Attributes.MaxLength = attributes["max_length"].(int)
+		argumentStruct.Attributes.Pattern = attributes["pattern"].(string)
 	case "TIMESTAMP", "DATE", "TIME":
-		argumentStruct.Before = argument["before"].(string)
-		argumentStruct.After = argument["after"].(string)
+		argumentStruct.Attributes.Before = attributes["before"].(string)
+		argumentStruct.Attributes.After = attributes["after"].(string)
 	case "BOOLEAN":
 		// no extra field
 	}
-	argumentStruct.DefaultValue = argument["default_value"]
 
 	return argumentStruct
 }

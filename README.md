@@ -151,54 +151,55 @@ One command_definition block containing:
     - id (filled by the API)
     - name
     - description: optional
-    - unit_id: optional
-    - value: optional
-    - type: `NUMERIC||TEXT||BOOLEAN||TIMESTAMP||DATE||TIME`
+    - attributes: one block
+        - unit_id: optional
+        - value: optional
+        - type: `NUMERIC||TEXT||BOOLEAN||TIMESTAMP||DATE||TIME`
 - arguments: one or multiple blocks
     - id (filled by the API)
     - name
     - identifier
     - description: optional
-    - value: optional
-    - required: optional
-    - type: `NUMERIC||TEXT||BOOLEAN||TIMESTAMP||DATE||TIME`
+    - attributes: one block
+        - required: optional
+        - type: `NUMERIC||TEXT||BOOLEAN||TIMESTAMP||DATE||TIME`
 
-    For Numeric:
-    - min: optional, floating value
-    - max: optional, floating value
-    - scale: optional, integer value
-    - precision: optional, integer value
-    - unit_id: optional, refers to the id of a unit
-    - default_value: floating or integer value
+        For Numeric:
+        - min: optional, floating value
+        - max: optional, floating value
+        - scale: optional, integer value
+        - precision: optional, integer value
+        - unit_id: optional, refers to the id of a unit
+        - default_value: floating or integer value
 
-    For Text:
-    - minLength: optional, integer value
-    - maxLength: optional, integer value
-    - pattern: optional, string
-    - precision: optional, integer value
-    - default_value: string
+        For Text:
+        - min_length: optional, integer value
+        - max_length: optional, integer value
+        - pattern: optional, string
+        - precision: optional, integer value
+        - default_value: string
 
-    For Boolean:
-    - default_value: boolean
+        For Boolean:
+        - default_value: boolean
 
-    For Enum:
-    - options: map of key/value pairs, the key is an integer, the value is a string
-    - default_value: integer, represents a key in the options
+        For Enum:
+        - options: map of key/value pairs, the key is an integer, the value is a string
+        - default_value: integer, represents a key in the options
 
-    For Timestamp:
-    - before: optional, string date time
-    - after:optional, string date time
-    - default_value: string date time
+        For Timestamp:
+        - before: optional, string date time
+        - after: optional, string date time
+        - default_value: string date time
 
-    For Date:
-    - before: optional, string date
-    - after:optional, string date
-    - default_value: string date
+        For Date:
+        - before: optional, string date
+        - after:optional, string date
+        - default_value: string date
 
-    For Time:
-    - before: optional, string time
-    - after:optional, string time
-    - default_value: string time
+        For Time:
+        - before: optional, string time
+        - after:optional, string time
+        - default_value: string time
 
 ## Datasource
 
