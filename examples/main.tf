@@ -15,7 +15,7 @@ provider "leanspace" {
 }
 
 module "assets_node" { 
-  source = "./nodes_neighbours" 
+  source = "./nodes" 
 }
 
 module "assets_property" { 

@@ -9,8 +9,8 @@ import (
 	"terraform-provider-asset/asset/general_objects"
 )
 
-var nodeSchema = makeNodeSchema(nil)            // not recursive
-var rootNodeSchema = makeNodeSchema(nodeSchema) // recursive!
+var nodeSchema = makeNodeSchema(nil)            // no sub nodes
+var rootNodeSchema = makeNodeSchema(nodeSchema) // max depth 1
 
 func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema.Schema {
 	baseSchema := map[string]*schema.Schema{
@@ -85,7 +85,6 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 	if recursiveNodes != nil {
 		baseSchema["nodes"] = &schema.Schema{
 			Type:     schema.TypeSet,
-			Optional: true,
 			Computed: true,
 			Elem: &schema.Resource{
 				Schema: recursiveNodes,

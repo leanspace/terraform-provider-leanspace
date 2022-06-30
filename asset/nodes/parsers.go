@@ -27,8 +27,6 @@ func nodeStructToInterface(node *Node, level int) map[string]any {
 	nodeMap["type"] = node.Type
 	nodeMap["kind"] = node.Kind
 	nodeMap["tags"] = general_objects.TagsStructToMap(node.Tags)
-	// Here we seemed to lock going to depth > 1?
-	// Any reason for this ? Would need to ask @Jerome
 	if node.Nodes != nil && level == 0 {
 		nodes := make([]any, len(node.Nodes))
 		for i, node := range node.Nodes {

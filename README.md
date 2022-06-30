@@ -59,14 +59,13 @@ One asset block containing:
 - type: `GROUP||ASSET||COMPONENT`
 - kind: optional if not an `ASSET`
 - tags: optional, zero to multiple blocks
-- nodes: optional, zero to multiple blocks
+- nodes: zero to multiple blocks (filled by the API)
 - norad_id: optional, only usefull for ASSET
 - international_designator: optional, only usefull for ASSET
 - tle: optional, only usefull for ASSET
     - list of exactly 2 strings
 
-It is possible to create nodes within nodes but it's also possible to create them separately and set the `parent_node_id` on the child node to the id of the parent node.
-The maximum depth allowed for nested nodes is 1. It is strongly recommended to create them separately (see `examples/nodes_neighbours`).
+Nesting of nodes is not possible. Instead, set the `parent_node_id` field for the child node (see `examples/nodes` for an example).
 
 ### leanspace_properties
 
@@ -255,7 +254,7 @@ You can find examples in the `/examples` folder
 There is the `main.tf` that defines which module it should other terraform file to call.
 
 There's 3 folders for each resource:
-- asset: it has 2 `leanspace_nodes` resources, the first one is a "normal" node and the second one has a node instead itself (thus creating 2 nodes)
+- asset: it has 2 `leanspace_nodes` resources, one inside the other.
 - property: it has as many `leanspace_properties` resources as available types (8)
 - command definition: it has as 1 `leanspace_command_definitions` resource which has all possible metadata types (6) and all possible argument types (7)
 
