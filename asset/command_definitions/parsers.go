@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func commandDefinitionStructToInterface(commandDefinition CommandDefinition) map[string]any {
+func (commandDefinition *CommandDefinition) ToMap() map[string]any {
 	commandDefinitionMap := make(map[string]any)
 	commandDefinitionMap["id"] = commandDefinition.ID
 	commandDefinitionMap["node_id"] = commandDefinition.NodeId
@@ -116,32 +116,30 @@ func argumentStructToInterface(argument Argument[any]) map[string]any {
 	return argumentMap
 }
 
-func getCommandDefinitionData(commandDefinition map[string]any) (CommandDefinition, error) {
-	commandDefinitionMap := CommandDefinition{}
-
-	commandDefinitionMap.ID = commandDefinition["id"].(string)
-	commandDefinitionMap.NodeId = commandDefinition["node_id"].(string)
-	commandDefinitionMap.Name = commandDefinition["name"].(string)
-	commandDefinitionMap.Description = commandDefinition["description"].(string)
-	commandDefinitionMap.Identifier = commandDefinition["identifier"].(string)
-	commandDefinitionMap.CreatedAt = commandDefinition["created_at"].(string)
-	commandDefinitionMap.CreatedBy = commandDefinition["created_by"].(string)
-	commandDefinitionMap.LastModifiedAt = commandDefinition["last_modified_at"].(string)
-	commandDefinitionMap.LastModifiedBy = commandDefinition["last_modified_by"].(string)
-	if commandDefinition["metadata"] != nil {
-		commandDefinitionMap.Metadata = asset.CastMap(
-			commandDefinition["metadata"].(*schema.Set).List(),
+func (commandDefinition *CommandDefinition) FromMap(cmdDefinitionMap map[string]any) error {
+	commandDefinition.ID = cmdDefinitionMap["id"].(string)
+	commandDefinition.NodeId = cmdDefinitionMap["node_id"].(string)
+	commandDefinition.Name = cmdDefinitionMap["name"].(string)
+	commandDefinition.Description = cmdDefinitionMap["description"].(string)
+	commandDefinition.Identifier = cmdDefinitionMap["identifier"].(string)
+	commandDefinition.CreatedAt = cmdDefinitionMap["created_at"].(string)
+	commandDefinition.CreatedBy = cmdDefinitionMap["created_by"].(string)
+	commandDefinition.LastModifiedAt = cmdDefinitionMap["last_modified_at"].(string)
+	commandDefinition.LastModifiedBy = cmdDefinitionMap["last_modified_by"].(string)
+	if cmdDefinitionMap["metadata"] != nil {
+		commandDefinition.Metadata = asset.CastMap(
+			cmdDefinitionMap["metadata"].(*schema.Set).List(),
 			metadataInterfaceToStruct,
 		)
 	}
-	if commandDefinition["arguments"] != nil {
-		commandDefinitionMap.Arguments = asset.CastMap(
-			commandDefinition["arguments"].(*schema.Set).List(),
+	if cmdDefinitionMap["arguments"] != nil {
+		commandDefinition.Arguments = asset.CastMap(
+			cmdDefinitionMap["arguments"].(*schema.Set).List(),
 			argumentInterfaceToStruct,
 		)
 	}
 
-	return commandDefinitionMap, nil
+	return nil
 }
 
 func metadataInterfaceToStruct(metadata map[string]any) Metadata[any] {

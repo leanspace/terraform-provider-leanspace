@@ -2,14 +2,9 @@ package nodes
 
 import "terraform-provider-asset/asset"
 
-var NodeDataType = asset.DataSourceType[Node]{
+var NodeDataType = asset.DataSourceType[Node, *Node]{
 	ResourceIdentifier: "leanspace_nodes",
 	Name:               "node",
 	Path:               "asset-repository/nodes",
-
-	Schema: rootNodeSchema,
-
-	GetID:       func(n *Node) string { return n.ID },
-	MapToStruct: nodeInterfaceToStruct,
-	StructToMap: nodeStructToInterfaceBase,
+	Schema:             rootNodeSchema,
 }

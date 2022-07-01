@@ -9,11 +9,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func nodeStructToInterfaceBase(node Node) map[string]any {
-	return nodeStructToInterface(&node, 0)
+func (node *Node) ToMap() map[string]any {
+	return node.toMapRecursive(0)
 }
 
-func nodeStructToInterface(node *Node, level int) map[string]any {
+func (node *Node) toMapRecursive(level int) map[string]any {
 	nodeMap := make(map[string]any)
 
 	nodeMap["id"] = node.ID
@@ -29,8 +29,8 @@ func nodeStructToInterface(node *Node, level int) map[string]any {
 	nodeMap["tags"] = general_objects.TagsStructToMap(node.Tags)
 	if node.Nodes != nil && level == 0 {
 		nodes := make([]any, len(node.Nodes))
-		for i, node := range node.Nodes {
-			nodes[i] = nodeStructToInterface(&node, level+1)
+		for i, subNode := range node.Nodes {
+			nodes[i] = (&subNode).toMapRecursive(level + 1)
 		}
 		nodeMap["nodes"] = nodes
 	}
@@ -50,49 +50,46 @@ func nodeStructToInterface(node *Node, level int) map[string]any {
 var tle1stLine = `^1 (?P<noradId>[ 0-9]{5})[A-Z] [ 0-9]{5}[ A-Z]{3} [ 0-9]{5}[.][ 0-9]{8} (?:(?:[ 0+-][.][ 0-9]{8})|(?: [ +-][.][ 0-9]{7})) [ +-][ 0-9]{5}[+-][ 0-9] [ +-][ 0-9]{5}[+-][ 0-9] [ 0-9] [ 0-9]{4}[ 0-9]$`
 var tle2ndLine = `^2 (?P<noradId>[ 0-9]{5}) [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{7} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{2}[.][ 0-9]{13}[ 0-9]$`
 
-func nodeInterfaceToStruct(node map[string]any) (Node, error) {
-	nodeStruct := Node{}
-
-	nodeStruct.Name = node["name"].(string)
-	nodeStruct.Description = node["description"].(string)
-	nodeStruct.CreatedAt = node["created_at"].(string)
-	nodeStruct.CreatedBy = node["created_by"].(string)
-	nodeStruct.ParentNodeId = node["parent_node_id"].(string)
-	nodeStruct.LastModifiedAt = node["last_modified_at"].(string)
-	nodeStruct.LastModifiedBy = node["last_modified_by"].(string)
-	nodeStruct.Type = node["type"].(string)
-	if nodeStruct.Type == "ASSET" && !(node["kind"] == "GENERIC" || node["kind"] == "SATELLITE" || node["kind"] == "GROUND_STATION") {
-		return nodeStruct, fmt.Errorf("kind must be either GENERIC, SATELLITE ou GROUND_STATION, got: %q", node["kind"])
+func (node *Node) FromMap(nodeMap map[string]any) error {
+	node.Name = nodeMap["name"].(string)
+	node.Description = nodeMap["description"].(string)
+	node.CreatedAt = nodeMap["created_at"].(string)
+	node.CreatedBy = nodeMap["created_by"].(string)
+	node.ParentNodeId = nodeMap["parent_node_id"].(string)
+	node.LastModifiedAt = nodeMap["last_modified_at"].(string)
+	node.LastModifiedBy = nodeMap["last_modified_by"].(string)
+	node.Type = nodeMap["type"].(string)
+	if node.Type == "ASSET" && !(nodeMap["kind"] == "GENERIC" || nodeMap["kind"] == "SATELLITE" || nodeMap["kind"] == "GROUND_STATION") {
+		return fmt.Errorf("kind must be either GENERIC, SATELLITE ou GROUND_STATION, got: %q", nodeMap["kind"])
 	}
-	nodeStruct.Kind = node["kind"].(string)
-	nodeStruct.Tags = general_objects.TagsInterfaceToStruct(node["tags"])
-	if node["nodes"] != nil {
-		nodeStruct.Nodes = make([]Node, node["nodes"].(*schema.Set).Len())
-		for i, node := range node["nodes"].(*schema.Set).List() {
-			childNodeStruct, err := nodeInterfaceToStruct(node.(map[string]any))
+	node.Kind = nodeMap["kind"].(string)
+	node.Tags = general_objects.TagsInterfaceToStruct(nodeMap["tags"])
+	if nodeMap["nodes"] != nil {
+		node.Nodes = make([]Node, nodeMap["nodes"].(*schema.Set).Len())
+		for i, subNode := range nodeMap["nodes"].(*schema.Set).List() {
+			err := node.Nodes[i].FromMap(subNode.(map[string]any))
 			if err != nil {
-				return nodeStruct, err
+				return err
 			}
-			nodeStruct.Nodes[i] = childNodeStruct
 		}
 	}
-	nodeStruct.NoradId = node["norad_id"].(string)
-	nodeStruct.InternationalDesignator = node["international_designator"].(string)
-	if node["tle"] != nil && len(node["tle"].([]any)) == 2 {
-		nodeStruct.Tle = make([]string, 2)
-		matched, _ := regexp.MatchString(tle1stLine, node["tle"].([]any)[0].(string))
+	node.NoradId = nodeMap["norad_id"].(string)
+	node.InternationalDesignator = nodeMap["international_designator"].(string)
+	if nodeMap["tle"] != nil && len(nodeMap["tle"].([]any)) == 2 {
+		node.Tle = make([]string, 2)
+		matched, _ := regexp.MatchString(tle1stLine, nodeMap["tle"].([]any)[0].(string))
 		if !matched {
-			return nodeStruct, fmt.Errorf("TLE first line mutch match %q, got: %q", tle1stLine, node["tle"].([]any)[0].(string))
+			return fmt.Errorf("TLE first line mutch match %q, got: %q", tle1stLine, nodeMap["tle"].([]any)[0].(string))
 		}
-		matched, _ = regexp.MatchString(tle2ndLine, node["tle"].([]any)[1].(string))
+		matched, _ = regexp.MatchString(tle2ndLine, nodeMap["tle"].([]any)[1].(string))
 		if !matched {
-			return nodeStruct, fmt.Errorf("TLE second line mutch match %q, got: %q", tle2ndLine, node["tle"].([]any)[1].(string))
+			return fmt.Errorf("TLE second line mutch match %q, got: %q", tle2ndLine, nodeMap["tle"].([]any)[1].(string))
 		}
-		for i, tle := range node["tle"].([]any) {
-			nodeStruct.Tle[i] = tle.(string)
+		for i, tle := range nodeMap["tle"].([]any) {
+			node.Tle[i] = tle.(string)
 		}
 
 	}
 
-	return nodeStruct, nil
+	return nil
 }

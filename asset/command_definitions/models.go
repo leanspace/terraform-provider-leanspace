@@ -14,6 +14,8 @@ type CommandDefinition struct {
 	LastModifiedBy string          `json:"lastModifiedBy" terra:"last_modified_by"`
 }
 
+func (cmdDefinition *CommandDefinition) GetID() string { return cmdDefinition.ID }
+
 type Metadata[T any] struct {
 	ID          string            `json:"id" terra:"id"`
 	Name        string            `json:"name" terra:"name"`

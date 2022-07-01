@@ -19,3 +19,5 @@ type Node struct {
 	InternationalDesignator string                `json:"internationalDesignator,omitempty" terra:"international_designator"`
 	Tle                     []string              `json:"tle,omitempty" terra:"tle"`
 }
+
+func (node *Node) GetID() string { return node.ID }

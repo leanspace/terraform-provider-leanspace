@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func (dataSource DataSourceType[T]) resourceGenericDefinition() *schema.Resource {
+func (dataSource DataSourceType[T, PT]) resourceGenericDefinition() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: dataSource.create,
 		ReadContext:   dataSource.get,
@@ -29,7 +29,7 @@ func (dataSource DataSourceType[T]) resourceGenericDefinition() *schema.Resource
 	}
 }
 
-func (dataSource DataSourceType[T]) create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+func (dataSource DataSourceType[T, PT]) create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
@@ -40,13 +40,13 @@ func (dataSource DataSourceType[T]) create(ctx context.Context, d *schema.Resour
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	d.SetId(dataSource.GetID(createdValue))
+	d.SetId(createdValue.GetID())
 	diags = append(diags, dataSource.get(ctx, d, m)...)
 
 	return diags
 }
 
-func (dataSource DataSourceType[T]) get(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+func (dataSource DataSourceType[T, PT]) get(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
@@ -61,19 +61,20 @@ func (dataSource DataSourceType[T]) get(ctx context.Context, d *schema.ResourceD
 	return diags
 }
 
-func (dataSource DataSourceType[T]) setValueData(value *T, d *schema.ResourceData) {
+func (dataSource DataSourceType[T, PT]) setValueData(value PT, d *schema.ResourceData) {
 	valueList := make([]map[string]any, 1)
 
-	valueList[0] = dataSource.StructToMap(*value)
+	valueList[0] = value.ToMap()
 	d.Set(dataSource.Name, valueList)
 }
 
-func (dataSource DataSourceType[T]) getValueData(valueList []any) T {
-	value, _ := dataSource.MapToStruct(valueList[0].(map[string]any))
+func (dataSource DataSourceType[T, PT]) getValueData(valueList []any) PT {
+	value := any(new(T)).(PT)
+	value.FromMap(valueList[0].(map[string]any))
 	return value
 }
 
-func (dataSource DataSourceType[T]) update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+func (dataSource DataSourceType[T, PT]) update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
@@ -94,7 +95,7 @@ func (dataSource DataSourceType[T]) update(ctx context.Context, d *schema.Resour
 
 }
 
-func (dataSource DataSourceType[T]) delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+func (dataSource DataSourceType[T, PT]) delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics

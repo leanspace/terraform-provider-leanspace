@@ -9,33 +9,33 @@ import (
 	"terraform-provider-asset/asset/general_objects"
 )
 
-func (resource GenericResourceType[T]) GetAll() (*general_objects.PaginatedList[T], error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s", resource.Client.HostURL, resource.Path), nil)
+func (client GenericClient[T, PT]) GetAll() (*general_objects.PaginatedList[T], error) {
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s", client.Client.HostURL, client.Path), nil)
 	if err != nil {
 		return nil, err
 	}
 
-	body, err, _ := resource.Client.doRequest(req, &(resource.Client).Token)
+	body, err, _ := client.Client.doRequest(req, &(client.Client).Token)
 	if err != nil {
 		return nil, err
 	}
 
-	elements := general_objects.PaginatedList[T]{}
-	err = json.Unmarshal(body, &elements)
+	values := general_objects.PaginatedList[T]{}
+	err = json.Unmarshal(body, &values)
 	if err != nil {
 		return nil, err
 	}
 
-	return &elements, nil
+	return &values, nil
 }
 
-func (resource GenericResourceType[T]) Get(id string) (*T, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s/%s", resource.Client.HostURL, resource.Path, id), nil)
+func (client GenericClient[T, PT]) Get(id string) (PT, error) {
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s/%s", client.Client.HostURL, client.Path, id), nil)
 	if err != nil {
 		return nil, err
 	}
 
-	body, err, _ := resource.Client.doRequest(req, &(resource.Client).Token)
+	body, err, _ := client.Client.doRequest(req, &(client.Client).Token)
 	if err != nil {
 		return nil, err
 	}
@@ -49,70 +49,70 @@ func (resource GenericResourceType[T]) Get(id string) (*T, error) {
 	return &value, nil
 }
 
-func (resource GenericResourceType[T]) Create(createElement T) (*T, error) {
+func (client GenericClient[T, PT]) Create(createElement PT) (PT, error) {
 	rb, err := json.Marshal(createElement)
 	if err != nil {
 		return nil, err
 	}
 
-	path := resource.Path
-	if resource.CreatePath != nil {
-		path = resource.CreatePath(createElement)
+	path := client.Path
+	if client.CreatePath != nil {
+		path = client.CreatePath(createElement)
 	}
 
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/%s", resource.Client.HostURL, path), strings.NewReader(string(rb)))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/%s", client.Client.HostURL, path), strings.NewReader(string(rb)))
 	req.Header.Set("Content-Type", "application/json")
 	if err != nil {
 		return nil, err
 	}
 
-	body, err, _ := resource.Client.doRequest(req, &(resource.Client).Token)
+	body, err, _ := client.Client.doRequest(req, &(client.Client).Token)
 	if err != nil {
 		return nil, err
 	}
 
-	var element T
-	err = json.Unmarshal(body, &element)
+	var value T
+	err = json.Unmarshal(body, &value)
 	if err != nil {
 		return nil, err
 	}
 
-	return &element, nil
+	return &value, nil
 }
 
-func (resource GenericResourceType[T]) Update(nodeId string, createElement T) (*T, error) {
+func (client GenericClient[T, PT]) Update(nodeId string, createElement PT) (*T, error) {
 	rb, err := json.Marshal(createElement)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PUT", fmt.Sprintf("%s/%s/%s", resource.Client.HostURL, resource.Path, nodeId), strings.NewReader(string(rb)))
+	req, err := http.NewRequest("PUT", fmt.Sprintf("%s/%s/%s", client.Client.HostURL, client.Path, nodeId), strings.NewReader(string(rb)))
 	req.Header.Set("Content-Type", "application/json")
 	if err != nil {
 		return nil, err
 	}
 
-	body, err, _ := resource.Client.doRequest(req, &(resource.Client).Token)
+	body, err, _ := client.Client.doRequest(req, &(client.Client).Token)
 	if err != nil {
 		return nil, err
 	}
 
-	var element T
-	err = json.Unmarshal(body, &element)
+	var value T
+	err = json.Unmarshal(body, &value)
 	if err != nil {
 		return nil, err
 	}
 
-	return &element, nil
+	return &value, nil
 }
 
-func (resource GenericResourceType[T]) Delete(nodeId string) error {
-	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/%s/%s", resource.Client.HostURL, resource.Path, nodeId), nil)
+func (client GenericClient[T, PT]) Delete(nodeId string) error {
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/%s/%s", client.Client.HostURL, client.Path, nodeId), nil)
 	if err != nil {
 		return err
 	}
 
-	_, err, statusCode := resource.Client.doRequest(req, &(resource.Client).Token)
+	_, err, statusCode := client.Client.doRequest(req, &(client.Client).Token)
 	// If it has been deleted outside terraform, it should not fail here
 	if statusCode != http.StatusNotFound && err != nil {
 		return err

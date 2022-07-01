@@ -11,7 +11,7 @@ var resourceMap = make(map[string]*schema.Resource)
 var dataSourceMap = make(map[string]*schema.Resource)
 
 // Subscribes this data type, adding it to the valid terraform resources and data types.
-func (dataType DataSourceType[T]) Subscribe() {
+func (dataType DataSourceType[T, PT]) Subscribe() {
 	resourceMap[dataType.ResourceIdentifier] = dataType.resourceGenericDefinition()
 	dataSourceMap[dataType.ResourceIdentifier] = dataType.toDataSource()
 }

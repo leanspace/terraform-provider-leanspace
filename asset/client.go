@@ -112,7 +112,11 @@ func (c *Client) doRequest(req *http.Request, authToken *string) ([]byte, error,
 
 	res, err := c.HTTPClient.Do(req)
 	if err != nil {
-		return nil, err, res.StatusCode
+		status := 0
+		if res != nil {
+			status = res.StatusCode
+		}
+		return nil, err, status
 	}
 	defer res.Body.Close()
 

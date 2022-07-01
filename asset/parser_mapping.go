@@ -4,13 +4,23 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type GenericResourceType[T any] struct {
-	Client     *Client
-	Path       string
-	CreatePath func(T) string
+type ParseableModel[T any] interface {
+	*T
+	// A function that returns the ID of a model instance instance.
+	GetID() string
+	// A function that converts the given map into a struct of this data type.
+	FromMap(map[string]any) error
+	// A function that converts the given struct of this data type into a map.
+	ToMap() map[string]any
 }
 
-type DataSourceType[T any] struct {
+type GenericClient[T any, PT ParseableModel[T]] struct {
+	Client     *Client
+	Path       string
+	CreatePath func(PT) string
+}
+
+type DataSourceType[T any, PT ParseableModel[T]] struct {
 	// Will be used in the terraform file!
 	ResourceIdentifier string
 	// Will be used in the terraform file!
@@ -20,21 +30,13 @@ type DataSourceType[T any] struct {
 	Path string
 	// Optional. A function that returns the path to which API *creation* requests are sent.
 	// This can be useful when the path to create a resource depends on the resource's owner (e.g. "nodes/NODE_ID/properties")
-	CreatePath func(T) string
-
+	CreatePath func(PT) string
 	// The schema to represent the data
 	Schema map[string]*schema.Schema
-
-	// A function that returns the ID of a data type instance.
-	GetID func(*T) string
-	// A function that converts the given map into a struct of this data type.
-	MapToStruct func(map[string]any) (T, error)
-	// A function that converts the given struct of this data type into a map.
-	StructToMap func(T) map[string]any
 }
 
-func (dataSource DataSourceType[T]) convert(client *Client) GenericResourceType[T] {
-	return GenericResourceType[T]{
+func (dataSource DataSourceType[T, PT]) convert(client *Client) GenericClient[T, PT] {
+	return GenericClient[T, PT]{
 		Client:     client,
 		Path:       dataSource.Path,
 		CreatePath: dataSource.CreatePath,

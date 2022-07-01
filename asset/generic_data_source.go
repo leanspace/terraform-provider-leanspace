@@ -12,14 +12,14 @@ import (
 	"terraform-provider-asset/asset/general_objects"
 )
 
-func (dataSourceType DataSourceType[T]) toDataSource() *schema.Resource {
+func (dataSourceType DataSourceType[T, PT]) toDataSource() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceType.read,
 		Schema:      general_objects.PaginatedListSchema(dataSourceType.Schema),
 	}
 }
 
-func (dataSourceType DataSourceType[T]) read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+func (dataSourceType DataSourceType[T, PT]) read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
@@ -34,7 +34,7 @@ func (dataSourceType DataSourceType[T]) read(ctx context.Context, d *schema.Reso
 	return diags
 }
 
-func (dataSourceType DataSourceType[T]) setData(paginatedList *general_objects.PaginatedList[T], d *schema.ResourceData) {
+func (dataSourceType DataSourceType[T, PT]) setData(paginatedList *general_objects.PaginatedList[T], d *schema.ResourceData) {
 	data_as_map := make(map[string]any)
 	decoder, _ := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
 		TagName: "terra",
