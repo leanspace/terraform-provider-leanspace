@@ -5,7 +5,7 @@ import (
 	"terraform-provider-asset/asset/general_objects"
 )
 
-func fieldStructToInterface(field *Field[any]) map[string]any {
+func (field *Field[T]) ToMap() map[string]any {
 	fieldMap := make(map[string]any)
 	fieldMap["id"] = field.ID
 	fieldMap["name"] = field.Name
@@ -15,7 +15,9 @@ func fieldStructToInterface(field *Field[any]) map[string]any {
 	fieldMap["last_modified_at"] = field.LastModifiedAt
 	fieldMap["last_modified_by"] = field.LastModifiedBy
 	fieldMap["type"] = field.Type
-	fieldMap["value"] = strconv.FormatFloat(field.Value.(float64), 'g', -1, 64)
+	// This might be unsafe in the future - for now fields are only used for numbers
+	// in the geopoint type so it's alright.
+	fieldMap["value"] = strconv.FormatFloat(any(field.Value).(float64), 'g', -1, 64)
 
 	return fieldMap
 }
@@ -61,13 +63,13 @@ func (property *Property[T]) ToMap() map[string]any {
 			fieldList := make([]map[string]any, 1)
 			fieldMap := make(map[string]any)
 			elevationList := make([]map[string]any, 1)
-			elevationList[0] = fieldStructToInterface(&property.Fields.Elevation)
+			elevationList[0] = (&property.Fields.Elevation).ToMap()
 			fieldMap["elevation"] = elevationList
 			latitudeList := make([]map[string]any, 1)
-			latitudeList[0] = fieldStructToInterface(&property.Fields.Latitude)
+			latitudeList[0] = (&property.Fields.Latitude).ToMap()
 			fieldMap["latitude"] = latitudeList
 			longitudeList := make([]map[string]any, 1)
-			longitudeList[0] = fieldStructToInterface(&property.Fields.Longitude)
+			longitudeList[0] = (&property.Fields.Longitude).ToMap()
 			fieldMap["longitude"] = longitudeList
 			fieldList[0] = fieldMap
 			propertyMap["fields"] = fieldList
@@ -76,20 +78,17 @@ func (property *Property[T]) ToMap() map[string]any {
 	return propertyMap
 }
 
-func fieldInterfaceToStruct(fieldList []any) Field[any] {
-	field := fieldList[0].(map[string]any)
-	fieldStruct := Field[any]{}
-	fieldStruct.ID = field["id"].(string)
-	fieldStruct.Name = field["name"].(string)
-	fieldStruct.Description = field["description"].(string)
-	fieldStruct.CreatedAt = field["created_at"].(string)
-	fieldStruct.CreatedBy = field["created_by"].(string)
-	fieldStruct.LastModifiedAt = field["last_modified_at"].(string)
-	fieldStruct.LastModifiedBy = field["last_modified_by"].(string)
-	fieldStruct.Type = field["type"].(string)
-	fieldStruct.Value = field["value"]
-
-	return fieldStruct
+func (field *Field[T]) FromMap(fieldMap map[string]any) error {
+	field.ID = fieldMap["id"].(string)
+	field.Name = fieldMap["name"].(string)
+	field.Description = fieldMap["description"].(string)
+	field.CreatedAt = fieldMap["created_at"].(string)
+	field.CreatedBy = fieldMap["created_by"].(string)
+	field.LastModifiedAt = fieldMap["last_modified_at"].(string)
+	field.LastModifiedBy = fieldMap["last_modified_by"].(string)
+	field.Type = fieldMap["type"].(string)
+	field.Value = fieldMap["value"].(T)
+	return nil
 }
 
 func (property *Property[T]) FromMap(propertyMap map[string]any) error {
@@ -126,10 +125,11 @@ func (property *Property[T]) FromMap(propertyMap map[string]any) error {
 		// no extra property for booleans
 	case "GEOPOINT":
 		if propertyMap["fields"] != nil {
+			fields := propertyMap["fields"].([]any)[0].(map[string]any)
 			property.Fields = &Fields{}
-			property.Fields.Elevation = fieldInterfaceToStruct(propertyMap["fields"].([]any)[0].(map[string]any)["elevation"].([]any))
-			property.Fields.Latitude = fieldInterfaceToStruct(propertyMap["fields"].([]any)[0].(map[string]any)["latitude"].([]any))
-			property.Fields.Longitude = fieldInterfaceToStruct(propertyMap["fields"].([]any)[0].(map[string]any)["longitude"].([]any))
+			property.Fields.Elevation.FromMap(fields["elevation"].([]any)[0].(map[string]any))
+			property.Fields.Latitude.FromMap(fields["latitude"].([]any)[0].(map[string]any))
+			property.Fields.Longitude.FromMap(fields["longitude"].([]any)[0].(map[string]any))
 		}
 	}
 

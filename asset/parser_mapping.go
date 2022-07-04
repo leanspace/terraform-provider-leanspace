@@ -4,14 +4,18 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type ParseableModel[T any] interface {
-	*T
-	// A function that returns the ID of a model instance instance.
-	GetID() string
+type Parseable interface {
 	// A function that converts the given map into a struct of this data type.
 	FromMap(map[string]any) error
 	// A function that converts the given struct of this data type into a map.
 	ToMap() map[string]any
+}
+
+type ParseableModel[T any] interface {
+	*T
+	Parseable
+	// A function that returns the ID of a model instance instance.
+	GetID() string
 }
 
 type GenericClient[T any, PT ParseableModel[T]] struct {

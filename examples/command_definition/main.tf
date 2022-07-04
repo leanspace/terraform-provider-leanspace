@@ -11,7 +11,7 @@ data "leanspace_command_definitions" "all" {}
 
 variable "node_id" {
   type        = string
-  description = "The ID of the node to which the properties will be added."
+  description = "The ID of the node to which the command definitions will be added."
 }
 
 resource "leanspace_command_definitions" "test" {

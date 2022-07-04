@@ -36,3 +36,25 @@ type PaginatedList[T any] struct {
 	Empty            bool     `json:"empty" terra:"empty"`
 	Pageable         Pageable `json:"pageable" terra:"pageable"`
 }
+
+type DefinitionAttribute[T any] struct {
+	// Common
+	Type         string `json:"type" terra:"type"`
+	Required     bool   `json:"required,omitempty" terra:"required"`
+	DefaultValue T      `json:"defaultValue,omitempty" terra:"default_value"`
+	// Text
+	MinLength int    `json:"minLength,omitempty" terra:"min_length"`
+	MaxLength int    `json:"maxLength,omitempty" terra:"max_length"`
+	Pattern   string `json:"pattern,omitempty" terra:"pattern"`
+	// Numeric
+	Min       float64 `json:"min,omitempty" terra:"min"`
+	Max       float64 `json:"max,omitempty" terra:"max"`
+	Scale     int     `json:"scale,omitempty" terra:"scale"`
+	Precision int     `json:"precision,omitempty" terra:"precision"`
+	UnitId    string  `json:"unit_id,omitempty" terra:"unit_id"`
+	// Date, time, timestamp
+	Before string `json:"before,omitempty" terra:"before"`
+	After  string `json:"after,omitempty" terra:"after"`
+	// Enum
+	Options *map[string]any `json:"options,omitempty" terra:"options"`
+}

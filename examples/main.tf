@@ -33,3 +33,11 @@ module "assets_commands" {
     module.assets_node
   ]
 }
+
+module "assets_metrics" {
+  source = "./metrics"
+  node_id = module.assets_node.satellite_node.id
+  depends_on = [
+    module.assets_node
+  ]
+}

@@ -54,7 +54,6 @@ One asset block containing:
 - created_by (filled by the API)
 - last_modified_at (filled by the API)
 - last_modified_by (filled by the API)
-- last_modified_by (filled by the API)
 - parent_node_id: optional, id of the parent node
 - type: `GROUP||ASSET||COMPONENT`
 - kind: optional if not an `ASSET`
@@ -77,7 +76,6 @@ One property block containing:
 - created_at (filled by the API)
 - created_by (filled by the API)
 - last_modified_at (filled by the API)
-- last_modified_by (filled by the API)
 - last_modified_by (filled by the API)
 - type: `NUMERIC||TEXT||BOOLEAN||ENUM||TIMESTAMP||DATE||TIME||GEOPOINT`
 
@@ -146,7 +144,6 @@ One command_definition block containing:
 - created_by (filled by the API)
 - last_modified_at (filled by the API)
 - last_modified_by (filled by the API)
-- last_modified_by (filled by the API)
 - metadata: one or multiple blocks
     - id (filled by the API)
     - name
@@ -201,6 +198,47 @@ One command_definition block containing:
         - after:optional, string time
         - default_value: string time
 
+### leanspace_metrics
+
+One command_definition block containing:
+- id (filled by the API)
+- node_id: id of the node to attach to
+- name
+- description: optional
+- created_at (filled by the API)
+- created_by (filled by the API)
+- last_modified_at (filled by the API)
+- last_modified_by (filled by the API)
+- attributes: one block
+    - type: `NUMERIC||TEXT||BOOLEAN||TIMESTAMP||DATE||ENUM`
+
+    For Numeric:
+    - min: optional, floating value
+    - max: optional, floating value
+    - scale: optional, integer value
+    - precision: optional, integer value
+    - unit_id: optional, refers to the id of a unit
+
+    For Text:
+    - min_length: optional, integer value
+    - max_length: optional, integer value
+    - pattern: optional, string
+    - precision: optional, integer value
+
+    For Boolean:
+    - No extra field
+
+    For Enum:
+    - options: map of key/value pairs, the key is an integer, the value is a string
+
+    For Timestamp:
+    - before: optional, string date time
+    - after: optional, string date time
+
+    For Date:
+    - before: optional, string date
+    - after:optional, string date
+
 ## Datasource
 
 ### Common pattern
@@ -246,6 +284,10 @@ One command_definition block containing:
 
 - content: list of one or multiple blocks of command_definition
 
+### leanspace_metrics
+
+- content: list of one or multiple blocks of metric
+
 ## Examples
 
 You can find examples in the `/examples` folder
@@ -254,9 +296,10 @@ You can find examples in the `/examples` folder
 
 There is the `main.tf` that defines which module it should other terraform file to call.
 
-There's 3 folders for each resource:
+There's one folder for each resource type:
 - asset: it has 2 `leanspace_nodes` resources, one inside the other.
 - property: it has as many `leanspace_properties` resources as available types (8)
 - command definition: it has as 1 `leanspace_command_definitions` resource which has all possible metadata types (6) and all possible argument types (7)
+- metrics: it has as many `leanspace_metrics` resources as available types (6)
 
 Finally there is the `imports` folder containing sample resources for each resource to test the import.

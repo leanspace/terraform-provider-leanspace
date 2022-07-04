@@ -1,5 +1,7 @@
 package command_definitions
 
+import "terraform-provider-asset/asset/general_objects"
+
 type CommandDefinition struct {
 	ID             string          `json:"id" terra:"id"`
 	NodeId         string          `json:"nodeId" terra:"node_id"`
@@ -30,31 +32,9 @@ type ValueAttribute[T any] struct {
 }
 
 type Argument[T any] struct {
-	ID          string                 `json:"id" terra:"id"`
-	Name        string                 `json:"name" terra:"name"`
-	Identifier  string                 `json:"identifier" terra:"identifier"`
-	Description string                 `json:"description,omitempty" terra:"description"`
-	Attributes  DefinitionAttribute[T] `json:"attributes" terra:"attributes"`
-}
-
-type DefinitionAttribute[T any] struct {
-	// Common
-	Type         string `json:"type" terra:"type"`
-	Required     bool   `json:"required,omitempty" terra:"required"`
-	DefaultValue T      `json:"defaultValue,omitempty" terra:"default_value"`
-	// Text
-	MinLength int    `json:"minLength,omitempty" terra:"min_length"`
-	MaxLength int    `json:"maxLength,omitempty" terra:"max_length"`
-	Pattern   string `json:"pattern,omitempty" terra:"pattern"`
-	// Numeric
-	Min       float64 `json:"min,omitempty" terra:"min"`
-	Max       float64 `json:"max,omitempty" terra:"max"`
-	Scale     int     `json:"scale,omitempty" terra:"scale"`
-	Precision int     `json:"precision,omitempty" terra:"precision"`
-	UnitId    string  `json:"unit_id,omitempty" terra:"unit_id"`
-	// Date, time, timestamp
-	Before string `json:"before,omitempty" terra:"before"`
-	After  string `json:"after,omitempty" terra:"after"`
-	// Enum
-	Options *map[string]any `json:"options,omitempty" terra:"options"`
+	ID          string                                 `json:"id" terra:"id"`
+	Name        string                                 `json:"name" terra:"name"`
+	Identifier  string                                 `json:"identifier" terra:"identifier"`
+	Description string                                 `json:"description,omitempty" terra:"description"`
+	Attributes  general_objects.DefinitionAttribute[T] `json:"attributes" terra:"attributes"`
 }

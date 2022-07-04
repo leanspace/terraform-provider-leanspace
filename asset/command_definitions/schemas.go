@@ -1,6 +1,8 @@
 package command_definitions
 
 import (
+	"terraform-provider-asset/asset/general_objects"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
@@ -129,85 +131,7 @@ var argumentSchema = map[string]*schema.Schema{
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: definitionAttributeSchema,
+			Schema: general_objects.DefinitionAttributeSchema(nil, nil),
 		},
-	},
-}
-
-var validArgumentTypes = []string{
-	"NUMERIC", "BOOLEAN", "TEXT", "DATE", "TIME", "TIMESTAMP", "ENUM",
-}
-
-var definitionAttributeSchema = map[string]*schema.Schema{
-	// Common fields
-	"type": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validArgumentTypes, false),
-	},
-	"required": {
-		Type:     schema.TypeBool,
-		Optional: true,
-	},
-	"default_value": {
-		Type:     schema.TypeString,
-		Optional: true,
-	},
-
-	// Text only
-	"min_length": {
-		Type:         schema.TypeInt,
-		Optional:     true,
-		ValidateFunc: validation.IntAtLeast(1),
-	},
-	"max_length": {
-		Type:         schema.TypeInt,
-		Optional:     true,
-		ValidateFunc: validation.IntAtLeast(1),
-	},
-	"pattern": {
-		Type:     schema.TypeString,
-		Optional: true,
-	},
-
-	// Numeric only
-	"min": {
-		Type:     schema.TypeFloat,
-		Optional: true,
-	},
-	"max": {
-		Type:     schema.TypeFloat,
-		Optional: true,
-	},
-	"scale": {
-		Type:     schema.TypeInt,
-		Optional: true,
-	},
-	"precision": {
-		Type:     schema.TypeInt,
-		Optional: true,
-	},
-	"unit_id": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.IsUUID,
-	},
-
-	// Time, date, timestamp only
-	"before": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.IsRFC3339Time,
-	},
-	"after": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.IsRFC3339Time,
-	},
-
-	// Enum only
-	"options": {
-		Type:     schema.TypeMap,
-		Optional: true,
 	},
 }

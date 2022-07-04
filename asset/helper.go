@@ -50,6 +50,27 @@ func CastMap[S any, I any, T any](source []S, converter func(I) T) []T {
 	return target
 }
 
+type ParseablePointer[T any] interface {
+	*T
+	Parseable
+}
+
+func ParseToMaps[T any, PT ParseablePointer[T]](parseables []T) []map[string]any {
+	maps := make([]map[string]any, len(parseables))
+	for index, value := range parseables {
+		maps[index] = any(&value).(PT).ToMap()
+	}
+	return maps
+}
+
+func ParseFromMaps[T any, PT ParseablePointer[T]](maps []any) []T {
+	parseables := make([]T, len(maps))
+	for index, m := range maps {
+		any(&parseables[index]).(PT).FromMap(m.(map[string]any))
+	}
+	return parseables
+}
+
 // Parses a float to a string. Use this method to ensure consistency.
 func ParseFloat(num float64) string {
 	return strconv.FormatFloat(num, 'g', -1, 64)
