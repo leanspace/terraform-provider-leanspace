@@ -15,4 +15,4 @@ type Metric[T any] struct {
 	Attributes     general_objects.DefinitionAttribute[T] `json:"attributes" terra:"attributes"`
 }
 
-func (prop *Metric[T]) GetID() string { return prop.ID }
+func (metric *Metric[T]) GetID() string { return metric.ID }

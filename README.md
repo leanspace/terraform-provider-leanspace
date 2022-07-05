@@ -59,10 +59,13 @@ One asset block containing:
 - kind: optional if not an `ASSET`
 - tags: optional, zero to multiple blocks
 - nodes: zero to multiple blocks (filled by the API)
-- norad_id: optional, only usefull for ASSET
-- international_designator: optional, only usefull for ASSET
-- tle: optional, only usefull for ASSET
+- norad_id: optional, only useful for ASSET
+- international_designator: optional, only useful for ASSET
+- tle: optional, only useful for ASSET
     - list of exactly 2 strings
+- latitude: required if kind = GROUND_STATION
+- longitude: required if kind = GROUND_STATION
+- elevation: required if kind = GROUND_STATION
 
 Nesting of nodes is not possible. Instead, set the `parent_node_id` field for the child node (see `examples/nodes` for an example).
 
@@ -198,6 +201,21 @@ One command_definition block containing:
         - after:optional, string time
         - default_value: string time
 
+### leanspace_command_queues
+
+One command_queue block containing:
+- id (filled by the API)
+- asset_id: id of the node to attach to
+- name
+- ground_station_ids: optional, a list of strings containing the IDs of ground stations
+- command_transformer_plugin_id: optional, UUID
+- protocol_transformer_plugin_id: optional, UUID
+- protocol_transformer_init_data: optional, string
+- created_at (filled by the API)
+- created_by (filled by the API)
+- last_modified_at (filled by the API)
+- last_modified_by (filled by the API)
+
 ### leanspace_metrics
 
 One command_definition block containing:
@@ -288,6 +306,10 @@ One command_definition block containing:
 
 - content: list of one or multiple blocks of metric
 
+### leanspace_queues
+
+- content: list of one or multiple blocs of command_queues
+
 ## Examples
 
 You can find examples in the `/examples` folder
@@ -299,7 +321,8 @@ There is the `main.tf` that defines which module it should other terraform file 
 There's one folder for each resource type:
 - asset: it has 2 `leanspace_nodes` resources, one inside the other.
 - property: it has as many `leanspace_properties` resources as available types (8)
-- command definition: it has as 1 `leanspace_command_definitions` resource which has all possible metadata types (6) and all possible argument types (7)
+- command definition: it has one `leanspace_command_definitions` resource which has all possible metadata types (6) and all possible argument types (7)
+- command queue: it has one `leanspace_command_queues` resource which links the satellite and ground station nodes.
 - metrics: it has as many `leanspace_metrics` resources as available types (6)
 
 Finally there is the `imports` folder containing sample resources for each resource to test the import.
