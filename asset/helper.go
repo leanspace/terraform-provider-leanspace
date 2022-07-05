@@ -32,6 +32,14 @@ func GenericSliceToAny[T any](slice []T) []any {
 	return anySlice
 }
 
+func SetToList[T any](set *schema.Set) []T {
+	slice := make([]T, set.Len())
+	for i, value := range set.List() {
+		slice[i] = value.(T)
+	}
+	return slice
+}
+
 // Maps a list of type S to type T
 func Map[S any, T any](source []S, converter func(S) T) []T {
 	target := make([]T, len(source))

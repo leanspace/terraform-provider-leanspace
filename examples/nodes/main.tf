@@ -9,7 +9,7 @@ terraform {
 
 data "leanspace_nodes" "all" {}
 
-resource "leanspace_nodes" "test_nodes_1" {
+resource "leanspace_nodes" "test_nodes_root" {
   node {
     name = "TerraMission - 0.1"
     description = "This is the root node for an entire mission made in terraform!"
@@ -25,9 +25,9 @@ resource "leanspace_nodes" "test_nodes_1" {
   }
 }
 
-resource "leanspace_nodes" "test_nodes_2" {
+resource "leanspace_nodes" "test_nodes_satellite" {
   node {
-      parent_node_id = leanspace_nodes.test_nodes_1.id
+      parent_node_id = leanspace_nodes.test_nodes_root.id
       name = "TerraSatellite"
       description = "The satellite responsible for the terraform mission."
       type = "ASSET"
@@ -45,10 +45,31 @@ resource "leanspace_nodes" "test_nodes_2" {
     }
 }
 
-output "test_node" {
-  value = leanspace_nodes.test_nodes_1
+resource "leanspace_nodes" "test_nodes_groundstation" {
+  node {
+      parent_node_id = leanspace_nodes.test_nodes_root.id
+      name = "TerraGroundStation"
+      description = "The satellite responsible for the terraform mission."
+      type = "ASSET"
+      kind = "GROUND_STATION"
+      latitude = 13.0344
+      longitude = 77.5116
+      elevation = 823
+      tags {
+        key = "Mission"
+        value = "Terraform"
+      }
+    }
+}
+
+output "root_node" {
+  value = leanspace_nodes.test_nodes_root
 }
 
 output "satellite_node" {
-  value = leanspace_nodes.test_nodes_2
+  value = leanspace_nodes.test_nodes_satellite
+}
+
+output "groundstation_node" {
+  value = leanspace_nodes.test_nodes_groundstation
 }

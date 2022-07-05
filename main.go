@@ -7,6 +7,7 @@ import (
 	"terraform-provider-asset/asset"
 
 	"terraform-provider-asset/asset/command_definitions"
+	"terraform-provider-asset/asset/command_queues"
 	"terraform-provider-asset/asset/metrics"
 	"terraform-provider-asset/asset/nodes"
 	"terraform-provider-asset/asset/properties"
@@ -15,6 +16,7 @@ import (
 func main() {
 	nodes.NodeDataType.Subscribe()
 	command_definitions.CommandDataType.Subscribe()
+	command_queues.CommandQueueDataType.Subscribe()
 	properties.PropertyDataType.Subscribe()
 	metrics.MetricDataType.Subscribe()
 

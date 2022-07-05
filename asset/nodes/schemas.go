@@ -80,6 +80,22 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 				Type: schema.TypeString,
 			},
 		},
+		// These fields are *required* when kind = GROUND_STATION
+		// However currently I don't think there is a way to have conditionally required fields
+		// A solution would be creating a new "ground station" schema, if we want to ensure type safety
+		// For now this does the job!
+		"latitude": {
+			Type:     schema.TypeFloat,
+			Optional: true,
+		},
+		"longitude": {
+			Type:     schema.TypeFloat,
+			Optional: true,
+		},
+		"elevation": {
+			Type:     schema.TypeFloat,
+			Optional: true,
+		},
 	}
 
 	if recursiveNodes != nil {
