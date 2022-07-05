@@ -257,6 +257,72 @@ One command_definition block containing:
     - before: optional, string date
     - after:optional, string date
 
+### leanspace_streams
+
+One command_definition block containing:
+- id (filled by the API)
+- version (filled by the API)
+- asset_id: id of the asset to attach to
+- name
+- description: optional
+- created_at (filled by the API)
+- created_by (filled by the API)
+- last_modified_at (filled by the API)
+- last_modified_by (filled by the API)
+- configuration: one block
+  - endianness: the default endianness of the stream (BE for big endian and LE for little endian)
+  - structure: one block
+    - elements: multiple blocks
+      - name
+      - order: position of the component in the parent (starts at 0, not required in child elements of switches)
+      - path: path to the element, e.g. "structure.my_container.my_field"
+      - type: `CONTAINER || FIELD || SWITCH`
+      - valid (filled by the API)
+      - errors (filled by the API)
+      - for FIELD:
+        - length_in_bits
+        - processor: optional
+        - data_type: `INTEGER || UINTEGER || DECIMAL || TEXT || BOOLEAN`
+        - endianness: field specific endiannes
+      - for SWITCH:
+        - expression: one block, required
+          - switch_on: name of the field on which the switch applies
+          - options: one block minimum
+            - component: name of the container used for this case
+            - value: one block, required
+              - data_type: `INTEGER || UINTEGER || DECIMAL || TEXT || BOOLEAN`
+              - data: the value to switch for
+      - for SWITCH and CONTAINER:
+        - elements: zero or more components
+    - valid (filled by the API)
+    - errors (filled by the API)
+  - metadata: one block
+    - packet_id: one block (filled by the API)
+      - valid (filled by the API)
+      - errors (filled by the API)
+    - timestamp: optional, one block
+      - expression: base64 encoded expression for the timecode
+      - valid (filled by the API)
+      - errors (filled by the API)
+    - valid (filled by the API)
+    - errors (filled by the API)
+  - computations: one block
+    - elements: 0 or more blocks
+      - name
+      - order: order of the computed field
+      - type: `COMPUTATION`
+      - data_type: `INTEGER || UINTEGER || DECIMAL || TEXT || BOOLEAN`
+      - expression: base64 encoding of the expression to get the field
+      - valid (filled by the API)
+      - errors (filled by the API)
+    - valid (filled by the API)
+    - errors (filled by the API)
+  - valid (filled by the API)
+  - errors (filled by the API)
+- mappings: multiple blocks
+  - metric_id: ID of the metric to map to
+  - name of the component to map from
+
 ## Datasource
 
 ### Common pattern
@@ -308,7 +374,11 @@ One command_definition block containing:
 
 ### leanspace_queues
 
-- content: list of one or multiple blocs of command_queues
+- content: list of one or multiple blocks of command_queues
+
+### leanspace_streams
+
+- content: list of one or multiple blocks of streams
 
 ## Examples
 
@@ -324,5 +394,6 @@ There's one folder for each resource type:
 - command definition: it has one `leanspace_command_definitions` resource which has all possible metadata types (6) and all possible argument types (7)
 - command queue: it has one `leanspace_command_queues` resource which links the satellite and ground station nodes.
 - metrics: it has as many `leanspace_metrics` resources as available types (6)
+- streams: it as one `leanspace_streams` resource, with all available element types (3), all possible field types (5), a computed field and a mapping.
 
 Finally there is the `imports` folder containing sample resources for each resource to test the import.

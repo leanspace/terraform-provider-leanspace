@@ -71,12 +71,14 @@ func ParseToMaps[T any, PT ParseablePointer[T]](parseables []T) []map[string]any
 	return maps
 }
 
-func ParseFromMaps[T any, PT ParseablePointer[T]](maps []any) []T {
+func ParseFromMaps[T any, PT ParseablePointer[T]](maps []any) ([]T, error) {
 	parseables := make([]T, len(maps))
 	for index, m := range maps {
-		any(&parseables[index]).(PT).FromMap(m.(map[string]any))
+		if err := any(&parseables[index]).(PT).FromMap(m.(map[string]any)); err != nil {
+			return parseables, err
+		}
 	}
-	return parseables
+	return parseables, nil
 }
 
 // Parses a float to a string. Use this method to ensure consistency.
