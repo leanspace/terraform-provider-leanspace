@@ -301,7 +301,7 @@ One command_definition block containing:
       - valid (filled by the API)
       - errors (filled by the API)
     - timestamp: optional, one block
-      - expression: base64 encoded expression for the timecode
+      - expression: JS expression for the timecode
       - valid (filled by the API)
       - errors (filled by the API)
     - valid (filled by the API)
@@ -312,7 +312,7 @@ One command_definition block containing:
       - order: order of the computed field
       - type: `COMPUTATION`
       - data_type: `INTEGER || UINTEGER || DECIMAL || TEXT || BOOLEAN`
-      - expression: base64 encoding of the expression to get the field
+      - expression: JS expression to get the field
       - valid (filled by the API)
       - errors (filled by the API)
     - valid (filled by the API)

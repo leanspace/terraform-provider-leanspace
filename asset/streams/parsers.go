@@ -1,6 +1,7 @@
 package streams
 
 import (
+	"encoding/base64"
 	"terraform-provider-asset/asset"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -314,5 +315,44 @@ func (elemStatus *ElementStatus) FromMap(elemStatusMap map[string]any) error {
 func (err *Error) FromMap(errorMap map[string]any) error {
 	err.Code = errorMap["code"].(string)
 	err.Message = errorMap["message"].(string)
+	return nil
+}
+
+func base64Encode(str string) string {
+	return base64.StdEncoding.EncodeToString([]byte(str))
+}
+
+func base64Decode(str string) (string, error) {
+	if val, err := base64.StdEncoding.DecodeString(str); err != nil {
+		return "", err
+	} else {
+		return string(val), nil
+	}
+}
+
+func (stream *Stream) PreMarshallProcess() error {
+	// Encode expressions to Base64
+	computations := stream.Configuration.Computations.Elements
+	for i := range computations {
+		computations[i].Expression = base64Encode(computations[i].Expression)
+	}
+	stream.Configuration.Metadata.Timestamp.Expression = base64Encode(stream.Configuration.Metadata.Timestamp.Expression)
+	return nil
+}
+
+func (stream *Stream) PostUnmarshallProcess() error {
+	computations := stream.Configuration.Computations.Elements
+	for i := range computations {
+		if value, err := base64Decode(computations[i].Expression); err != nil {
+			return err
+		} else {
+			computations[i].Expression = value
+		}
+	}
+	if value, err := base64Decode(stream.Configuration.Metadata.Timestamp.Expression); err != nil {
+		return err
+	} else {
+		stream.Configuration.Metadata.Timestamp.Expression = value
+	}
 	return nil
 }

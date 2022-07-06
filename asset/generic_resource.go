@@ -69,7 +69,7 @@ func (dataSource DataSourceType[T, PT]) setValueData(value PT, d *schema.Resourc
 }
 
 func (dataSource DataSourceType[T, PT]) getValueData(valueList []any) PT {
-	value := any(new(T)).(PT)
+	var value PT = new(T)
 	value.FromMap(valueList[0].(map[string]any))
 	return value
 }

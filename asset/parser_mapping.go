@@ -18,6 +18,20 @@ type ParseableModel[T any] interface {
 	GetID() string
 }
 
+type ExtraMarshallModel interface {
+	// An optional extra function that is called before the object is marshalled.
+	// This can be useful to encode specific fields to an API-compatible format, or to extrapolate optional data.
+	// This function is guaranteed to only be called once for the instance of this model.
+	PreMarshallProcess() error
+}
+
+type ExtraUnmarshallModel interface {
+	// An optional extra function that is called after the object was unmarshalled.
+	// This can be useful to decode specific fields from an API-compatible format, or to extrapolate optional data.
+	// This function is guaranteed to only be called once for the instance of this model.
+	PostUnmarshallProcess() error
+}
+
 type GenericClient[T any, PT ParseableModel[T]] struct {
 	Client     *Client
 	Path       string

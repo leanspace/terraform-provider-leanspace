@@ -149,7 +149,7 @@ resource "leanspace_streams" "test" {
       }
       metadata {
         timestamp {
-          expression = "KGN0eCwgcmF3KSA9PiBjdHhbJ21ldGFkYXRhLnJlY2VpdmVkX2F0J107"
+          expression = "(ctx, raw) => ctx['metadata.received_at'];"
         }
       }
       computations {
@@ -158,7 +158,13 @@ resource "leanspace_streams" "test" {
           data_type  = "UINTEGER"
           name       = "power"
           order      = 0
-          expression = "KGN0eCkgPT4gewogIGNvbnN0IHZvbHRhZ2UgPSBjdHhbJ3N0cnVjdHVyZS5wcm9wZXJ0aWVzLnNvbGFyX3cnXTsKICB2YXIgcG93ZXIgPSB2b2x0YWdlICogMTU7CiAgcmV0dXJuIChwb3dlcik7Cn0="
+          expression = <<-EOT
+            (ctx) => {
+              const voltage = ctx['structure.properties.solar_w'];
+              var power = voltage * 15;
+              return (power);
+            }
+          EOT
         }
       }
     }
