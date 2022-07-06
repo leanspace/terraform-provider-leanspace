@@ -56,6 +56,7 @@ module "assets_streams" {
   asset_id           = module.assets_node.satellite_node.id
   numeric_metric_id = module.assets_metrics.test_numeric_metric.id
   depends_on = [
-    module.assets_node
+    module.assets_node,
+    module.assets_metrics
   ]
 }

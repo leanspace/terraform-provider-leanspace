@@ -61,7 +61,7 @@ func (argument Argument[T]) ToMap() map[string]any {
 	argumentMap["name"] = argument.Name
 	argumentMap["identifier"] = argument.Identifier
 	argumentMap["description"] = argument.Description
-	argumentMap["attributes"] = argument.Attributes.ToMap()
+	argumentMap["attributes"] = []any{argument.Attributes.ToMap()}
 
 	return argumentMap
 }

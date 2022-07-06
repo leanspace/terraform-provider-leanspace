@@ -124,13 +124,13 @@ func streamComponentSchema(depth int) map[string]*schema.Schema {
 			Type:     schema.TypeString,
 			Required: true,
 		},
-		"order": { // derivable
+		"order": {
 			Type:     schema.TypeInt,
-			Optional: true,
+			Computed: true,
 		},
-		"path": { // derivable
+		"path": {
 			Type:     schema.TypeString,
-			Required: true,
+			Computed: true,
 		},
 		"type": {
 			Type:         schema.TypeString,
@@ -329,14 +329,13 @@ var computationSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Required: true,
 	},
-	"order": { // derivable
+	"order": {
 		Type:     schema.TypeInt,
-		Required: true,
+		Computed: true,
 	},
 	"type": {
-		Type:         schema.TypeString, // ... derivable obviously
-		Required:     true,
-		ValidateFunc: validation.StringInSlice([]string{"COMPUTATION"}, false),
+		Type:     schema.TypeString,
+		Computed: true,
 	},
 	"data_type": {
 		Type:         schema.TypeString,

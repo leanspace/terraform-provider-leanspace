@@ -61,8 +61,10 @@ func (dataSource DataSourceType[T, PT]) get(ctx context.Context, d *schema.Resou
 	if value != nil {
 		storedData = []map[string]any{value.ToMap()}
 	}
-	d.Set(dataSource.Name, storedData)
-
+	err = d.Set(dataSource.Name, storedData)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	return diags
 }
 

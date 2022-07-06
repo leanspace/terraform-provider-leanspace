@@ -2,6 +2,7 @@ package streams
 
 import (
 	"encoding/base64"
+	"strconv"
 	"terraform-provider-asset/asset"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -14,7 +15,7 @@ func (stream *Stream) ToMap() map[string]any {
 	streamMap["name"] = stream.Name
 	streamMap["description"] = stream.Description
 	streamMap["asset_id"] = stream.AssetId
-	streamMap["configuration"] = stream.Configuration.ToMap()
+	streamMap["configuration"] = []any{stream.Configuration.ToMap()}
 	streamMap["mappings"] = asset.ParseToMaps(stream.Mappings)
 	streamMap["created_at"] = stream.CreatedAt
 	streamMap["created_by"] = stream.CreatedBy
@@ -26,9 +27,9 @@ func (stream *Stream) ToMap() map[string]any {
 func (configuration *Configuration) ToMap() map[string]any {
 	configMap := make(map[string]any)
 	configMap["endianness"] = configuration.Endianness
-	configMap["structure"] = configuration.Structure.ToMap()
-	configMap["metadata"] = configuration.Metadata.ToMap()
-	configMap["computations"] = configuration.Computations.ToMap()
+	configMap["structure"] = []any{configuration.Structure.ToMap()}
+	configMap["metadata"] = []any{configuration.Metadata.ToMap()}
+	configMap["computations"] = []any{configuration.Computations.ToMap()}
 	configMap["valid"] = configuration.Valid
 	configMap["errors"] = asset.ParseToMaps(configuration.Errors)
 	return configMap
@@ -50,7 +51,7 @@ func (streamComp *StreamComponent) ToMap() map[string]any {
 		streamCompMap["endianness"] = streamComp.Endianness
 	}
 	if streamComp.Type == "SWITCH" {
-		streamCompMap["expression"] = streamComp.Expression.ToMap()
+		streamCompMap["expression"] = []any{streamComp.Expression.ToMap()}
 	}
 	if streamComp.Type == "SWITCH" || streamComp.Type == "CONTAINER" {
 		streamCompMap["elements"] = asset.ParseToMaps(streamComp.Elements)
@@ -68,7 +69,7 @@ func (switchExp *SwitchExpression) ToMap() map[string]any {
 
 func (switchOption *SwitchOption) ToMap() map[string]any {
 	switchOptionMap := make(map[string]any)
-	switchOptionMap["value"] = switchOption.Value.ToMap()
+	switchOptionMap["value"] = []any{switchOption.Value.ToMap()}
 	switchOptionMap["component"] = switchOption.Component
 	return switchOptionMap
 }
@@ -76,14 +77,21 @@ func (switchOption *SwitchOption) ToMap() map[string]any {
 func (switchValue *SwitchValue[T]) ToMap() map[string]any {
 	switchValueMap := make(map[string]any)
 	switchValueMap["data_type"] = switchValue.DataType
-	switchValueMap["data"] = switchValue.Data
+	switch switchValue.DataType {
+	case "INTEGER", "UINTEGER", "DECIMAL":
+		switchValueMap["data"] = asset.ParseFloat(any(switchValue.Data).(float64))
+	case "TEXT":
+		switchValueMap["data"] = any(switchValue.Data).(string)
+	case "BOOLEAN":
+		switchValueMap["data"] = strconv.FormatBool(any(switchValue.Data).(bool))
+	}
 	return switchValueMap
 }
 
 func (metadata *Metadata) ToMap() map[string]any {
 	metadataMap := make(map[string]any)
-	metadataMap["packet_id"] = metadata.PacketID.ToMap()
-	metadataMap["timestamp"] = metadata.Timestamp.ToMap()
+	metadataMap["packet_id"] = []any{metadata.PacketID.ToMap()}
+	metadataMap["timestamp"] = []any{metadata.Timestamp.ToMap()}
 	metadataMap["valid"] = metadata.Valid
 	metadataMap["errors"] = asset.ParseToMaps(metadata.Errors)
 	return metadataMap
@@ -139,6 +147,7 @@ func (err *Error) ToMap() map[string]any {
 }
 
 func (stream *Stream) FromMap(streamMap map[string]any) error {
+	asset.Logger.Printf("Called *Stream.FromMap\n%#v", streamMap)
 	stream.ID = streamMap["id"].(string)
 	stream.Version = streamMap["version"].(int)
 	stream.Name = streamMap["name"].(string)
@@ -304,7 +313,7 @@ func (mapping *Mapping) FromMap(mappingMap map[string]any) error {
 
 func (elemStatus *ElementStatus) FromMap(elemStatusMap map[string]any) error {
 	elemStatus.Valid = elemStatusMap["valid"].(bool)
-	if errors, err := asset.ParseFromMaps[Error](elemStatusMap["errors"].([]any)); err != nil {
+	if errors, err := asset.ParseFromMaps[Error](elemStatusMap["errors"].(*schema.Set).List()); err != nil {
 		return err
 	} else {
 		elemStatus.Errors = errors
@@ -330,12 +339,26 @@ func base64Decode(str string) (string, error) {
 	}
 }
 
+func recursiveUpdateStreamComponent(streamComps []StreamComponent, path string) {
+	for index := range streamComps {
+		component := &streamComps[index]
+		component.Path = path + "." + component.Name
+		component.Order = index
+		if component.Type == "CONTAINER" || component.Type == "SWITCH" {
+			recursiveUpdateStreamComponent(component.Elements, component.Path)
+		}
+	}
+}
+
 func (stream *Stream) PreMarshallProcess() error {
 	// Encode expressions to Base64
 	computations := stream.Configuration.Computations.Elements
 	for i := range computations {
+		computations[i].Order = i
+		computations[i].Type = "COMPUTATION"
 		computations[i].Expression = base64Encode(computations[i].Expression)
 	}
+	recursiveUpdateStreamComponent(stream.Configuration.Structure.Elements, "structure")
 	stream.Configuration.Metadata.Timestamp.Expression = base64Encode(stream.Configuration.Metadata.Timestamp.Expression)
 	return nil
 }

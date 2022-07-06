@@ -31,21 +31,15 @@ resource "leanspace_streams" "test" {
           type           = "FIELD"
           data_type      = "UINTEGER"
           name           = "id_field"
-          order          = 0
-          path           = "structure.id_field"
           length_in_bits = 8
         }
         elements {
           type  = "CONTAINER"
           name  = "properties"
-          order = 1
-          path  = "structure.properties"
           elements {
             type           = "FIELD"
             data_type      = "TEXT"
             name           = "name"
-            order          = 0
-            path           = "structure.properties.name"
             length_in_bits = 32
             processor      = "zlib"
           }
@@ -53,32 +47,24 @@ resource "leanspace_streams" "test" {
             type           = "FIELD"
             data_type      = "INTEGER"
             name           = "version"
-            order          = 1
-            path           = "structure.properties.version"
             length_in_bits = 8
           }
           elements {
             type           = "FIELD"
             data_type      = "BOOLEAN"
             name           = "is_active"
-            order          = 2
-            path           = "structure.properties.is_active"
             length_in_bits = 8
           }
           elements {
             type           = "FIELD"
             data_type      = "DECIMAL"
             name           = "solar_w"
-            order          = 3
-            path           = "structure.properties.solar_w"
             length_in_bits = 32
           }
         }
         elements {
           type  = "SWITCH"
           name  = "data"
-          order = 2
-          path  = "structure.data"
           expression {
             switch_on = "structure.properties.version"
             options {
@@ -106,42 +92,32 @@ resource "leanspace_streams" "test" {
           elements {
             type = "CONTAINER"
             name = "pos_data"
-            path = "structure.data.pos_data"
             elements {
               type           = "FIELD"
               data_type      = "INTEGER"
               name           = "x"
-              order          = 0
-              path           = "structure.data.pos_data.x"
               length_in_bits = 8
             }
             elements {
               type           = "FIELD"
               data_type      = "INTEGER"
               name           = "y"
-              order          = 1
-              path           = "structure.data.pos_data.y"
               length_in_bits = 8
             }
           }
           elements {
             type = "CONTAINER"
             name = "rot_data"
-            path = "structure.data.rot_data"
             elements {
               type           = "FIELD"
               data_type      = "INTEGER"
               name           = "rx"
-              order          = 0
-              path           = "structure.data.rot_data.x"
               length_in_bits = 8
             }
             elements {
               type           = "FIELD"
               data_type      = "INTEGER"
               name           = "ry"
-              order          = 1
-              path           = "structure.data.rot_data.y"
               length_in_bits = 8
             }
           }
@@ -154,10 +130,8 @@ resource "leanspace_streams" "test" {
       }
       computations {
         elements {
-          type       = "COMPUTATION"
           data_type  = "UINTEGER"
           name       = "power"
-          order      = 0
           expression = <<-EOT
             (ctx) => {
               const voltage = ctx['structure.properties.solar_w'];

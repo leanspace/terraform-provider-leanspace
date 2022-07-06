@@ -274,8 +274,8 @@ One command_definition block containing:
   - structure: one block
     - elements: multiple blocks
       - name
-      - order: position of the component in the parent (starts at 0, not required in child elements of switches)
-      - path: path to the element, e.g. "structure.my_container.my_field"
+      - path (filled by the API, derived from the terraform config)
+      - order (filled by the API, derived from the terraform config)
       - type: `CONTAINER || FIELD || SWITCH`
       - valid (filled by the API)
       - errors (filled by the API)
@@ -309,8 +309,8 @@ One command_definition block containing:
   - computations: one block
     - elements: 0 or more blocks
       - name
-      - order: order of the computed field
-      - type: `COMPUTATION`
+      - order (filled by the API, derived from the terraform config)
+      - type: `COMPUTATION` (filled by the API)
       - data_type: `INTEGER || UINTEGER || DECIMAL || TEXT || BOOLEAN`
       - expression: JS expression to get the field
       - valid (filled by the API)

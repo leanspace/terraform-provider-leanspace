@@ -63,8 +63,8 @@ func (client GenericClient[T, PT]) Get(id string) (PT, error) {
 		return nil, err
 	}
 
-	body, err, code := client.Client.doRequest(req, &(client.Client).Token)
-	if code == 404 {
+	body, err, statusCode := client.Client.doRequest(req, &(client.Client).Token)
+	if statusCode == http.StatusNotFound {
 		return nil, nil
 	}
 	if err != nil {
