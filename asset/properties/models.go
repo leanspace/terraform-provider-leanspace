@@ -23,7 +23,7 @@ type Property[T any] struct {
 	Max            float64               `json:"max,omitempty" terra:"max"`
 	Scale          int                   `json:"scale,omitempty" terra:"scale"`
 	Precision      int                   `json:"precision,omitempty" terra:"precision"`
-	UnitId         string                `json:"unit_id,omitempty" terra:"unit_id"`
+	UnitId         string                `json:"unitId,omitempty" terra:"unit_id"`
 	Value          T                     `json:"value,omitempty" terra:"value"`
 	Type           string                `json:"type" terra:"type"`
 }
@@ -51,5 +51,5 @@ type Field[T any] struct {
 	Max            float64               `json:"max,omitempty" terra:"max"`
 	Scale          int                   `json:"scale,omitempty" terra:"scale"`
 	Precision      int                   `json:"precision,omitempty" terra:"precision"`
-	UnitId         string                `json:"unit_id,omitempty" terra:"unit_id"`
+	UnitId         string                `json:"unitId,omitempty" terra:"unit_id"`
 }
