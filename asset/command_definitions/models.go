@@ -28,7 +28,7 @@ type Metadata[T any] struct {
 type ValueAttribute[T any] struct {
 	Value  T      `json:"value,omitempty" terra:"value"`
 	Type   string `json:"type" terra:"type"`
-	UnitId string `json:"unit_id,omitempty" terra:"unit_id,omitempty"`
+	UnitId string `json:"unitId,omitempty" terra:"unit_id,omitempty"`
 }
 
 type Argument[T any] struct {
