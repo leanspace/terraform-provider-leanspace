@@ -52,13 +52,21 @@ func (client GenericClient[T, PT]) GetAll() (*general_objects.PaginatedList[T], 
 	return &values, nil
 }
 
+// Retrieve a resource of this type with the given ID.
+// Can return:
+// - PT, nil, if the resource was fetched
+// - nil, error, if there was an error when fetching the resource
+// - nil, nil, if the resource was not found (and no other error occurred)
 func (client GenericClient[T, PT]) Get(id string) (PT, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s/%s", client.Client.HostURL, client.Path, id), nil)
 	if err != nil {
 		return nil, err
 	}
 
-	body, err, _ := client.Client.doRequest(req, &(client.Client).Token)
+	body, err, code := client.Client.doRequest(req, &(client.Client).Token)
+	if code == 404 {
+		return nil, nil
+	}
 	if err != nil {
 		return nil, err
 	}

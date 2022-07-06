@@ -56,16 +56,14 @@ func (dataSource DataSourceType[T, PT]) get(ctx context.Context, d *schema.Resou
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	dataSource.setValueData(value, d)
+
+	var storedData any = nil
+	if value != nil {
+		storedData = []map[string]any{value.ToMap()}
+	}
+	d.Set(dataSource.Name, storedData)
 
 	return diags
-}
-
-func (dataSource DataSourceType[T, PT]) setValueData(value PT, d *schema.ResourceData) {
-	valueList := make([]map[string]any, 1)
-
-	valueList[0] = value.ToMap()
-	d.Set(dataSource.Name, valueList)
 }
 
 func (dataSource DataSourceType[T, PT]) getValueData(valueList []any) PT {
