@@ -52,11 +52,20 @@ module "assets_command_queues" {
 }
 
 module "assets_streams" {
-  source             = "./streams"
-  asset_id           = module.assets_node.satellite_node.id
+  source            = "./streams"
+  asset_id          = module.assets_node.satellite_node.id
   numeric_metric_id = module.assets_metrics.test_numeric_metric.id
   depends_on = [
     module.assets_node,
+    module.assets_metrics
+  ]
+}
+
+module "assets_widgets" {
+  source            = "./widgets"
+  text_metric_id    = module.assets_metrics.test_text_metric.id
+  numeric_metric_id = module.assets_metrics.test_numeric_metric.id
+  depends_on = [
     module.assets_metrics
   ]
 }

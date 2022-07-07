@@ -34,7 +34,7 @@ type AuthResponse struct {
 }
 
 func NewClient(host, env, tenant, clientId, clientSecret *string) (*Client, error) {
-	if (env == nil || *env == "") {
+	if env == nil || *env == "" {
 		environment := "prod"
 		env = &environment
 	}
