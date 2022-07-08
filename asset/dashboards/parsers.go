@@ -49,7 +49,6 @@ func (widget *DashboardWidget) ToMap() map[string]any {
 	if metadataMap := widget.Metadata.ToMap(); metadataMap != nil {
 		widgetMap["metadata"] = []any{metadataMap}
 	}
-	widgetMap["dashboards"] = asset.ParseToMaps(widget.Dashboards)
 	widgetMap["tags"] = general_objects.TagsStructToMap(widget.Tags)
 	widgetMap["created_at"] = widget.CreatedAt
 	widgetMap["created_by"] = widget.CreatedBy
@@ -137,8 +136,10 @@ func (widget *DashboardWidget) FromMap(widgetMap map[string]any) error {
 			return err
 		}
 	}
-	if err := widget.View.FromMap(widgetMap["view"].([]any)[0].(map[string]any)); err != nil {
-		return err
+	if len(widgetMap["view"].([]any)) > 0 {
+		if err := widget.View.FromMap(widgetMap["view"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
 	}
 	widget.Tags = general_objects.TagsInterfaceToStruct(widgetMap["tags"])
 	widget.CreatedAt = widgetMap["created_at"].(string)
@@ -165,27 +166,6 @@ func (grid *Grid) FromMap(gridMap map[string]any) error {
 	grid.X = gridMap["x"].(int)
 	grid.Y = gridMap["y"].(int)
 	grid.I = gridMap["i"].(string)
-	return nil
-}
-
-func (dashboard *Dashboard) PreMarshallProcess() error {
-	// Transfer all data from the widgets array to the widget_info array,
-	// to make sure the API call will ignore widgets (handled separately)
-	// dashboard.WidgetInfo = make([]WidgetInfo, len(dashboard.Widgets))
-	// for index, widget := range dashboard.Widgets {
-	// 	dashboard.WidgetInfo[index] = WidgetInfo{
-	// 		ID:   widget.ID,
-	// 		Type: widget.Type,
-	// 		X:    widget.View.Grid.X,
-	// 		Y:    widget.View.Grid.Y,
-	// 		W:    widget.View.Grid.W,
-	// 		H:    widget.View.Grid.H,
-	// 		MinW: widget.View.Grid.MinW,
-	// 		MinH: widget.View.Grid.MinH,
-	// 	}
-	// }
-	dashboard.Widgets = nil
-
 	return nil
 }
 

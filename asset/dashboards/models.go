@@ -33,21 +33,20 @@ type WidgetInfo struct {
 }
 
 type DashboardWidget struct {
-	ID             string                  `json:"id" terra:"id"`
-	Name           string                  `json:"name" terra:"name"`
-	Description    string                  `json:"description,omitempty" terra:"description"`
-	Type           string                  `json:"type" terra:"type"`
-	Granularity    string                  `json:"granularity" terra:"granularity"`
-	Series         []widgets.Series        `json:"series" terra:"series"`
-	Metrics        []widgets.MetricInfo    `json:"metrics" terra:"metrics"`
-	Metadata       widgets.Metadata        `json:"metadata" terra:"metadata"`
-	Dashboards     []widgets.DashboardInfo `json:"dashboards" terra:"dashboards"`
-	View           WidgetView              `json:"view" terra:"view"`
-	Tags           []general_objects.Tag   `json:"tags,omitempty" terra:"tags"`
-	CreatedAt      string                  `json:"createdAt" terra:"created_at"`
-	CreatedBy      string                  `json:"createdBy" terra:"created_by"`
-	LastModifiedAt string                  `json:"lastModifiedAt" terra:"last_modified_at"`
-	LastModifiedBy string                  `json:"lastModifiedBy" terra:"last_modified_by"`
+	ID             string                `json:"id" terra:"id"`
+	Name           string                `json:"name" terra:"name"`
+	Description    string                `json:"description,omitempty" terra:"description"`
+	Type           string                `json:"type" terra:"type"`
+	Granularity    string                `json:"granularity" terra:"granularity"`
+	Series         []widgets.Series      `json:"series" terra:"series"`
+	Metrics        []widgets.MetricInfo  `json:"metrics" terra:"metrics"`
+	Metadata       widgets.Metadata      `json:"metadata" terra:"metadata"`
+	View           WidgetView            `json:"view" terra:"view"`
+	Tags           []general_objects.Tag `json:"tags,omitempty" terra:"tags"`
+	CreatedAt      string                `json:"createdAt" terra:"created_at"`
+	CreatedBy      string                `json:"createdBy" terra:"created_by"`
+	LastModifiedAt string                `json:"lastModifiedAt" terra:"last_modified_at"`
+	LastModifiedBy string                `json:"lastModifiedBy" terra:"last_modified_by"`
 }
 
 type WidgetView struct {

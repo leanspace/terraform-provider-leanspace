@@ -33,32 +33,36 @@ resource "leanspace_dashboards" "test" {
   dashboard {
     name        = "Terraform Dashboard"
     description = "A whole dashboard created through terraform!"
-    node_ids       = var.attached_node_ids
+    node_ids    = var.attached_node_ids
     widget_info {
-      id   = var.value_widget_id
-      type = "value"
-      x    = 0
-      y    = 0
-      w    = 1
-      h    = 1
+      id    = var.value_widget_id
+      type  = "VALUE"
+      x     = 0
+      y     = 0
+      w     = 1
+      h     = 5
+      min_w = 1
+      min_h = 5
     }
     widget_info {
-      id   = var.line_widget_id
-      type = "line"
-      x    = 1
-      y    = 0
-      w    = 2
-      h    = 1
+      id    = var.line_widget_id
+      type  = "LINE"
+      x     = 1
+      y     = 0
+      w     = 2
+      h     = 5
+      min_w = 1
+      min_h = 5
     }
     widget_info {
       id    = var.table_widget_id
-      type  = "table"
+      type  = "TABLE"
       x     = 0
       y     = 1
       w     = 3
-      h     = 5
+      h     = 13
       min_w = 2
-      min_h = 3
+      min_h = 13
     }
     tags {
       key   = "Mission"
