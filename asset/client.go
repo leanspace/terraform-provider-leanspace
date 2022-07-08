@@ -88,7 +88,7 @@ func (c *Client) SignIn() (*AuthResponse, error) {
 	req.Header.Add("Authorization", "Basic "+basicAuth(c.Auth.ClientId, c.Auth.ClientSecret))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	body, err, _ := c.doRequest(req, nil)
+	body, err, _ := c.DoRequest(req, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -102,11 +102,10 @@ func (c *Client) SignIn() (*AuthResponse, error) {
 	return &ar, nil
 }
 
-func (c *Client) doRequest(req *http.Request, authToken *string) ([]byte, error, int) {
-	token := c.Token
+func (c *Client) DoRequest(req *http.Request, authToken *string) ([]byte, error, int) {
 
 	if authToken != nil {
-		token = *authToken
+		token := *authToken
 		req.Header.Set("Authorization", "Bearer "+token)
 	}
 

@@ -38,7 +38,7 @@ func (client GenericClient[T, PT]) GetAll() (*general_objects.PaginatedList[T], 
 		return nil, err
 	}
 
-	body, err, _ := client.Client.doRequest(req, &(client.Client).Token)
+	body, err, _ := client.Client.DoRequest(req, &(client.Client).Token)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +63,7 @@ func (client GenericClient[T, PT]) Get(id string) (PT, error) {
 		return nil, err
 	}
 
-	body, err, statusCode := client.Client.doRequest(req, &(client.Client).Token)
+	body, err, statusCode := client.Client.DoRequest(req, &(client.Client).Token)
 	if statusCode == http.StatusNotFound {
 		return nil, nil
 	}
@@ -96,7 +96,7 @@ func (client GenericClient[T, PT]) Create(createElement PT) (PT, error) {
 		return nil, err
 	}
 
-	body, err, _ := client.Client.doRequest(req, &(client.Client).Token)
+	body, err, _ := client.Client.DoRequest(req, &(client.Client).Token)
 
 	// Here, maybe check if the error is because of a 409 (conflict), in which case
 	// we update the object and continue as if it was created.
@@ -109,11 +109,17 @@ func (client GenericClient[T, PT]) Create(createElement PT) (PT, error) {
 		return nil, err
 	}
 
+	if postCreate, ok := any(createElement).(PostCreateModel); ok {
+		if err := postCreate.PostCreateProcess(client.Client, value); err != nil {
+			return nil, err
+		}
+	}
+
 	return value, nil
 }
 
-func (client GenericClient[T, PT]) Update(nodeId string, createElement PT) (PT, error) {
-	rb, err := client.marshalElement(createElement)
+func (client GenericClient[T, PT]) Update(nodeId string, updateElement PT) (PT, error) {
+	rb, err := client.marshalElement(updateElement)
 	if err != nil {
 		return nil, err
 	}
@@ -124,7 +130,7 @@ func (client GenericClient[T, PT]) Update(nodeId string, createElement PT) (PT, 
 		return nil, err
 	}
 
-	body, err, _ := client.Client.doRequest(req, &(client.Client).Token)
+	body, err, _ := client.Client.DoRequest(req, &(client.Client).Token)
 	if err != nil {
 		return nil, err
 	}
@@ -132,6 +138,12 @@ func (client GenericClient[T, PT]) Update(nodeId string, createElement PT) (PT, 
 	value, err := client.unmarshalElement(body)
 	if err != nil {
 		return nil, err
+	}
+
+	if postUpdate, ok := any(updateElement).(PostUpdateModel); ok {
+		if err := postUpdate.PostUpdateProcess(client.Client, value); err != nil {
+			return nil, err
+		}
 	}
 
 	return value, nil
@@ -143,7 +155,7 @@ func (client GenericClient[T, PT]) Delete(nodeId string) error {
 		return err
 	}
 
-	_, err, statusCode := client.Client.doRequest(req, &(client.Client).Token)
+	_, err, statusCode := client.Client.DoRequest(req, &(client.Client).Token)
 	// If it has been deleted outside terraform, it should not fail here
 	if statusCode != http.StatusNotFound && err != nil {
 		return err

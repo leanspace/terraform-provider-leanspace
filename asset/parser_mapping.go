@@ -32,6 +32,24 @@ type ExtraUnmarshallModel interface {
 	PostUnmarshallProcess() error
 }
 
+type PostCreateModel interface {
+	// An optional extra function that is called after this instance is created remotely by terraform.
+	// Extra requests can be done here, as this method is exclusively called when the resource is created (unlike
+	// PostUnmarshallProcess).
+	// The parameter is the instance of the model that was created - it can be used to compare the desired result
+	// with what was actually created.
+	PostCreateProcess(*Client, any) error
+}
+
+type PostUpdateModel interface {
+	// An optional extra function that is called after this instance was updated remotely by terraform.
+	// Extra requests can be done here, as this method is exclusively called after the resource is updated (unlike
+	// PostUnmarshallProcess).
+	// The parameter is the instance of the model after being updated. It can be used to compare the desired
+	// state with what is currently present.
+	PostUpdateProcess(*Client, any) error
+}
+
 type GenericClient[T any, PT ParseableModel[T]] struct {
 	Client     *Client
 	Path       string

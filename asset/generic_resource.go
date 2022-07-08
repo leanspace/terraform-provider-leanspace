@@ -34,9 +34,9 @@ func (dataSource DataSourceType[T, PT]) create(ctx context.Context, d *schema.Re
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	value := d.Get(dataSource.Name).([]any)
-	valueData := dataSource.getValueData(value)
-	createdValue, err := dataSource.convert(client).Create(valueData)
+	valueRaw := d.Get(dataSource.Name).([]any)
+	value := dataSource.getValueData(valueRaw)
+	createdValue, err := dataSource.convert(client).Create(value)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -81,8 +81,9 @@ func (dataSource DataSourceType[T, PT]) update(ctx context.Context, d *schema.Re
 
 	if d.HasChange(dataSource.Name) {
 		valueId := d.Id()
-		value := d.Get(dataSource.Name).([]any)
-		_, err := dataSource.convert(client).Update(valueId, dataSource.getValueData(value))
+		valueRaw := d.Get(dataSource.Name).([]any)
+		value := dataSource.getValueData(valueRaw)
+		_, err := dataSource.convert(client).Update(valueId, value)
 		if err != nil {
 			return diag.FromErr(err)
 		}
