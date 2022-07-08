@@ -69,3 +69,15 @@ module "assets_widgets" {
     module.assets_metrics
   ]
 }
+
+module "assets_dashboards" {
+  source            = "./dashboards"
+  table_widget_id = module.assets_widgets.test_table_widget.id
+  value_widget_id = module.assets_widgets.test_value_widget.id
+  line_widget_id = module.assets_widgets.test_line_widget.id
+  attached_node_ids = [module.assets_node.satellite_node.id]
+  depends_on = [
+    module.assets_widgets,
+    module.assets_node
+  ]
+}
