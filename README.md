@@ -357,6 +357,30 @@ One widget block containing:
 - last_modified_at (filled by the API)
 - last_modified_by (filled by the API)
 
+### leanspace_dashboards
+One dashboard block containing:
+- id (filled by the API)
+- name
+- description: optional
+- node_ids: optional list of strings with node IDs
+- widget_info: zero or more blocks
+  - id: id of the widget 
+  - type: `TABLE || LINE || BAR || AREA || VALUE` must match the widget
+  - x: integer
+  - y: integer
+  - w: integer
+  - h: integer
+  - min_w: optional integer
+  - min_h: optional integer
+- widgets: wero or more blocks of type widget (see above) (filled by the API)
+- tags: zero or more blocks
+  - key
+  - value
+- created_at (filled by the API)
+- created_by (filled by the API)
+- last_modified_at (filled by the API)
+- last_modified_by (filled by the API)
+
 ## Datasource
 
 ### Common pattern
@@ -418,6 +442,10 @@ One widget block containing:
 
 - content: list of one or multiple blocks of widgets
 
+### leanspace_dashboards
+
+- content: list of one or multiple blocks of dashboards
+
 ## Examples
 
 You can find examples in the `/examples` folder
@@ -434,5 +462,6 @@ There's one folder for each resource type:
 - metrics: it has as many `leanspace_metrics` resources as available types (6)
 - streams: it has one `leanspace_streams` resource, with all available element types (3), all possible field types (5), a computed field and a mapping.
 - widgets: it has as many `leanspace_widgets` resources as available types (5)
+- dashboards: it has as one `leanspace_dashboards` resource with three widgets and linked to a node
 
 Finally there is the `imports` folder containing sample resources for each resource to test the import.
