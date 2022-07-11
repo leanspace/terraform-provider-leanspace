@@ -73,3 +73,24 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (any, diag.D
 
 	return c, diags
 }
+
+func TestProvider() (*schema.Provider, error) {
+	providerConfigure := func(ctx context.Context, d *schema.ResourceData) (any, diag.Diagnostics) {
+		env := "develop"
+		tenant := "training"
+		clientId := "1gqfr50rsdovh7i1qr3imda3qd"
+		clientSecret := "1g7ogiq4i6jj3ebcd46tsjfqi5btft194raf0ht2jtmo7sb98d13"
+
+		c, err := NewClient(nil, &env, &tenant, &clientId, &clientSecret)
+		if err != nil {
+			return nil, diag.FromErr(err)
+		}
+
+		return c, nil
+	}
+
+	provider := Provider()
+	provider.ConfigureContextFunc = providerConfigure
+
+	return provider, nil
+}
