@@ -118,13 +118,13 @@ func (client GenericClient[T, PT]) Create(createElement PT) (PT, error) {
 	return value, nil
 }
 
-func (client GenericClient[T, PT]) Update(nodeId string, updateElement PT) (PT, error) {
+func (client GenericClient[T, PT]) Update(elementId string, updateElement PT) (PT, error) {
 	rb, err := client.marshalElement(updateElement)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PUT", fmt.Sprintf("%s/%s/%s", client.Client.HostURL, client.Path, nodeId), strings.NewReader(string(rb)))
+	req, err := http.NewRequest("PUT", fmt.Sprintf("%s/%s/%s", client.Client.HostURL, client.Path, elementId), strings.NewReader(string(rb)))
 	req.Header.Set("Content-Type", "application/json")
 	if err != nil {
 		return nil, err
@@ -149,8 +149,8 @@ func (client GenericClient[T, PT]) Update(nodeId string, updateElement PT) (PT, 
 	return value, nil
 }
 
-func (client GenericClient[T, PT]) Delete(nodeId string) error {
-	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/%s/%s", client.Client.HostURL, client.Path, nodeId), nil)
+func (client GenericClient[T, PT]) Delete(elementId string, element PT) error {
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/%s/%s", client.Client.HostURL, client.Path, elementId), nil)
 	if err != nil {
 		return err
 	}
@@ -159,6 +159,12 @@ func (client GenericClient[T, PT]) Delete(nodeId string) error {
 	// If it has been deleted outside terraform, it should not fail here
 	if statusCode != http.StatusNotFound && err != nil {
 		return err
+	}
+
+	if postDelete, ok := any(element).(PostDeleteModel); element != nil && ok {
+		if err := postDelete.PostDeleteProcess(client.Client); err != nil {
+			return err
+		}
 	}
 
 	return nil

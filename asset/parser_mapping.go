@@ -50,6 +50,13 @@ type PostUpdateModel interface {
 	PostUpdateProcess(*Client, any) error
 }
 
+type PostDeleteModel interface {
+	// An optional extra function that is called after this instance was delete remotely by terraform.
+	// Extra requests (e.g. a cleanup) can be done here, as this method is exclusively called after the resource
+	// is successfuly deleted.
+	PostDeleteProcess(*Client) error
+}
+
 type GenericClient[T any, PT ParseableModel[T]] struct {
 	Client     *Client
 	Path       string
