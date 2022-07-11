@@ -72,12 +72,24 @@ module "assets_widgets" {
 
 module "assets_dashboards" {
   source            = "./dashboards"
-  table_widget_id = module.assets_widgets.test_table_widget.id
-  value_widget_id = module.assets_widgets.test_value_widget.id
-  line_widget_id = module.assets_widgets.test_line_widget.id
+  table_widget_id   = module.assets_widgets.test_table_widget.id
+  value_widget_id   = module.assets_widgets.test_value_widget.id
+  line_widget_id    = module.assets_widgets.test_line_widget.id
   attached_node_ids = [module.assets_node.satellite_node.id]
   depends_on = [
     module.assets_widgets,
     module.assets_node
+  ]
+}
+
+module "assets_remote_agents" {
+  source            = "./remote_agents"
+  ground_station_id = module.assets_node.groundstation_node.id
+  command_queue_id  = module.assets_command_queues.test_command_queue.id
+  stream_id         = module.assets_streams.test_stream.id
+  depends_on = [
+    module.assets_node,
+    module.assets_command_queues,
+    module.assets_streams
   ]
 }

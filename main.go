@@ -12,6 +12,7 @@ import (
 	"terraform-provider-asset/asset/metrics"
 	"terraform-provider-asset/asset/nodes"
 	"terraform-provider-asset/asset/properties"
+	"terraform-provider-asset/asset/remote_agents"
 	"terraform-provider-asset/asset/streams"
 	"terraform-provider-asset/asset/widgets"
 )
@@ -25,6 +26,7 @@ func main() {
 	streams.StreamDataType.Subscribe()
 	widgets.WidgetDataType.Subscribe()
 	dashboards.DashboardDataType.Subscribe()
+	remote_agents.RemoteAgentDataType.Subscribe()
 
 	plugin.Serve(&plugin.ServeOpts{
 		ProviderFunc: func() *schema.Provider {

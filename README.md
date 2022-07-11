@@ -381,6 +381,37 @@ One dashboard block containing:
 - last_modified_at (filled by the API)
 - last_modified_by (filled by the API)
 
+### leanspace_remote_agents
+One remote agent block containing:
+- id (filled by the API)
+- name
+- description: optional
+- servie_account_id (filled by the API)
+- connectors: zero to many blocks:
+  - id (filled by the API)
+  - gateway_id
+  - type `INBOUND || OUTBOUND`
+  - socket: one block
+    - type: `TCP || UDP`
+    - host (only required if type = `OUTBOUND`)
+    - port: integer
+  - stream_id (only required if type = `INBOUND`)
+  - destination (filled by the API) (only set if type = `INBOUND`):
+    - type (filled by the API)
+    - binding (filled by the API)
+  - command_queue_id (only required if type = `OUTBOUND`)
+  - source (filled by the API) (only set if type = `OUTBOUND`)
+    - type (filled by the API)
+    - binding (filled by the API)
+  - created_at (filled by the API)
+  - created_by (filled by the API)
+  - last_modified_at (filled by the API)
+  - last_modified_by (filled by the API)
+- created_at (filled by the API)
+- created_by (filled by the API)
+- last_modified_at (filled by the API)
+- last_modified_by (filled by the API)
+
 ## Datasource
 
 ### Common pattern
@@ -446,6 +477,10 @@ One dashboard block containing:
 
 - content: list of one or multiple blocks of dashboards
 
+### leanspace_remote_agents
+
+- content: list of one or multiple blocks of remote agents
+
 ## Examples
 
 You can find examples in the `/examples` folder
@@ -462,6 +497,7 @@ There's one folder for each resource type:
 - metrics: it has as many `leanspace_metrics` resources as available types (6)
 - streams: it has one `leanspace_streams` resource, with all available element types (3), all possible field types (5), a computed field and a mapping.
 - widgets: it has as many `leanspace_widgets` resources as available types (5)
-- dashboards: it has as one `leanspace_dashboards` resource with three widgets and linked to a node
+- dashboards: it has one `leanspace_dashboards` resource with three widgets and linked to a node
+- remote agents: it has one `leanspace_remote_agents` resource, with one inbound and one outbond connectors.
 
 Finally there is the `imports` folder containing sample resources for each resource to test the import.
