@@ -93,3 +93,7 @@ module "assets_remote_agents" {
     module.assets_streams
   ]
 }
+
+module "assets_access_policies" {
+  source            = "./access_policies"
+}
