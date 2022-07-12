@@ -52,8 +52,8 @@ func (node *Node) toMapRecursive(level int) map[string]any {
 	return nodeMap
 }
 
-var tle1stLine = `^1 (?P<noradId>[ 0-9]{5})[A-Z] [ 0-9]{5}[ A-Z]{3} [ 0-9]{5}[.][ 0-9]{8} (?:(?:[ 0+-][.][ 0-9]{8})|(?: [ +-][.][ 0-9]{7})) [ +-][ 0-9]{5}[+-][ 0-9] [ +-][ 0-9]{5}[+-][ 0-9] [ 0-9] [ 0-9]{4}[ 0-9]$`
-var tle2ndLine = `^2 (?P<noradId>[ 0-9]{5}) [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{7} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{2}[.][ 0-9]{13}[ 0-9]$`
+var tle1stLineRegex = `^1 (?P<noradId>[ 0-9]{5})[A-Z] [ 0-9]{5}[ A-Z]{3} [ 0-9]{5}[.][ 0-9]{8} (?:(?:[ 0+-][.][ 0-9]{8})|(?: [ +-][.][ 0-9]{7})) [ +-][ 0-9]{5}[+-][ 0-9] [ +-][ 0-9]{5}[+-][ 0-9] [ 0-9] [ 0-9]{4}[ 0-9]$`
+var tle2ndLineRegex = `^2 (?P<noradId>[ 0-9]{5}) [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{7} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{2}[.][ 0-9]{13}[ 0-9]$`
 
 func (node *Node) FromMap(nodeMap map[string]any) error {
 	node.Name = nodeMap["name"].(string)
@@ -82,13 +82,13 @@ func (node *Node) FromMap(nodeMap map[string]any) error {
 	node.InternationalDesignator = nodeMap["international_designator"].(string)
 	if nodeMap["tle"] != nil && len(nodeMap["tle"].([]any)) == 2 {
 		node.Tle = make([]string, 2)
-		matched, _ := regexp.MatchString(tle1stLine, nodeMap["tle"].([]any)[0].(string))
+		matched, _ := regexp.MatchString(tle1stLineRegex, nodeMap["tle"].([]any)[0].(string))
 		if !matched {
-			return fmt.Errorf("TLE first line mutch match %q, got: %q", tle1stLine, nodeMap["tle"].([]any)[0].(string))
+			return fmt.Errorf("TLE first line mutch match %q, got: %q", tle1stLineRegex, nodeMap["tle"].([]any)[0].(string))
 		}
-		matched, _ = regexp.MatchString(tle2ndLine, nodeMap["tle"].([]any)[1].(string))
+		matched, _ = regexp.MatchString(tle2ndLineRegex, nodeMap["tle"].([]any)[1].(string))
 		if !matched {
-			return fmt.Errorf("TLE second line mutch match %q, got: %q", tle2ndLine, nodeMap["tle"].([]any)[1].(string))
+			return fmt.Errorf("TLE second line mutch match %q, got: %q", tle2ndLineRegex, nodeMap["tle"].([]any)[1].(string))
 		}
 		for i, tle := range nodeMap["tle"].([]any) {
 			node.Tle[i] = tle.(string)

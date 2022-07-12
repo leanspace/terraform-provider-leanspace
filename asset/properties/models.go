@@ -28,7 +28,7 @@ type Property[T any] struct {
 	Type           string                `json:"type" terra:"type"`
 }
 
-func (prop *Property[T]) GetID() string { return prop.ID }
+func (property *Property[T]) GetID() string { return property.ID }
 
 type Fields struct {
 	Elevation Field[any] `json:"elevation" terra:"elevation"`
