@@ -24,7 +24,7 @@ var memberSchema = map[string]*schema.Schema{
 		Computed: true,
 	},
 	"policy_ids": {
-		Type:     schema.TypeList,
+		Type:     schema.TypeSet,
 		Required: true,
 		Elem: &schema.Schema{
 			Type:         schema.TypeString,

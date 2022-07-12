@@ -15,7 +15,7 @@ var serviceAccountSchema = map[string]*schema.Schema{
 		Required: true,
 	},
 	"policy_ids": {
-		Type:     schema.TypeList,
+		Type:     schema.TypeSet,
 		Required: true,
 		Elem: &schema.Schema{
 			Type:         schema.TypeString,

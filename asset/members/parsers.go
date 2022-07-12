@@ -1,5 +1,7 @@
 package members
 
+import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 func (member *Member) ToMap() map[string]any {
 	memberMap := make(map[string]any)
 	memberMap["id"] = member.ID
@@ -20,8 +22,8 @@ func (member *Member) FromMap(memberMap map[string]any) error {
 	member.Name = memberMap["name"].(string)
 	member.Email = memberMap["email"].(string)
 	member.Status = memberMap["status"].(string)
-	member.PolicyIds = make([]string, len(memberMap["policy_ids"].([]any)))
-	for i, value := range memberMap["policy_ids"].([]any) {
+	member.PolicyIds = make([]string, memberMap["policy_ids"].(*schema.Set).Len())
+	for i, value := range memberMap["policy_ids"].(*schema.Set).List() {
 		member.PolicyIds[i] = value.(string)
 	}
 	member.CreatedAt = memberMap["created_at"].(string)
