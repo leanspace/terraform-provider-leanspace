@@ -448,6 +448,17 @@ One service account block containing:
 - last_modified_at (filled by the API)
 - last_modified_by (filled by the API)
 
+### leanspace_teams
+One team block containing:
+- id (filled by the API)
+- name
+- policy_ids: list of policy IDs (UUID strings) to attach
+- members: list of member IDs (UUID strings) to add
+- created_at (filled by the API)
+- created_by (filled by the API)
+- last_modified_at (filled by the API)
+- last_modified_by (filled by the API)
+
 ## Datasource
 
 ### Common pattern
@@ -529,6 +540,10 @@ One service account block containing:
 
 - content: list of one or multiple blocks of service accounts
 
+### leanspace_teams
+
+- content: list of one or multiple blocks of teams
+
 ## Examples
 
 You can find examples in the `/examples` folder
@@ -550,5 +565,6 @@ There's one folder for each resource type:
 - access policies: it has one `leanspace_access_policies` resource, with two statements, one containing a global (`*`) action and one with specific actions.
 - members: it has three `leanspace_members` resources, created recursively.
 - service accounts: it has three `leanspace_service_accounts` resources, created recursively.  
+- teams: it has one `leanspace_teams` resource, created with the given members and policies.
 
 Finally there is the `imports` folder containing sample resources for each resource to test the import.

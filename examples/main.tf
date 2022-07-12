@@ -102,4 +102,26 @@ module "assets_members" {
   source          = "./members"
   usernames       = ["TerraPaul", "TerraCotta", "TerraKium"]
   access_policies = [module.assets_access_policies.test_access_policy.id]
+  depends_on = [
+    module.assets_access_policies
+  ]
+}
+
+module "assets_service_accounts" {
+  source          = "./service_accounts"
+  usernames       = ["TerraBot 1", "TerraBot 2", "TerraBot 3"]
+  access_policies = [module.assets_access_policies.test_access_policy.id]
+  depends_on = [
+    module.assets_access_policies
+  ]
+}
+
+module "assets_teams" {
+  source          = "./teams"
+  members         = [for member in module.assets_members.test_members : member.id]
+  access_policies = [module.assets_access_policies.test_access_policy.id]
+  depends_on = [
+    module.assets_access_policies,
+    module.assets_members
+  ]
 }
