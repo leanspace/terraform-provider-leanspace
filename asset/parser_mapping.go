@@ -41,6 +41,13 @@ type PostCreateModel interface {
 	PostCreateProcess(*Client, any) error
 }
 
+type PostReadModel interface {
+	// An optional extra function that is called after this instance was read remotely by terraform.
+	// Extra requests (e.g. extra data fetching) can be done here, as this method is exclusively called after the resource
+	// is read, and changes done to this instance will be persisted when saving to the state.
+	PostReadProcess(*Client) error
+}
+
 type PostUpdateModel interface {
 	// An optional extra function that is called after this instance was updated remotely by terraform.
 	// Extra requests can be done here, as this method is exclusively called after the resource is updated (unlike

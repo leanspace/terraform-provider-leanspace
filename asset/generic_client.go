@@ -76,6 +76,12 @@ func (client GenericClient[T, PT]) Get(id string) (PT, error) {
 		return nil, err
 	}
 
+	if postRead, ok := any(value).(PostReadModel); ok {
+		if err := postRead.PostReadProcess(client.Client); err != nil {
+			return nil, err
+		}
+	}
+
 	return value, nil
 }
 

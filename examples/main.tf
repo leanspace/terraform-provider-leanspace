@@ -95,5 +95,11 @@ module "assets_remote_agents" {
 }
 
 module "assets_access_policies" {
-  source            = "./access_policies"
+  source = "./access_policies"
+}
+
+module "assets_members" {
+  source          = "./members"
+  usernames       = ["TerraPaul", "TerraCotta", "TerraKium"]
+  access_policies = [module.assets_access_policies.test_access_policy.id]
 }
