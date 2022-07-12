@@ -15,6 +15,7 @@ import (
 	"terraform-provider-asset/asset/nodes"
 	"terraform-provider-asset/asset/properties"
 	"terraform-provider-asset/asset/remote_agents"
+	"terraform-provider-asset/asset/service_accounts"
 	"terraform-provider-asset/asset/streams"
 	"terraform-provider-asset/asset/widgets"
 )
@@ -31,6 +32,7 @@ func main() {
 	remote_agents.RemoteAgentDataType.Subscribe()
 	access_policies.AccessPolicyDataType.Subscribe()
 	members.MemberDataType.Subscribe()
+	service_accounts.ServiceAccountDataType.Subscribe()
 
 	plugin.Serve(&plugin.ServeOpts{
 		ProviderFunc: func() *schema.Provider {
