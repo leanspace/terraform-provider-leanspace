@@ -38,7 +38,7 @@ var propertyFieldSchema = map[string]*schema.Schema{
 	},
 	"value": {
 		Type:     schema.TypeString,
-		Required: true,
+		Optional: true,
 	},
 	"type": {
 		Type:         schema.TypeString,
