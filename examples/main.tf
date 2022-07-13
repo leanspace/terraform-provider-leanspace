@@ -125,3 +125,13 @@ module "assets_teams" {
     module.assets_members
   ]
 }
+
+module "assets_activity_definitions" {
+  source = "./activity_definitions"
+  node_id = module.assets_nodes.satellite_node.id
+  command_definition_id = module.assets_command_definitions.test_command_definition.id
+  depends_on = [
+    module.assets_nodes,
+    module.assets_command_definitions
+  ]
+}

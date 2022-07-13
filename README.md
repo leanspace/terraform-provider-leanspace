@@ -459,6 +459,81 @@ One team block containing:
 - last_modified_at (filled by the API)
 - last_modified_by (filled by the API)
 
+### leanspace_command_definitions
+
+One command_definition block containing:
+- id (filled by the API)
+- node_id: id of the node to attach to
+- name
+- description: optional
+- estimated_duration: optional, in seconds
+- created_at (filled by the API)
+- created_by (filled by the API)
+- last_modified_at (filled by the API)
+- last_modified_by (filled by the API)
+- metadata: one or multiple blocks
+    - id (filled by the API)
+    - name
+    - description: optional
+    - attributes: one block
+        - unit_id: optional
+        - value: optional
+        - type: `NUMERIC||TEXT||BOOLEAN||TIMESTAMP||DATE||TIME`
+- arguments: one or multiple blocks
+    - id (filled by the API)
+    - name
+    - description: optional
+    - attributes: one block
+        - required: optional
+        - type: `NUMERIC||TEXT||BOOLEAN||TIMESTAMP||DATE||TIME`
+
+        For Numeric:
+        - min: optional, floating value
+        - max: optional, floating value
+        - scale: optional, integer value
+        - precision: optional, integer value
+        - unit_id: optional, refers to the id of a unit
+        - default_value: floating or integer value
+
+        For Text:
+        - min_length: optional, integer value
+        - max_length: optional, integer value
+        - pattern: optional, string
+        - precision: optional, integer value
+        - default_value: string
+
+        For Boolean:
+        - default_value: boolean
+
+        For Enum:
+        - options: map of key/value pairs, the key is an integer, the value is a string
+        - default_value: integer, represents a key in the options
+
+        For Timestamp:
+        - before: optional, string date time
+        - after: optional, string date time
+        - default_value: string date time
+
+        For Date:
+        - before: optional, string date
+        - after:optional, string date
+        - default_value: string date
+
+        For Time:
+        - before: optional, string time
+        - after:optional, string time
+        - default_value: string time
+- command_mappings: one or multiple blocks
+  - command_definition_id: id of a command definition for the mapping
+  - position (filled by the API)
+  - delay_in_milliseconds: required integer
+  - argument_mappings: zero or more blocks
+    - activity_definition_argument_name: name of an argument in the activity definition, required
+    - command_definition_argument_name: name of an argument in the command definition, required
+  - metadata_mappings: zero or more blocks
+    - activity_definition_metadata_name: name of a metadata value in the activity definition, required
+    - command_definition_argument_name: name of an argument in the command definition, required
+
 ## Datasource
 
 ### Common pattern
@@ -544,6 +619,10 @@ One team block containing:
 
 - content: list of one or multiple blocks of teams
 
+### leanspace_activity_definitions
+
+- content: list of one or multiple blocks of activity definitions
+
 ## Examples
 
 You can find examples in the `/examples` folder
@@ -566,5 +645,6 @@ There's one folder for each resource type:
 - members: it has three `leanspace_members` resources, created recursively.
 - service accounts: it has three `leanspace_service_accounts` resources, created recursively.  
 - teams: it has one `leanspace_teams` resource, created with the given members and policies.
+- activity definitions: it has one `leanspace_activity_definitions` resource, whth all possible metadata types (6) and all possible argument types (7), as well as two mappings
 
 Finally there is the `imports` folder containing sample resources for each resource to test the import.
