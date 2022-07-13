@@ -67,6 +67,21 @@ func (pageable *Pageable) ToMap() map[string]any {
 	return pageableMap
 }
 
+func (attribute *ValueAttribute[T]) ToMap() map[string]any {
+	attributeMap := make(map[string]any)
+	attributeMap["type"] = attribute.Type
+	switch attribute.Type {
+	case "NUMERIC":
+		attributeMap["value"] = ParseFloat(any(attribute.Value).(float64))
+		attributeMap["unit_id"] = attribute.UnitId
+	case "TEXT", "TIMESTAMP", "DATE", "TIME":
+		attributeMap["value"] = attribute.Value
+	case "BOOLEAN":
+		attributeMap["value"] = strconv.FormatBool(any(attribute.Value).(bool))
+	}
+	return attributeMap
+}
+
 func (paginatedList *PaginatedList[T, PT]) FromMap(paginatedListMap map[string]any) error {
 	paginatedList.Content = make([]T, len(paginatedListMap["content"].([]any)))
 	for i, value := range paginatedListMap["content"].([]any) {
@@ -154,6 +169,15 @@ func (attribute *DefinitionAttribute[T]) FromMap(attributeMap map[string]any) er
 		attribute.After = attributeMap["after"].(string)
 	case "BOOLEAN":
 		// no extra field
+	}
+	return nil
+}
+
+func (attribute *ValueAttribute[T]) FromMap(attributeMap map[string]any) error {
+	attribute.Value = attributeMap["value"].(T)
+	attribute.Type = attributeMap["type"].(string)
+	if attributeMap["type"] == "NUMERIC" {
+		attribute.UnitId = attributeMap["unit_id"].(string)
 	}
 	return nil
 }

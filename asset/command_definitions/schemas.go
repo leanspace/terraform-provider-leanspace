@@ -81,30 +81,8 @@ var metadataSchema = map[string]*schema.Schema{
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: valueAttributeSchema,
+			Schema: general_objects.ValueAttributeSchema,
 		},
-	},
-}
-
-var validMetadataTypes = []string{
-	"NUMERIC", "BOOLEAN", "TEXT", "DATE", "TIME", "TIMESTAMP", "ENUM",
-}
-
-var valueAttributeSchema = map[string]*schema.Schema{
-	"value": {
-		Type:     schema.TypeString,
-		Optional: true,
-	},
-	"type": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validMetadataTypes, false),
-	},
-	// Numeric only
-	"unit_id": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.IsUUID,
 	},
 }
 

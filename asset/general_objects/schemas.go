@@ -239,3 +239,25 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string) ma
 
 	return schema
 }
+
+var validMetadataTypes = []string{
+	"NUMERIC", "BOOLEAN", "TEXT", "DATE", "TIME", "TIMESTAMP", "ENUM",
+}
+
+var ValueAttributeSchema = map[string]*schema.Schema{
+	"value": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"type": {
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.StringInSlice(validMetadataTypes, false),
+	},
+	// Numeric only
+	"unit_id": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: validation.IsUUID,
+	},
+}
