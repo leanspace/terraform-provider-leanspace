@@ -4,6 +4,8 @@ import (
 	"strconv"
 	"terraform-provider-asset/asset"
 	"terraform-provider-asset/asset/general_objects"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func (field *Field[T]) ToMap() map[string]any {
@@ -34,7 +36,7 @@ func (property *Property[T]) ToMap() map[string]any {
 	propertyMap["last_modified_at"] = property.LastModifiedAt
 	propertyMap["last_modified_by"] = property.LastModifiedBy
 	propertyMap["type"] = property.Type
-	propertyMap["tags"] = general_objects.TagsStructToMap(property.Tags)
+	propertyMap["tags"] = asset.ParseToMaps(property.Tags)
 	switch property.Type {
 	case "NUMERIC":
 		propertyMap["value"] = asset.ParseFloat(any(property.Value).(float64))
@@ -102,7 +104,11 @@ func (property *Property[T]) FromMap(propertyMap map[string]any) error {
 	property.LastModifiedBy = propertyMap["last_modified_by"].(string)
 	property.Value = propertyMap["value"].(T)
 	property.Type = propertyMap["type"].(string)
-	property.Tags = general_objects.TagsInterfaceToStruct(propertyMap["tags"])
+	if tags, err := asset.ParseFromMaps[general_objects.Tag](propertyMap["tags"].(*schema.Set).List()); err != nil {
+		return err
+	} else {
+		property.Tags = tags
+	}
 	switch property.Type {
 	case "NUMERIC":
 		property.Min = propertyMap["min"].(float64)

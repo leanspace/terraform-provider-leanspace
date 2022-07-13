@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 
+	"terraform-provider-asset/asset"
 	"terraform-provider-asset/asset/general_objects"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -26,7 +27,7 @@ func (node *Node) toMapRecursive(level int) map[string]any {
 	nodeMap["last_modified_by"] = node.LastModifiedBy
 	nodeMap["type"] = node.Type
 	nodeMap["kind"] = node.Kind
-	nodeMap["tags"] = general_objects.TagsStructToMap(node.Tags)
+	nodeMap["tags"] = asset.ParseToMaps(node.Tags)
 	if node.Nodes != nil && level == 0 {
 		nodes := make([]any, len(node.Nodes))
 		for i, subNode := range node.Nodes {
@@ -68,7 +69,11 @@ func (node *Node) FromMap(nodeMap map[string]any) error {
 		return fmt.Errorf("kind must be either GENERIC, SATELLITE ou GROUND_STATION, got: %q", nodeMap["kind"])
 	}
 	node.Kind = nodeMap["kind"].(string)
-	node.Tags = general_objects.TagsInterfaceToStruct(nodeMap["tags"])
+	if tags, err := asset.ParseFromMaps[general_objects.Tag](nodeMap["tags"].(*schema.Set).List()); err != nil {
+		return err
+	} else {
+		node.Tags = tags
+	}
 	if nodeMap["nodes"] != nil {
 		node.Nodes = make([]Node, nodeMap["nodes"].(*schema.Set).Len())
 		for i, subNode := range nodeMap["nodes"].(*schema.Set).List() {

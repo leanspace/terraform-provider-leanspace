@@ -7,7 +7,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/mitchellh/mapstructure"
 
 	"terraform-provider-asset/asset/general_objects"
 )
@@ -28,21 +27,23 @@ func (dataSourceType DataSourceType[T, PT]) read(ctx context.Context, d *schema.
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	dataSourceType.setData(values, d)
+	err = dataSourceType.setData(values, d)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
 
 	return diags
 }
 
-func (dataSourceType DataSourceType[T, PT]) setData(paginatedList *general_objects.PaginatedList[T], d *schema.ResourceData) {
-	data_as_map := make(map[string]any)
-	decoder, _ := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
-		TagName: "terra",
-		Result:  &data_as_map,
-	})
-	decoder.Decode(paginatedList)
+func (dataSourceType DataSourceType[T, PT]) setData(paginatedList *general_objects.PaginatedList[T, PT], d *schema.ResourceData) error {
+	paginatedListMap := paginatedList.ToMap()
 
-	for key, value := range data_as_map {
-		d.Set(key, value)
+	for key, value := range paginatedListMap {
+		err := d.Set(key, value)
+		if err != nil {
+			return err
+		}
 	}
+	return nil
 }

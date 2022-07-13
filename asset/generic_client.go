@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-
 	"terraform-provider-asset/asset/general_objects"
 )
 
@@ -32,7 +31,7 @@ func (client GenericClient[T, PT]) unmarshalElement(data []byte) (PT, error) {
 	return element, nil
 }
 
-func (client GenericClient[T, PT]) GetAll() (*general_objects.PaginatedList[T], error) {
+func (client GenericClient[T, PT]) GetAll() (*general_objects.PaginatedList[T, PT], error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s", client.Client.HostURL, client.Path), nil)
 	if err != nil {
 		return nil, err
@@ -43,7 +42,7 @@ func (client GenericClient[T, PT]) GetAll() (*general_objects.PaginatedList[T], 
 		return nil, err
 	}
 
-	values := general_objects.PaginatedList[T]{}
+	values := general_objects.PaginatedList[T, PT]{}
 	err = json.Unmarshal(body, &values)
 	if err != nil {
 		return nil, err
