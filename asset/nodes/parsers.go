@@ -1,0 +1,95 @@
+package nodes
+
+import (
+	"fmt"
+	"regexp"
+
+	"terraform-provider-asset/asset/general_objects"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
+
+func (node *Node) ToMap() map[string]any {
+	return node.toMapRecursive(0)
+}
+
+func (node *Node) toMapRecursive(level int) map[string]any {
+	nodeMap := make(map[string]any)
+
+	nodeMap["id"] = node.ID
+	nodeMap["name"] = node.Name
+	nodeMap["description"] = node.Description
+	nodeMap["created_at"] = node.CreatedAt
+	nodeMap["created_by"] = node.CreatedBy
+	nodeMap["parent_node_id"] = node.ParentNodeId
+	nodeMap["last_modified_at"] = node.LastModifiedAt
+	nodeMap["last_modified_by"] = node.LastModifiedBy
+	nodeMap["type"] = node.Type
+	nodeMap["kind"] = node.Kind
+	nodeMap["tags"] = general_objects.TagsStructToMap(node.Tags)
+	if node.Nodes != nil && level == 0 {
+		nodes := make([]any, len(node.Nodes))
+		for i, subNode := range node.Nodes {
+			nodes[i] = (&subNode).toMapRecursive(level + 1)
+		}
+		nodeMap["nodes"] = nodes
+	}
+	if len(node.NoradId) != 0 {
+		nodeMap["norad_id"] = node.NoradId
+	}
+	if len(node.InternationalDesignator) != 0 {
+		nodeMap["international_designator"] = node.InternationalDesignator
+	}
+	if len(node.Tle) == 2 {
+		nodeMap["tle"] = node.Tle
+	}
+
+	return nodeMap
+}
+
+var tle1stLine = `^1 (?P<noradId>[ 0-9]{5})[A-Z] [ 0-9]{5}[ A-Z]{3} [ 0-9]{5}[.][ 0-9]{8} (?:(?:[ 0+-][.][ 0-9]{8})|(?: [ +-][.][ 0-9]{7})) [ +-][ 0-9]{5}[+-][ 0-9] [ +-][ 0-9]{5}[+-][ 0-9] [ 0-9] [ 0-9]{4}[ 0-9]$`
+var tle2ndLine = `^2 (?P<noradId>[ 0-9]{5}) [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{7} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{2}[.][ 0-9]{13}[ 0-9]$`
+
+func (node *Node) FromMap(nodeMap map[string]any) error {
+	node.Name = nodeMap["name"].(string)
+	node.Description = nodeMap["description"].(string)
+	node.CreatedAt = nodeMap["created_at"].(string)
+	node.CreatedBy = nodeMap["created_by"].(string)
+	node.ParentNodeId = nodeMap["parent_node_id"].(string)
+	node.LastModifiedAt = nodeMap["last_modified_at"].(string)
+	node.LastModifiedBy = nodeMap["last_modified_by"].(string)
+	node.Type = nodeMap["type"].(string)
+	if node.Type == "ASSET" && !(nodeMap["kind"] == "GENERIC" || nodeMap["kind"] == "SATELLITE" || nodeMap["kind"] == "GROUND_STATION") {
+		return fmt.Errorf("kind must be either GENERIC, SATELLITE ou GROUND_STATION, got: %q", nodeMap["kind"])
+	}
+	node.Kind = nodeMap["kind"].(string)
+	node.Tags = general_objects.TagsInterfaceToStruct(nodeMap["tags"])
+	if nodeMap["nodes"] != nil {
+		node.Nodes = make([]Node, nodeMap["nodes"].(*schema.Set).Len())
+		for i, subNode := range nodeMap["nodes"].(*schema.Set).List() {
+			err := node.Nodes[i].FromMap(subNode.(map[string]any))
+			if err != nil {
+				return err
+			}
+		}
+	}
+	node.NoradId = nodeMap["norad_id"].(string)
+	node.InternationalDesignator = nodeMap["international_designator"].(string)
+	if nodeMap["tle"] != nil && len(nodeMap["tle"].([]any)) == 2 {
+		node.Tle = make([]string, 2)
+		matched, _ := regexp.MatchString(tle1stLine, nodeMap["tle"].([]any)[0].(string))
+		if !matched {
+			return fmt.Errorf("TLE first line mutch match %q, got: %q", tle1stLine, nodeMap["tle"].([]any)[0].(string))
+		}
+		matched, _ = regexp.MatchString(tle2ndLine, nodeMap["tle"].([]any)[1].(string))
+		if !matched {
+			return fmt.Errorf("TLE second line mutch match %q, got: %q", tle2ndLine, nodeMap["tle"].([]any)[1].(string))
+		}
+		for i, tle := range nodeMap["tle"].([]any) {
+			node.Tle[i] = tle.(string)
+		}
+
+	}
+
+	return nil
+}
