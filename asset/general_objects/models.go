@@ -51,7 +51,7 @@ type DefinitionAttribute[T any] struct {
 	Max       float64 `json:"max,omitempty" terra:"max"`
 	Scale     int     `json:"scale,omitempty" terra:"scale"`
 	Precision int     `json:"precision,omitempty" terra:"precision"`
-	UnitId    string  `json:"unit_id,omitempty" terra:"unit_id"`
+	UnitId    string  `json:"unitId,omitempty" terra:"unit_id"`
 	// Date, time, timestamp
 	Before string `json:"before,omitempty" terra:"before"`
 	After  string `json:"after,omitempty" terra:"after"`

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 
+	"terraform-provider-asset/asset"
 	"terraform-provider-asset/asset/general_objects"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -42,6 +43,11 @@ func (node *Node) toMapRecursive(level int) map[string]any {
 	}
 	if len(node.Tle) == 2 {
 		nodeMap["tle"] = node.Tle
+	}
+	if node.Kind == "GROUND_STATION" {
+		nodeMap["latitude"] = asset.ParseFloat(node.Latitude)
+		nodeMap["longitude"] = asset.ParseFloat(node.Longitude)
+		nodeMap["elevation"] = asset.ParseFloat(node.Elevation)
 	}
 
 	return nodeMap
@@ -89,6 +95,11 @@ func (node *Node) FromMap(nodeMap map[string]any) error {
 			node.Tle[i] = tle.(string)
 		}
 
+	}
+	if nodeMap["kind"] == "GROUND_STATION" {
+		node.Latitude = nodeMap["latitude"].(float64)
+		node.Longitude = nodeMap["longitude"].(float64)
+		node.Elevation = nodeMap["elevation"].(float64)
 	}
 
 	return nil
