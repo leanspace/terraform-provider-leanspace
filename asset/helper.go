@@ -66,17 +66,21 @@ type ParseablePointer[T any] interface {
 func ParseToMaps[T any, PT ParseablePointer[T]](parseables []T) []map[string]any {
 	maps := make([]map[string]any, len(parseables))
 	for index, value := range parseables {
-		maps[index] = any(&value).(PT).ToMap()
+		var pointer PT = &value
+		maps[index] = pointer.ToMap()
 	}
 	return maps
 }
 
-func ParseFromMaps[T any, PT ParseablePointer[T]](maps []any) []T {
+func ParseFromMaps[T any, PT ParseablePointer[T]](maps []any) ([]T, error) {
 	parseables := make([]T, len(maps))
 	for index, m := range maps {
-		any(&parseables[index]).(PT).FromMap(m.(map[string]any))
+		var pointer PT = &parseables[index]
+		if err := pointer.FromMap(m.(map[string]any)); err != nil {
+			return parseables, err
+		}
 	}
-	return parseables
+	return parseables, nil
 }
 
 // Parses a float to a string. Use this method to ensure consistency.

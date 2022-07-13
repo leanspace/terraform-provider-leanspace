@@ -9,6 +9,29 @@ import (
 	"terraform-provider-asset/asset/general_objects"
 )
 
+func (client GenericClient[T, PT]) marshalElement(element PT) ([]byte, error) {
+	if extraElement, ok := any(element).(ExtraMarshallModel); ok {
+		if err := extraElement.PreMarshallProcess(); err != nil {
+			return nil, err
+		}
+	}
+	return json.Marshal(element)
+}
+
+func (client GenericClient[T, PT]) unmarshalElement(data []byte) (PT, error) {
+	var element PT = new(T)
+	err := json.Unmarshal(data, element)
+	if err != nil {
+		return nil, err
+	}
+	if extraElement, ok := any(element).(ExtraUnmarshallModel); ok {
+		if err := extraElement.PostUnmarshallProcess(); err != nil {
+			return nil, err
+		}
+	}
+	return element, nil
+}
+
 func (client GenericClient[T, PT]) GetAll() (*general_objects.PaginatedList[T], error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s", client.Client.HostURL, client.Path), nil)
 	if err != nil {
@@ -29,28 +52,35 @@ func (client GenericClient[T, PT]) GetAll() (*general_objects.PaginatedList[T], 
 	return &values, nil
 }
 
+// Retrieve a resource of this type with the given ID.
+// Can return:
+// - PT, nil, if the resource was fetched
+// - nil, error, if there was an error when fetching the resource
+// - nil, nil, if the resource was not found (and no other error occurred)
 func (client GenericClient[T, PT]) Get(id string) (PT, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s/%s", client.Client.HostURL, client.Path, id), nil)
 	if err != nil {
 		return nil, err
 	}
 
-	body, err, _ := client.Client.doRequest(req, &(client.Client).Token)
+	body, err, statusCode := client.Client.doRequest(req, &(client.Client).Token)
+	if statusCode == http.StatusNotFound {
+		return nil, nil
+	}
 	if err != nil {
 		return nil, err
 	}
 
-	var value T
-	err = json.Unmarshal(body, &value)
+	value, err := client.unmarshalElement(body)
 	if err != nil {
 		return nil, err
 	}
 
-	return &value, nil
+	return value, nil
 }
 
 func (client GenericClient[T, PT]) Create(createElement PT) (PT, error) {
-	rb, err := json.Marshal(createElement)
+	rb, err := client.marshalElement(createElement)
 	if err != nil {
 		return nil, err
 	}
@@ -67,21 +97,23 @@ func (client GenericClient[T, PT]) Create(createElement PT) (PT, error) {
 	}
 
 	body, err, _ := client.Client.doRequest(req, &(client.Client).Token)
+
+	// Here, maybe check if the error is because of a 409 (conflict), in which case
+	// we update the object and continue as if it was created.
 	if err != nil {
 		return nil, err
 	}
 
-	var value T
-	err = json.Unmarshal(body, &value)
+	value, err := client.unmarshalElement(body)
 	if err != nil {
 		return nil, err
 	}
 
-	return &value, nil
+	return value, nil
 }
 
-func (client GenericClient[T, PT]) Update(nodeId string, createElement PT) (*T, error) {
-	rb, err := json.Marshal(createElement)
+func (client GenericClient[T, PT]) Update(nodeId string, createElement PT) (PT, error) {
+	rb, err := client.marshalElement(createElement)
 	if err != nil {
 		return nil, err
 	}
@@ -97,13 +129,12 @@ func (client GenericClient[T, PT]) Update(nodeId string, createElement PT) (*T, 
 		return nil, err
 	}
 
-	var value T
-	err = json.Unmarshal(body, &value)
+	value, err := client.unmarshalElement(body)
 	if err != nil {
 		return nil, err
 	}
 
-	return &value, nil
+	return value, nil
 }
 
 func (client GenericClient[T, PT]) Delete(nodeId string) error {

@@ -61,7 +61,7 @@ func (argument Argument[T]) ToMap() map[string]any {
 	argumentMap["name"] = argument.Name
 	argumentMap["identifier"] = argument.Identifier
 	argumentMap["description"] = argument.Description
-	argumentMap["attributes"] = argument.Attributes.ToMap()
+	argumentMap["attributes"] = []any{argument.Attributes.ToMap()}
 
 	return argumentMap
 }
@@ -77,14 +77,23 @@ func (commandDefinition *CommandDefinition) FromMap(cmdDefinitionMap map[string]
 	commandDefinition.LastModifiedAt = cmdDefinitionMap["last_modified_at"].(string)
 	commandDefinition.LastModifiedBy = cmdDefinitionMap["last_modified_by"].(string)
 	if cmdDefinitionMap["metadata"] != nil {
-		commandDefinition.Metadata = asset.ParseFromMaps[Metadata[any]](
+		if metadata, err := asset.ParseFromMaps[Metadata[any]](
 			cmdDefinitionMap["metadata"].(*schema.Set).List(),
-		)
+		); err != nil {
+			return err
+		} else {
+			commandDefinition.Metadata = metadata
+		}
 	}
 	if cmdDefinitionMap["arguments"] != nil {
-		commandDefinition.Arguments = asset.ParseFromMaps[Argument[any]](
+
+		if arguments, err := asset.ParseFromMaps[Argument[any]](
 			cmdDefinitionMap["arguments"].(*schema.Set).List(),
-		)
+		); err != nil {
+			return err
+		} else {
+			commandDefinition.Arguments = arguments
+		}
 	}
 
 	return nil

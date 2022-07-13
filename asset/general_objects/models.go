@@ -40,7 +40,7 @@ type PaginatedList[T any] struct {
 type DefinitionAttribute[T any] struct {
 	// Common
 	Type         string `json:"type" terra:"type"`
-	Required     bool   `json:"required,omitempty" terra:"required"`
+	Required     *bool  `json:"required,omitempty" terra:"required"`
 	DefaultValue T      `json:"defaultValue,omitempty" terra:"default_value"`
 	// Text
 	MinLength int    `json:"minLength,omitempty" terra:"min_length"`

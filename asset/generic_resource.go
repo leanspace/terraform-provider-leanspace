@@ -35,7 +35,10 @@ func (dataSource DataSourceType[T, PT]) create(ctx context.Context, d *schema.Re
 	var diags diag.Diagnostics
 
 	value := d.Get(dataSource.Name).([]any)
-	valueData := dataSource.getValueData(value)
+	valueData, err := dataSource.getValueData(value)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	createdValue, err := dataSource.convert(client).Create(valueData)
 	if err != nil {
 		return diag.FromErr(err)
@@ -56,22 +59,25 @@ func (dataSource DataSourceType[T, PT]) get(ctx context.Context, d *schema.Resou
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	dataSource.setValueData(value, d)
 
+	var storedData any = nil
+	if value != nil {
+		storedData = []map[string]any{value.ToMap()}
+	}
+	err = d.Set(dataSource.Name, storedData)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	return diags
 }
 
-func (dataSource DataSourceType[T, PT]) setValueData(value PT, d *schema.ResourceData) {
-	valueList := make([]map[string]any, 1)
-
-	valueList[0] = value.ToMap()
-	d.Set(dataSource.Name, valueList)
-}
-
-func (dataSource DataSourceType[T, PT]) getValueData(valueList []any) PT {
-	value := any(new(T)).(PT)
-	value.FromMap(valueList[0].(map[string]any))
-	return value
+func (dataSource DataSourceType[T, PT]) getValueData(valueList []any) (PT, error) {
+	var value PT = new(T)
+	err := value.FromMap(valueList[0].(map[string]any))
+	if err != nil {
+		return nil, err
+	}
+	return value, nil
 }
 
 func (dataSource DataSourceType[T, PT]) update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
@@ -82,7 +88,11 @@ func (dataSource DataSourceType[T, PT]) update(ctx context.Context, d *schema.Re
 	if d.HasChange(dataSource.Name) {
 		valueId := d.Id()
 		value := d.Get(dataSource.Name).([]any)
-		_, err := dataSource.convert(client).Update(valueId, dataSource.getValueData(value))
+		valueData, err := dataSource.getValueData(value)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		_, err = dataSource.convert(client).Update(valueId, valueData)
 		if err != nil {
 			return diag.FromErr(err)
 		}

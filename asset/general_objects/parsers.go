@@ -70,7 +70,8 @@ func PageableStructToMapList(pageable Pageable, sort any) []map[string]any {
 func (attribute *DefinitionAttribute[T]) FromMap(attributeMap map[string]any) error {
 	attribute.Type = attributeMap["type"].(string)
 	if value, ok := attributeMap["required"]; ok {
-		attribute.Required = value.(bool)
+		b := value.(bool)
+		attribute.Required = &b
 	}
 	if value, ok := attributeMap["default_value"]; ok {
 		attribute.DefaultValue = value.(T)
@@ -104,11 +105,16 @@ func (attribute *DefinitionAttribute[T]) ToMap() map[string]any {
 	attributeMap := make(map[string]any)
 
 	attributeMap["type"] = attribute.Type
-	attributeMap["required"] = attribute.Required
+
+	if attribute.Required != nil {
+		attributeMap["required"] = attribute.Required
+	}
 
 	switch attribute.Type {
 	case "TEXT":
-		attributeMap["default_value"] = attribute.DefaultValue
+		if any(attribute.DefaultValue) != nil {
+			attributeMap["default_value"] = attribute.DefaultValue
+		}
 		attributeMap["min_length"] = attribute.MinLength
 		attributeMap["max_length"] = attribute.MaxLength
 		attributeMap["pattern"] = attribute.Pattern
@@ -126,7 +132,9 @@ func (attribute *DefinitionAttribute[T]) ToMap() map[string]any {
 			attributeMap["default_value"] = strconv.FormatBool(any(attribute.DefaultValue).(bool))
 		}
 	case "TIMESTAMP", "DATE", "TIME":
-		attributeMap["default_value"] = attribute.DefaultValue
+		if any(attribute.DefaultValue) != nil {
+			attributeMap["default_value"] = attribute.DefaultValue
+		}
 		attributeMap["before"] = attribute.Before
 		attributeMap["after"] = attribute.After
 	case "ENUM":

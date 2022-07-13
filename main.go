@@ -11,6 +11,7 @@ import (
 	"terraform-provider-asset/asset/metrics"
 	"terraform-provider-asset/asset/nodes"
 	"terraform-provider-asset/asset/properties"
+	"terraform-provider-asset/asset/streams"
 )
 
 func main() {
@@ -19,6 +20,7 @@ func main() {
 	command_queues.CommandQueueDataType.Subscribe()
 	properties.PropertyDataType.Subscribe()
 	metrics.MetricDataType.Subscribe()
+	streams.StreamDataType.Subscribe()
 
 	plugin.Serve(&plugin.ServeOpts{
 		ProviderFunc: func() *schema.Provider {
