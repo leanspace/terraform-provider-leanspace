@@ -63,9 +63,9 @@ One asset block containing:
 - international_designator: optional, only useful for ASSET
 - tle: optional, only useful for ASSET
     - list of exactly 2 strings
-- latitude: required if kind = GROUND_STATION
-- longitude: required if kind = GROUND_STATION
-- elevation: required if kind = GROUND_STATION
+- latitude: required if kind = GROUND_STATION, float of the ground station's latitude
+- longitude: required if kind = GROUND_STATION, float of the ground station's longitude
+- elevation: required if kind = GROUND_STATION, float of the ground station's elevation
 
 Nesting of nodes is not possible. Instead, set the `parent_node_id` field for the child node (see `examples/nodes` for an example).
 
