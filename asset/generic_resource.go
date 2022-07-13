@@ -35,7 +35,10 @@ func (dataSource DataSourceType[T, PT]) create(ctx context.Context, d *schema.Re
 	var diags diag.Diagnostics
 
 	valueRaw := d.Get(dataSource.Name).([]any)
-	value := dataSource.getValueData(valueRaw)
+	value, err := dataSource.getValueData(valueRaw)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	createdValue, err := dataSource.convert(client).Create(value)
 	if err != nil {
 		return diag.FromErr(err)
@@ -68,10 +71,13 @@ func (dataSource DataSourceType[T, PT]) get(ctx context.Context, d *schema.Resou
 	return diags
 }
 
-func (dataSource DataSourceType[T, PT]) getValueData(valueList []any) PT {
+func (dataSource DataSourceType[T, PT]) getValueData(valueList []any) (PT, error) {
 	var value PT = new(T)
-	value.FromMap(valueList[0].(map[string]any))
-	return value
+	err := value.FromMap(valueList[0].(map[string]any))
+	if err != nil {
+		return nil, err
+	}
+	return value, nil
 }
 
 func (dataSource DataSourceType[T, PT]) update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
@@ -82,8 +88,11 @@ func (dataSource DataSourceType[T, PT]) update(ctx context.Context, d *schema.Re
 	if d.HasChange(dataSource.Name) {
 		valueId := d.Id()
 		valueRaw := d.Get(dataSource.Name).([]any)
-		value := dataSource.getValueData(valueRaw)
-		_, err := dataSource.convert(client).Update(valueId, value)
+		value, err := dataSource.getValueData(valueRaw)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		_, err = dataSource.convert(client).Update(valueId, value)
 		if err != nil {
 			return diag.FromErr(err)
 		}
