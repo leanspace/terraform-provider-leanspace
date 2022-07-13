@@ -280,9 +280,12 @@ One command_definition block containing:
       - valid (filled by the API)
       - errors (filled by the API)
       - for FIELD:
-        - length_in_bits
         - processor: optional
         - data_type: `INTEGER || UINTEGER || DECIMAL || TEXT || BOOLEAN`
+        - length_in_bits
+          Extra rules apply:
+          - For data_type = `INTEGER || UINTEGER`, the max value is 32 bits
+          - For data_type = `DECIMAL`, the value must be either 32 or 64 bits
         - endianness: field specific endiannes
       - for SWITCH:
         - expression: one block, required
