@@ -17,7 +17,7 @@ func (agent *RemoteAgent) PostDeleteProcess(client *asset.Client) error {
 		return err
 	}
 	data, err, code := client.DoRequest(req, &(client).Token)
-	if code != http.StatusNotFound {
+	if code == http.StatusNotFound {
 		return nil
 	}
 	if err != nil {
