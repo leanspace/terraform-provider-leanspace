@@ -19,8 +19,10 @@ var remoteAgentSchema = map[string]*schema.Schema{
 		Optional: true,
 	},
 	"service_account_id": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:         schema.TypeString,
+		Computed:     true,
+		Optional:     true,
+		ValidateFunc: validation.IsUUID,
 	},
 	"connectors": {
 		Type:     schema.TypeSet,
@@ -53,8 +55,9 @@ var connectorSchema = map[string]*schema.Schema{
 		Computed: true,
 	},
 	"gateway_id": {
-		Type:     schema.TypeString,
-		Required: true,
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.IsUUID,
 	},
 	"type": {
 		Type:         schema.TypeString,
@@ -138,6 +141,6 @@ var connTargetSchema = map[string]*schema.Schema{
 	},
 	"binding": {
 		Type:     schema.TypeString,
-		Optional: true,
+		Computed: true,
 	},
 }
