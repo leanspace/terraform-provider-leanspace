@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 
+	"terraform-provider-asset/asset"
 	"terraform-provider-asset/asset/general_objects"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -26,7 +27,7 @@ func (node *Node) toMapRecursive(level int) map[string]any {
 	nodeMap["last_modified_by"] = node.LastModifiedBy
 	nodeMap["type"] = node.Type
 	nodeMap["kind"] = node.Kind
-	nodeMap["tags"] = general_objects.TagsStructToMap(node.Tags)
+	nodeMap["tags"] = asset.ParseToMaps(node.Tags)
 	if node.Nodes != nil && level == 0 {
 		nodes := make([]any, len(node.Nodes))
 		for i, subNode := range node.Nodes {
@@ -52,8 +53,8 @@ func (node *Node) toMapRecursive(level int) map[string]any {
 	return nodeMap
 }
 
-var tle1stLine = `^1 (?P<noradId>[ 0-9]{5})[A-Z] [ 0-9]{5}[ A-Z]{3} [ 0-9]{5}[.][ 0-9]{8} (?:(?:[ 0+-][.][ 0-9]{8})|(?: [ +-][.][ 0-9]{7})) [ +-][ 0-9]{5}[+-][ 0-9] [ +-][ 0-9]{5}[+-][ 0-9] [ 0-9] [ 0-9]{4}[ 0-9]$`
-var tle2ndLine = `^2 (?P<noradId>[ 0-9]{5}) [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{7} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{2}[.][ 0-9]{13}[ 0-9]$`
+var tle1stLineRegex = `^1 (?P<noradId>[ 0-9]{5})[A-Z] [ 0-9]{5}[ A-Z]{3} [ 0-9]{5}[.][ 0-9]{8} (?:(?:[ 0+-][.][ 0-9]{8})|(?: [ +-][.][ 0-9]{7})) [ +-][ 0-9]{5}[+-][ 0-9] [ +-][ 0-9]{5}[+-][ 0-9] [ 0-9] [ 0-9]{4}[ 0-9]$`
+var tle2ndLineRegex = `^2 (?P<noradId>[ 0-9]{5}) [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{7} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{2}[.][ 0-9]{13}[ 0-9]$`
 
 func (node *Node) FromMap(nodeMap map[string]any) error {
 	node.Name = nodeMap["name"].(string)
@@ -68,7 +69,11 @@ func (node *Node) FromMap(nodeMap map[string]any) error {
 		return fmt.Errorf("kind must be either GENERIC, SATELLITE ou GROUND_STATION, got: %q", nodeMap["kind"])
 	}
 	node.Kind = nodeMap["kind"].(string)
-	node.Tags = general_objects.TagsInterfaceToStruct(nodeMap["tags"])
+	if tags, err := asset.ParseFromMaps[general_objects.Tag](nodeMap["tags"].(*schema.Set).List()); err != nil {
+		return err
+	} else {
+		node.Tags = tags
+	}
 	if nodeMap["nodes"] != nil {
 		node.Nodes = make([]Node, nodeMap["nodes"].(*schema.Set).Len())
 		for i, subNode := range nodeMap["nodes"].(*schema.Set).List() {
@@ -82,13 +87,13 @@ func (node *Node) FromMap(nodeMap map[string]any) error {
 	node.InternationalDesignator = nodeMap["international_designator"].(string)
 	if nodeMap["tle"] != nil && len(nodeMap["tle"].([]any)) == 2 {
 		node.Tle = make([]string, 2)
-		matched, _ := regexp.MatchString(tle1stLine, nodeMap["tle"].([]any)[0].(string))
+		matched, _ := regexp.MatchString(tle1stLineRegex, nodeMap["tle"].([]any)[0].(string))
 		if !matched {
-			return fmt.Errorf("TLE first line mutch match %q, got: %q", tle1stLine, nodeMap["tle"].([]any)[0].(string))
+			return fmt.Errorf("TLE first line mutch match %q, got: %q", tle1stLineRegex, nodeMap["tle"].([]any)[0].(string))
 		}
-		matched, _ = regexp.MatchString(tle2ndLine, nodeMap["tle"].([]any)[1].(string))
+		matched, _ = regexp.MatchString(tle2ndLineRegex, nodeMap["tle"].([]any)[1].(string))
 		if !matched {
-			return fmt.Errorf("TLE second line mutch match %q, got: %q", tle2ndLine, nodeMap["tle"].([]any)[1].(string))
+			return fmt.Errorf("TLE second line mutch match %q, got: %q", tle2ndLineRegex, nodeMap["tle"].([]any)[1].(string))
 		}
 		for i, tle := range nodeMap["tle"].([]any) {
 			node.Tle[i] = tle.(string)

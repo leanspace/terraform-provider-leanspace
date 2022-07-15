@@ -1,8 +1,6 @@
 package command_queues
 
 import (
-	"terraform-provider-asset/asset"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -27,7 +25,10 @@ func (queue *CommandQueue) FromMap(queueMap map[string]any) error {
 	queue.ID = queueMap["id"].(string)
 	queue.AssetId = queueMap["asset_id"].(string)
 	queue.Name = queueMap["name"].(string)
-	queue.GroundStationIds = asset.SetToList[string](queueMap["ground_station_ids"].(*schema.Set))
+	queue.GroundStationIds = make([]string, queueMap["ground_station_ids"].(*schema.Set).Len())
+	for i, value := range queueMap["ground_station_ids"].(*schema.Set).List() {
+		queue.GroundStationIds[i] = value.(string)
+	}
 	queue.CommandTransformerPluginId = queueMap["command_transformer_plugin_id"].(string)
 	queue.ProtocolTransformerPluginId = queueMap["protocol_transformer_plugin_id"].(string)
 	queue.ProtocolTransformerInitData = queueMap["protocol_transformer_init_data"].(string)

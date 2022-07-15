@@ -11,17 +11,17 @@ data "leanspace_remote_agents" "all" {}
 
 variable "command_queue_id" {
   type        = string
-  description = "The ID of the asset to which the command queue will be added."
+  description = "The ID of the command queue to be attached to the remote agent."
 }
 
 variable "stream_id" {
   type        = string
-  description = ""
+  description = "The ID of the stream to be attached to the remote agent."
 }
 
 variable "ground_station_id" {
   type        = string
-  description = "The list of ground station IDs to which the command queue will be linked."
+  description = "The ground station ID that will be used as a gateway by the remote agent."
 }
 
 resource "leanspace_remote_agents" "test" {

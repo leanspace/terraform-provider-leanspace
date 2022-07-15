@@ -389,7 +389,7 @@ One remote agent block containing:
 - id (filled by the API)
 - name
 - description: optional
-- servie_account_id (filled by the API)
+- service_account_id (filled by the API)
 - connectors: zero to many blocks:
   - id (filled by the API)
   - gateway_id
@@ -410,6 +410,53 @@ One remote agent block containing:
   - created_by (filled by the API)
   - last_modified_at (filled by the API)
   - last_modified_by (filled by the API)
+- created_at (filled by the API)
+- created_by (filled by the API)
+- last_modified_at (filled by the API)
+- last_modified_by (filled by the API)
+
+### leanspace_access_policies
+One access policy block containing:
+- id (filled by the API)
+- name
+- description: optional
+- read_only (filled by the API)
+- statements: zero or more blocks
+  - name
+  - actions: a list of strings of permissions, that match the pattern `serviceName:permissionName` or `serviceName:*`
+- created_at (filled by the API)
+- created_by (filled by the API)
+- last_modified_at (filled by the API)
+- last_modified_by (filled by the API)
+
+### leanspace_members
+One member block containing:
+- id (filled by the API)
+- name
+- email
+- status (filled by the API)
+- policy_ids: list of policy IDs (UUID strings) to attach
+- created_at (filled by the API)
+- created_by (filled by the API)
+- last_modified_at (filled by the API)
+- last_modified_by (filled by the API)
+
+### leanspace_service_accounts
+One service account block containing:
+- id (filled by the API)
+- name
+- policy_ids: list of policy IDs (UUID strings) to attach
+- created_at (filled by the API)
+- created_by (filled by the API)
+- last_modified_at (filled by the API)
+- last_modified_by (filled by the API)
+
+### leanspace_teams
+One team block containing:
+- id (filled by the API)
+- name
+- policy_ids: list of policy IDs (UUID strings) to attach
+- members: list of member IDs (UUID strings) to add
 - created_at (filled by the API)
 - created_by (filled by the API)
 - last_modified_at (filled by the API)
@@ -484,6 +531,22 @@ One remote agent block containing:
 
 - content: list of one or multiple blocks of remote agents
 
+### leanspace_access_policies
+
+- content: list of one or multiple blocks of access policies
+
+### leanspace_members
+
+- content: list of one or multiple blocks of members
+
+### leanspace_service_accounts
+
+- content: list of one or multiple blocks of service accounts
+
+### leanspace_teams
+
+- content: list of one or multiple blocks of teams
+
 ## Examples
 
 You can find examples in the `/examples` folder
@@ -502,5 +565,9 @@ There's one folder for each resource type:
 - widgets: it has as many `leanspace_widgets` resources as available types (5)
 - dashboards: it has one `leanspace_dashboards` resource with three widgets and linked to a node
 - remote agents: it has one `leanspace_remote_agents` resource, with one inbound and one outbond connectors.
+- access policies: it has one `leanspace_access_policies` resource, with two statements, one containing a global (`*`) action and one with specific actions.
+- members: it has three `leanspace_members` resources, created recursively.
+- service accounts: it has three `leanspace_service_accounts` resources, created recursively.  
+- teams: it has one `leanspace_teams` resource, created with the given members and policies.
 
 Finally there is the `imports` folder containing sample resources for each resource to test the import.
