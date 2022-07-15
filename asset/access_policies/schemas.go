@@ -49,7 +49,7 @@ var accessPolicySchema = map[string]*schema.Schema{
 	},
 }
 
-var actionRegex = regexp.MustCompile(`^([a-z]*):(\*|[a-zA-z]+)$`)
+var actionRegex = regexp.MustCompile(`^([a-z]*):(\*|[a-zA-Z]+)$`)
 
 var statementSchema = map[string]*schema.Schema{
 	"name": {
