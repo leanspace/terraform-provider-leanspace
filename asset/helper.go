@@ -5,58 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
-
-// Returns a function that casts its input to a map, and makes a hash of the value
-// for the given key.
-// This requires three assumptions that must hold:
-//
-// - the input is a map[string]any
-//
-// - the map contains the given key
-//
-// - the value mapped to the given key is a string
-func HashFromMapValue(key string) func(any) int {
-	return func(m any) int {
-		return schema.HashString(m.(map[string]any)[key].(string))
-	}
-}
-
-func GenericSliceToAny[T any](slice []T) []any {
-	anySlice := make([]any, len(slice))
-	for i, value := range slice {
-		anySlice[i] = value
-	}
-	return anySlice
-}
-
-func SetToList[T any](set *schema.Set) []T {
-	slice := make([]T, set.Len())
-	for i, value := range set.List() {
-		slice[i] = value.(T)
-	}
-	return slice
-}
-
-// Maps a list of type S to type T
-func Map[S any, T any](source []S, converter func(S) T) []T {
-	target := make([]T, len(source))
-	for index, value := range source {
-		target[index] = converter(value)
-	}
-	return target
-}
-
-// Maps a list of type S to type T, casting with intermediate type I
-func CastMap[S any, I any, T any](source []S, converter func(I) T) []T {
-	target := make([]T, len(source))
-	for index, value := range source {
-		target[index] = converter(any(value).(I))
-	}
-	return target
-}
 
 type ParseablePointer[T any] interface {
 	*T

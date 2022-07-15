@@ -2,8 +2,6 @@ package general_objects
 
 import (
 	"strconv"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 // Parses a float to a string. Use this method to ensure consistency.
@@ -11,60 +9,119 @@ func ParseFloat(num float64) string {
 	return strconv.FormatFloat(num, 'g', -1, 64)
 }
 
-func TagsInterfaceToStruct(tags any) []Tag {
-	tagsStruct := []Tag{}
-	if tags != nil {
-		for _, tag := range tags.(*schema.Set).List() {
-			newTag := Tag{Key: tag.(map[string]any)["key"].(string), Value: tag.(map[string]any)["value"].(string)}
-			tagsStruct = append(tagsStruct, newTag)
-		}
+func (paginatedList *PaginatedList[T, PT]) ToMap() map[string]any {
+	paginatedListMap := make(map[string]any)
+	content := make([]map[string]any, len(paginatedList.Content))
+	for i, value := range paginatedList.Content {
+		var pointer PT = &value
+		content[i] = pointer.ToMap()
 	}
-	return tagsStruct
+	paginatedListMap["content"] = content
+	paginatedListMap["total_elements"] = paginatedList.TotalElements
+	paginatedListMap["total_pages"] = paginatedList.TotalPages
+	paginatedListMap["number_of_elements"] = paginatedList.NumberOfElements
+	paginatedListMap["number"] = paginatedList.Number
+	paginatedListMap["size"] = paginatedList.Size
+	sort := make([]map[string]any, len(paginatedList.Sort))
+	for i, value := range paginatedList.Sort {
+		sort[i] = value.ToMap()
+	}
+	paginatedListMap["sort"] = sort
+	paginatedListMap["first"] = paginatedList.First
+	paginatedListMap["last"] = paginatedList.Last
+	paginatedListMap["empty"] = paginatedList.Empty
+	paginatedListMap["pageable"] = []any{paginatedList.Pageable.ToMap()}
+	return paginatedListMap
 }
 
-func TagsStructToMap(tags []Tag) []map[string]any {
-	if tags != nil {
-		tagsList := make([]map[string]any, len(tags))
-		for i, tag := range tags {
-			tagMap := make(map[string]any)
-			tagMap["key"] = tag.Key
-			tagMap["value"] = tag.Value
-			tagsList[i] = tagMap
-		}
-
-		return tagsList
-	}
-	return make([]map[string]any, 0)
+func (tag *Tag) ToMap() map[string]any {
+	tagMap := make(map[string]any)
+	tagMap["key"] = tag.Key
+	tagMap["value"] = tag.Value
+	return tagMap
 }
 
-func SortStructToMap(sort []Sort) []map[string]any {
-	sortList := make([]map[string]any, len(sort))
-	for i, sortItem := range sort {
-		sortMap := make(map[string]any)
-		sortMap["direction"] = sortItem.Direction
-		sortMap["property"] = sortItem.Property
-		sortMap["ignore_case"] = sortItem.IgnoreCase
-		sortMap["null_handling"] = sortItem.NullHandling
-		sortMap["ascending"] = sortItem.Ascending
-		sortMap["descending"] = sortItem.Descending
-		sortList[i] = sortMap
-	}
-
-	return sortList
+func (sort *Sort) ToMap() map[string]any {
+	sortMap := make(map[string]any)
+	sortMap["direction"] = sort.Direction
+	sortMap["property"] = sort.Property
+	sortMap["ignore_case"] = sort.IgnoreCase
+	sortMap["null_handling"] = sort.NullHandling
+	sortMap["ascending"] = sort.Ascending
+	sortMap["descending"] = sort.Descending
+	return sortMap
 }
 
-func PageableStructToMapList(pageable Pageable, sort any) []map[string]any {
-	pageableList := make([]map[string]any, 1)
+func (pageable *Pageable) ToMap() map[string]any {
 	pageableMap := make(map[string]any)
-	pageableMap["sort"] = sort
+	sorts := make([]map[string]any, len(pageable.Sort))
+	for i, sort := range pageable.Sort {
+		sorts[i] = sort.ToMap()
+	}
+	pageableMap["sort"] = sorts
 	pageableMap["offset"] = pageable.Offset
 	pageableMap["page_number"] = pageable.PageNumber
 	pageableMap["page_size"] = pageable.PageSize
 	pageableMap["paged"] = pageable.Paged
 	pageableMap["unpaged"] = pageable.Unpaged
-	pageableList[0] = pageableMap
+	return pageableMap
+}
 
-	return pageableList
+func (paginatedList *PaginatedList[T, PT]) FromMap(paginatedListMap map[string]any) error {
+	paginatedList.Content = make([]T, len(paginatedListMap["content"].([]any)))
+	for i, value := range paginatedListMap["content"].([]any) {
+		var pointer PT = &paginatedList.Content[i]
+		err := pointer.FromMap(value.(map[string]any))
+		if err != nil {
+			return err
+		}
+	}
+	paginatedList.TotalElements = paginatedListMap["total_elements"].(int)
+	paginatedList.TotalPages = paginatedListMap["total_pages"].(int)
+	paginatedList.NumberOfElements = paginatedListMap["number_of_elements"].(int)
+	paginatedList.Number = paginatedListMap["number"].(int)
+	paginatedList.Size = paginatedListMap["size"].(int)
+	paginatedList.Sort = make([]Sort, len(paginatedListMap["sort"].([]any)))
+	for i, value := range paginatedListMap["sort"].([]any) {
+		paginatedList.Sort[i].FromMap(value.(map[string]any))
+	}
+	paginatedList.First = paginatedListMap["first"].(bool)
+	paginatedList.Last = paginatedListMap["last"].(bool)
+	paginatedList.Empty = paginatedListMap["empty"].(bool)
+	paginatedList.Pageable.FromMap(paginatedListMap["pageable"].([]any)[0].(map[string]any))
+	return nil
+}
+
+func (tag *Tag) FromMap(tagMap map[string]any) error {
+	tag.Key = tagMap["key"].(string)
+	tag.Value = tagMap["value"].(string)
+	return nil
+}
+
+func (sort *Sort) FromMap(sortMap map[string]any) error {
+	sort.Direction = sortMap["direction"].(string)
+	sort.Property = sortMap["property"].(string)
+	sort.NullHandling = sortMap["null_handling"].(string)
+	sort.IgnoreCase = sortMap["ignore_case"].(bool)
+	sort.Ascending = sortMap["ascending"].(bool)
+	sort.Descending = sortMap["descending"].(bool)
+	return nil
+}
+
+func (pageable *Pageable) FromMap(pageableMap map[string]any) error {
+	sorts := make([]Sort, len(pageableMap["sorts"].([]any)))
+	for i, sort := range pageableMap["sorts"].([]any) {
+		err := sorts[i].FromMap(sort.(map[string]any))
+		if err != nil {
+			return err
+		}
+	}
+	pageable.Offset = pageableMap["offset"].(int)
+	pageable.PageNumber = pageableMap["page_number"].(int)
+	pageable.PageSize = pageableMap["page_size"].(int)
+	pageable.Paged = pageableMap["paged"].(bool)
+	pageable.Unpaged = pageableMap["unpaged"].(bool)
+	return nil
 }
 
 func (attribute *DefinitionAttribute[T]) FromMap(attributeMap map[string]any) error {

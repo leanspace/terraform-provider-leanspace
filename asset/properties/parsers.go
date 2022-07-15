@@ -2,7 +2,10 @@ package properties
 
 import (
 	"strconv"
+	"terraform-provider-asset/asset"
 	"terraform-provider-asset/asset/general_objects"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func (field *Field[T]) ToMap() map[string]any {
@@ -17,7 +20,7 @@ func (field *Field[T]) ToMap() map[string]any {
 	fieldMap["type"] = field.Type
 	// This might be unsafe in the future - for now fields are only used for numbers
 	// in the geopoint type so it's alright.
-	fieldMap["value"] = strconv.FormatFloat(any(field.Value).(float64), 'g', -1, 64)
+	fieldMap["value"] = asset.ParseFloat(any(field.Value).(float64))
 
 	return fieldMap
 }
@@ -33,17 +36,17 @@ func (property *Property[T]) ToMap() map[string]any {
 	propertyMap["last_modified_at"] = property.LastModifiedAt
 	propertyMap["last_modified_by"] = property.LastModifiedBy
 	propertyMap["type"] = property.Type
-	propertyMap["tags"] = general_objects.TagsStructToMap(property.Tags)
+	propertyMap["tags"] = asset.ParseToMaps(property.Tags)
 	switch property.Type {
 	case "NUMERIC":
-		propertyMap["value"] = strconv.FormatFloat(any(property.Value).(float64), 'g', -1, 64)
+		propertyMap["value"] = asset.ParseFloat(any(property.Value).(float64))
 		propertyMap["min"] = property.Min
 		propertyMap["max"] = property.Max
 		propertyMap["scale"] = property.Scale
 		propertyMap["precision"] = property.Precision
 		propertyMap["unit_id"] = property.UnitId
 	case "ENUM":
-		propertyMap["value"] = strconv.FormatFloat(any(property.Value).(float64), 'g', -1, 64)
+		propertyMap["value"] = asset.ParseFloat(any(property.Value).(float64))
 		if property.Options != nil {
 			propertyMap["options"] = *property.Options
 		}
@@ -101,7 +104,11 @@ func (property *Property[T]) FromMap(propertyMap map[string]any) error {
 	property.LastModifiedBy = propertyMap["last_modified_by"].(string)
 	property.Value = propertyMap["value"].(T)
 	property.Type = propertyMap["type"].(string)
-	property.Tags = general_objects.TagsInterfaceToStruct(propertyMap["tags"])
+	if tags, err := asset.ParseFromMaps[general_objects.Tag](propertyMap["tags"].(*schema.Set).List()); err != nil {
+		return err
+	} else {
+		property.Tags = tags
+	}
 	switch property.Type {
 	case "NUMERIC":
 		property.Min = propertyMap["min"].(float64)

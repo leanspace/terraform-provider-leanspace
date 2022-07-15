@@ -72,6 +72,9 @@ func (dataSource DataSourceType[T, PT]) get(ctx context.Context, d *schema.Resou
 }
 
 func (dataSource DataSourceType[T, PT]) getValueData(valueList []any) (PT, error) {
+	if len(valueList) == 0 {
+		return nil, nil
+	}
 	var value PT = new(T)
 	err := value.FromMap(valueList[0].(map[string]any))
 	if err != nil {
@@ -111,7 +114,12 @@ func (dataSource DataSourceType[T, PT]) delete(ctx context.Context, d *schema.Re
 	var diags diag.Diagnostics
 
 	valueId := d.Id()
-	err := dataSource.convert(client).Delete(valueId)
+	valueRaw := d.Get(dataSource.Name).([]any)
+	value, err := dataSource.getValueData(valueRaw)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	err = dataSource.convert(client).Delete(valueId, value)
 	if err != nil {
 		return diag.FromErr(err)
 	}

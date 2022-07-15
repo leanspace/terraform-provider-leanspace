@@ -41,6 +41,13 @@ type PostCreateModel interface {
 	PostCreateProcess(*Client, any) error
 }
 
+type PostReadModel interface {
+	// An optional extra function that is called after this instance was read remotely by terraform.
+	// Extra requests (e.g. extra data fetching) can be done here, as this method is exclusively called after the resource
+	// is read, and changes done to this instance will be persisted when saving to the state.
+	PostReadProcess(*Client) error
+}
+
 type PostUpdateModel interface {
 	// An optional extra function that is called after this instance was updated remotely by terraform.
 	// Extra requests can be done here, as this method is exclusively called after the resource is updated (unlike
@@ -48,6 +55,13 @@ type PostUpdateModel interface {
 	// The parameter is the instance of the model after being updated. It can be used to compare the desired
 	// state with what is currently present.
 	PostUpdateProcess(*Client, any) error
+}
+
+type PostDeleteModel interface {
+	// An optional extra function that is called after this instance was delete remotely by terraform.
+	// Extra requests (e.g. a cleanup) can be done here, as this method is exclusively called after the resource
+	// is successfuly deleted.
+	PostDeleteProcess(*Client) error
 }
 
 type GenericClient[T any, PT ParseableModel[T]] struct {

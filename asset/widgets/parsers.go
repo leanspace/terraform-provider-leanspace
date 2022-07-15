@@ -20,7 +20,7 @@ func (widget *Widget) ToMap() map[string]any {
 		widgetMap["metadata"] = []any{metadataMap}
 	}
 	widgetMap["dashboards"] = asset.ParseToMaps(widget.Dashboards)
-	widgetMap["tags"] = general_objects.TagsStructToMap(widget.Tags)
+	widgetMap["tags"] = asset.ParseToMaps(widget.Tags)
 	widgetMap["created_at"] = widget.CreatedAt
 	widgetMap["created_by"] = widget.CreatedBy
 	widgetMap["last_modified_at"] = widget.LastModifiedAt
@@ -105,7 +105,11 @@ func (widget *Widget) FromMap(widgetMap map[string]any) error {
 	} else {
 		widget.Dashboards = dashboards
 	}
-	widget.Tags = general_objects.TagsInterfaceToStruct(widgetMap["tags"])
+	if tags, err := asset.ParseFromMaps[general_objects.Tag](widgetMap["tags"].(*schema.Set).List()); err != nil {
+		return err
+	} else {
+		widget.Tags = tags
+	}
 	widget.CreatedAt = widgetMap["created_at"].(string)
 	widget.CreatedBy = widgetMap["created_by"].(string)
 	widget.LastModifiedAt = widgetMap["last_modified_at"].(string)

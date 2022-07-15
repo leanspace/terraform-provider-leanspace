@@ -34,7 +34,13 @@ func PaginatedListSchema(content map[string]*schema.Schema) map[string]*schema.S
 			Type:     schema.TypeInt,
 			Computed: true,
 		},
-		"sort": SortSchema,
+		"sort": {
+			Type:     schema.TypeList,
+			Computed: true,
+			Elem: &schema.Resource{
+				Schema: SortSchema,
+			},
+		},
 		"first": {
 			Type:     schema.TypeBool,
 			Computed: true,
@@ -47,101 +53,70 @@ func PaginatedListSchema(content map[string]*schema.Schema) map[string]*schema.S
 			Type:     schema.TypeBool,
 			Computed: true,
 		},
-		"pageable": PageableSchema,
+		"pageable": {
+			Type:     schema.TypeList,
+			Computed: true,
+			Elem: &schema.Resource{
+				Schema: PageableSchema,
+			},
+		},
 	}
 }
 
-var SortSchema = &schema.Schema{
-	Type:     schema.TypeList,
-	Computed: true,
-	Elem: &schema.Resource{
-		Schema: map[string]*schema.Schema{
-			"direction": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"property": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"ignore_case": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
-			"null_handling": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"ascending": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
-			"descending": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
-		},
+var SortSchema = map[string]*schema.Schema{
+	"direction": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"property": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"ignore_case": {
+		Type:     schema.TypeBool,
+		Computed: true,
+	},
+	"null_handling": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"ascending": {
+		Type:     schema.TypeBool,
+		Computed: true,
+	},
+	"descending": {
+		Type:     schema.TypeBool,
+		Computed: true,
 	},
 }
 
-var PageableSchema = &schema.Schema{
-	Type:     schema.TypeList,
-	Computed: true,
-	Elem: &schema.Resource{
-		Schema: map[string]*schema.Schema{
-			"sort": {
-				Type:     schema.TypeList,
-				Computed: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"direction": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"property": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"ignore_case": {
-							Type:     schema.TypeBool,
-							Computed: true,
-						},
-						"null_handling": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"ascending": {
-							Type:     schema.TypeBool,
-							Computed: true,
-						},
-						"descending": {
-							Type:     schema.TypeBool,
-							Computed: true,
-						},
-					},
-				},
-			},
-			"offset": {
-				Type:     schema.TypeInt,
-				Computed: true,
-			},
-			"page_number": {
-				Type:     schema.TypeInt,
-				Computed: true,
-			},
-			"page_size": {
-				Type:     schema.TypeInt,
-				Computed: true,
-			},
-			"paged": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
-			"unpaged": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
+var PageableSchema = map[string]*schema.Schema{
+	"sort": {
+		Type:     schema.TypeList,
+		Computed: true,
+		Elem: &schema.Resource{
+			Schema: SortSchema,
 		},
+	},
+	"offset": {
+		Type:     schema.TypeInt,
+		Computed: true,
+	},
+	"page_number": {
+		Type:     schema.TypeInt,
+		Computed: true,
+	},
+	"page_size": {
+		Type:     schema.TypeInt,
+		Computed: true,
+	},
+	"paged": {
+		Type:     schema.TypeBool,
+		Computed: true,
+	},
+	"unpaged": {
+		Type:     schema.TypeBool,
+		Computed: true,
 	},
 }
 

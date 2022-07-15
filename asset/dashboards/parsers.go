@@ -16,7 +16,7 @@ func (dashboard *Dashboard) ToMap() map[string]any {
 	dashboardMap["node_ids"] = dashboard.NodeIds
 	dashboardMap["widget_info"] = asset.ParseToMaps(dashboard.WidgetInfo)
 	dashboardMap["widgets"] = asset.ParseToMaps(dashboard.Widgets)
-	dashboardMap["tags"] = general_objects.TagsStructToMap(dashboard.Tags)
+	dashboardMap["tags"] = asset.ParseToMaps(dashboard.Tags)
 	dashboardMap["created_at"] = dashboard.CreatedAt
 	dashboardMap["created_by"] = dashboard.CreatedBy
 	dashboardMap["last_modified_at"] = dashboard.LastModifiedAt
@@ -49,7 +49,7 @@ func (widget *DashboardWidget) ToMap() map[string]any {
 	if metadataMap := widget.Metadata.ToMap(); metadataMap != nil {
 		widgetMap["metadata"] = []any{metadataMap}
 	}
-	widgetMap["tags"] = general_objects.TagsStructToMap(widget.Tags)
+	widgetMap["tags"] = asset.ParseToMaps(widget.Tags)
 	widgetMap["created_at"] = widget.CreatedAt
 	widgetMap["created_by"] = widget.CreatedBy
 	widgetMap["last_modified_at"] = widget.LastModifiedAt
@@ -95,7 +95,11 @@ func (dashboard *Dashboard) FromMap(dashboardMap map[string]any) error {
 	} else {
 		dashboard.Widgets = widgets
 	}
-	dashboard.Tags = general_objects.TagsInterfaceToStruct(dashboardMap["tags"])
+	if tags, err := asset.ParseFromMaps[general_objects.Tag](dashboardMap["tags"].(*schema.Set).List()); err != nil {
+		return err
+	} else {
+		dashboard.Tags = tags
+	}
 	dashboard.CreatedAt = dashboardMap["created_at"].(string)
 	dashboard.CreatedBy = dashboardMap["created_by"].(string)
 	dashboard.LastModifiedAt = dashboardMap["last_modified_at"].(string)
@@ -141,7 +145,11 @@ func (widget *DashboardWidget) FromMap(widgetMap map[string]any) error {
 			return err
 		}
 	}
-	widget.Tags = general_objects.TagsInterfaceToStruct(widgetMap["tags"])
+	if tags, err := asset.ParseFromMaps[general_objects.Tag](widgetMap["tags"].(*schema.Set).List()); err != nil {
+		return err
+	} else {
+		widget.Tags = tags
+	}
 	widget.CreatedAt = widgetMap["created_at"].(string)
 	widget.CreatedBy = widgetMap["created_by"].(string)
 	widget.LastModifiedAt = widgetMap["last_modified_at"].(string)

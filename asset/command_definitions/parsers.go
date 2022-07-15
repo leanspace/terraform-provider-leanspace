@@ -42,13 +42,11 @@ func (metadata Metadata[T]) ToMap() map[string]any {
 	}
 	switch metadata.Attributes.Type {
 	case "NUMERIC":
-		attributes["value"] = strconv.FormatFloat(any(metadata.Attributes.Value).(float64), 'g', -1, 64)
-	case "TEXT":
+		attributes["value"] = asset.ParseFloat(any(metadata.Attributes.Value).(float64))
+	case "TEXT", "TIMESTAMP", "DATE", "TIME":
 		attributes["value"] = metadata.Attributes.Value
 	case "BOOLEAN":
 		attributes["value"] = strconv.FormatBool(any(metadata.Attributes.Value).(bool))
-	case "TIMESTAMP", "DATE", "TIME":
-		attributes["value"] = metadata.Attributes.Value
 	}
 	metadataMap["attributes"] = []map[string]any{attributes}
 

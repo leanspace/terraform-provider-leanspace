@@ -1,5 +1,16 @@
 package general_objects
 
+// Have to duplicate this, because of import cycles between general_objects and assets...
+type Parseable interface {
+	FromMap(map[string]any) error
+	ToMap() map[string]any
+}
+
+type ParseablePointer[T any] interface {
+	*T
+	Parseable
+}
+
 type Sort struct {
 	Direction    string `json:"direction" terra:"direction"`
 	Property     string `json:"property" terra:"property"`
@@ -23,7 +34,7 @@ type Tag struct {
 	Value string `json:"value,omitempty" terra:"value"`
 }
 
-type PaginatedList[T any] struct {
+type PaginatedList[T any, PT ParseablePointer[T]] struct {
 	Content          []T      `json:"content" terra:"content"`
 	TotalElements    int      `json:"totalElements" terra:"total_elements"`
 	TotalPages       int      `json:"totalPages" terra:"total_pages"`
