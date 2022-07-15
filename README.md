@@ -326,6 +326,64 @@ One command_definition block containing:
   - metric_id: ID of the metric to map to
   - name of the component to map from
 
+### leanspace_widgets
+
+One widget block containing:
+- id (filled by the API)
+- name
+- description: optional
+- type: `TABLE || LINE || BAR || AREA || VALUE`
+- granularity: `second || minute || hour || day || week || month || raw`
+- series: one or more blocks:
+  - id: id of a metric if `datasource` = `metric` or the raw stream attribute if `datasource` = `raw_stream`
+  - datasource: `metric || raw_stream`
+  - aggregation: `avg || count || sum || min || max || none`
+  - filters: 0 to 3 blocks:
+    - filter_by: id of a metric if `datasource` = `metric` or the raw stream attribute if `datasource` = `raw_stream`
+    - operator: `gt || lt || equals || notEquals`
+    - value
+- metrics: (filled by the API, derived from `series`) one or more blocks
+  - id: id of the metric
+  - aggregation: `avg || count || sum || min || max || none`
+- metadata: optional
+  - y_axis_label: optional string
+  - y_axis_range_min: optional *list* of floats (one item inside)
+  - y_axis_range_max: optional *list* of floats (one item inside)
+- dashboards: (filled by the API) one or more blocks
+  - id: id of dashboard
+  - name: name of the dashboard
+- tags: zero or more blocks
+  - key
+  - value
+- created_at (filled by the API)
+- created_by (filled by the API)
+- last_modified_at (filled by the API)
+- last_modified_by (filled by the API)
+
+### leanspace_dashboards
+One dashboard block containing:
+- id (filled by the API)
+- name
+- description: optional
+- node_ids: optional list of strings with node IDs
+- widget_info: zero or more blocks
+  - id: id of the widget 
+  - type: `TABLE || LINE || BAR || AREA || VALUE` must match the widget
+  - x: integer
+  - y: integer
+  - w: integer
+  - h: integer
+  - min_w: optional integer
+  - min_h: optional integer
+- widgets: wero or more blocks of type widget (see above) (filled by the API)
+- tags: zero or more blocks
+  - key
+  - value
+- created_at (filled by the API)
+- created_by (filled by the API)
+- last_modified_at (filled by the API)
+- last_modified_by (filled by the API)
+
 ## Datasource
 
 ### Common pattern
@@ -383,6 +441,14 @@ One command_definition block containing:
 
 - content: list of one or multiple blocks of streams
 
+### leanspace_widgets
+
+- content: list of one or multiple blocks of widgets
+
+### leanspace_dashboards
+
+- content: list of one or multiple blocks of dashboards
+
 ## Examples
 
 You can find examples in the `/examples` folder
@@ -397,6 +463,8 @@ There's one folder for each resource type:
 - command definition: it has one `leanspace_command_definitions` resource which has all possible metadata types (6) and all possible argument types (7)
 - command queue: it has one `leanspace_command_queues` resource which links the satellite and ground station nodes.
 - metrics: it has as many `leanspace_metrics` resources as available types (6)
-- streams: it as one `leanspace_streams` resource, with all available element types (3), all possible field types (5), a computed field and a mapping.
+- streams: it has one `leanspace_streams` resource, with all available element types (3), all possible field types (5), a computed field and a mapping.
+- widgets: it has as many `leanspace_widgets` resources as available types (5)
+- dashboards: it has as one `leanspace_dashboards` resource with three widgets and linked to a node
 
 Finally there is the `imports` folder containing sample resources for each resource to test the import.

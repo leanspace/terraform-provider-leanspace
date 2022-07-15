@@ -148,7 +148,6 @@ func (err *Error) ToMap() map[string]any {
 }
 
 func (stream *Stream) FromMap(streamMap map[string]any) error {
-	asset.Logger.Printf("Called *Stream.FromMap\n%#v", streamMap)
 	stream.ID = streamMap["id"].(string)
 	stream.Version = streamMap["version"].(int)
 	stream.Name = streamMap["name"].(string)

@@ -8,10 +8,12 @@ import (
 
 	"terraform-provider-asset/asset/command_definitions"
 	"terraform-provider-asset/asset/command_queues"
+	"terraform-provider-asset/asset/dashboards"
 	"terraform-provider-asset/asset/metrics"
 	"terraform-provider-asset/asset/nodes"
 	"terraform-provider-asset/asset/properties"
 	"terraform-provider-asset/asset/streams"
+	"terraform-provider-asset/asset/widgets"
 )
 
 func main() {
@@ -21,6 +23,8 @@ func main() {
 	properties.PropertyDataType.Subscribe()
 	metrics.MetricDataType.Subscribe()
 	streams.StreamDataType.Subscribe()
+	widgets.WidgetDataType.Subscribe()
+	dashboards.DashboardDataType.Subscribe()
 
 	plugin.Serve(&plugin.ServeOpts{
 		ProviderFunc: func() *schema.Provider {
