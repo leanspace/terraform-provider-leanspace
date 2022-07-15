@@ -386,7 +386,7 @@ One remote agent block containing:
 - id (filled by the API)
 - name
 - description: optional
-- service_account_id (filled by the API)
+- service_account_id: optional, the ID of the service account to link (can also be filled by the API)
 - connectors: zero to many blocks:
   - id (filled by the API)
   - gateway_id
@@ -459,7 +459,7 @@ One team block containing:
 - last_modified_at (filled by the API)
 - last_modified_by (filled by the API)
 
-### leanspace_command_definitions
+### leanspace_activity_definitions
 
 One command_definition block containing:
 - id (filled by the API)
