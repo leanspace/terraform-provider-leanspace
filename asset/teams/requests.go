@@ -8,15 +8,6 @@ import (
 	"terraform-provider-asset/asset"
 )
 
-func contains(slice []string, element string) bool {
-	for _, s := range slice {
-		if s == element {
-			return true
-		}
-	}
-	return false
-}
-
 func (team *Team) currentPolicies(client *asset.Client) ([]string, error) {
 	path := fmt.Sprintf("%s/%s/%s/access-policies", client.HostURL, TeamDataType.Path, team.ID)
 	req, err := http.NewRequest("GET", path, nil)
@@ -157,12 +148,12 @@ func (team *Team) PostUpdateProcess(client *asset.Client, teamRaw any) error {
 
 	// Diff policies to see what to add/remove
 	for _, policy := range currentPolicies {
-		if !contains(expectedPolicies, policy) {
+		if !asset.Contains(expectedPolicies, policy) {
 			policiesToRemove = append(policiesToRemove, policy)
 		}
 	}
 	for _, policy := range expectedPolicies {
-		if !contains(currentPolicies, policy) {
+		if !asset.Contains(currentPolicies, policy) {
 			policiesToAdd = append(policiesToAdd, policy)
 		}
 	}
@@ -189,7 +180,7 @@ func (team *Team) PostUpdateProcess(client *asset.Client, teamRaw any) error {
 
 	// Diff members, and add/remove directly (we're limited to 1 member per request)
 	for _, member := range currentMembers {
-		if !contains(expectedMembers, member) {
+		if !asset.Contains(expectedMembers, member) {
 			err = team.removeMember(member, client)
 			if err != nil {
 				return err
@@ -197,7 +188,7 @@ func (team *Team) PostUpdateProcess(client *asset.Client, teamRaw any) error {
 		}
 	}
 	for _, member := range expectedMembers {
-		if !contains(currentMembers, member) {
+		if !asset.Contains(currentMembers, member) {
 			err = team.addMember(member, client)
 			if err != nil {
 				return err

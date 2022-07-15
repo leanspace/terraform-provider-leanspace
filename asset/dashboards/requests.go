@@ -31,15 +31,6 @@ func (widgetInfo *WidgetInfo) toAPIFormat() ([]byte, error) {
 	return json.Marshal(widgetView)
 }
 
-func contains(slice []string, str string) bool {
-	for _, s := range slice {
-		if s == str {
-			return true
-		}
-	}
-	return false
-}
-
 func nodeAction(action string, node string, dashboardId string, client *asset.Client) error {
 	path := fmt.Sprintf("%s/%s/%s/nodes/%s", client.HostURL, DashboardDataType.Path, dashboardId, node)
 	req, err := http.NewRequest(action, path, nil)
@@ -126,14 +117,14 @@ func (dashboard *Dashboard) PostCreateProcess(client *asset.Client, created any)
 func (dashboard *Dashboard) PostUpdateProcess(client *asset.Client, updated any) error {
 	updatedDashboard := updated.(*Dashboard)
 	for _, node := range dashboard.NodeIds { // Attach needed nodes
-		if !contains(updatedDashboard.NodeIds, node) {
+		if !asset.Contains(updatedDashboard.NodeIds, node) {
 			if err := attachNode(node, updatedDashboard.ID, client); err != nil {
 				return err
 			}
 		}
 	}
 	for _, node := range updatedDashboard.NodeIds { // Remove extra nodes
-		if !contains(dashboard.NodeIds, node) {
+		if !asset.Contains(dashboard.NodeIds, node) {
 			if err := detachNode(node, updatedDashboard.ID, client); err != nil {
 				return err
 			}

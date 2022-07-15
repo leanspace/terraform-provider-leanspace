@@ -8,15 +8,6 @@ import (
 	"terraform-provider-asset/asset"
 )
 
-func contains(slice []string, element string) bool {
-	for _, s := range slice {
-		if s == element {
-			return true
-		}
-	}
-	return false
-}
-
 func (serviceAccount *ServiceAccount) currentPolicies(client *asset.Client) ([]string, error) {
 	path := fmt.Sprintf("%s/%s/%s/access-policies", client.HostURL, ServiceAccountDataType.Path, serviceAccount.ID)
 	req, err := http.NewRequest("GET", path, nil)
@@ -92,12 +83,12 @@ func (serviceAccount *ServiceAccount) PostUpdateProcess(client *asset.Client, se
 
 	// Diff policies to see what to add/remove
 	for _, policy := range currentPolicies {
-		if !contains(expectedPolicies, policy) {
+		if !asset.Contains(expectedPolicies, policy) {
 			policiesToRemove = append(policiesToRemove, policy)
 		}
 	}
 	for _, policy := range expectedPolicies {
-		if !contains(currentPolicies, policy) {
+		if !asset.Contains(currentPolicies, policy) {
 			policiesToAdd = append(policiesToAdd, policy)
 		}
 	}
