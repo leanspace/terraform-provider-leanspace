@@ -61,11 +61,12 @@ func (member *Member) removePolicies(policies []string, client *asset.Client) er
 	return member.policyChange("DELETE", policies, client)
 }
 
-func (member *Member) PostReadProcess(client *asset.Client) error {
-	if policies, err := member.currentPolicies(client); err != nil {
+func (member *Member) PostReadProcess(client *asset.Client, rawMember any) error {
+	currentMember := rawMember.(*Member)
+	if policies, err := currentMember.currentPolicies(client); err != nil {
 		return err
 	} else {
-		member.PolicyIds = policies
+		currentMember.PolicyIds = policies
 	}
 	return nil
 }

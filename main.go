@@ -14,6 +14,7 @@ import (
 	"terraform-provider-asset/asset/members"
 	"terraform-provider-asset/asset/metrics"
 	"terraform-provider-asset/asset/nodes"
+	"terraform-provider-asset/asset/plugins"
 	"terraform-provider-asset/asset/properties"
 	"terraform-provider-asset/asset/remote_agents"
 	"terraform-provider-asset/asset/service_accounts"
@@ -37,6 +38,7 @@ func main() {
 	service_accounts.ServiceAccountDataType.Subscribe()
 	teams.TeamDataType.Subscribe()
 	activity_definitions.ActivityDefinitionDataType.Subscribe()
+	plugins.PluginDataType.Subscribe()
 
 	plugin.Serve(&plugin.ServeOpts{
 		ProviderFunc: func() *schema.Provider {

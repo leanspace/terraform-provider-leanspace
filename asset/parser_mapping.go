@@ -1,6 +1,8 @@
 package asset
 
 import (
+	"io"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -45,7 +47,9 @@ type PostReadModel interface {
 	// An optional extra function that is called after this instance was read remotely by terraform.
 	// Extra requests (e.g. extra data fetching) can be done here, as this method is exclusively called after the resource
 	// is read, and changes done to this instance will be persisted when saving to the state.
-	PostReadProcess(*Client) error
+	// The parameter is the instance of the model after being updated. It can be used to compare the desired
+	// state with what is currently present.
+	PostReadProcess(*Client, any) error
 }
 
 type PostUpdateModel interface {
@@ -64,10 +68,21 @@ type PostDeleteModel interface {
 	PostDeleteProcess(*Client) error
 }
 
+type CustomEncodingModel interface {
+	// An optional extra function that is called when this instance needs to be encoded by terraform
+	// for a request (when creating or updating).
+	// If this is implemented, it will replace the default body and content types of the request.
+	// This can be useful to properly encode multipart data, for instance.
+	// The parameters are the JSON encoded representation of the model, and the client used.
+	// It must return a reader to the body, the content type, and possibly an error.
+	CustomEncoding([]byte) (io.Reader, string, error)
+}
+
 type GenericClient[T any, PT ParseableModel[T]] struct {
 	Client     *Client
 	Path       string
 	CreatePath func(PT) string
+	ReadPath   func(string) string
 }
 
 type DataSourceType[T any, PT ParseableModel[T]] struct {
@@ -81,6 +96,9 @@ type DataSourceType[T any, PT ParseableModel[T]] struct {
 	// Optional. A function that returns the path to which API *creation* requests are sent.
 	// This can be useful when the path to create a resource depends on the resource's owner (e.g. "nodes/NODE_ID/properties")
 	CreatePath func(PT) string
+	// Optional. A function that returns the path to which API reading requests are sent.
+	// This can be useful when the path to read from has extra subpaths (e.g. "plugins/PLUGIN_ID/metadata")
+	ReadPath func(string) string
 	// The schema to represent the data
 	Schema map[string]*schema.Schema
 }
@@ -90,5 +108,6 @@ func (dataSource DataSourceType[T, PT]) convert(client *Client) GenericClient[T,
 		Client:     client,
 		Path:       dataSource.Path,
 		CreatePath: dataSource.CreatePath,
+		ReadPath:   dataSource.ReadPath,
 	}
 }

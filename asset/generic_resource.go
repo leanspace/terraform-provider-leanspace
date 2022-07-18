@@ -55,7 +55,9 @@ func (dataSource DataSourceType[T, PT]) get(ctx context.Context, d *schema.Resou
 	var diags diag.Diagnostics
 
 	valueId := d.Id()
-	value, err := dataSource.convert(client).Get(valueId)
+	valueRaw := d.Get(dataSource.Name).([]any)
+	value := dataSource.getValueData(valueRaw)
+	value, err := dataSource.convert(client).Get(valueId, value)
 	if err != nil {
 		return diag.FromErr(err)
 	}
