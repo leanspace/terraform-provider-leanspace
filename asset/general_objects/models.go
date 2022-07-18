@@ -69,3 +69,10 @@ type DefinitionAttribute[T any] struct {
 	// Enum
 	Options *map[string]any `json:"options,omitempty" terra:"options"`
 }
+
+type ValueAttribute[T any] struct {
+	Value T      `json:"value,omitempty" terra:"value"`
+	Type  string `json:"type" terra:"type"`
+	// Numeric
+	UnitId string `json:"unitId,omitempty" terra:"unit_id,omitempty"`
+}

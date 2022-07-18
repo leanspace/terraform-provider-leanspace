@@ -1,7 +1,6 @@
 package command_definitions
 
 import (
-	"strconv"
 	"terraform-provider-asset/asset"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -33,23 +32,7 @@ func (metadata Metadata[T]) ToMap() map[string]any {
 	metadataMap["id"] = metadata.ID
 	metadataMap["name"] = metadata.Name
 	metadataMap["description"] = metadata.Description
-
-	attributes := make(map[string]any)
-
-	attributes["type"] = metadata.Attributes.Type
-	if metadata.Attributes.Type == "NUMERIC" {
-		attributes["unit_id"] = metadata.Attributes.UnitId
-	}
-	switch metadata.Attributes.Type {
-	case "NUMERIC":
-		attributes["value"] = asset.ParseFloat(any(metadata.Attributes.Value).(float64))
-	case "TEXT", "TIMESTAMP", "DATE", "TIME":
-		attributes["value"] = metadata.Attributes.Value
-	case "BOOLEAN":
-		attributes["value"] = strconv.FormatBool(any(metadata.Attributes.Value).(bool))
-	}
-	metadataMap["attributes"] = []map[string]any{attributes}
-
+	metadataMap["attributes"] = []any{metadata.Attributes.ToMap()}
 	return metadataMap
 }
 
@@ -60,7 +43,6 @@ func (argument Argument[T]) ToMap() map[string]any {
 	argumentMap["identifier"] = argument.Identifier
 	argumentMap["description"] = argument.Description
 	argumentMap["attributes"] = []any{argument.Attributes.ToMap()}
-
 	return argumentMap
 }
 
@@ -101,14 +83,9 @@ func (metadata *Metadata[T]) FromMap(metadataMap map[string]any) error {
 	metadata.ID = metadataMap["id"].(string)
 	metadata.Name = metadataMap["name"].(string)
 	metadata.Description = metadataMap["description"].(string)
-
-	attributes := metadataMap["attributes"].([]any)[0].(map[string]any)
-	metadata.Attributes.Value = attributes["value"].(T)
-	metadata.Attributes.Type = attributes["type"].(string)
-	if metadataMap["type"] == "NUMERIC" {
-		metadata.Attributes.UnitId = attributes["unit_id"].(string)
+	if err := metadata.Attributes.FromMap(metadataMap["attributes"].([]any)[0].(map[string]any)); err != nil {
+		return err
 	}
-
 	return nil
 }
 

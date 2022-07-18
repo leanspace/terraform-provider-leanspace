@@ -19,16 +19,10 @@ type CommandDefinition struct {
 func (cmdDefinition *CommandDefinition) GetID() string { return cmdDefinition.ID }
 
 type Metadata[T any] struct {
-	ID          string            `json:"id" terra:"id"`
-	Name        string            `json:"name" terra:"name"`
-	Description string            `json:"description,omitempty" terra:"description"`
-	Attributes  ValueAttribute[T] `json:"attributes" terra:"attributes"`
-}
-
-type ValueAttribute[T any] struct {
-	Value  T      `json:"value,omitempty" terra:"value"`
-	Type   string `json:"type" terra:"type"`
-	UnitId string `json:"unitId,omitempty" terra:"unit_id,omitempty"`
+	ID          string                            `json:"id" terra:"id"`
+	Name        string                            `json:"name" terra:"name"`
+	Description string                            `json:"description,omitempty" terra:"description"`
+	Attributes  general_objects.ValueAttribute[T] `json:"attributes" terra:"attributes"`
 }
 
 type Argument[T any] struct {

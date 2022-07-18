@@ -26,7 +26,8 @@ var dashboardSchema = map[string]*schema.Schema{
 		Type:     schema.TypeSet,
 		Optional: true,
 		Elem: &schema.Schema{
-			Type: schema.TypeString,
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
 		},
 	},
 	"widget_info": {
@@ -74,28 +75,34 @@ var widgetInfoSchema = map[string]*schema.Schema{
 		ValidateFunc: validation.StringInSlice(validWidgetTypes, false),
 	},
 	"w": {
-		Type:     schema.TypeInt,
-		Required: true,
+		Type:         schema.TypeInt,
+		Required:     true,
+		ValidateFunc: validation.IntAtLeast(1),
 	},
 	"h": {
-		Type:     schema.TypeInt,
-		Required: true,
+		Type:         schema.TypeInt,
+		Required:     true,
+		ValidateFunc: validation.IntAtLeast(1),
 	},
 	"x": {
-		Type:     schema.TypeInt,
-		Required: true,
+		Type:         schema.TypeInt,
+		Required:     true,
+		ValidateFunc: validation.IntAtLeast(0),
 	},
 	"y": {
-		Type:     schema.TypeInt,
-		Required: true,
+		Type:         schema.TypeInt,
+		Required:     true,
+		ValidateFunc: validation.IntAtLeast(0),
 	},
 	"min_w": {
-		Type:     schema.TypeInt,
-		Optional: true,
+		Type:         schema.TypeInt,
+		Optional:     true,
+		ValidateFunc: validation.IntAtLeast(1),
 	},
 	"min_h": {
-		Type:     schema.TypeInt,
-		Optional: true,
+		Type:         schema.TypeInt,
+		Optional:     true,
+		ValidateFunc: validation.IntAtLeast(1),
 	},
 }
 

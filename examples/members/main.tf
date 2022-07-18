@@ -8,7 +8,7 @@ terraform {
 }
 
 variable "usernames" {
-  type        = list(string)
+  type        = set(string)
   description = "The usernames for the accounts to create."
 }
 
@@ -20,7 +20,7 @@ variable "access_policies" {
 data "leanspace_members" "all" {}
 
 resource "leanspace_members" "test" {
-  for_each = { for u in var.usernames : u => u }
+  for_each = var.usernames
   member {
     name       = each.value
     email      = "${lower(each.value)}@terraform.leanspace.io"

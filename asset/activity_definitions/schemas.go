@@ -1,4 +1,4 @@
-package command_definitions
+package activity_definitions
 
 import (
 	"terraform-provider-asset/asset/general_objects"
@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-var commandDefinitionSchema = map[string]*schema.Schema{
+var activityDefinitionSchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
 		Computed: true,
@@ -26,9 +26,10 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Optional: true,
 	},
-	"identifier": {
-		Type:     schema.TypeString,
-		Optional: true,
+	"estimated_duration": {
+		Type:         schema.TypeInt,
+		Optional:     true,
+		ValidateFunc: validation.IntAtLeast(0),
 	},
 	"metadata": {
 		Type:     schema.TypeSet,
@@ -37,11 +38,18 @@ var commandDefinitionSchema = map[string]*schema.Schema{
 			Schema: metadataSchema,
 		},
 	},
-	"arguments": {
+	"argument_definitions": {
 		Type:     schema.TypeSet,
 		Optional: true,
 		Elem: &schema.Resource{
-			Schema: argumentSchema,
+			Schema: argumentDefinitionSchema,
+		},
+	},
+	"command_mappings": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Resource{
+			Schema: commandMappingSchema,
 		},
 	},
 	"created_at": {
@@ -86,16 +94,12 @@ var metadataSchema = map[string]*schema.Schema{
 	},
 }
 
-var argumentSchema = map[string]*schema.Schema{
+var argumentDefinitionSchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
 		Computed: true,
 	},
 	"name": {
-		Type:     schema.TypeString,
-		Required: true,
-	},
-	"identifier": {
 		Type:     schema.TypeString,
 		Required: true,
 	},
@@ -111,5 +115,58 @@ var argumentSchema = map[string]*schema.Schema{
 		Elem: &schema.Resource{
 			Schema: general_objects.DefinitionAttributeSchema(nil, nil),
 		},
+	},
+}
+
+var commandMappingSchema = map[string]*schema.Schema{
+	"command_definition_id": {
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.IsUUID,
+	},
+	"position": {
+		Type:     schema.TypeInt,
+		Computed: true,
+	},
+	"delay_in_milliseconds": {
+		Type:         schema.TypeInt,
+		Required:     true,
+		ValidateFunc: validation.IntAtLeast(0),
+	},
+	"argument_mappings": {
+		Type:     schema.TypeSet,
+		Optional: true,
+		Elem: &schema.Resource{
+			Schema: argumentMappingSchema,
+		},
+	},
+	"metadata_mappings": {
+		Type:     schema.TypeSet,
+		Optional: true,
+		Elem: &schema.Resource{
+			Schema: metadataMappingSchema,
+		},
+	},
+}
+
+var argumentMappingSchema = map[string]*schema.Schema{
+	"activity_definition_argument_name": {
+		Type:     schema.TypeString,
+		Required: true,
+	},
+	"command_definition_argument_name": {
+		Type:     schema.TypeString,
+		Required: true,
+	},
+}
+
+var metadataMappingSchema = map[string]*schema.Schema{
+	"activity_definition_metadata_name": {
+		Type:     schema.TypeString,
+		Required: true,
+	},
+	"command_definition_argument_name": {
+		Type:     schema.TypeString,
+		Required: true,
 	},
 }

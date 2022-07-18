@@ -39,28 +39,38 @@ func (property *Property[T]) ToMap() map[string]any {
 	propertyMap["tags"] = asset.ParseToMaps(property.Tags)
 	switch property.Type {
 	case "NUMERIC":
-		propertyMap["value"] = asset.ParseFloat(any(property.Value).(float64))
+		if any(property.Value) != nil {
+			propertyMap["value"] = asset.ParseFloat(any(property.Value).(float64))
+		}
 		propertyMap["min"] = property.Min
 		propertyMap["max"] = property.Max
 		propertyMap["scale"] = property.Scale
 		propertyMap["precision"] = property.Precision
 		propertyMap["unit_id"] = property.UnitId
 	case "ENUM":
-		propertyMap["value"] = asset.ParseFloat(any(property.Value).(float64))
+		if any(property.Value) != nil {
+			propertyMap["value"] = asset.ParseFloat(any(property.Value).(float64))
+		}
 		if property.Options != nil {
 			propertyMap["options"] = *property.Options
 		}
 	case "TEXT":
-		propertyMap["value"] = property.Value
+		if any(property.Value) != nil {
+			propertyMap["value"] = property.Value
+		}
 		propertyMap["min_length"] = property.MinLength
 		propertyMap["max_length"] = property.MaxLength
 		propertyMap["pattern"] = property.Pattern
 	case "TIMESTAMP", "DATE", "TIME":
-		propertyMap["value"] = property.Value
+		if any(property.Value) != nil {
+			propertyMap["value"] = property.Value
+		}
 		propertyMap["before"] = property.Before
 		propertyMap["after"] = property.After
 	case "BOOLEAN":
-		propertyMap["value"] = strconv.FormatBool(any(property.Value).(bool))
+		if any(property.Value) != nil {
+			propertyMap["value"] = strconv.FormatBool(any(property.Value).(bool))
+		}
 	case "GEOPOINT":
 		if property.Fields != nil {
 			fieldList := make([]map[string]any, 1)
@@ -102,7 +112,9 @@ func (property *Property[T]) FromMap(propertyMap map[string]any) error {
 	property.CreatedBy = propertyMap["created_by"].(string)
 	property.LastModifiedAt = propertyMap["last_modified_at"].(string)
 	property.LastModifiedBy = propertyMap["last_modified_by"].(string)
-	property.Value = propertyMap["value"].(T)
+	if value, ok := propertyMap["value"]; ok {
+		property.Value = value.(T)
+	}
 	property.Type = propertyMap["type"].(string)
 	if tags, err := asset.ParseFromMaps[general_objects.Tag](propertyMap["tags"].(*schema.Set).List()); err != nil {
 		return err

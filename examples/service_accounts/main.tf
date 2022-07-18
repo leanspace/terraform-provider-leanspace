@@ -8,7 +8,7 @@ terraform {
 }
 
 variable "usernames" {
-  type        = list(string)
+  type        = set(string)
   description = "The usernames for the service accounts to create."
 }
 
@@ -20,7 +20,7 @@ variable "access_policies" {
 data "leanspace_service_accounts" "all" {}
 
 resource "leanspace_service_accounts" "test" {
-  for_each = { for u in var.usernames : u => u }
+  for_each = var.usernames
   service_account {
     name       = each.value
     policy_ids = var.access_policies

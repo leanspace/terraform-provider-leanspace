@@ -178,7 +178,10 @@ func (grid *Grid) FromMap(gridMap map[string]any) error {
 }
 
 func (dashboard *Dashboard) PostUnmarshallProcess() error {
-	// Update WidgetInfo array with "fresh" date
+	// Update WidgetInfo array with "fresh" state
+	// Because dashboard.widgets is marked as computed and not handled by terraform,
+	// the only place where terraform will notice a change is in the widget_info
+	// array (that is handled by the provider and unrelated to the API)
 	dashboard.WidgetInfo = make([]WidgetInfo, len(dashboard.Widgets))
 	for index, widget := range dashboard.Widgets {
 		dashboard.WidgetInfo[index] = WidgetInfo{

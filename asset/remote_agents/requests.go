@@ -16,7 +16,10 @@ func (agent *RemoteAgent) PostDeleteProcess(client *asset.Client) error {
 	if err != nil {
 		return err
 	}
-	data, err, _ := client.DoRequest(req, &(client).Token)
+	data, err, code := client.DoRequest(req, &(client).Token)
+	if code == http.StatusNotFound {
+		return nil
+	}
 	if err != nil {
 		return err
 	}
@@ -34,8 +37,8 @@ func (agent *RemoteAgent) PostDeleteProcess(client *asset.Client) error {
 		if err != nil {
 			return err
 		}
-		_, err, _ = client.DoRequest(req, &(client).Token)
-		if err != nil {
+		_, err, code = client.DoRequest(req, &(client).Token)
+		if code != http.StatusNotFound && err != nil {
 			return err
 		}
 	}
@@ -46,8 +49,8 @@ func (agent *RemoteAgent) PostDeleteProcess(client *asset.Client) error {
 	if err != nil {
 		return err
 	}
-	_, err, _ = client.DoRequest(req, &(client).Token)
-	if err != nil {
+	_, err, code = client.DoRequest(req, &(client).Token)
+	if code != http.StatusNotFound && err != nil {
 		return err
 	}
 

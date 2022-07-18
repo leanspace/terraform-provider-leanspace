@@ -7,6 +7,7 @@ import (
 	"terraform-provider-asset/asset"
 
 	"terraform-provider-asset/asset/access_policies"
+	"terraform-provider-asset/asset/activity_definitions"
 	"terraform-provider-asset/asset/command_definitions"
 	"terraform-provider-asset/asset/command_queues"
 	"terraform-provider-asset/asset/dashboards"
@@ -35,6 +36,7 @@ func main() {
 	members.MemberDataType.Subscribe()
 	service_accounts.ServiceAccountDataType.Subscribe()
 	teams.TeamDataType.Subscribe()
+	activity_definitions.ActivityDefinitionDataType.Subscribe()
 
 	plugin.Serve(&plugin.ServeOpts{
 		ProviderFunc: func() *schema.Provider {

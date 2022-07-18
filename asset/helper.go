@@ -37,6 +37,15 @@ func ParseFloat(num float64) string {
 	return strconv.FormatFloat(num, 'g', -1, 64)
 }
 
+func Contains[T comparable](slice []T, value T) bool {
+	for _, v := range slice {
+		if v == value {
+			return true
+		}
+	}
+	return false
+}
+
 const Debug = false
 
 var Logger = func() *log.Logger {
