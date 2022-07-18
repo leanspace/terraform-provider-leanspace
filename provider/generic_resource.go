@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func (dataSource DataSourceType[T, PT]) resourceGenericDefinition() *schema.Resource {
+func (dataSource DataSourceType[T, PT]) toResource() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: dataSource.create,
 		ReadContext:   dataSource.get,
