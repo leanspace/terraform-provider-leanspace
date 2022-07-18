@@ -105,16 +105,17 @@ func (team *Team) removeMember(memberId string, client *asset.Client) error {
 	return team.memberChange("DELETE", memberId, client)
 }
 
-func (team *Team) PostReadProcess(client *asset.Client) error {
-	if policies, err := team.currentPolicies(client); err != nil {
+func (team *Team) PostReadProcess(client *asset.Client, rawTeam any) error {
+	currentTeam := rawTeam.(*Team)
+	if policies, err := currentTeam.currentPolicies(client); err != nil {
 		return err
 	} else {
-		team.PolicyIds = policies
+		currentTeam.PolicyIds = policies
 	}
-	if members, err := team.currentMembers(client); err != nil {
+	if members, err := currentTeam.currentMembers(client); err != nil {
 		return err
 	} else {
-		team.Members = members
+		currentTeam.Members = members
 	}
 	return nil
 }

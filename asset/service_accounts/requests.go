@@ -61,11 +61,12 @@ func (serviceAccount *ServiceAccount) removePolicies(policies []string, client *
 	return serviceAccount.policyChange("DELETE", policies, client)
 }
 
-func (serviceAccount *ServiceAccount) PostReadProcess(client *asset.Client) error {
-	if policies, err := serviceAccount.currentPolicies(client); err != nil {
+func (serviceAccount *ServiceAccount) PostReadProcess(client *asset.Client, rawServiceAccount any) error {
+	currentServiceAccount := rawServiceAccount.(*ServiceAccount)
+	if policies, err := currentServiceAccount.currentPolicies(client); err != nil {
 		return err
 	} else {
-		serviceAccount.PolicyIds = policies
+		currentServiceAccount.PolicyIds = policies
 	}
 	return nil
 }

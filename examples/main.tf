@@ -127,11 +127,16 @@ module "assets_teams" {
 }
 
 module "assets_activity_definitions" {
-  source = "./activity_definitions"
-  node_id = module.assets_nodes.satellite_node.id
+  source             = "./activity_definitions"
+  node_id            = module.assets_nodes.satellite_node.id
   command_definition = module.assets_command_definitions.test_command_definition
   depends_on = [
     module.assets_nodes,
     module.assets_command_definitions
   ]
+}
+
+module "assets_plugins" {
+  source = "./plugins"
+  path   = abspath("./plugins/my_plugin.jar")
 }
