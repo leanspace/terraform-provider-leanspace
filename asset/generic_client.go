@@ -3,6 +3,7 @@ package asset
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"strings"
 	"terraform-provider-asset/asset/general_objects"
@@ -31,6 +32,14 @@ func (client GenericClient[T, PT]) unmarshalElement(data []byte) (PT, error) {
 	return element, nil
 }
 
+func (client GenericClient[T, PT]) encodeElement(element PT, data []byte) (io.Reader, string, error) {
+	if customEncoding, ok := any(element).(CustomEncodingModel); ok {
+		return customEncoding.CustomEncoding(data)
+	} else {
+		return strings.NewReader(string(data)), "application/json", nil
+	}
+}
+
 func (client GenericClient[T, PT]) GetAll() (*general_objects.PaginatedList[T, PT], error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s", client.Client.HostURL, client.Path), nil)
 	if err != nil {
@@ -56,8 +65,12 @@ func (client GenericClient[T, PT]) GetAll() (*general_objects.PaginatedList[T, P
 // - PT, nil, if the resource was fetched
 // - nil, error, if there was an error when fetching the resource
 // - nil, nil, if the resource was not found (and no other error occurred)
-func (client GenericClient[T, PT]) Get(id string) (PT, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s/%s", client.Client.HostURL, client.Path, id), nil)
+func (client GenericClient[T, PT]) Get(id string, readElement PT) (PT, error) {
+	path := fmt.Sprintf("%s/%s", client.Path, id)
+	if client.ReadPath != nil {
+		path = client.ReadPath(id)
+	}
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s", client.Client.HostURL, path), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -75,8 +88,8 @@ func (client GenericClient[T, PT]) Get(id string) (PT, error) {
 		return nil, err
 	}
 
-	if postRead, ok := any(value).(PostReadModel); ok {
-		if err := postRead.PostReadProcess(client.Client); err != nil {
+	if postRead, ok := any(readElement).(PostReadModel); ok {
+		if err := postRead.PostReadProcess(client.Client, value); err != nil {
 			return nil, err
 		}
 	}
@@ -95,8 +108,13 @@ func (client GenericClient[T, PT]) Create(createElement PT) (PT, error) {
 		path = client.CreatePath(createElement)
 	}
 
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/%s", client.Client.HostURL, path), strings.NewReader(string(rb)))
-	req.Header.Set("Content-Type", "application/json")
+	requestContent, contentType, err := client.encodeElement(createElement, rb)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/%s", client.Client.HostURL, path), requestContent)
+	req.Header.Set("Content-Type", contentType)
 	if err != nil {
 		return nil, err
 	}
@@ -129,8 +147,14 @@ func (client GenericClient[T, PT]) Update(elementId string, updateElement PT) (P
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PUT", fmt.Sprintf("%s/%s/%s", client.Client.HostURL, client.Path, elementId), strings.NewReader(string(rb)))
-	req.Header.Set("Content-Type", "application/json")
+	requestContent, contentType, err := client.encodeElement(updateElement, rb)
+	if err != nil {
+		return nil, err
+	}
+
+	path := fmt.Sprintf("%s/%s/%s", client.Client.HostURL, client.Path, elementId)
+	req, err := http.NewRequest("PUT", path, requestContent)
+	req.Header.Set("Content-Type", contentType)
 	if err != nil {
 		return nil, err
 	}
