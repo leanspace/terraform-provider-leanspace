@@ -65,9 +65,9 @@ One asset block containing:
 - international_designator: optional, only useful for ASSET
 - tle: optional, only useful for ASSET
     - list of exactly 2 strings
-- latitude: required if kind = GROUND_STATION
-- longitude: required if kind = GROUND_STATION
-- elevation: required if kind = GROUND_STATION
+- latitude: required if kind = GROUND_STATION, float of the ground station's latitude
+- longitude: required if kind = GROUND_STATION, float of the ground station's longitude
+- elevation: required if kind = GROUND_STATION, float of the ground station's elevation
 
 Nesting of nodes is not possible. Instead, set the `parent_node_id` field for the child node (see `examples/asset/nodes` for an example).
 
@@ -282,9 +282,12 @@ One command_definition block containing:
       - valid (filled by the API)
       - errors (filled by the API)
       - for FIELD:
-        - length_in_bits
         - processor: optional
         - data_type: `INTEGER || UINTEGER || DECIMAL || TEXT || BOOLEAN`
+        - length_in_bits
+          Extra rules apply:
+          - For data_type = `INTEGER || UINTEGER`, the max value is 32 bits
+          - For data_type = `DECIMAL`, the value must be either 32 or 64 bits
         - endianness: field specific endiannes
       - for SWITCH:
         - expression: one block, required
