@@ -544,7 +544,7 @@ One plugin block containing:
 - implementation_class_name: required string (e.g. `org.myplugin.ClassName`)
 - name
 - description: optional
-- source_code_file_download_authorized: optional bool, if the source can be downloaded
+- source_code_file_download_authorized: optional bool, if the source can be downloaded (defaults to true)
 - file_path: the absolute path to the file to upload (we recommend using the terraform function `abspath`)
 - created_at (filled by the API)
 - created_by (filled by the API)

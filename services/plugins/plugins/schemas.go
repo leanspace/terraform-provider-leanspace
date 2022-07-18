@@ -46,7 +46,8 @@ var pluginSchema = map[string]*schema.Schema{
 	},
 	"source_code_file_download_authorized": {
 		Type:     schema.TypeBool,
-		Required: true,
+		Optional: true,
+		Default:  true,
 	},
 	"file_path": {
 		Type:     schema.TypeString,
