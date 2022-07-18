@@ -1,4 +1,4 @@
-module terraform-provider-asset
+module leanspace-terraform-provider
 
 go 1.18
 
