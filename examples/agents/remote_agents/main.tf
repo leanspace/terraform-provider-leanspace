@@ -1,8 +1,8 @@
 terraform {
   required_providers {
     leanspace = {
-      version = "0.2"
-      source  = "leanspace.io/io/asset"
+      version = "0.3"
+      source  = "leanspace.io/io/leanspace"
     }
   }
 }

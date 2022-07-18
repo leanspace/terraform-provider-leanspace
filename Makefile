@@ -1,9 +1,9 @@
 TEST?=$$(go list ./... | grep -v 'vendor')
 HOSTNAME=leanspace.io
 NAMESPACE=io
-NAME=asset
+NAME=leanspace
 BINARY=terraform-provider-${NAME}.exe
-VERSION=0.2
+VERSION=0.3
 PLATFORM=""
 ARCHITECTURE=""
 
