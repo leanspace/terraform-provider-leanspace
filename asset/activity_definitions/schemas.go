@@ -27,8 +27,9 @@ var activityDefinitionSchema = map[string]*schema.Schema{
 		Optional: true,
 	},
 	"estimated_duration": {
-		Type:     schema.TypeInt,
-		Optional: true,
+		Type:         schema.TypeInt,
+		Optional:     true,
+		ValidateFunc: validation.IntAtLeast(0),
 	},
 	"metadata": {
 		Type:     schema.TypeSet,
