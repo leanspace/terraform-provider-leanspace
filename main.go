@@ -15,6 +15,7 @@ import (
 	"leanspace-terraform-provider/services/dashboard/dashboards"
 	"leanspace-terraform-provider/services/dashboard/widgets"
 	"leanspace-terraform-provider/services/metrics/metrics"
+	"leanspace-terraform-provider/services/monitors/action_templates"
 	"leanspace-terraform-provider/services/plugins/plugins"
 	"leanspace-terraform-provider/services/streams/streams"
 	"leanspace-terraform-provider/services/teams/access_policies"
@@ -25,6 +26,7 @@ import (
 
 func main() {
 	access_policies.AccessPolicyDataType.Subscribe()
+	action_templates.ActionTemplateDataType.Subscribe()
 	activity_definitions.ActivityDefinitionDataType.Subscribe()
 	command_definitions.CommandDataType.Subscribe()
 	command_queues.CommandQueueDataType.Subscribe()

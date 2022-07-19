@@ -140,3 +140,7 @@ module "plugins" {
   source = "./plugins/plugins"
   path   = abspath("./plugins/plugins/my_plugin.jar")
 }
+
+module "action_templates" {
+  source = "./monitors/action_templates/"
+}
