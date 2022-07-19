@@ -1,6 +1,6 @@
 # terraform
 
-This repository enables the use of Terraform for the service Topology & Asset of Leanspace
+This repository enables the use of Terraform for the different services of Leanspace
 
 ## Requirements
 
@@ -21,7 +21,8 @@ Then run `terraform init && terraform apply --auto-approve`: this will create th
 If you made some changes you can run it again to update the resources.
 
 You can use `terraform init && terraform destroy --auto-approve`: this will delete the created resources.
-You can also import existing resources (navigate to `examples/imports`)
+
+You can also import existing resources (navigate to `examples/imports`):
 You can use `terraform init && terraform import leanspace_nodes.sample_node 3563e0f6-03e3-416f-96f5-6c7102e37a11`: this will import the node with the id 3563e0f6-03e3-416f-96f5-6c7102e37a11 in the resource named sample_node
 
 ## Provider
@@ -36,7 +37,8 @@ This service account needs to have enough permissions (CRUD).
 
 ## Resources
 
-The resources reflects the object of Topology & Asset (https://api.leanspace.io/asset-repository/swagger-ui/index.html?configUrl=/asset-repository/v3/api-docs/swagger-config#/).
+The resources reflect the objects of the different services, and for most of them mimics closely the APIs. 
+More information, as well as the API documentation, can be found [here](https://docs.leanspace.io/docs/services/)
 
 ### Shared resources
 
@@ -67,7 +69,7 @@ One asset block containing:
 - longitude: required if kind = GROUND_STATION, float of the ground station's longitude
 - elevation: required if kind = GROUND_STATION, float of the ground station's elevation
 
-Nesting of nodes is not possible. Instead, set the `parent_node_id` field for the child node (see `examples/nodes` for an example).
+Nesting of nodes is not possible. Instead, set the `parent_node_id` field for the child node (see `examples/asset/nodes` for an example).
 
 ### leanspace_properties
 
@@ -537,11 +539,26 @@ One command_definition block containing:
     - activity_definition_metadata_name: name of a metadata value in the activity definition, required
     - command_definition_argument_name: name of an argument in the command definition, required
 
+### leanspace_plugins
+
+One plugin block containing:
+- id (filled by the API)
+- type: `STRING_IDENTITY_PLUGIN_TYPE || JSON_IDENTITY_PLUGIN_TYPE || COMMANDS_COMMAND_TRANSFORMER_PLUGIN_TYPE || COMMANDS_PROTOCOL_TRANSFORMER_PLUGIN_TYPE || SIMULATIONS_ANALYTICAL_NOMINAL_PROPAGATION_PLUGIN_TYPE`
+- implementation_class_name: required string (e.g. `org.myplugin.ClassName`)
+- name
+- description: optional
+- source_code_file_download_authorized: optional bool, if the source can be downloaded (defaults to true)
+- file_path: the absolute path to the file to upload (we recommend using the terraform function `abspath`)
+- created_at (filled by the API)
+- created_by (filled by the API)
+- last_modified_at (filled by the API)
+- last_modified_by (filled by the API)
+
 ## Datasource
 
 ### Common pattern
 
-- content: variable list of objects
+- content: variable list of the objects of the resource type (see above)
 - total_elements: integer
 - total_pages: integer
 - number_of_elements: integer
@@ -565,89 +582,38 @@ One command_definition block containing:
     - paged: boolean
     - unpaged: boolean
 
-### leanspace_nodes
-
-- content: list of one or multiple blocks of assets (snapshot representation of the resource `leanspace_nodes`)
-    - id (filled by the API)
-    - type: `GROUP||ASSET||COMPONENT`
-    - kind: optional if not an `ASSET`
-    - name
-    - description: optional
-
-### leanspace_properties
-
-- content: list of one or multiple blocks of properties
-
-### leanspace_command_definitions
-
-- content: list of one or multiple blocks of command_definition
-
-### leanspace_metrics
-
-- content: list of one or multiple blocks of metric
-
-### leanspace_queues
-
-- content: list of one or multiple blocks of command_queues
-
-### leanspace_streams
-
-- content: list of one or multiple blocks of streams
-
-### leanspace_widgets
-
-- content: list of one or multiple blocks of widgets
-
-### leanspace_dashboards
-
-- content: list of one or multiple blocks of dashboards
-
-### leanspace_remote_agents
-
-- content: list of one or multiple blocks of remote agents
-
-### leanspace_access_policies
-
-- content: list of one or multiple blocks of access policies
-
-### leanspace_members
-
-- content: list of one or multiple blocks of members
-
-### leanspace_service_accounts
-
-- content: list of one or multiple blocks of service accounts
-
-### leanspace_teams
-
-- content: list of one or multiple blocks of teams
-
-### leanspace_activity_definitions
-
-- content: list of one or multiple blocks of activity definitions
-
 ## Examples
 
-You can find examples in the `/examples` folder
+You can find examples in the `/examples` folder.
 
 ### Structure
 
-There is the `main.tf` that defines which module it should other terraform file to call.
+The `main.tf` file imports all other modules. All modules are then organised per service, per resource: `examples/{service}/{resource}/main.tf`
 
-There's one folder for each resource type:
-- asset: it has 2 `leanspace_nodes` resources, one inside the other.
-- property: it has as many `leanspace_properties` resources as available types (8)
-- command definition: it has one `leanspace_command_definitions` resource which has all possible metadata types (6) and all possible argument types (7)
-- command queue: it has one `leanspace_command_queues` resource which links the satellite and ground station nodes.
-- metrics: it has as many `leanspace_metrics` resources as available types (6)
-- streams: it has one `leanspace_streams` resource, with all available element types (3), all possible field types (5), a computed field and a mapping.
-- widgets: it has as many `leanspace_widgets` resources as available types (5)
-- dashboards: it has one `leanspace_dashboards` resource with three widgets and linked to a node
-- remote agents: it has one `leanspace_remote_agents` resource, with one inbound and one outbond connectors.
-- access policies: it has one `leanspace_access_policies` resource, with two statements, one containing a global (`*`) action and one with specific actions.
-- members: it has three `leanspace_members` resources, created recursively.
-- service accounts: it has three `leanspace_service_accounts` resources, created recursively.  
-- teams: it has one `leanspace_teams` resource, created with the given members and policies.
-- activity definitions: it has one `leanspace_activity_definitions` resource, whth all possible metadata types (6) and all possible argument types (7), as well as two mappings
+The available resources per service are:
+- activities:
+  - activity definitions: it has one `leanspace_activity_definitions` resource, whth all possible metadata types (6) and all possible argument types (7), as well as two mappings
+- agents:
+  - remote agents: it has one `leanspace_remote_agents` resource, with one inbound and one outbond connectors.
+- asset:
+  - nodes: it has 2 `leanspace_nodes` resources, one inside the other.
+  - property: it has as many `leanspace_properties` resources as available types (8)
+- commands:
+  - command definition: it has one `leanspace_command_definitions` resource which has all possible metadata types (6) and all possible argument types (7)
+  - command queue: it has one `leanspace_command_queues` resource which links the satellite and ground station nodes.
+- dashboard:
+  - widgets: it has as many `leanspace_widgets` resources as available types (5)
+  - dashboards: it has one `leanspace_dashboards` resource with three widgets and linked to a node
+- metrics:
+  - metrics: it has as many `leanspace_metrics` resources as available types (6)
+- plugins:
+  - plugins: it has one `leanspace_plugins` resource, with basic filler data.
+- streams:
+  - streams: it has one `leanspace_streams` resource, with all available element types (3), all possible field types (5), a computed field and a mapping.
+- teams:
+  - access policies: it has one `leanspace_access_policies` resource, with two statements, one containing a global (`*`) action and one with specific actions.
+  - members: it has three `leanspace_members` resources, created recursively.
+  - service accounts: it has three `leanspace_service_accounts` resources, created recursively.  
+  - teams: it has one `leanspace_teams` resource, created with the given members and policies.
 
-Finally there is the `imports` folder containing sample resources for each resource to test the import.
+There is also an `imports/main.tf` file, to test importing resources for the Topology & Assets service.

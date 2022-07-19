@@ -1,8 +1,8 @@
 terraform {
   required_providers {
     leanspace = {
-      version = "0.2"
-      source  = "leanspace.io/io/asset"
+      version = "0.3"
+      source  = "leanspace.io/io/leanspace"
     }
   }
 }
@@ -14,129 +14,129 @@ provider "leanspace" {
   client_secret = "d762kk9862jn0j1qr4c2u3o8bjkv70o45pld3200ek89qtul6kg"
 }
 
-module "assets_nodes" {
-  source = "./nodes"
+module "nodes" {
+  source = "./asset/nodes"
 }
 
-module "assets_properties" {
-  source  = "./properties"
-  node_id = module.assets_nodes.satellite_node.id
+module "properties" {
+  source  = "./asset/properties"
+  node_id = module.nodes.satellite_node.id
   depends_on = [
-    module.assets_nodes
+    module.nodes
   ]
 }
 
-module "assets_command_definitions" {
-  source  = "./command_definitions"
-  node_id = module.assets_nodes.satellite_node.id
+module "command_definitions" {
+  source  = "./commands/command_definitions"
+  node_id = module.nodes.satellite_node.id
   depends_on = [
-    module.assets_nodes
+    module.nodes
   ]
 }
 
-module "assets_metrics" {
-  source  = "./metrics"
-  node_id = module.assets_nodes.satellite_node.id
+module "metrics" {
+  source  = "./metrics/metrics"
+  node_id = module.nodes.satellite_node.id
   depends_on = [
-    module.assets_nodes
+    module.nodes
   ]
 }
 
-module "assets_command_queues" {
-  source             = "./command_queues"
-  asset_id           = module.assets_nodes.satellite_node.id
-  ground_station_ids = [module.assets_nodes.groundstation_node.id]
+module "command_queues" {
+  source             = "./commands/command_queues"
+  asset_id           = module.nodes.satellite_node.id
+  ground_station_ids = [module.nodes.groundstation_node.id]
   depends_on = [
-    module.assets_nodes
+    module.nodes
   ]
 }
 
-module "assets_streams" {
-  source            = "./streams"
-  asset_id          = module.assets_nodes.satellite_node.id
-  numeric_metric_id = module.assets_metrics.test_numeric_metric.id
+module "streams" {
+  source            = "./streams/streams"
+  asset_id          = module.nodes.satellite_node.id
+  numeric_metric_id = module.metrics.test_numeric_metric.id
   depends_on = [
-    module.assets_nodes,
-    module.assets_metrics
+    module.nodes,
+    module.metrics
   ]
 }
 
-module "assets_widgets" {
-  source            = "./widgets"
-  text_metric_id    = module.assets_metrics.test_text_metric.id
-  numeric_metric_id = module.assets_metrics.test_numeric_metric.id
+module "widgets" {
+  source            = "./dashboard/widgets"
+  text_metric_id    = module.metrics.test_text_metric.id
+  numeric_metric_id = module.metrics.test_numeric_metric.id
   depends_on = [
-    module.assets_metrics
+    module.metrics
   ]
 }
 
-module "assets_dashboards" {
-  source            = "./dashboards"
-  table_widget_id   = module.assets_widgets.test_table_widget.id
-  value_widget_id   = module.assets_widgets.test_value_widget.id
-  line_widget_id    = module.assets_widgets.test_line_widget.id
-  attached_node_ids = [module.assets_nodes.satellite_node.id]
+module "dashboards" {
+  source            = "./dashboard/dashboards"
+  table_widget_id   = module.widgets.test_table_widget.id
+  value_widget_id   = module.widgets.test_value_widget.id
+  line_widget_id    = module.widgets.test_line_widget.id
+  attached_node_ids = [module.nodes.satellite_node.id]
   depends_on = [
-    module.assets_widgets,
-    module.assets_nodes
+    module.widgets,
+    module.nodes
   ]
 }
 
-module "assets_remote_agents" {
-  source            = "./remote_agents"
-  ground_station_id = module.assets_nodes.groundstation_node.id
-  command_queue_id  = module.assets_command_queues.test_command_queue.id
-  stream_id         = module.assets_streams.test_stream.id
+module "remote_agents" {
+  source            = "./agents/remote_agents"
+  ground_station_id = module.nodes.groundstation_node.id
+  command_queue_id  = module.command_queues.test_command_queue.id
+  stream_id         = module.streams.test_stream.id
   depends_on = [
-    module.assets_nodes,
-    module.assets_command_queues,
-    module.assets_streams
+    module.nodes,
+    module.command_queues,
+    module.streams
   ]
 }
 
-module "assets_access_policies" {
-  source = "./access_policies"
+module "access_policies" {
+  source = "./teams/access_policies"
 }
 
-module "assets_members" {
-  source          = "./members"
+module "members" {
+  source          = "./teams/members"
   usernames       = ["TerraPaul", "TerraCotta", "TerraKium"]
-  access_policies = [module.assets_access_policies.test_access_policy.id]
+  access_policies = [module.access_policies.test_access_policy.id]
   depends_on = [
-    module.assets_access_policies
+    module.access_policies
   ]
 }
 
-module "assets_service_accounts" {
-  source          = "./service_accounts"
+module "service_accounts" {
+  source          = "./teams/service_accounts"
   usernames       = ["TerraBot 1", "TerraBot 2", "TerraBot 3"]
-  access_policies = [module.assets_access_policies.test_access_policy.id]
+  access_policies = [module.access_policies.test_access_policy.id]
   depends_on = [
-    module.assets_access_policies
+    module.access_policies
   ]
 }
 
-module "assets_teams" {
-  source          = "./teams"
-  members         = [for member in module.assets_members.test_members : member.id]
-  access_policies = [module.assets_access_policies.test_access_policy.id]
+module "teams" {
+  source          = "./teams/teams"
+  members         = [for member in module.members.test_members : member.id]
+  access_policies = [module.access_policies.test_access_policy.id]
   depends_on = [
-    module.assets_access_policies,
-    module.assets_members
+    module.access_policies,
+    module.members
   ]
 }
 
-module "assets_activity_definitions" {
-  source             = "./activity_definitions"
-  node_id            = module.assets_nodes.satellite_node.id
-  command_definition = module.assets_command_definitions.test_command_definition
+module "activity_definitions" {
+  source             = "./activities/activity_definitions"
+  node_id            = module.nodes.satellite_node.id
+  command_definition = module.command_definitions.test_command_definition
   depends_on = [
-    module.assets_nodes,
-    module.assets_command_definitions
+    module.nodes,
+    module.command_definitions
   ]
 }
 
-module "assets_plugins" {
-  source = "./plugins"
-  path   = abspath("./plugins/my_plugin.jar")
+module "plugins" {
+  source = "./plugins/plugins"
+  path   = abspath("./plugins/plugins/my_plugin.jar")
 }
