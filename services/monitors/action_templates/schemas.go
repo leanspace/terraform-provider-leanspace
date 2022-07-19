@@ -7,7 +7,7 @@ import (
 
 var validTypes = []string{"WEBHOOK"}
 
-var actionTemplateSchema = map[string]*schema.Schema{
+var ActionTemplateSchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
 		Computed: true,
