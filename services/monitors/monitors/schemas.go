@@ -25,7 +25,7 @@ var validAggregationFunctions = []string{
 	"COUNT_VALUE",
 }
 
-var validPollingFrequencies = []int{1440, 1, 60}
+var validPollingFrequencies = []int{1, 60, 1440}
 
 var monitorSchema = map[string]*schema.Schema{
 	"id": {
