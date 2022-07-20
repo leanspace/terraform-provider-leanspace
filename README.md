@@ -1,4 +1,4 @@
-# terraform
+# terraform-provider-leanspace
 
 This repository enables the use of Terraform for the different services of Leanspace
 

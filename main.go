@@ -23,6 +23,9 @@ import (
 	"leanspace-terraform-provider/services/teams/teams"
 )
 
+// Generate the Terraform provider documentation using `tfplugindocs`:
+//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
+
 func main() {
 	access_policies.AccessPolicyDataType.Subscribe()
 	activity_definitions.ActivityDefinitionDataType.Subscribe()
