@@ -29,7 +29,6 @@ resource "leanspace_monitors" "test_greater_than_monitor" {
       comparison_operator  = "GREATER_THAN"
       comparison_value     = 200
       aggregation_function = "HIGHEST_VALUE"
-      tolerance = 10
     }
     action_template_ids = var.action_template_ids
     tags {
