@@ -47,7 +47,7 @@ var streamSchema = map[string]*schema.Schema{
 	},
 	"mappings": {
 		Type:     schema.TypeSet,
-		Required: true,
+		Optional: true,
 		Elem: &schema.Resource{
 			Schema: mappingSchema,
 		},
@@ -305,7 +305,7 @@ func elementListSchema(content map[string]*schema.Schema) map[string]*schema.Sch
 	return map[string]*schema.Schema{
 		"elements": {
 			Type:     schema.TypeList,
-			Required: true,
+			Optional: true,
 			Elem: &schema.Resource{
 				Schema: content,
 			},

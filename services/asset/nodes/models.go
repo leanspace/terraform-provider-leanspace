@@ -18,9 +18,9 @@ type Node struct {
 	NoradId                 string                `json:"noradId,omitempty" terra:"norad_id"`
 	InternationalDesignator string                `json:"internationalDesignator,omitempty" terra:"international_designator"`
 	Tle                     []string              `json:"tle,omitempty" terra:"tle"`
-	Latitude                float64               `json:"latitude,omitempty" terra:"latitude,omitempty"`
-	Longitude               float64               `json:"longitude,omitempty" terra:"longitude,omitempty"`
-	Elevation               float64               `json:"elevation,omitempty" terra:"elevation,omitempty"`
+	Latitude                *float64              `json:"latitude,omitempty" terra:"latitude,omitempty"`
+	Longitude               *float64              `json:"longitude,omitempty" terra:"longitude,omitempty"`
+	Elevation               *float64              `json:"elevation,omitempty" terra:"elevation,omitempty"`
 }
 
 func (node *Node) GetID() string { return node.ID }
