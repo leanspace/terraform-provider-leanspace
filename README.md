@@ -562,7 +562,7 @@ One action_template block containing:
 - type: can only be `WEBHOOK`, optional
 - url: a required http / https url
 - payload: the webhook payload (can be a `jsonencode` string)
-- headers: a map of strings
+- headers: an optional map of strings
 - created_at (filled by the API)
 - created_by (filled by the API)
 - last_modified_at (filled by the API)
