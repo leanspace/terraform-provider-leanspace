@@ -554,6 +554,48 @@ One plugin block containing:
 - last_modified_at (filled by the API)
 - last_modified_by (filled by the API)
 
+### leanspace_action_templates
+
+One action_template block containing:
+- id (filled by the API)
+- name
+- type: can only be `WEBHOOK`, optional
+- url: a required http / https url
+- payload: the webhook payload (can be a `jsonencode` string)
+- headers: an optional map of strings
+- created_at (filled by the API)
+- created_by (filled by the API)
+- last_modified_at (filled by the API)
+- last_modified_by (filled by the API)
+
+### leanspce_monitors
+
+One monitor block containing:
+- id (filled by the API)
+- name
+- description (optional)
+- status (filled by the API)
+- polling_frequency_in_minutes: `1 || 60 || 1440`
+- metric_id: UUID of the metric to monitor
+- node_id (filled by the API)
+- statistics: one block (filled by the API)
+  - last_evaluation: one block
+    - timestamp (datetime string)
+    - value: float
+    - status: string
+- expression: one block
+  - comparison_operator: one of `GREATER_THAN || LESSER_THAN || GREATER_THAN_OR_EQUAL_TO || LESSER_THAN_OR_EQUAL_TO || EQUAL_TO || NOT_EQUAL_TO`
+  - comparison_value: float to compare
+  - aggregation_function: one of `AVERAGE_VALUE || HIGHEST_VALUE || LOWEST_VALUE || SUM_VALUE || COUNT_VALUE`
+  - tolerance: float of tolerance, only allowed if comparison_operator is `EQUAL_TO || NOT_EQUAL_TO`
+- action_templates: set of action templates (see above) (filled by the API)
+- action_template_ids: the set of desired action templates
+- tags: zero or more tag blocks
+- created_at (filled by the API)
+- created_by (filled by the API)
+- last_modified_at (filled by the API)
+- last_modified_by (filled by the API)
+
 ## Datasource
 
 ### Common pattern
@@ -606,6 +648,9 @@ The available resources per service are:
   - dashboards: it has one `leanspace_dashboards` resource with three widgets and linked to a node
 - metrics:
   - metrics: it has as many `leanspace_metrics` resources as available types (6)
+- monitors:
+  - action_templates: it has one simple `leanspace_action_template` with a body and headers
+  - monitors: it has two `leanspace_monitors`, one with and one without a tolerance set.
 - plugins:
   - plugins: it has one `leanspace_plugins` resource, with basic filler data.
 - streams:

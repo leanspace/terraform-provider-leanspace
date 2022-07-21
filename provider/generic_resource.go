@@ -29,15 +29,15 @@ func (dataSource DataSourceType[T, PT]) toResource() *schema.Resource {
 	}
 }
 
-func (dataSource DataSourceType[T, PT]) getData(d *schema.ResourceData) (string, PT) {
+func (dataSource DataSourceType[T, PT]) getData(d *schema.ResourceData) (string, PT, error) {
 	valueId := d.Id()
 	valueRaw := d.Get(dataSource.Name).([]any)
 	if len(valueRaw) == 0 {
-		return valueId, nil
+		return valueId, nil, nil
 	}
 	var value PT = new(T)
-	value.FromMap(valueRaw[0].(map[string]any))
-	return valueId, value
+	error := value.FromMap(valueRaw[0].(map[string]any))
+	return valueId, value, error
 }
 
 func (dataSource DataSourceType[T, PT]) create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
@@ -45,7 +45,10 @@ func (dataSource DataSourceType[T, PT]) create(ctx context.Context, d *schema.Re
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	_, value := dataSource.getData(d)
+	_, value, err := dataSource.getData(d)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	createdValue, err := dataSource.convert(client).Create(value)
 	if err != nil {
 		return diag.FromErr(err)
@@ -61,8 +64,11 @@ func (dataSource DataSourceType[T, PT]) get(ctx context.Context, d *schema.Resou
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	valueId, value := dataSource.getData(d)
-	value, err := dataSource.convert(client).Get(valueId, value)
+	valueId, value, err := dataSource.getData(d)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	value, err = dataSource.convert(client).Get(valueId, value)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -84,8 +90,11 @@ func (dataSource DataSourceType[T, PT]) update(ctx context.Context, d *schema.Re
 	var diags diag.Diagnostics
 
 	if d.HasChange(dataSource.Name) {
-		valueId, value := dataSource.getData(d)
-		_, err := dataSource.convert(client).Update(valueId, value)
+		valueId, value, err := dataSource.getData(d)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		_, err = dataSource.convert(client).Update(valueId, value)
 		if err != nil {
 			return diag.FromErr(err)
 		}
@@ -103,8 +112,11 @@ func (dataSource DataSourceType[T, PT]) delete(ctx context.Context, d *schema.Re
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	valueId, value := dataSource.getData(d)
-	err := dataSource.convert(client).Delete(valueId, value)
+	valueId, value, err := dataSource.getData(d)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	err = dataSource.convert(client).Delete(valueId, value)
 	if err != nil {
 		return diag.FromErr(err)
 	}

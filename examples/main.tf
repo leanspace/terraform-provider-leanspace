@@ -140,3 +140,13 @@ module "plugins" {
   source = "./plugins/plugins"
   path   = abspath("./plugins/plugins/my_plugin.jar")
 }
+
+module "action_templates" {
+  source = "./monitors/action_templates/"
+}
+
+module "monitors" {
+  source = "./monitors/monitors/"
+  metric_id = module.metrics.test_numeric_metric.id
+  action_template_ids = [module.action_templates.test_action_template.id]
+}
