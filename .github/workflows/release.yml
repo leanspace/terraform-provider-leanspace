@@ -86,8 +86,8 @@ jobs:
               echo "Creating file:$file, sha:$sha, arch:$arch, os:$os"
               sha=$(echo $line | awk '{print $1}')
               file=$(echo $line | awk '{print $2}')
-              arch=$(echo $file | awk -F_ '{print $3}')
-              os=$(echo $file | awk -F_ '{print $4}' | awk -F. '{print $1}')
+              os=$(echo $file | awk -F_ '{print $3}')
+              arch=$(echo $file | awk -F_ '{print $4}' | awk -F. '{print $1}')
 
               RESPONSE=$(curl -s \
               -H "Authorization: Bearer ${{ secrets.TERRAFORM_TOKEN }}" \

@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     leanspace = {
-      version = "0.3.0"
+      version = "0.3.1"
       source  = "app.terraform.io/leanspace/leanspace"
     }
   }
