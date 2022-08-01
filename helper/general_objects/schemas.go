@@ -15,24 +15,29 @@ func PaginatedListSchema(content map[string]*schema.Schema) map[string]*schema.S
 			},
 		},
 		"total_elements": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Number of elements in total",
 		},
 		"total_pages": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Number of pages in total",
 		},
 		"number_of_elements": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Number of elements fetched in this page",
 		},
 		"number": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Page number",
 		},
 		"size": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Size of this page",
 		},
 		"sort": {
 			Type:     schema.TypeList,
@@ -42,16 +47,19 @@ func PaginatedListSchema(content map[string]*schema.Schema) map[string]*schema.S
 			},
 		},
 		"first": {
-			Type:     schema.TypeBool,
-			Computed: true,
+			Type:        schema.TypeBool,
+			Computed:    true,
+			Description: "True if this is the first page",
 		},
 		"last": {
-			Type:     schema.TypeBool,
-			Computed: true,
+			Type:        schema.TypeBool,
+			Computed:    true,
+			Description: "True if this is the last page",
 		},
 		"empty": {
-			Type:     schema.TypeBool,
-			Computed: true,
+			Type:        schema.TypeBool,
+			Computed:    true,
+			Description: "True if the content is empty",
 		},
 		"pageable": {
 			Type:     schema.TypeList,
@@ -65,28 +73,34 @@ func PaginatedListSchema(content map[string]*schema.Schema) map[string]*schema.S
 
 var SortSchema = map[string]*schema.Schema{
 	"direction": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Direction of the sorting, either DESC or ASC",
 	},
 	"property": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Property used to sort by",
 	},
 	"ignore_case": {
-		Type:     schema.TypeBool,
-		Computed: true,
+		Type:        schema.TypeBool,
+		Computed:    true,
+		Description: "True if the search ignores case",
 	},
 	"null_handling": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "How null values are handled",
 	},
 	"ascending": {
-		Type:     schema.TypeBool,
-		Computed: true,
+		Type:        schema.TypeBool,
+		Computed:    true,
+		Description: "True if the direction of the sorting is ascending",
 	},
 	"descending": {
-		Type:     schema.TypeBool,
-		Computed: true,
+		Type:        schema.TypeBool,
+		Computed:    true,
+		Description: "True if the direction of the sorting is descending",
 	},
 }
 
@@ -99,24 +113,29 @@ var PageableSchema = map[string]*schema.Schema{
 		},
 	},
 	"offset": {
-		Type:     schema.TypeInt,
-		Computed: true,
+		Type:        schema.TypeInt,
+		Computed:    true,
+		Description: "Number of elements in previous pages",
 	},
 	"page_number": {
-		Type:     schema.TypeInt,
-		Computed: true,
+		Type:        schema.TypeInt,
+		Computed:    true,
+		Description: "Page number",
 	},
 	"page_size": {
-		Type:     schema.TypeInt,
-		Computed: true,
+		Type:        schema.TypeInt,
+		Computed:    true,
+		Description: "Size of this page",
 	},
 	"paged": {
-		Type:     schema.TypeBool,
-		Computed: true,
+		Type:        schema.TypeBool,
+		Computed:    true,
+		Description: "True if this query is paged",
 	},
 	"unpaged": {
-		Type:     schema.TypeBool,
-		Computed: true,
+		Type:        schema.TypeBool,
+		Computed:    true,
+		Description: "True if this query is unpaged",
 	},
 }
 
