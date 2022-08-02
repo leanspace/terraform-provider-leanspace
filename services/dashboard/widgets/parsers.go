@@ -85,7 +85,7 @@ func (widget *Widget) FromMap(widgetMap map[string]any) error {
 	widget.Description = widgetMap["description"].(string)
 	widget.Type = widgetMap["type"].(string)
 	widget.Granularity = widgetMap["granularity"].(string)
-	if series, err := helper.ParseFromMaps[Series](widgetMap["series"].([]any)); err != nil {
+	if series, err := helper.ParseFromMaps[Series](widgetMap["series"].(*schema.Set).List()); err != nil {
 		return err
 	} else {
 		widget.Series = series

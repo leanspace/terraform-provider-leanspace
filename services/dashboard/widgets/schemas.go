@@ -37,7 +37,7 @@ var widgetSchema = map[string]*schema.Schema{
 		ValidateFunc: validation.StringInSlice(validGranularities, false),
 	},
 	"series": {
-		Type:     schema.TypeList,
+		Type:     schema.TypeSet,
 		Required: true,
 		Elem: &schema.Resource{
 			Schema: seriesSchema,

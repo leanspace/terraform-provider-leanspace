@@ -38,6 +38,7 @@ var metricSchema = map[string]*schema.Schema{
 			),
 		},
 	},
+	"tags": general_objects.TagsSchema,
 	"created_at": {
 		Type:     schema.TypeString,
 		Computed: true,

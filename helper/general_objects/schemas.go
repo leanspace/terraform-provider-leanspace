@@ -60,6 +60,13 @@ func PaginatedListSchema(content map[string]*schema.Schema) map[string]*schema.S
 				Schema: PageableSchema,
 			},
 		},
+		"filters": {
+			Type:     schema.TypeMap,
+			Optional: true,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
+		},
 	}
 }
 

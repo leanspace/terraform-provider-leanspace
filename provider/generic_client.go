@@ -6,6 +6,7 @@ import (
 	"io"
 	"leanspace-terraform-provider/helper/general_objects"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -44,8 +45,16 @@ func (client GenericClient[T, PT]) encodeElement(element PT) (io.Reader, string,
 	}
 }
 
-func (client GenericClient[T, PT]) GetAll() (*general_objects.PaginatedList[T, PT], error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s", client.Client.HostURL, client.Path), nil)
+func (client GenericClient[T, PT]) GetAll(filters map[string]any) (*general_objects.PaginatedList[T, PT], error) {
+	path := fmt.Sprintf("%s/%s", client.Client.HostURL, client.Path)
+	if filters != nil {
+		queryParams := url.Values{}
+		for key, value := range filters {
+			queryParams.Add(key, value.(string))
+		}
+		path += "?" + queryParams.Encode()
+	}
+	req, err := http.NewRequest("GET", path, nil)
 	if err != nil {
 		return nil, err
 	}

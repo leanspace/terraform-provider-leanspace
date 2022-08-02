@@ -23,7 +23,8 @@ func (dataSourceType DataSourceType[T, PT]) read(ctx context.Context, d *schema.
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	values, err := dataSourceType.convert(client).GetAll()
+	filters := d.Get("filters").(map[string]any)
+	values, err := dataSourceType.convert(client).GetAll(filters)
 	if err != nil {
 		return diag.FromErr(err)
 	}

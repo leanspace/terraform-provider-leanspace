@@ -101,9 +101,12 @@ func (node *Node) FromMap(nodeMap map[string]any) error {
 
 	}
 	if nodeMap["kind"] == "GROUND_STATION" {
-		node.Latitude = nodeMap["latitude"].(float64)
-		node.Longitude = nodeMap["longitude"].(float64)
-		node.Elevation = nodeMap["elevation"].(float64)
+		latitude := nodeMap["latitude"].(float64)
+		node.Latitude = &latitude
+		longitude := nodeMap["longitude"].(float64)
+		node.Longitude = &longitude
+		elevation := nodeMap["elevation"].(float64)
+		node.Elevation = &elevation
 	}
 
 	return nil

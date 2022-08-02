@@ -20,7 +20,9 @@ func (field *Field[T]) ToMap() map[string]any {
 	fieldMap["type"] = field.Type
 	// This might be unsafe in the future - for now fields are only used for numbers
 	// in the geopoint type so it's alright.
-	fieldMap["value"] = helper.ParseFloat(any(field.Value).(float64))
+	if any(field.Value) != nil {
+		fieldMap["value"] = helper.ParseFloat(any(field.Value).(float64))
+	}
 
 	return fieldMap
 }

@@ -177,8 +177,10 @@ func (configuration *Configuration) FromMap(configMap map[string]any) error {
 	if err := configuration.Metadata.FromMap(configMap["metadata"].([]any)[0].(map[string]any)); err != nil {
 		return err
 	}
-	if err := configuration.Computations.FromMap(configMap["computations"].([]any)[0].(map[string]any)); err != nil {
-		return err
+	if len(configMap["computations"].([]any)) > 0 {
+		if err := configuration.Computations.FromMap(configMap["computations"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
 	}
 	configuration.Valid = configMap["valid"].(bool)
 	if errors, err := helper.ParseFromMaps[Error](configMap["errors"].(*schema.Set).List()); err != nil {
@@ -215,7 +217,8 @@ func (streamComp *StreamComponent) FromMap(streamCompMap map[string]any) error {
 				)
 			}
 		case "DECIMAL":
-			if streamComp.LengthInBits != 32 && streamComp.LengthInBits != 64 {
+			// Here we also need to allow 0 - when deleting that field is sometimes set to 0 and that is tolerable.
+			if streamComp.LengthInBits != 0 && streamComp.LengthInBits != 32 && streamComp.LengthInBits != 64 {
 				return fmt.Errorf(
 					"the length in bits of a decimal field must be 32 or 64, got %d",
 					streamComp.LengthInBits,
