@@ -217,6 +217,7 @@ func (streamComp *StreamComponent) FromMap(streamCompMap map[string]any) error {
 				)
 			}
 		case "DECIMAL":
+			// Here we also need to allow 0 - when deleting that field is sometimes set to 0 and that is tolerable.
 			if streamComp.LengthInBits != 0 && streamComp.LengthInBits != 32 && streamComp.LengthInBits != 64 {
 				return fmt.Errorf(
 					"the length in bits of a decimal field must be 32 or 64, got %d",
