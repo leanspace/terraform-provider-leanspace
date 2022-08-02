@@ -6,6 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"leanspace-terraform-provider/helper"
 )
 
 var validComparisonOperators = []string{
@@ -48,6 +49,7 @@ var monitorSchema = map[string]*schema.Schema{
 		Type:         schema.TypeInt,
 		Required:     true,
 		ValidateFunc: validation.IntInSlice(validPollingFrequencies),
+		Description:  helper.AllowedIntValuesToDescription(validPollingFrequencies),
 	},
 	"metric_id": {
 		Type:         schema.TypeString,
@@ -91,20 +93,24 @@ var monitorSchema = map[string]*schema.Schema{
 	},
 	"tags": general_objects.TagsSchema,
 	"created_at": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "When it was created",
 	},
 	"created_by": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Who created it",
 	},
 	"last_modified_at": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "When it was last modified",
 	},
 	"last_modified_by": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Who modified it the last",
 	},
 }
 
@@ -138,6 +144,7 @@ var expressionSchema = map[string]*schema.Schema{
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.StringInSlice(validComparisonOperators, false),
+		Description:  helper.AllowedValuesToDescription(validComparisonOperators),
 	},
 	"comparison_value": {
 		Type:     schema.TypeFloat,
@@ -147,10 +154,12 @@ var expressionSchema = map[string]*schema.Schema{
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.StringInSlice(validAggregationFunctions, false),
+		Description:  helper.AllowedValuesToDescription(validAggregationFunctions),
 	},
 	"tolerance": {
 		Type:         schema.TypeFloat,
 		Optional:     true,
 		ValidateFunc: validation.FloatAtLeast(0),
+		Description:  "Only valid for EQUAL_TO or NOT_EQUAL_TO comparison operator",
 	},
 }

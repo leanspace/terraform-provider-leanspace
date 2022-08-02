@@ -35,14 +35,14 @@ Required:
 Optional:
 
 - `headers` (Map of String)
-- `type` (String)
+- `type` (String) it must be one of these values: WEBHOOK
 
 Read-Only:
 
-- `created_at` (String)
-- `created_by` (String)
+- `created_at` (String) When it was created
+- `created_by` (String) Who created it
 - `id` (String) The ID of this resource.
-- `last_modified_at` (String)
-- `last_modified_by` (String)
+- `last_modified_at` (String) When it was last modified
+- `last_modified_by` (String) Who modified it the last
 
 

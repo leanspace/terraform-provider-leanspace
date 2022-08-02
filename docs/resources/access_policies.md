@@ -37,11 +37,11 @@ Optional:
 
 Read-Only:
 
-- `created_at` (String)
-- `created_by` (String)
+- `created_at` (String) When it was created
+- `created_by` (String) Who created it
 - `id` (String) The ID of this resource.
-- `last_modified_at` (String)
-- `last_modified_by` (String)
+- `last_modified_at` (String) When it was last modified
+- `last_modified_by` (String) Who modified it the last
 - `read_only` (Boolean)
 
 <a id="nestedblock--access_policy--statements"></a>

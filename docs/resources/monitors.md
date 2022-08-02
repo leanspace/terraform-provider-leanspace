@@ -31,7 +31,7 @@ Required:
 - `expression` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--monitor--expression))
 - `metric_id` (String)
 - `name` (String)
-- `polling_frequency_in_minutes` (Number)
+- `polling_frequency_in_minutes` (Number) it must be one of these values: 1, 60, 1440
 
 Optional:
 
@@ -42,11 +42,11 @@ Optional:
 Read-Only:
 
 - `action_templates` (Set of Object) (see [below for nested schema](#nestedatt--monitor--action_templates))
-- `created_at` (String)
-- `created_by` (String)
+- `created_at` (String) When it was created
+- `created_by` (String) Who created it
 - `id` (String) The ID of this resource.
-- `last_modified_at` (String)
-- `last_modified_by` (String)
+- `last_modified_at` (String) When it was last modified
+- `last_modified_by` (String) Who modified it the last
 - `node_id` (String)
 - `statistics` (List of Object) (see [below for nested schema](#nestedatt--monitor--statistics))
 - `status` (String)
@@ -56,13 +56,13 @@ Read-Only:
 
 Required:
 
-- `aggregation_function` (String)
-- `comparison_operator` (String)
+- `aggregation_function` (String) it must be one of these values: AVERAGE_VALUE, HIGHEST_VALUE, LOWEST_VALUE, SUM_VALUE, COUNT_VALUE
+- `comparison_operator` (String) it must be one of these values: GREATER_THAN, LESSER_THAN, GREATER_THAN_OR_EQUAL_TO, LESSER_THAN_OR_EQUAL_TO, EQUAL_TO, NOT_EQUAL_TO
 - `comparison_value` (Number)
 
 Optional:
 
-- `tolerance` (Number)
+- `tolerance` (Number) Only valid for EQUAL_TO or NOT_EQUAL_TO comparison operator
 
 
 <a id="nestedblock--monitor--tags"></a>

@@ -3,6 +3,7 @@ package general_objects
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"leanspace-terraform-provider/helper"
 )
 
 func PaginatedListSchema(content map[string]*schema.Schema) map[string]*schema.Schema {
@@ -184,6 +185,7 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string) ma
 			Type:         schema.TypeString,
 			Required:     true,
 			ValidateFunc: validation.StringInSlice(validTypes, false),
+			Description:  helper.AllowedValuesToDescription(validTypes),
 		},
 		"required": {
 			Type:     schema.TypeBool,
@@ -199,38 +201,46 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string) ma
 			Type:         schema.TypeInt,
 			Optional:     true,
 			ValidateFunc: validation.IntAtLeast(1),
+			Description:  "Text only: Minimum length of this text (at least 1)",
 		},
 		"max_length": {
 			Type:         schema.TypeInt,
 			Optional:     true,
 			ValidateFunc: validation.IntAtLeast(1),
+			Description:  "Text only: Maximum length of this text (at least 1)",
 		},
 		"pattern": {
-			Type:     schema.TypeString,
-			Optional: true,
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Text only: Regex defined the allowed pattern of this text",
 		},
 
 		// Numeric only
 		"min": {
-			Type:     schema.TypeFloat,
-			Optional: true,
+			Type:        schema.TypeFloat,
+			Optional:    true,
+			Description: "Numeric only",
 		},
 		"max": {
-			Type:     schema.TypeFloat,
-			Optional: true,
+			Type:        schema.TypeFloat,
+			Optional:    true,
+			Description: "Numeric only",
 		},
 		"scale": {
-			Type:     schema.TypeInt,
-			Optional: true,
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Numeric only",
 		},
 		"precision": {
-			Type:     schema.TypeInt,
-			Optional: true,
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Numeric only: How many values after the comma should be accepted",
 		},
 		"unit_id": {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validation.IsUUID,
+			Description:  "Numeric only",
 		},
 
 		// Time, date, timestamp only
@@ -238,17 +248,20 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string) ma
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validation.IsRFC3339Time,
+			Description:  "Time/date/timestamp only: Maximum date allowed",
 		},
 		"after": {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validation.IsRFC3339Time,
+			Description:  "Time/date/timestamp only: Minimum date allowed",
 		},
 
 		// Enum only
 		"options": {
-			Type:     schema.TypeMap,
-			Optional: true,
+			Type:        schema.TypeMap,
+			Optional:    true,
+			Description: "Enum only: The allowed values for the enum in the format 1 = \"value\"",
 		},
 	}
 
@@ -272,6 +285,7 @@ var ValueAttributeSchema = map[string]*schema.Schema{
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.StringInSlice(validMetadataTypes, false),
+		Description:  helper.AllowedValuesToDescription(validMetadataTypes),
 	},
 	// Numeric only
 	"unit_id": {

@@ -29,7 +29,7 @@ description: |-
 Required:
 
 - `name` (String)
-- `type` (String)
+- `type` (String) it must be one of these values: ASSET, GROUP, COMPONENT
 
 Optional:
 
@@ -39,18 +39,18 @@ Optional:
 - `kind` (String)
 - `latitude` (Number)
 - `longitude` (Number)
-- `norad_id` (String)
+- `norad_id` (String) It must be 5 digits
 - `parent_node_id` (String)
 - `tags` (Block Set) (see [below for nested schema](#nestedblock--node--tags))
-- `tle` (List of String)
+- `tle` (List of String) TLE composed of its 2 lines
 
 Read-Only:
 
-- `created_at` (String)
-- `created_by` (String)
+- `created_at` (String) When it was created
+- `created_by` (String) Who created it
 - `id` (String) The ID of this resource.
-- `last_modified_at` (String)
-- `last_modified_by` (String)
+- `last_modified_at` (String) When it was last modified
+- `last_modified_by` (String) Who modified it the last
 - `nodes` (Set of Object) (see [below for nested schema](#nestedatt--node--nodes))
 
 <a id="nestedblock--node--tags"></a>

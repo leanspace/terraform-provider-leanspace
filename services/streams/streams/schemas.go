@@ -3,6 +3,7 @@ package streams
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"leanspace-terraform-provider/helper"
 )
 
 var validDataTypes = []string{
@@ -19,8 +20,9 @@ var streamSchema = map[string]*schema.Schema{
 		Computed: true,
 	},
 	"version": {
-		Type:     schema.TypeInt,
-		Computed: true,
+		Type:        schema.TypeInt,
+		Computed:    true,
+		Description: "Version of the stream, this is incremented each time the stream is updated",
 	},
 	"name": {
 		Type:     schema.TypeString,
@@ -53,20 +55,24 @@ var streamSchema = map[string]*schema.Schema{
 		},
 	},
 	"created_at": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "When it was created",
 	},
 	"created_by": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Who created it",
 	},
 	"last_modified_at": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "When it was last modified",
 	},
 	"last_modified_by": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Who modified it the last",
 	},
 }
 
@@ -75,6 +81,7 @@ var configurationSchema = map[string]*schema.Schema{
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.StringInSlice(validEndianness, false),
+		Description:  "Endianness of the stream, " + helper.AllowedValuesToDescription(validEndianness),
 	},
 	"structure": {
 		Type:     schema.TypeList,
@@ -125,12 +132,14 @@ func streamComponentSchema(depth int) map[string]*schema.Schema {
 			Required: true,
 		},
 		"order": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Position of this component in the current context",
 		},
 		"path": {
-			Type:     schema.TypeString,
-			Computed: true,
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Path of this component in the current context",
 		},
 		"type": {
 			Type:         schema.TypeString,
@@ -163,11 +172,13 @@ func streamComponentSchema(depth int) map[string]*schema.Schema {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validation.StringInSlice(validDataTypes, false),
+			Description:  helper.AllowedValuesToDescription(validDataTypes),
 		},
 		"endianness": {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validation.StringInSlice(validEndianness, false),
+			Description:  helper.AllowedValuesToDescription(validEndianness),
 		},
 	}
 
@@ -197,8 +208,9 @@ func streamComponentSchema(depth int) map[string]*schema.Schema {
 
 var switchExpressionSchema = map[string]*schema.Schema{
 	"switch_on": {
-		Type:     schema.TypeString,
-		Required: true,
+		Type:        schema.TypeString,
+		Required:    true,
+		Description: "Path of the field that the switch will use",
 	},
 	"options": {
 		Type:     schema.TypeSet,
@@ -231,6 +243,7 @@ var switchValueSchema = map[string]*schema.Schema{
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.StringInSlice(validDataTypes, false),
+		Description:  helper.AllowedValuesToDescription(validDataTypes),
 	},
 	"data": {
 		Type:     schema.TypeString,
@@ -341,10 +354,12 @@ var computationSchema = map[string]*schema.Schema{
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.StringInSlice(validDataTypes, false),
+		Description:  helper.AllowedValuesToDescription(validDataTypes),
 	},
 	"expression": {
-		Type:     schema.TypeString,
-		Required: true,
+		Type:        schema.TypeString,
+		Required:    true,
+		Description: "i.e.: javascript function with 2 input parameters and a return value (ctx, raw) => ctx['metadata.received_at']",
 	},
 	"valid": {
 		Type:     schema.TypeBool,

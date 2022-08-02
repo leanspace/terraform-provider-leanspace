@@ -1,10 +1,12 @@
 package helper
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
+	"strings"
 )
 
 type Parseable interface {
@@ -51,6 +53,14 @@ func Contains[T comparable](slice []T, value T) bool {
 		}
 	}
 	return false
+}
+
+func AllowedValuesToDescription(allowedValues []string) string {
+	return "it must be one of these values: " + strings.Join(allowedValues, ", ")
+}
+
+func AllowedIntValuesToDescription(allowedValues []int) string {
+	return "it must be one of these values: " + strings.Trim(strings.Join(strings.Fields(fmt.Sprint(allowedValues)), ", "), "[]")
 }
 
 const Debug = false

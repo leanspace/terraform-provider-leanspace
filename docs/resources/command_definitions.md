@@ -40,11 +40,11 @@ Optional:
 
 Read-Only:
 
-- `created_at` (String)
-- `created_by` (String)
+- `created_at` (String) When it was created
+- `created_by` (String) Who created it
 - `id` (String) The ID of this resource.
-- `last_modified_at` (String)
-- `last_modified_by` (String)
+- `last_modified_at` (String) When it was last modified
+- `last_modified_by` (String) Who modified it the last
 
 <a id="nestedblock--command_definition--arguments"></a>
 ### Nested Schema for `command_definition.arguments`
@@ -68,23 +68,23 @@ Read-Only:
 
 Required:
 
-- `type` (String)
+- `type` (String) it must be one of these values: NUMERIC, BOOLEAN, TEXT, DATE, TIME, TIMESTAMP, ENUM
 
 Optional:
 
-- `after` (String)
-- `before` (String)
+- `after` (String) Time/date/timestamp only: Minimum date allowed
+- `before` (String) Time/date/timestamp only: Maximum date allowed
 - `default_value` (String)
-- `max` (Number)
-- `max_length` (Number)
-- `min` (Number)
-- `min_length` (Number)
-- `options` (Map of String)
-- `pattern` (String)
-- `precision` (Number)
+- `max` (Number) Numeric only
+- `max_length` (Number) Text only: Maximum length of this text (at least 1)
+- `min` (Number) Numeric only
+- `min_length` (Number) Text only: Minimum length of this text (at least 1)
+- `options` (Map of String) Enum only: The allowed values for the enum in the format 1 = "value"
+- `pattern` (String) Text only: Regex defined the allowed pattern of this text
+- `precision` (Number) Numeric only: How many values after the comma should be accepted
 - `required` (Boolean)
-- `scale` (Number)
-- `unit_id` (String)
+- `scale` (Number) Numeric only
+- `unit_id` (String) Numeric only
 
 
 
@@ -109,7 +109,7 @@ Read-Only:
 
 Required:
 
-- `type` (String)
+- `type` (String) it must be one of these values: NUMERIC, BOOLEAN, TEXT, DATE, TIME, TIMESTAMP, ENUM
 
 Optional:
 

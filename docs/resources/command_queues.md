@@ -33,17 +33,17 @@ Required:
 
 Optional:
 
-- `command_transformer_plugin_id` (String)
+- `command_transformer_plugin_id` (String) The Id of the Command Transformer's Plugin
 - `ground_station_ids` (Set of String)
-- `protocol_transformer_init_data` (String)
-- `protocol_transformer_plugin_id` (String)
+- `protocol_transformer_init_data` (String) Initialization data used by the Protocol Transformer
+- `protocol_transformer_plugin_id` (String) The Id of the Protocol Transformer's Plugin
 
 Read-Only:
 
-- `created_at` (String)
-- `created_by` (String)
+- `created_at` (String) When it was created
+- `created_by` (String) Who created it
 - `id` (String) The ID of this resource.
-- `last_modified_at` (String)
-- `last_modified_by` (String)
+- `last_modified_at` (String) When it was last modified
+- `last_modified_by` (String) Who modified it the last
 
 

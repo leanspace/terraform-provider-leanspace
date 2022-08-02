@@ -38,20 +38,20 @@ Optional:
 
 Read-Only:
 
-- `created_at` (String)
-- `created_by` (String)
+- `created_at` (String) When it was created
+- `created_by` (String) Who created it
 - `id` (String) The ID of this resource.
-- `last_modified_at` (String)
-- `last_modified_by` (String)
+- `last_modified_at` (String) When it was last modified
+- `last_modified_by` (String) Who modified it the last
 
 <a id="nestedblock--remote_agent--connectors"></a>
 ### Nested Schema for `remote_agent.connectors`
 
 Required:
 
-- `gateway_id` (String)
+- `gateway_id` (String) Id of the node
 - `socket` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--remote_agent--connectors--socket))
-- `type` (String)
+- `type` (String) it must be one of these values: INBOUND, OUTBOUND
 
 Optional:
 
@@ -60,12 +60,12 @@ Optional:
 
 Read-Only:
 
-- `created_at` (String)
-- `created_by` (String)
+- `created_at` (String) When it was created
+- `created_by` (String) Who created it
 - `destination` (List of Object) (see [below for nested schema](#nestedatt--remote_agent--connectors--destination))
 - `id` (String) The ID of this resource.
-- `last_modified_at` (String)
-- `last_modified_by` (String)
+- `last_modified_at` (String) When it was last modified
+- `last_modified_by` (String) Who modified it the last
 - `source` (List of Object) (see [below for nested schema](#nestedatt--remote_agent--connectors--source))
 
 <a id="nestedblock--remote_agent--connectors--socket"></a>
@@ -74,7 +74,7 @@ Read-Only:
 Required:
 
 - `port` (Number)
-- `type` (String)
+- `type` (String) it must be one of these values: TCP, UDP
 
 Optional:
 

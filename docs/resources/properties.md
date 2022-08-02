@@ -30,33 +30,33 @@ Required:
 
 - `name` (String)
 - `node_id` (String)
-- `type` (String)
+- `type` (String) it must be one of these values: NUMERIC, ENUM, TEXT, TIMESTAMP, DATE, TIME, BOOLEAN, GEOPOINT
 
 Optional:
 
-- `after` (String)
-- `before` (String)
+- `after` (String) Time/date/timestamp only: Minimum date allowed
+- `before` (String) Time/date/timestamp only: Maximum date allowed
 - `description` (String)
-- `fields` (Block List, Max: 1) (see [below for nested schema](#nestedblock--property--fields))
-- `max` (Number)
-- `max_length` (Number)
-- `min` (Number)
-- `min_length` (Number)
-- `options` (Map of String)
-- `pattern` (String)
-- `precision` (Number)
-- `scale` (Number)
+- `fields` (Block List, Max: 1) Geopoint only (see [below for nested schema](#nestedblock--property--fields))
+- `max` (Number) Numeric only
+- `max_length` (Number) Text only: Maximum length of this text (at least 1)
+- `min` (Number) Numeric only
+- `min_length` (Number) Text only: Minimum length of this text (at least 1)
+- `options` (Map of String) Enum only: The allowed values for the enum in the format 1 = "value"
+- `pattern` (String) Text only: Regex defined the allowed pattern of this text
+- `precision` (Number) Numeric only: How many values after the comma should be accepted
+- `scale` (Number) Numeric only
 - `tags` (Block Set) (see [below for nested schema](#nestedblock--property--tags))
-- `unit_id` (String)
+- `unit_id` (String) Numeric only
 - `value` (String)
 
 Read-Only:
 
-- `created_at` (String)
-- `created_by` (String)
+- `created_at` (String) When it was created
+- `created_by` (String) Who created it
 - `id` (String) The ID of this resource.
-- `last_modified_at` (String)
-- `last_modified_by` (String)
+- `last_modified_at` (String) When it was last modified
+- `last_modified_by` (String) Who modified it the last
 
 <a id="nestedblock--property--fields"></a>
 ### Nested Schema for `property.fields`
@@ -73,7 +73,7 @@ Required:
 Required:
 
 - `name` (String)
-- `type` (String)
+- `type` (String) it must be one of these values: NUMERIC, ENUM, TEXT, TIMESTAMP, DATE, TIME, BOOLEAN, GEOPOINT
 
 Optional:
 
@@ -82,11 +82,11 @@ Optional:
 
 Read-Only:
 
-- `created_at` (String)
-- `created_by` (String)
+- `created_at` (String) When it was created
+- `created_by` (String) Who created it
 - `id` (String) The ID of this resource.
-- `last_modified_at` (String)
-- `last_modified_by` (String)
+- `last_modified_at` (String) When it was last modified
+- `last_modified_by` (String) Who modified it the last
 
 
 <a id="nestedblock--property--fields--latitude"></a>
@@ -95,7 +95,7 @@ Read-Only:
 Required:
 
 - `name` (String)
-- `type` (String)
+- `type` (String) it must be one of these values: NUMERIC, ENUM, TEXT, TIMESTAMP, DATE, TIME, BOOLEAN, GEOPOINT
 
 Optional:
 
@@ -104,11 +104,11 @@ Optional:
 
 Read-Only:
 
-- `created_at` (String)
-- `created_by` (String)
+- `created_at` (String) When it was created
+- `created_by` (String) Who created it
 - `id` (String) The ID of this resource.
-- `last_modified_at` (String)
-- `last_modified_by` (String)
+- `last_modified_at` (String) When it was last modified
+- `last_modified_by` (String) Who modified it the last
 
 
 <a id="nestedblock--property--fields--longitude"></a>
@@ -117,7 +117,7 @@ Read-Only:
 Required:
 
 - `name` (String)
-- `type` (String)
+- `type` (String) it must be one of these values: NUMERIC, ENUM, TEXT, TIMESTAMP, DATE, TIME, BOOLEAN, GEOPOINT
 
 Optional:
 
@@ -126,11 +126,11 @@ Optional:
 
 Read-Only:
 
-- `created_at` (String)
-- `created_by` (String)
+- `created_at` (String) When it was created
+- `created_by` (String) Who created it
 - `id` (String) The ID of this resource.
-- `last_modified_at` (String)
-- `last_modified_by` (String)
+- `last_modified_at` (String) When it was last modified
+- `last_modified_by` (String) Who modified it the last
 
 
 
