@@ -1,0 +1,114 @@
+name: release
+on:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Unshallow
+        run: git fetch --prune --unshallow
+      -
+        name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+      -
+        name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+      -
+        name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v3.0.0
+        id: release
+        with:
+          version: latest
+          args: release --rm-dist
+        env:
+          GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
+          # GitHub sets this automatically
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Create version on Terraform Cloud
+        id: create_version
+        run: |
+          VERSION_NUMBER=${{ github.ref_name }}
+          VERSION=$(curl -s \
+          -H "Authorization: Bearer ${{ secrets.TERRAFORM_TOKEN }}" \
+          -H "Content-Type: application/vnd.api+json" \
+          -X POST \
+          -d '{
+            "data": {
+              "type": "registry-provider-versions",
+              "attributes": {
+                "version": "'${VERSION_NUMBER:1}'",
+                "key-id": "F59E7A935CC0B217",
+                "protocols": ["5.0"]
+              }
+            }
+          }' \
+          https://app.terraform.io/api/v2/organizations/leanspace/registry-providers/private/leanspace/leanspace/versions)
+
+          SHASUMS_SIG_UPLOAD=$(echo $VERSION | jq -r '.data.links["shasums-sig-upload"]')
+          SHASUMS_UPLOAD=$(echo $VERSION | jq -r '.data.links["shasums-upload"]')
+          
+          echo "::set-output name=SHASUMS_SIG_UPLOAD::$SHASUMS_SIG_UPLOAD"
+          echo "::set-output name=SHASUMS_UPLOAD::$SHASUMS_UPLOAD"
+          echo "::set-output name=VERSION_NUMBER::${VERSION_NUMBER:1}"
+      -
+        name: Upload signature & checksum
+        id: upload_signature_and_checksum
+        run: |
+          SHASUMS_SIG_PATH=$(echo '${{ steps.release.outputs.artifacts }}' | jq -r '.[] | select(.type=="Signature") | .path')
+          SHASUMS_PATH=$(echo '${{ steps.release.outputs.artifacts }}' | jq -r '.[] | select(.type=="Checksum") | .path')
+          
+          echo "Uploading Signature File"
+          curl -s -T "$SHASUMS_SIG_PATH" "${{ steps.create_version.outputs.SHASUMS_SIG_UPLOAD }}"
+          
+          echo "Uploading Checksum File"
+          curl -s -T "$SHASUMS_PATH" "${{ steps.create_version.outputs.SHASUMS_UPLOAD }}"
+          
+          echo "::set-output name=SHASUMS_PATH::$SHASUMS_PATH"
+      -
+        name: Create OS + Architecture Combos
+        run: |
+          cat ${{ steps.upload_signature_and_checksum.outputs.SHASUMS_PATH }} | grep .zip | while read -r line
+          do
+              echo "Creating file:$file, sha:$sha, arch:$arch, os:$os"
+              sha=$(echo $line | awk '{print $1}')
+              file=$(echo $line | awk '{print $2}')
+              os=$(echo $file | awk -F_ '{print $3}')
+              arch=$(echo $file | awk -F_ '{print $4}' | awk -F. '{print $1}')
+
+              RESPONSE=$(curl -s \
+              -H "Authorization: Bearer ${{ secrets.TERRAFORM_TOKEN }}" \
+              -H "Content-Type: application/vnd.api+json" \
+              -X POST \
+                -d '{
+                "data": {
+                  "type": "registry-provider-version-platforms",
+                  "attributes": {
+                    "os": "'$os'",
+                    "arch": "'$arch'",
+                    "shasum": "'$sha'",
+                    "filename": "'$file'"
+                  }
+                }
+              }' \
+              https://app.terraform.io/api/v2/organizations/leanspace/registry-providers/private/leanspace/leanspace/versions/${{steps.create_version.outputs.VERSION_NUMBER}}/platforms)
+
+              FILE_UPLOAD=$(echo $RESPONSE | jq -r '.data.links["provider-binary-upload"]')
+              FILE_PATH=$(echo '${{ steps.release.outputs.artifacts }}' | jq -r '.[] | select(.name=="'$file'") | .path')
+              
+              echo "Uploading file:$file"
+              curl -s -T "$FILE_PATH" $FILE_UPLOAD
+          done

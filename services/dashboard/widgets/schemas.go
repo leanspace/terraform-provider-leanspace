@@ -5,6 +5,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"leanspace-terraform-provider/helper"
 )
 
 var validWidgetTypes = []string{"TABLE", "LINE", "BAR", "AREA", "VALUE"}
@@ -30,11 +31,13 @@ var widgetSchema = map[string]*schema.Schema{
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.StringInSlice(validWidgetTypes, false),
+		Description:  helper.AllowedValuesToDescription(validWidgetTypes),
 	},
 	"granularity": {
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.StringInSlice(validGranularities, false),
+		Description:  helper.AllowedValuesToDescription(validGranularities),
 	},
 	"series": {
 		Type:     schema.TypeSet,
@@ -68,20 +71,24 @@ var widgetSchema = map[string]*schema.Schema{
 	},
 	"tags": general_objects.TagsSchema,
 	"created_at": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "When it was created",
 	},
 	"created_by": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Who created it",
 	},
 	"last_modified_at": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "When it was last modified",
 	},
 	"last_modified_by": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Who modified it the last",
 	},
 }
 
@@ -94,11 +101,13 @@ var seriesSchema = map[string]*schema.Schema{
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.StringInSlice(validDatasources, false),
+		Description:  helper.AllowedValuesToDescription(validDatasources),
 	},
 	"aggregation": {
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.StringInSlice(validAggregations, false),
+		Description:  helper.AllowedValuesToDescription(validAggregations),
 	},
 	"filters": {
 		Type:     schema.TypeSet,
@@ -119,6 +128,7 @@ var filterSchema = map[string]*schema.Schema{
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.StringInSlice(validFilterOperators, false),
+		Description:  helper.AllowedValuesToDescription(validFilterOperators),
 	},
 	"value": {
 		Type:     schema.TypeString,

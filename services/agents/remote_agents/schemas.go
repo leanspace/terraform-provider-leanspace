@@ -3,7 +3,11 @@ package remote_agents
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"leanspace-terraform-provider/helper"
 )
+
+var validConnectorTypes = []string{"INBOUND", "OUTBOUND"}
+var validProtocolTypes = []string{"TCP", "UDP"}
 
 var remoteAgentSchema = map[string]*schema.Schema{
 	"id": {
@@ -32,20 +36,24 @@ var remoteAgentSchema = map[string]*schema.Schema{
 		},
 	},
 	"created_at": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "When it was created",
 	},
 	"created_by": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Who created it",
 	},
 	"last_modified_at": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "When it was last modified",
 	},
 	"last_modified_by": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Who modified it the last",
 	},
 }
 
@@ -58,11 +66,13 @@ var connectorSchema = map[string]*schema.Schema{
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.IsUUID,
+		Description:  "Id of the node",
 	},
 	"type": {
 		Type:         schema.TypeString,
 		Required:     true,
-		ValidateFunc: validation.StringInSlice([]string{"INBOUND", "OUTBOUND"}, false),
+		ValidateFunc: validation.StringInSlice(validConnectorTypes, false),
+		Description:  helper.AllowedValuesToDescription(validConnectorTypes),
 	},
 	"socket": {
 		Type:     schema.TypeList,
@@ -74,20 +84,24 @@ var connectorSchema = map[string]*schema.Schema{
 		},
 	},
 	"created_at": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "When it was created",
 	},
 	"created_by": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Who created it",
 	},
 	"last_modified_at": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "When it was last modified",
 	},
 	"last_modified_by": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Who modified it the last",
 	},
 
 	// inbound only
@@ -122,7 +136,8 @@ var socketSchema = map[string]*schema.Schema{
 	"type": {
 		Type:         schema.TypeString,
 		Required:     true,
-		ValidateFunc: validation.StringInSlice([]string{"TCP", "UDP"}, false),
+		ValidateFunc: validation.StringInSlice(validProtocolTypes, false),
+		Description:  helper.AllowedValuesToDescription(validProtocolTypes),
 	},
 	"host": {
 		Type:     schema.TypeString,

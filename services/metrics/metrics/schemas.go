@@ -40,19 +40,23 @@ var metricSchema = map[string]*schema.Schema{
 	},
 	"tags": general_objects.TagsSchema,
 	"created_at": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "When it was created",
 	},
 	"created_by": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Who created it",
 	},
 	"last_modified_at": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "When it was last modified",
 	},
 	"last_modified_by": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Who modified it the last",
 	},
 }
