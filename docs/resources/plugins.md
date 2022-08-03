@@ -28,8 +28,8 @@ description: |-
 
 Required:
 
-- `file_path` (String)
-- `implementation_class_name` (String)
+- `file_path` (String) It must be a valid path to a .jar file
+- `implementation_class_name` (String) It must be a valid java class path
 - `name` (String)
 - `type` (String)
 
@@ -40,10 +40,10 @@ Optional:
 
 Read-Only:
 
-- `created_at` (String)
-- `created_by` (String)
+- `created_at` (String) When it was created
+- `created_by` (String) Who created it
 - `id` (String) The ID of this resource.
-- `last_modified_at` (String)
-- `last_modified_by` (String)
+- `last_modified_at` (String) When it was last modified
+- `last_modified_by` (String) Who modified it the last
 
 

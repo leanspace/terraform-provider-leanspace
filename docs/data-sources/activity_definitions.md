@@ -18,17 +18,17 @@ description: |-
 ### Read-Only
 
 - `content` (List of Object) (see [below for nested schema](#nestedatt--content))
-- `empty` (Boolean)
-- `first` (Boolean)
+- `empty` (Boolean) True if the content is empty
+- `first` (Boolean) True if this is the first page
 - `id` (String) The ID of this resource.
-- `last` (Boolean)
-- `number` (Number)
-- `number_of_elements` (Number)
+- `last` (Boolean) True if this is the last page
+- `number` (Number) Page number
+- `number_of_elements` (Number) Number of elements fetched in this page
 - `pageable` (List of Object) (see [below for nested schema](#nestedatt--pageable))
-- `size` (Number)
+- `size` (Number) Size of this page
 - `sort` (List of Object) (see [below for nested schema](#nestedatt--sort))
-- `total_elements` (Number)
-- `total_pages` (Number)
+- `total_elements` (Number) Number of elements in total
+- `total_pages` (Number) Number of pages in total
 
 <a id="nestedatt--content"></a>
 ### Nested Schema for `content`

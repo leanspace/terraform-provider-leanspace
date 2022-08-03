@@ -6,11 +6,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
+	"leanspace-terraform-provider/helper"
 	"leanspace-terraform-provider/helper/general_objects"
 )
 
 var nodeSchema = makeNodeSchema(nil)            // no sub nodes
 var rootNodeSchema = makeNodeSchema(nodeSchema) // max depth 1
+
+var validNodeTypes = []string{"ASSET", "GROUP", "COMPONENT"}
 
 func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema.Schema {
 	baseSchema := map[string]*schema.Schema{
@@ -28,20 +31,24 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 			Optional: true,
 		},
 		"created_at": {
-			Type:     schema.TypeString,
-			Computed: true,
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "When it was created",
 		},
 		"created_by": {
-			Type:     schema.TypeString,
-			Computed: true,
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Who created it",
 		},
 		"last_modified_at": {
-			Type:     schema.TypeString,
-			Computed: true,
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "When it was last modified",
 		},
 		"last_modified_by": {
-			Type:     schema.TypeString,
-			Computed: true,
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Who modified it the last",
 		},
 		"parent_node_id": {
 			Type:         schema.TypeString,
@@ -52,7 +59,8 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 			Type:         schema.TypeString,
 			Required:     true,
 			ForceNew:     true,
-			ValidateFunc: validation.StringInSlice([]string{"ASSET", "GROUP", "COMPONENT"}, false),
+			ValidateFunc: validation.StringInSlice(validNodeTypes, false),
+			Description:  helper.AllowedValuesToDescription(validNodeTypes),
 		},
 		"kind": {
 			Type:     schema.TypeString,
@@ -64,6 +72,7 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validation.StringMatch(regexp.MustCompile(`^\d{5}$`), "It must be 5 digits"),
+			Description:  "It must be 5 digits",
 		},
 		"international_designator": {
 			Type:         schema.TypeString,
@@ -78,6 +87,7 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 			Elem: &schema.Schema{
 				Type: schema.TypeString,
 			},
+			Description: "TLE composed of its 2 lines",
 		},
 		// These fields are *required* when kind = GROUND_STATION
 		// However currently I don't think there is a way to have conditionally required fields

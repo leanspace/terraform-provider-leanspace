@@ -17,7 +17,7 @@ description: |-
 
 ### Optional
 
-- `client_id` (String)
-- `client_secret` (String, Sensitive)
-- `env` (String)
-- `tenant` (String)
+- `client_id` (String) Client id of your Service Account
+- `client_secret` (String, Sensitive) Client secret of your Service Account
+- `env` (String) Only set this value if you are using a specific environment given by leanspace
+- `tenant` (String) The name given to your organization

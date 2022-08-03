@@ -28,10 +28,10 @@ description: |-
 
 Required:
 
-- `granularity` (String)
+- `granularity` (String) it must be one of these values: second, minute, hour, day, week, month, raw
 - `name` (String)
 - `series` (Block List, Min: 1) (see [below for nested schema](#nestedblock--widget--series))
-- `type` (String)
+- `type` (String) it must be one of these values: TABLE, LINE, BAR, AREA, VALUE
 
 Optional:
 
@@ -41,12 +41,12 @@ Optional:
 
 Read-Only:
 
-- `created_at` (String)
-- `created_by` (String)
+- `created_at` (String) When it was created
+- `created_by` (String) Who created it
 - `dashboards` (Set of Object) (see [below for nested schema](#nestedatt--widget--dashboards))
 - `id` (String) The ID of this resource.
-- `last_modified_at` (String)
-- `last_modified_by` (String)
+- `last_modified_at` (String) When it was last modified
+- `last_modified_by` (String) Who modified it the last
 - `metrics` (List of Object) (see [below for nested schema](#nestedatt--widget--metrics))
 
 <a id="nestedblock--widget--series"></a>
@@ -54,8 +54,8 @@ Read-Only:
 
 Required:
 
-- `aggregation` (String)
-- `datasource` (String)
+- `aggregation` (String) it must be one of these values: avg, count, sum, min, max, none
+- `datasource` (String) it must be one of these values: metric, raw_stream
 
 Optional:
 
@@ -71,7 +71,7 @@ Read-Only:
 Required:
 
 - `filter_by` (String)
-- `operator` (String)
+- `operator` (String) it must be one of these values: gt, lt, equals, notEquals
 - `value` (String)
 
 

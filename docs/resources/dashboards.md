@@ -39,11 +39,11 @@ Optional:
 
 Read-Only:
 
-- `created_at` (String)
-- `created_by` (String)
+- `created_at` (String) When it was created
+- `created_by` (String) Who created it
 - `id` (String) The ID of this resource.
-- `last_modified_at` (String)
-- `last_modified_by` (String)
+- `last_modified_at` (String) When it was last modified
+- `last_modified_by` (String) Who modified it the last
 - `widgets` (Set of Object) (see [below for nested schema](#nestedatt--dashboard--widgets))
 
 <a id="nestedblock--dashboard--tags"></a>
@@ -64,7 +64,7 @@ Optional:
 Required:
 
 - `h` (Number)
-- `type` (String)
+- `type` (String) it must be one of these values: TABLE, LINE, BAR, AREA, VALUE
 - `w` (Number)
 - `x` (Number)
 - `y` (Number)

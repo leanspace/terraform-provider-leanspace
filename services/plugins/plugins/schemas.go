@@ -35,6 +35,7 @@ var pluginSchema = map[string]*schema.Schema{
 			classNameRegex,
 			"'implementation_class_name' must be a valid java class path",
 		),
+		Description: "It must be a valid java class path",
 	},
 	"name": {
 		Type:     schema.TypeString,
@@ -56,21 +57,26 @@ var pluginSchema = map[string]*schema.Schema{
 			pathToJarFileRegex,
 			"'file_path' must be a valid path to a .jar file",
 		),
+		Description: "It must be a valid path to a .jar file",
 	},
 	"created_at": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "When it was created",
 	},
 	"created_by": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Who created it",
 	},
 	"last_modified_at": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "When it was last modified",
 	},
 	"last_modified_by": {
-		Type:     schema.TypeString,
-		Computed: true,
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Who modified it the last",
 	},
 }
