@@ -1,7 +1,6 @@
 terraform {
   required_providers {
     leanspace = {
-      version = "0.3.1"
       source  = "app.terraform.io/leanspace/leanspace"
     }
   }
@@ -9,10 +8,9 @@ terraform {
 
 
 provider "leanspace" {
-  tenant        = "yuri"
-  env           = "develop"
-  client_id     = "nlbja2p65j8kj7of0tfs29rf4"
-  client_secret = "d762kk9862jn0j1qr4c2u3o8bjkv70o45pld3200ek89qtul6kg"
+  tenant        = "traintest"
+  client_id     = "13aj7nst2pgust5u4ggjvaceqk"
+  client_secret = "3is3a40fijhqjsuaopgra8ibgb9vds4kkluhgq95bo7bj92v20q"
 }
 
 module "nodes" {

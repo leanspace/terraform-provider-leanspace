@@ -3,7 +3,7 @@ HOSTNAME=leanspace.io
 NAMESPACE=io
 NAME=leanspace
 BINARY=terraform-provider-${NAME}.exe
-VERSION=0.3
+VERSION=0.4.0
 PLATFORM=""
 ARCHITECTURE=""
 
