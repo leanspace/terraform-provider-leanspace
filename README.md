@@ -1,6 +1,6 @@
 # terraform-provider-leanspace
 
-This repository enables the use of Terraform for the different services of Leanspace
+This repository enables the use of Terraform for the different services of Leanspace. The provider is hosted on a private registry in Terraform cloud
 
 ## Requirements
 
@@ -9,13 +9,21 @@ This repository enables the use of Terraform for the different services of Leans
 
 ## How to use
 
-### Change plugin
+### Make modification
 
-Run `make install` or `make install-windows` if you are on windows to apply the changes.
+- Run `make install` or `make install-windows` if you are on windows to apply the changes.
+- In the terraform files (.tf), modify the source to "leanspace.io/io/leanspace", this way it will try to find the provider in your local machine first
+
+### Create a new version
+
+Create a tag on a commit with the following format `v{marjor}.{minor}.[patch}`; i.e.: v0.4.0; this will create a version accordingly.
+It will create a release in github and push this version to the private repository in Terraform cloud.
 
 ### Run the plugin
 
-Either run the examples (navigate to `examples`, if so you can modify the master `main.tf` to point to the correct resource) or create custom files.
+Since we host the provider in a private registry, you first have to login `terraform login` and then put a token to have access.
+
+Then either run the examples (navigate to `examples`, if so you can modify the master `main.tf` to point to the correct resource) or create custom files.
 
 Then run `terraform init && terraform apply --auto-approve`: this will create the required resources.
 If you made some changes you can run it again to update the resources.
@@ -34,6 +42,12 @@ The attributes are as follows:
 - client_secret: mandatory, refers to the client secret of a service account
 
 This service account needs to have enough permissions (CRUD).
+
+It is also possible to avoid passing this information in the provider by using environment variables as follows:
+- TENANT
+- ENV
+- CLIENT_ID
+- CLIENT_SECRET
 
 ## Resources
 
