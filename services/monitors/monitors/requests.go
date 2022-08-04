@@ -28,6 +28,21 @@ func (monitor *Monitor) removeActionTemplate(actionTemplateId string, client *pr
 	return monitor.actionTemplateChange("DELETE", actionTemplateId, client)
 }
 
+func (monitor *Monitor) PostCreateProcess(client *provider.Client, monitorRaw any) error {
+	createdMonitor := monitorRaw.(*Monitor)
+	expectedActionTemplates := monitor.ActionTemplateIds
+
+	// Add all members directly
+	for _, actionTemplate := range expectedActionTemplates {
+		err := createdMonitor.addActionTemplate(actionTemplate, client)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (monitor *Monitor) PostUpdateProcess(client *provider.Client, monitorRaw any) error {
 	monitorCurrent := monitorRaw.(*Monitor)
 	currentActionTemplates := monitorCurrent.ActionTemplateIds

@@ -95,7 +95,7 @@ func (widget *Widget) FromMap(widgetMap map[string]any) error {
 	} else {
 		widget.Metrics = metrics
 	}
-	if len(widgetMap["metadata"].([]any)) > 0 {
+	if len(widgetMap["metadata"].([]any)) > 0 && widgetMap["metadata"].([]any)[0] != nil {
 		if err := widget.Metadata.FromMap(widgetMap["metadata"].([]any)[0].(map[string]any)); err != nil {
 			return err
 		}
