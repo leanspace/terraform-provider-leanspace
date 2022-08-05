@@ -3,50 +3,50 @@ package activity_definitions
 import "leanspace-terraform-provider/helper/general_objects"
 
 type ActivityDefinition struct {
-	ID                  string                    `json:"id" terra:"id"`
-	NodeId              string                    `json:"nodeId" terra:"node_id"`
-	Name                string                    `json:"name" terra:"name"`
-	Description         string                    `json:"description,omitempty" terra:"description"`
-	EstimatedDuration   int                       `json:"estimatedDuration" terra:"estimated_duration"`
-	Metadata            []Metadata[any]           `json:"metadata,omitempty" terra:"metadata"`
-	ArgumentDefinitions []ArgumentDefinition[any] `json:"argumentDefinitions,omitempty" terra:"argument_definitions"`
-	CommandMappings     []CommandMapping          `json:"commandMappings" terra:"command_mappings"`
-	CreatedAt           string                    `json:"createdAt" terra:"created_at"`
-	CreatedBy           string                    `json:"createdBy" terra:"created_by"`
-	LastModifiedAt      string                    `json:"lastModifiedAt" terra:"last_modified_at"`
-	LastModifiedBy      string                    `json:"lastModifiedBy" terra:"last_modified_by"`
+	ID                  string                    `json:"id"`
+	NodeId              string                    `json:"nodeId"`
+	Name                string                    `json:"name"`
+	Description         string                    `json:"description,omitempty"`
+	EstimatedDuration   int                       `json:"estimatedDuration"`
+	Metadata            []Metadata[any]           `json:"metadata,omitempty"`
+	ArgumentDefinitions []ArgumentDefinition[any] `json:"argumentDefinitions,omitempty"`
+	CommandMappings     []CommandMapping          `json:"commandMappings"`
+	CreatedAt           string                    `json:"createdAt"`
+	CreatedBy           string                    `json:"createdBy"`
+	LastModifiedAt      string                    `json:"lastModifiedAt"`
+	LastModifiedBy      string                    `json:"lastModifiedBy"`
 }
 
 func (actDefinition *ActivityDefinition) GetID() string { return actDefinition.ID }
 
 type Metadata[T any] struct {
-	ID          string                            `json:"id" terra:"id"`
-	Name        string                            `json:"name" terra:"name"`
-	Description string                            `json:"description,omitempty" terra:"description"`
-	Attributes  general_objects.ValueAttribute[T] `json:"attributes" terra:"attributes"`
+	ID          string                            `json:"id"`
+	Name        string                            `json:"name"`
+	Description string                            `json:"description,omitempty"`
+	Attributes  general_objects.ValueAttribute[T] `json:"attributes"`
 }
 
 type ArgumentDefinition[T any] struct {
-	ID          string                                 `json:"id" terra:"id"`
-	Name        string                                 `json:"name" terra:"name"`
-	Description string                                 `json:"description,omitempty" terra:"description"`
-	Attributes  general_objects.DefinitionAttribute[T] `json:"attributes" terra:"attributes"`
+	ID          string                                 `json:"id"`
+	Name        string                                 `json:"name"`
+	Description string                                 `json:"description,omitempty"`
+	Attributes  general_objects.DefinitionAttribute[T] `json:"attributes"`
 }
 
 type CommandMapping struct {
-	CommandDefinitionId string            `json:"commandDefinitionId" terra:"command_definition_id"`
-	Position            int               `json:"position" terra:"position"`
-	DelayInMilliseconds int               `json:"delayInMilliseconds" terra:"delay_in_milliseconds"`
-	ArgumentMappings    []ArgumentMapping `json:"argumentMappings" terra:"argument_mappings"`
-	MetadataMappings    []MetadataMapping `json:"metadataMappings" terra:"metadata_mappings"`
+	CommandDefinitionId string            `json:"commandDefinitionId"`
+	Position            int               `json:"position"`
+	DelayInMilliseconds int               `json:"delayInMilliseconds"`
+	ArgumentMappings    []ArgumentMapping `json:"argumentMappings"`
+	MetadataMappings    []MetadataMapping `json:"metadataMappings"`
 }
 
 type ArgumentMapping struct {
-	ActivityDefinitionArgumentName string `json:"activityDefinitionArgumentName" terra:"activity_definition_argument_name"`
-	CommandDefinitionArgumentName  string `json:"commandDefinitionArgumentName" terra:"command_definition_argument_name"`
+	ActivityDefinitionArgumentName string `json:"activityDefinitionArgumentName"`
+	CommandDefinitionArgumentName  string `json:"commandDefinitionArgumentName"`
 }
 
 type MetadataMapping struct {
-	ActivityDefinitionMetadataName string `json:"activityDefinitionMetadataName" terra:"activity_definition_metadata_name"`
-	CommandDefinitionArgumentName  string `json:"commandDefinitionArgumentName" terra:"command_definition_argument_name"`
+	ActivityDefinitionMetadataName string `json:"activityDefinitionMetadataName"`
+	CommandDefinitionArgumentName  string `json:"commandDefinitionArgumentName"`
 }

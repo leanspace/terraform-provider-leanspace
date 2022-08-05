@@ -3,36 +3,36 @@ package streams
 import "leanspace-terraform-provider/helper"
 
 type Stream struct {
-	ID             string        `json:"id" terra:"id"`
-	Version        int           `json:"version" terra:"version"`
-	Name           string        `json:"name" terra:"name"`
-	Description    string        `json:"description" terra:"description"`
-	AssetId        string        `json:"assetId" terra:"asset_id"`
-	Configuration  Configuration `json:"configuration" terra:"configuration"`
-	Mappings       []Mapping     `json:"mappings" terra:"mappings"`
-	CreatedAt      string        `json:"createdAt" terra:"created_at"`
-	CreatedBy      string        `json:"createdBy" terra:"created_by"`
-	LastModifiedAt string        `json:"lastModifiedAt" terra:"last_modified_at"`
-	LastModifiedBy string        `json:"lastModifiedBy" terra:"last_modified_by"`
+	ID             string        `json:"id"`
+	Version        int           `json:"version"`
+	Name           string        `json:"name"`
+	Description    string        `json:"description"`
+	AssetId        string        `json:"assetId"`
+	Configuration  Configuration `json:"configuration"`
+	Mappings       []Mapping     `json:"mappings"`
+	CreatedAt      string        `json:"createdAt"`
+	CreatedBy      string        `json:"createdBy"`
+	LastModifiedAt string        `json:"lastModifiedAt"`
+	LastModifiedBy string        `json:"lastModifiedBy"`
 }
 
 func (stream *Stream) GetID() string { return stream.ID }
 
 type Configuration struct {
-	Endianness   string                                         `json:"endianness" terra:"endianness"`
-	Structure    ElementList[StreamComponent, *StreamComponent] `json:"structure" terra:"structure"`
-	Metadata     Metadata                                       `json:"metadata" terra:"metadata"`
-	Computations ElementList[Computation, *Computation]         `json:"computations" terra:"computations"`
+	Endianness   string                                         `json:"endianness"`
+	Structure    ElementList[StreamComponent, *StreamComponent] `json:"structure"`
+	Metadata     Metadata                                       `json:"metadata"`
+	Computations ElementList[Computation, *Computation]         `json:"computations"`
 	Valid        bool                                           `json:"valid,omitempty" terra:"valid,omitempty"`
 	Errors       []Error                                        `json:"errors,omitempty" terra:"errors,omitempty"`
 }
 
 type StreamComponent struct {
 	// Common
-	Name   string  `json:"name" terra:"name"`
-	Order  int     `json:"order" terra:"order"`
-	Path   string  `json:"path" terra:"path"`
-	Type   string  `json:"type" terra:"type"` // CONTAINER / FIELD / SWITCH
+	Name   string  `json:"name"`
+	Order  int     `json:"order"`
+	Path   string  `json:"path"`
+	Type   string  `json:"type"` // CONTAINER / FIELD / SWITCH
 	Valid  bool    `json:"valid,omitempty" terra:"valid,omitempty"`
 	Errors []Error `json:"errors,omitempty" terra:"errors,omitempty"`
 
@@ -50,52 +50,52 @@ type StreamComponent struct {
 }
 
 type SwitchExpression struct {
-	SwitchOn string         `json:"switchOn" terra:"switch_on"`
-	Options  []SwitchOption `json:"options" terra:"options"`
+	SwitchOn string         `json:"switchOn"`
+	Options  []SwitchOption `json:"options"`
 }
 
 type SwitchOption struct {
-	Value     SwitchValue[any] `json:"value" terra:"value"`
-	Component string           `json:"component" terra:"component"`
+	Value     SwitchValue[any] `json:"value"`
+	Component string           `json:"component"`
 }
 
 type SwitchValue[T any] struct {
-	DataType string `json:"dataType" terra:"data_type"`
-	Data     T      `json:"data" terra:"data"`
+	DataType string `json:"dataType"`
+	Data     T      `json:"data"`
 }
 
 type Metadata struct {
 	PacketID  ElementStatus       `json:"packetId,omitempty" terra:"packet_id,omitempty"`
-	Timestamp TimestampDefinition `json:"timestamp" terra:"timestamp"`
+	Timestamp TimestampDefinition `json:"timestamp"`
 	Valid     bool                `json:"valid,omitempty" terra:"valid,omitempty"`
 	Errors    []Error             `json:"errors,omitempty" terra:"errors,omitempty"`
 }
 
 type TimestampDefinition struct {
-	Expression string  `json:"expression" terra:"expression"`
+	Expression string  `json:"expression"`
 	Valid      bool    `json:"valid,omitempty" terra:"valid,omitempty"`
 	Errors     []Error `json:"errors,omitempty" terra:"errors,omitempty"`
 }
 
 type ElementList[T any, PT helper.ParseablePointer[T]] struct {
-	Elements []T     `json:"elements" terra:"elements"`
+	Elements []T     `json:"elements"`
 	Valid    bool    `json:"valid,omitempty" terra:"valid,omitempty"`
 	Errors   []Error `json:"errors,omitempty" terra:"errors,omitempty"`
 }
 
 type Computation struct {
-	Name       string  `json:"name" terra:"name"`
-	Order      int     `json:"order" terra:"order"`
-	Type       string  `json:"type" terra:"type"`
-	DataType   string  `json:"dataType" terra:"data_type"`
-	Expression string  `json:"expression" terra:"expression"`
+	Name       string  `json:"name"`
+	Order      int     `json:"order"`
+	Type       string  `json:"type"`
+	DataType   string  `json:"dataType"`
+	Expression string  `json:"expression"`
 	Valid      bool    `json:"valid,omitempty" terra:"valid,omitempty"`
 	Errors     []Error `json:"errors,omitempty" terra:"errors,omitempty"`
 }
 
 type Mapping struct {
-	MetricId  string `json:"metricId" terra:"metric_id"`
-	Component string `json:"component" terra:"component"`
+	MetricId  string `json:"metricId"`
+	Component string `json:"component"`
 }
 
 type ElementStatus struct {
@@ -104,6 +104,6 @@ type ElementStatus struct {
 }
 
 type Error struct {
-	Code    string `json:"code" terra:"code"`
-	Message string `json:"message" terra:"message"`
+	Code    string `json:"code"`
+	Message string `json:"message"`
 }

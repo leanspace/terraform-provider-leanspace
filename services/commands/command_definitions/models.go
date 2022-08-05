@@ -3,32 +3,32 @@ package command_definitions
 import "leanspace-terraform-provider/helper/general_objects"
 
 type CommandDefinition struct {
-	ID             string          `json:"id" terra:"id"`
-	NodeId         string          `json:"nodeId" terra:"node_id"`
-	Name           string          `json:"name" terra:"name"`
-	Description    string          `json:"description,omitempty" terra:"description"`
-	Identifier     string          `json:"identifier,omitempty" terra:"identifier"`
-	Metadata       []Metadata[any] `json:"metadata,omitempty" terra:"metadata"`
-	Arguments      []Argument[any] `json:"arguments,omitempty" terra:"arguments"`
-	CreatedAt      string          `json:"createdAt" terra:"created_at"`
-	CreatedBy      string          `json:"createdBy" terra:"created_by"`
-	LastModifiedAt string          `json:"lastModifiedAt" terra:"last_modified_at"`
-	LastModifiedBy string          `json:"lastModifiedBy" terra:"last_modified_by"`
+	ID             string          `json:"id"`
+	NodeId         string          `json:"nodeId"`
+	Name           string          `json:"name"`
+	Description    string          `json:"description,omitempty"`
+	Identifier     string          `json:"identifier,omitempty"`
+	Metadata       []Metadata[any] `json:"metadata,omitempty"`
+	Arguments      []Argument[any] `json:"arguments,omitempty"`
+	CreatedAt      string          `json:"createdAt"`
+	CreatedBy      string          `json:"createdBy"`
+	LastModifiedAt string          `json:"lastModifiedAt"`
+	LastModifiedBy string          `json:"lastModifiedBy"`
 }
 
 func (cmdDefinition *CommandDefinition) GetID() string { return cmdDefinition.ID }
 
 type Metadata[T any] struct {
-	ID          string                            `json:"id" terra:"id"`
-	Name        string                            `json:"name" terra:"name"`
-	Description string                            `json:"description,omitempty" terra:"description"`
-	Attributes  general_objects.ValueAttribute[T] `json:"attributes" terra:"attributes"`
+	ID          string                            `json:"id"`
+	Name        string                            `json:"name"`
+	Description string                            `json:"description,omitempty"`
+	Attributes  general_objects.ValueAttribute[T] `json:"attributes"`
 }
 
 type Argument[T any] struct {
-	ID          string                                 `json:"id" terra:"id"`
-	Name        string                                 `json:"name" terra:"name"`
-	Identifier  string                                 `json:"identifier" terra:"identifier"`
-	Description string                                 `json:"description,omitempty" terra:"description"`
-	Attributes  general_objects.DefinitionAttribute[T] `json:"attributes" terra:"attributes"`
+	ID          string                                 `json:"id"`
+	Name        string                                 `json:"name"`
+	Identifier  string                                 `json:"identifier"`
+	Description string                                 `json:"description,omitempty"`
+	Attributes  general_objects.DefinitionAttribute[T] `json:"attributes"`
 }

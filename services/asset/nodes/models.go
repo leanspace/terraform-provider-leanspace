@@ -3,21 +3,21 @@ package nodes
 import "leanspace-terraform-provider/helper/general_objects"
 
 type Node struct {
-	ID                      string                `json:"id" terra:"id"`
-	Name                    string                `json:"name" terra:"name"`
-	Description             string                `json:"description,omitempty" terra:"description"`
-	CreatedAt               string                `json:"createdAt" terra:"created_at"`
-	CreatedBy               string                `json:"createdBy" terra:"created_by"`
-	LastModifiedAt          string                `json:"lastModifiedAt" terra:"last_modified_at"`
-	LastModifiedBy          string                `json:"lastModifiedBy" terra:"last_modified_by"`
-	ParentNodeId            string                `json:"parentNodeId,omitempty" terra:"parent_node_id"`
-	Tags                    []general_objects.Tag `json:"tags,omitempty" terra:"tags"`
-	Nodes                   []Node                `json:"nodes,omitempty" terra:"nodes"`
-	Type                    string                `json:"type" terra:"type"`
-	Kind                    string                `json:"kind,omitempty" terra:"kind"`
-	NoradId                 string                `json:"noradId,omitempty" terra:"norad_id"`
-	InternationalDesignator string                `json:"internationalDesignator,omitempty" terra:"international_designator"`
-	Tle                     []string              `json:"tle,omitempty" terra:"tle"`
+	ID                      string                `json:"id"`
+	Name                    string                `json:"name"`
+	Description             string                `json:"description,omitempty"`
+	CreatedAt               string                `json:"createdAt"`
+	CreatedBy               string                `json:"createdBy"`
+	LastModifiedAt          string                `json:"lastModifiedAt"`
+	LastModifiedBy          string                `json:"lastModifiedBy"`
+	ParentNodeId            string                `json:"parentNodeId,omitempty"`
+	Tags                    []general_objects.Tag `json:"tags,omitempty"`
+	Nodes                   []Node                `json:"nodes,omitempty"`
+	Type                    string                `json:"type"`
+	Kind                    string                `json:"kind,omitempty"`
+	NoradId                 string                `json:"noradId,omitempty"`
+	InternationalDesignator string                `json:"internationalDesignator,omitempty"`
+	Tle                     []string              `json:"tle,omitempty"`
 	Latitude                *float64              `json:"latitude,omitempty" terra:"latitude,omitempty"`
 	Longitude               *float64              `json:"longitude,omitempty" terra:"longitude,omitempty"`
 	Elevation               *float64              `json:"elevation,omitempty" terra:"elevation,omitempty"`
