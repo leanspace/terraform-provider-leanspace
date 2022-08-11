@@ -165,7 +165,7 @@ var TagsSchema = &schema.Schema{
 }
 
 var validAttributeSchemaTypes = []string{
-	"NUMERIC", "BOOLEAN", "TEXT", "DATE", "TIME", "TIMESTAMP", "ENUM",
+	"NUMERIC", "BOOLEAN", "TEXT", "DATE", "TIME", "TIMESTAMP", "ENUM", "BINARY",
 }
 
 func contains(slice []string, value string) bool {
