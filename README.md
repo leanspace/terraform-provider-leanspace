@@ -102,7 +102,8 @@ The available resources per service are:
   - remote agents: it has one `leanspace_remote_agents` resource, with one inbound and one outbond connectors.
 - asset:
   - nodes: it has 2 `leanspace_nodes` resources, one inside the other.
-  - property: it has as many `leanspace_properties` resources as available types (8)
+  - properties: it has as many `leanspace_properties` resources as available types (8)
+  - units: it generates 7 `leanspace_units` that are variants of a custom unit.
 - commands:
   - command definition: it has one `leanspace_command_definitions` resource which has all possible metadata types (6) and all possible argument types (7)
   - command queue: it has one `leanspace_command_queues` resource which links the satellite and ground station nodes.
