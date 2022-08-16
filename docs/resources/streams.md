@@ -30,12 +30,12 @@ Required:
 
 - `asset_id` (String)
 - `configuration` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--stream--configuration))
-- `mappings` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--stream--mappings))
 - `name` (String)
 
 Optional:
 
 - `description` (String)
+- `mappings` (Block Set) (see [below for nested schema](#nestedblock--stream--mappings))
 
 Read-Only:
 
@@ -64,9 +64,9 @@ Read-Only:
 <a id="nestedblock--stream--configuration--computations"></a>
 ### Nested Schema for `stream.configuration.computations`
 
-Required:
+Optional:
 
-- `elements` (Block List, Min: 1) (see [below for nested schema](#nestedblock--stream--configuration--computations--elements))
+- `elements` (Block List) (see [below for nested schema](#nestedblock--stream--configuration--computations--elements))
 
 Read-Only:
 
@@ -175,9 +175,9 @@ Read-Only:
 <a id="nestedblock--stream--configuration--structure"></a>
 ### Nested Schema for `stream.configuration.structure`
 
-Required:
+Optional:
 
-- `elements` (Block List, Min: 1) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements))
+- `elements` (Block List) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements))
 
 Read-Only:
 

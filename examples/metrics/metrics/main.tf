@@ -82,6 +82,17 @@ resource "leanspace_metrics" "test_enum" {
   }
 }
 
+resource "leanspace_metrics" "test_binary" {
+  metric {
+    name        = "Terra Binary Metric"
+    description = "A binary metric, entirely created under terraform."
+    node_id     = var.node_id
+    attributes {
+      type          = "BINARY"
+    }
+  }
+}
+
 output "test_numeric_metric" {
   value = leanspace_metrics.test_numeric
 }
@@ -104,4 +115,8 @@ output "test_date_metric" {
 
 output "test_enum_metric" {
   value = leanspace_metrics.test_enum
+}
+
+output "test_binary_metric" {
+  value = leanspace_metrics.test_binary
 }
