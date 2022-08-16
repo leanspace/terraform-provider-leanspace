@@ -111,7 +111,7 @@ The available resources per service are:
   - widgets: it has as many `leanspace_widgets` resources as available types (5)
   - dashboards: it has one `leanspace_dashboards` resource with three widgets and linked to a node
 - metrics:
-  - metrics: it has as many `leanspace_metrics` resources as available types (6)
+  - metrics: it has as many `leanspace_metrics` resources as available types (7)
 - monitors:
   - action_templates: it has one simple `leanspace_action_template` with a body and headers
   - monitors: it has two `leanspace_monitors`, one with and one without a tolerance set.
