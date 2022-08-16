@@ -8,9 +8,10 @@ terraform {
 
 
 provider "leanspace" {
-  tenant        = "traintest"
-  client_id     = "13aj7nst2pgust5u4ggjvaceqk"
-  client_secret = "3is3a40fijhqjsuaopgra8ibgb9vds4kkluhgq95bo7bj92v20q"
+  tenant        = "yuri"
+  env           = "develop"
+  client_id     = "7qre49tftlciuj6jtvjllo7n24"
+  client_secret = "f34mtnejaclpq26ill8o4dun6gvrps2ka1b85p6dkhbkku8dm0g"
 }
 
 module "nodes" {
@@ -145,7 +146,11 @@ module "action_templates" {
 }
 
 module "monitors" {
-  source = "./monitors/monitors/"
-  metric_id = module.metrics.test_numeric_metric.id
+  source              = "./monitors/monitors/"
+  metric_id           = module.metrics.test_numeric_metric.id
   action_template_ids = [module.action_templates.test_action_template.id]
+}
+
+module "units" {
+  source = "./asset/units"
 }
