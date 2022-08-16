@@ -10,7 +10,7 @@ type Dashboard struct {
 	Name           string                `json:"name"`
 	Description    string                `json:"description,omitempty"`
 	NodeIds        []string              `json:"nodeIds"`
-	WidgetInfo     []WidgetInfo          `json:"widgetInfo,omitempty" terra:"widget_info,omitempty"`
+	WidgetInfo     []WidgetInfo          `json:"widgetInfo,omitempty"`
 	Widgets        []DashboardWidget     `json:"widgets"`
 	Tags           []general_objects.Tag `json:"tags,omitempty"`
 	CreatedAt      string                `json:"createdAt"`

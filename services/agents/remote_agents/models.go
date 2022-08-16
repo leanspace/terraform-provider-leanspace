@@ -3,7 +3,7 @@ package remote_agents
 type RemoteAgent struct {
 	ID               string      `json:"id"`
 	Name             string      `json:"name"`
-	Description      string      `json:"description,omitempty" terra:"description,omitempty"`
+	Description      string      `json:"description,omitempty"`
 	ServiceAccountId string      `json:"serviceAccountId"`
 	Connectors       []Connector `json:"connectors"`
 	CreatedAt        string      `json:"createdAt"`
@@ -35,7 +35,7 @@ type Connector struct {
 
 type Socket struct {
 	Type string `json:"type"`
-	Host string `json:"host,omitempty" terra:"host,omitempty"`
+	Host string `json:"host,omitempty"`
 	Port int    `json:"port"`
 }
 

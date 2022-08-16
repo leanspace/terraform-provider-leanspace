@@ -65,5 +65,5 @@ type ValueAttribute[T any] struct {
 	Value T      `json:"value,omitempty"`
 	Type  string `json:"type"`
 	// Numeric
-	UnitId string `json:"unitId,omitempty" terra:"unit_id,omitempty"`
+	UnitId string `json:"unitId,omitempty"`
 }

@@ -40,5 +40,5 @@ type Expression struct {
 	ComparisonOperator  string  `json:"comparisonOperator"`
 	ComparisonValue     float64 `json:"comparisonValue"`
 	AggregationFunction string  `json:"aggregationFunction"`
-	Tolerance           float64 `json:"tolerance,omitempty" terra:"tolerance,omitempty"`
+	Tolerance           float64 `json:"tolerance,omitempty"`
 }

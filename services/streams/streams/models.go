@@ -23,8 +23,8 @@ type Configuration struct {
 	Structure    ElementList[StreamComponent, *StreamComponent] `json:"structure"`
 	Metadata     Metadata                                       `json:"metadata"`
 	Computations ElementList[Computation, *Computation]         `json:"computations"`
-	Valid        bool                                           `json:"valid,omitempty" terra:"valid,omitempty"`
-	Errors       []Error                                        `json:"errors,omitempty" terra:"errors,omitempty"`
+	Valid        bool                                           `json:"valid,omitempty"`
+	Errors       []Error                                        `json:"errors,omitempty"`
 }
 
 type StreamComponent struct {
@@ -33,20 +33,20 @@ type StreamComponent struct {
 	Order  int     `json:"order"`
 	Path   string  `json:"path"`
 	Type   string  `json:"type"` // CONTAINER / FIELD / SWITCH
-	Valid  bool    `json:"valid,omitempty" terra:"valid,omitempty"`
-	Errors []Error `json:"errors,omitempty" terra:"errors,omitempty"`
+	Valid  bool    `json:"valid,omitempty"`
+	Errors []Error `json:"errors,omitempty"`
 
 	// Field only
-	LengthInBits int    `json:"lengthInBits,omitempty" terra:"length_in_bits,omitempty"`
-	Processor    string `json:"processor,omitempty" terra:"processor,omitempty"`
-	DataType     string `json:"dataType,omitempty" terra:"data_type,omitempty"`
-	Endianness   string `json:"endianness,omitempty" terra:"endianness,omitempty"`
+	LengthInBits int    `json:"lengthInBits,omitempty"`
+	Processor    string `json:"processor,omitempty"`
+	DataType     string `json:"dataType,omitempty"`
+	Endianness   string `json:"endianness,omitempty"`
 
 	// Switch only
-	Expression SwitchExpression `json:"expression,omitempty" terra:"expression,omitempty"`
+	Expression SwitchExpression `json:"expression,omitempty"`
 
 	// Container and switch only
-	Elements []StreamComponent `json:"elements,omitempty" terra:"elements,omitempty"`
+	Elements []StreamComponent `json:"elements,omitempty"`
 }
 
 type SwitchExpression struct {
@@ -65,22 +65,22 @@ type SwitchValue[T any] struct {
 }
 
 type Metadata struct {
-	PacketID  ElementStatus       `json:"packetId,omitempty" terra:"packet_id,omitempty"`
+	PacketID  ElementStatus       `json:"packetId,omitempty"`
 	Timestamp TimestampDefinition `json:"timestamp"`
-	Valid     bool                `json:"valid,omitempty" terra:"valid,omitempty"`
-	Errors    []Error             `json:"errors,omitempty" terra:"errors,omitempty"`
+	Valid     bool                `json:"valid,omitempty"`
+	Errors    []Error             `json:"errors,omitempty"`
 }
 
 type TimestampDefinition struct {
 	Expression string  `json:"expression"`
-	Valid      bool    `json:"valid,omitempty" terra:"valid,omitempty"`
-	Errors     []Error `json:"errors,omitempty" terra:"errors,omitempty"`
+	Valid      bool    `json:"valid,omitempty"`
+	Errors     []Error `json:"errors,omitempty"`
 }
 
 type ElementList[T any, PT helper.ParseablePointer[T]] struct {
 	Elements []T     `json:"elements"`
-	Valid    bool    `json:"valid,omitempty" terra:"valid,omitempty"`
-	Errors   []Error `json:"errors,omitempty" terra:"errors,omitempty"`
+	Valid    bool    `json:"valid,omitempty"`
+	Errors   []Error `json:"errors,omitempty"`
 }
 
 type Computation struct {
@@ -89,8 +89,8 @@ type Computation struct {
 	Type       string  `json:"type"`
 	DataType   string  `json:"dataType"`
 	Expression string  `json:"expression"`
-	Valid      bool    `json:"valid,omitempty" terra:"valid,omitempty"`
-	Errors     []Error `json:"errors,omitempty" terra:"errors,omitempty"`
+	Valid      bool    `json:"valid,omitempty"`
+	Errors     []Error `json:"errors,omitempty"`
 }
 
 type Mapping struct {
@@ -99,8 +99,8 @@ type Mapping struct {
 }
 
 type ElementStatus struct {
-	Valid  bool    `json:"valid,omitempty" terra:"valid,omitempty"`
-	Errors []Error `json:"errors,omitempty" terra:"errors,omitempty"`
+	Valid  bool    `json:"valid,omitempty"`
+	Errors []Error `json:"errors,omitempty"`
 }
 
 type Error struct {
