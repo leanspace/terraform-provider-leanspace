@@ -6,61 +6,61 @@ import (
 )
 
 type Dashboard struct {
-	ID             string                `json:"id" terra:"id"`
-	Name           string                `json:"name" terra:"name"`
-	Description    string                `json:"description,omitempty" terra:"description"`
-	NodeIds        []string              `json:"nodeIds" terra:"node_ids"`
-	WidgetInfo     []WidgetInfo          `json:"widgetInfo,omitempty" terra:"widget_info,omitempty"`
-	Widgets        []DashboardWidget     `json:"widgets" terra:"widgets"`
-	Tags           []general_objects.Tag `json:"tags,omitempty" terra:"tags"`
-	CreatedAt      string                `json:"createdAt" terra:"created_at"`
-	CreatedBy      string                `json:"createdBy" terra:"created_by"`
-	LastModifiedAt string                `json:"lastModifiedAt" terra:"last_modified_at"`
-	LastModifiedBy string                `json:"lastModifiedBy" terra:"last_modified_by"`
+	ID             string                `json:"id"`
+	Name           string                `json:"name"`
+	Description    string                `json:"description,omitempty"`
+	NodeIds        []string              `json:"nodeIds"`
+	WidgetInfo     []WidgetInfo          `json:"widgetInfo,omitempty"`
+	Widgets        []DashboardWidget     `json:"widgets"`
+	Tags           []general_objects.Tag `json:"tags,omitempty"`
+	CreatedAt      string                `json:"createdAt"`
+	CreatedBy      string                `json:"createdBy"`
+	LastModifiedAt string                `json:"lastModifiedAt"`
+	LastModifiedBy string                `json:"lastModifiedBy"`
 }
 
 func (dashboard *Dashboard) GetID() string { return dashboard.ID }
 
 type WidgetInfo struct {
-	ID   string `json:"id" terra:"id"`
-	Type string `json:"type" terra:"type"`
-	W    int    `json:"w" terra:"w"`
-	H    int    `json:"h" terra:"h"`
-	X    int    `json:"x" terra:"x"`
-	Y    int    `json:"y" terra:"y"`
-	MinW int    `json:"minW" terra:"min_w"`
-	MinH int    `json:"minH" terra:"min_h"`
+	ID   string `json:"id"`
+	Type string `json:"type"`
+	W    int    `json:"w"`
+	H    int    `json:"h"`
+	X    int    `json:"x"`
+	Y    int    `json:"y"`
+	MinW int    `json:"minW"`
+	MinH int    `json:"minH"`
 }
 
 type DashboardWidget struct {
-	ID             string                `json:"id" terra:"id"`
-	Name           string                `json:"name" terra:"name"`
-	Description    string                `json:"description,omitempty" terra:"description"`
-	Type           string                `json:"type" terra:"type"`
-	Granularity    string                `json:"granularity" terra:"granularity"`
-	Series         []widgets.Series      `json:"series" terra:"series"`
-	Metrics        []widgets.MetricInfo  `json:"metrics" terra:"metrics"`
-	Metadata       widgets.Metadata      `json:"metadata" terra:"metadata"`
-	View           WidgetView            `json:"view" terra:"view"`
-	Tags           []general_objects.Tag `json:"tags,omitempty" terra:"tags"`
-	CreatedAt      string                `json:"createdAt" terra:"created_at"`
-	CreatedBy      string                `json:"createdBy" terra:"created_by"`
-	LastModifiedAt string                `json:"lastModifiedAt" terra:"last_modified_at"`
-	LastModifiedBy string                `json:"lastModifiedBy" terra:"last_modified_by"`
+	ID             string                `json:"id"`
+	Name           string                `json:"name"`
+	Description    string                `json:"description,omitempty"`
+	Type           string                `json:"type"`
+	Granularity    string                `json:"granularity"`
+	Series         []widgets.Series      `json:"series"`
+	Metrics        []widgets.MetricInfo  `json:"metrics"`
+	Metadata       widgets.Metadata      `json:"metadata"`
+	View           WidgetView            `json:"view"`
+	Tags           []general_objects.Tag `json:"tags,omitempty"`
+	CreatedAt      string                `json:"createdAt"`
+	CreatedBy      string                `json:"createdBy"`
+	LastModifiedAt string                `json:"lastModifiedAt"`
+	LastModifiedBy string                `json:"lastModifiedBy"`
 }
 
 type WidgetView struct {
-	WidgetType string `json:"widgetType" terra:"widget_type"`
-	Grid       Grid   `json:"grid" terra:"grid"`
+	WidgetType string `json:"widgetType"`
+	Grid       Grid   `json:"grid"`
 }
 
 type Grid struct {
-	Version int    `json:"version" terra:"version"`
-	W       int    `json:"w" terra:"w"`
-	H       int    `json:"h" terra:"h"`
-	MinW    int    `json:"minW" terra:"min_w"`
-	MinH    int    `json:"minH" terra:"min_h"`
-	X       int    `json:"x" terra:"x"`
-	Y       int    `json:"y" terra:"y"`
-	I       string `json:"i" terra:"i"`
+	Version int    `json:"version"`
+	W       int    `json:"w"`
+	H       int    `json:"h"`
+	MinW    int    `json:"minW"`
+	MinH    int    `json:"minH"`
+	X       int    `json:"x"`
+	Y       int    `json:"y"`
+	I       string `json:"i"`
 }

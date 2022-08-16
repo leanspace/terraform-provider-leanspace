@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     leanspace = {
-      source  = "app.terraform.io/leanspace/leanspace"
+      source = "app.terraform.io/leanspace/leanspace"
     }
   }
 }
@@ -146,7 +146,11 @@ module "action_templates" {
 }
 
 module "monitors" {
-  source = "./monitors/monitors/"
-  metric_id = module.metrics.test_numeric_metric.id
+  source              = "./monitors/monitors/"
+  metric_id           = module.metrics.test_numeric_metric.id
   action_template_ids = [module.action_templates.test_action_template.id]
+}
+
+module "units" {
+  source = "./asset/units"
 }

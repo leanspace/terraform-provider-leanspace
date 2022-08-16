@@ -10,6 +10,7 @@ import (
 	"leanspace-terraform-provider/services/agents/remote_agents"
 	"leanspace-terraform-provider/services/asset/nodes"
 	"leanspace-terraform-provider/services/asset/properties"
+	"leanspace-terraform-provider/services/asset/units"
 	"leanspace-terraform-provider/services/commands/command_definitions"
 	"leanspace-terraform-provider/services/commands/command_queues"
 	"leanspace-terraform-provider/services/dashboard/dashboards"
@@ -45,6 +46,7 @@ func main() {
 	service_accounts.ServiceAccountDataType.Subscribe()
 	streams.StreamDataType.Subscribe()
 	teams.TeamDataType.Subscribe()
+	units.UnitDataType.Subscribe()
 	widgets.WidgetDataType.Subscribe()
 
 	plugin.Serve(&plugin.ServeOpts{
