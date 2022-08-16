@@ -35,6 +35,7 @@ Required:
 Optional:
 
 - `description` (String)
+- `tags` (Block Set) (see [below for nested schema](#nestedblock--metric--tags))
 
 Read-Only:
 
@@ -49,7 +50,7 @@ Read-Only:
 
 Required:
 
-- `type` (String) it must be one of these values: NUMERIC, BOOLEAN, TEXT, DATE, TIMESTAMP, ENUM
+- `type` (String) it must be one of these values: NUMERIC, BOOLEAN, TEXT, DATE, TIMESTAMP, ENUM, BINARY
 
 Optional:
 
@@ -64,5 +65,17 @@ Optional:
 - `precision` (Number) Numeric only: How many values after the comma should be accepted
 - `scale` (Number) Numeric only
 - `unit_id` (String) Numeric only
+
+
+<a id="nestedblock--metric--tags"></a>
+### Nested Schema for `metric.tags`
+
+Required:
+
+- `key` (String)
+
+Optional:
+
+- `value` (String)
 
 

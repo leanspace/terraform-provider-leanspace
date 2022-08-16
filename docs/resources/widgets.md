@@ -30,7 +30,7 @@ Required:
 
 - `granularity` (String) it must be one of these values: second, minute, hour, day, week, month, raw
 - `name` (String)
-- `series` (Block List, Min: 1) (see [below for nested schema](#nestedblock--widget--series))
+- `series` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--widget--series))
 - `type` (String) it must be one of these values: TABLE, LINE, BAR, AREA, VALUE
 
 Optional:
