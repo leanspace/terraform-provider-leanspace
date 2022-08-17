@@ -63,6 +63,10 @@ func AllowedIntValuesToDescription(allowedValues []int) string {
 	return "it must be one of these values: " + strings.Trim(strings.Join(strings.Fields(fmt.Sprint(allowedValues)), ", "), "[]")
 }
 
+func Ptr[T any](value T) *T {
+	return &value
+}
+
 const Debug = false
 
 var Logger = func() *log.Logger {

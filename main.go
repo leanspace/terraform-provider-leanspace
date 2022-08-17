@@ -8,6 +8,7 @@ import (
 
 	"leanspace-terraform-provider/services/activities/activity_definitions"
 	"leanspace-terraform-provider/services/agents/remote_agents"
+	"leanspace-terraform-provider/services/analyses/analysis_definitions"
 	"leanspace-terraform-provider/services/asset/nodes"
 	"leanspace-terraform-provider/services/asset/properties"
 	"leanspace-terraform-provider/services/asset/units"
@@ -33,6 +34,7 @@ func main() {
 	access_policies.AccessPolicyDataType.Subscribe()
 	action_templates.ActionTemplateDataType.Subscribe()
 	activity_definitions.ActivityDefinitionDataType.Subscribe()
+	analysis_definitions.AnalysisDefinitionDataType.Subscribe()
 	command_definitions.CommandDataType.Subscribe()
 	command_queues.CommandQueueDataType.Subscribe()
 	dashboards.DashboardDataType.Subscribe()
