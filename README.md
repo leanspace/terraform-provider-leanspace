@@ -100,6 +100,8 @@ The available resources per service are:
   - activity definitions: it has one `leanspace_activity_definitions` resource, whth all possible metadata types (6) and all possible argument types (7), as well as two mappings
 - agents:
   - remote agents: it has one `leanspace_remote_agents` resource, with one inbound and one outbond connectors.
+- analyses:
+  - analysis_defintions: it has one `leanspace_analysis_definitions` resource, with a basic analysis definition configuration.
 - asset:
   - nodes: it has 2 `leanspace_nodes` resources, one inside the other.
   - properties: it has as many `leanspace_properties` resources as available types (8)
