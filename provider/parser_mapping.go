@@ -73,6 +73,13 @@ type CustomEncodingModel interface {
 	CustomEncoding([]byte) (io.Reader, string, error)
 }
 
+type ValidationModel interface {
+	// An optional extra function that is called on the loaded configuration state of an instance.
+	// It is called during "terraform plan", and returns whatever error is returned. Use this to provide
+	// resource validation that is separate from parsing.
+	Validate() error
+}
+
 type GenericClient[T any, PT ParseableModel[T]] struct {
 	Client     *Client
 	Path       string

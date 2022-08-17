@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"leanspace-terraform-provider/helper"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -26,10 +27,28 @@ func (dataSource DataSourceType[T, PT]) toResource() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
+		CustomizeDiff: func(ctx context.Context, rd *schema.ResourceDiff, i any) error {
+			if helper.IsInstance[T, ValidationModel]() {
+				_, value, err := dataSource.getData(rd)
+				if err != nil {
+					return err
+				}
+				err = any(value).(ValidationModel).Validate()
+				if err != nil {
+					return err
+				}
+			}
+			return nil
+		},
 	}
 }
 
-func (dataSource DataSourceType[T, PT]) getData(d *schema.ResourceData) (string, PT, error) {
+type FlexResourceData interface {
+	Id() string
+	Get(key string) any
+}
+
+func (dataSource DataSourceType[T, PT]) getData(d FlexResourceData) (string, PT, error) {
 	valueId := d.Id()
 	valueRaw := d.Get(dataSource.Name).([]any)
 	if len(valueRaw) == 0 {
