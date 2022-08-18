@@ -1,0 +1,39 @@
+name: create doc pr
+
+env:
+  GITHUB_USERNAME: leanspace-bot
+  GITHUB_EMAIL: yannick+github-bot@leanspace.io
+
+on:
+  push:
+    tags:
+      - v*
+jobs:
+  doc-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
+      - name: Reorganize Directory
+        run: |
+          echo Creating target structure
+          cd docs
+          mkdir -p Terraform
+          ls | grep -v Terraform | xargs mv -t Terraform
+      - name: Create pull request
+        uses: car-on-sale/action-pull-request-another-repo@v1.3.0
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.LEANSPACE_BOT_TOKEN }}
+          GH_TOKEN: ${{ secrets.LEANSPACE_BOT_TOKEN }}
+        with:
+          source_folder: docs
+          destination_repo: leanspace/docs-tools
+          destination_folder: docs
+          destination_base_branch: main
+          destination_head_branch: feature/terra-${{ github.ref_name }}
+          user_email: ${{ env.GITHUB_EMAIL }}
+          user_name: ${{ env.GITHUB_USERNAME }}
+          pr_title: (Terraform) Update provider to ${{ github.ref_name }}
+          commit_msg: Terraform provider ${{ github.ref_name }}
