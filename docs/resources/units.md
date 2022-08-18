@@ -3,12 +3,12 @@
 page_title: "leanspace_units Resource - terraform-provider-leanspace"
 subcategory: ""
 description: |-
-  API path: asset-repository/units
+  
 ---
 
 # leanspace_units (Resource)
 
-API path: asset-repository/units
+
 
 
 

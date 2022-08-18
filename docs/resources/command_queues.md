@@ -3,12 +3,12 @@
 page_title: "leanspace_command_queues Resource - terraform-provider-leanspace"
 subcategory: ""
 description: |-
-  API path: commands-repository/command-queues
+  
 ---
 
 # leanspace_command_queues (Resource)
 
-API path: commands-repository/command-queues
+
 
 
 

@@ -3,12 +3,12 @@
 page_title: "leanspace_widgets Resource - terraform-provider-leanspace"
 subcategory: ""
 description: |-
-  API path: dashboard-repository/widgets
+  
 ---
 
 # leanspace_widgets (Resource)
 
-API path: dashboard-repository/widgets
+
 
 
 

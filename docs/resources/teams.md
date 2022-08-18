@@ -3,12 +3,12 @@
 page_title: "leanspace_teams Resource - terraform-provider-leanspace"
 subcategory: ""
 description: |-
-  API path: teams-repository/teams
+  
 ---
 
 # leanspace_teams (Resource)
 
-API path: teams-repository/teams
+
 
 
 

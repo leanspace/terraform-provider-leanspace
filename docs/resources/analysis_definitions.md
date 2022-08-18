@@ -3,12 +3,12 @@
 page_title: "leanspace_analysis_definitions Resource - terraform-provider-leanspace"
 subcategory: ""
 description: |-
-  API path: analyses-repository/analysis-definitions
+  
 ---
 
 # leanspace_analysis_definitions (Resource)
 
-API path: analyses-repository/analysis-definitions
+
 
 
 

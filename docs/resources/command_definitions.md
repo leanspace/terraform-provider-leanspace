@@ -3,12 +3,12 @@
 page_title: "leanspace_command_definitions Resource - terraform-provider-leanspace"
 subcategory: ""
 description: |-
-  API path: commands-repository/command-definitions
+  
 ---
 
 # leanspace_command_definitions (Resource)
 
-API path: commands-repository/command-definitions
+
 
 
 

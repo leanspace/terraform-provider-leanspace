@@ -3,12 +3,12 @@
 page_title: "leanspace_service_accounts Resource - terraform-provider-leanspace"
 subcategory: ""
 description: |-
-  API path: teams-repository/service-accounts
+  
 ---
 
 # leanspace_service_accounts (Resource)
 
-API path: teams-repository/service-accounts
+
 
 
 

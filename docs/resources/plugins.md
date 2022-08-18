@@ -3,12 +3,12 @@
 page_title: "leanspace_plugins Resource - terraform-provider-leanspace"
 subcategory: ""
 description: |-
-  API path: plugins-repository/plugins
+  
 ---
 
 # leanspace_plugins (Resource)
 
-API path: plugins-repository/plugins
+
 
 
 

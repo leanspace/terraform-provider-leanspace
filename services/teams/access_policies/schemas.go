@@ -66,7 +66,6 @@ var statementSchema = map[string]*schema.Schema{
 		Elem: &schema.Schema{
 			Type:         schema.TypeString,
 			ValidateFunc: validation.StringMatch(actionRegex, "Actions must match the pattern 'service:rule' or 'service:*'"),
-			Description:  "A list of permissions for this statement. Actions must match the pattern 'service:rule' or 'service:*'.",
 		},
 	},
 }

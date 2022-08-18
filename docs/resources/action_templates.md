@@ -3,12 +3,12 @@
 page_title: "leanspace_action_templates Resource - terraform-provider-leanspace"
 subcategory: ""
 description: |-
-  API path: monitors-repository/action-templates
+  
 ---
 
 # leanspace_action_templates (Resource)
 
-API path: monitors-repository/action-templates
+
 
 
 
