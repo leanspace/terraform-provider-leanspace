@@ -28,7 +28,7 @@ jobs:
           API_TOKEN_GITHUB: ${{ secrets.LEANSPACE_BOT_TOKEN }}
           GH_TOKEN: ${{ secrets.LEANSPACE_BOT_TOKEN }}
         with:
-          source_folder: docs
+          source_folder: docs/Terraform
           destination_repo: leanspace/docs-tools
           destination_folder: docs
           destination_base_branch: main
