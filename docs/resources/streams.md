@@ -3,12 +3,12 @@
 page_title: "leanspace_streams Resource - terraform-provider-leanspace"
 subcategory: ""
 description: |-
-  
+  API path: streams-repository/streams
 ---
 
 # leanspace_streams (Resource)
 
-
+API path: streams-repository/streams
 
 
 

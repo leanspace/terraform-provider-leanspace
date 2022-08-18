@@ -3,12 +3,12 @@
 page_title: "leanspace_remote_agents Resource - terraform-provider-leanspace"
 subcategory: ""
 description: |-
-  
+  API path: agents-repository/agents
 ---
 
 # leanspace_remote_agents (Resource)
 
-
+API path: agents-repository/agents
 
 
 

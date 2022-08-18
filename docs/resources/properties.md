@@ -3,12 +3,12 @@
 page_title: "leanspace_properties Resource - terraform-provider-leanspace"
 subcategory: ""
 description: |-
-  
+  API path: asset-repository/properties
 ---
 
 # leanspace_properties (Resource)
 
-
+API path: asset-repository/properties
 
 
 

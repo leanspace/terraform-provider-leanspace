@@ -3,12 +3,12 @@
 page_title: "leanspace_metrics Resource - terraform-provider-leanspace"
 subcategory: ""
 description: |-
-  
+  API path: metrics-repository/metrics
 ---
 
 # leanspace_metrics (Resource)
 
-
+API path: metrics-repository/metrics
 
 
 

@@ -3,12 +3,12 @@
 page_title: "leanspace_access_policies Resource - terraform-provider-leanspace"
 subcategory: ""
 description: |-
-  
+  API path: teams-repository/access-policies
 ---
 
 # leanspace_access_policies (Resource)
 
-
+API path: teams-repository/access-policies
 
 
 

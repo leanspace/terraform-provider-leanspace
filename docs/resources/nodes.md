@@ -3,12 +3,12 @@
 page_title: "leanspace_nodes Resource - terraform-provider-leanspace"
 subcategory: ""
 description: |-
-  
+  API path: asset-repository/nodes
 ---
 
 # leanspace_nodes (Resource)
 
-
+API path: asset-repository/nodes
 
 
 

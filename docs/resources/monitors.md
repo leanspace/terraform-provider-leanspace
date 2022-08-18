@@ -3,12 +3,12 @@
 page_title: "leanspace_monitors Resource - terraform-provider-leanspace"
 subcategory: ""
 description: |-
-  
+  API path: monitors-repository/monitors
 ---
 
 # leanspace_monitors (Resource)
 
-
+API path: monitors-repository/monitors
 
 
 

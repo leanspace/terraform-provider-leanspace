@@ -3,12 +3,12 @@
 page_title: "leanspace_dashboards Resource - terraform-provider-leanspace"
 subcategory: ""
 description: |-
-  
+  API path: dashboard-repository/dashboards
 ---
 
 # leanspace_dashboards (Resource)
 
-
+API path: dashboard-repository/dashboards
 
 
 

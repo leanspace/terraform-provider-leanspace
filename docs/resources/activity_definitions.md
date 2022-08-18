@@ -3,12 +3,12 @@
 page_title: "leanspace_activity_definitions Resource - terraform-provider-leanspace"
 subcategory: ""
 description: |-
-  
+  API path: activities-repository/activity-definitions
 ---
 
 # leanspace_activity_definitions (Resource)
 
-
+API path: activities-repository/activity-definitions
 
 
 
