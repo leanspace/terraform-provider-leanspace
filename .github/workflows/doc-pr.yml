@@ -1,0 +1,62 @@
+name: create doc pr
+on:
+  push:
+    tags:
+      - v*
+jobs:
+  doc-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
+      - name: Test 1
+        run: |
+          ls
+          cat docs/resources/units.md
+      - name: Reorganize Directory
+        run: |
+          echo Creating target structure
+          ARRAY=("Activities:activities-repository"
+                 "Commands:commands-repository"
+                 "Dashboards:dashboard-repository"
+                 "Metrics:metrics-repository"
+                 "Monitors:monitors-repository"
+                 "RemoteAgents:agents-repository"
+                 "Simulations:analyses-repository"
+                 "Streams:streams-repository"
+                 "TeamsAndRoles:teams-repository"
+                 "TopologyAndAssets:asset-repository" )
+
+          for service in "${ARRAY[@]}" ; do
+              KEY=${service%%:*}
+              VALUE=${service#*:}
+
+              mkdir -p docs/$KEY/Terraform
+              
+              echo Moving matches for $VALUE to folder $KEY
+
+              MATCHES=$(grep --include=\*.md -rnwl docs/resources/ -e $VALUE)
+              echo Matches are $MATCHES
+
+              mv $MATCHES docs/$KEY/Terraform
+          done
+
+          echo Cleaning up directory
+          rm -r docs/{data-sources,resources,index.md}
+
+      - name: Create pull request
+        uses: car-on-sale/action-pull-request-another-repo@v1.3.0
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          source_folder: docs
+          destination_repo: leanspace/docs-services
+          destination_folder: docs
+          destination_base_branch: main
+          destination_head_branch: feature/terra-${{ github.ref_name }}
+          user_email: ${{ secrets.GITHUB_EMAIL }}
+          user_name: ${{ secrets.USERNAME }}
+          pr_title: (Terraform) Update provider to ${{ github.ref_name }}
+          commit_msg: Terraform provider ${{ github.ref_name }}
