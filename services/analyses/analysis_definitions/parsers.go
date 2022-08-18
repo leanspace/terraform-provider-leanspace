@@ -125,10 +125,8 @@ func (field *Field) FromMap(fieldMap map[string]any) error {
 			field.Items = items
 		}
 	} else {
-		field.Source = helper.Ptr(fieldMap["source"].(string))
-		if field.Source == nil {
-			return fmt.Errorf("field type is %s, but source isn't set", field.Type)
-		} else if *field.Source == "STATIC" {
+		field.Source = fieldMap["source"].(string)
+		if field.Source == "STATIC" {
 			valueString := fieldMap["value"].(string)
 			var jsonValue any
 			if err := json.Unmarshal([]byte(valueString), jsonValue); err == nil {
@@ -136,13 +134,13 @@ func (field *Field) FromMap(fieldMap map[string]any) error {
 			} else {
 				field.Value = valueString
 			}
-		} else if *field.Source == "REFERENCE" {
-			field.Ref = helper.Ptr(fieldMap["ref"].(string))
-			if field.Ref == nil || *field.Ref == "" {
+		} else if field.Source == "REFERENCE" {
+			field.Ref = fieldMap["ref"].(string)
+			if field.Ref == "" {
 				return fmt.Errorf("expected ref value, got %p", field.Ref)
 			}
 		} else {
-			return fmt.Errorf("unrecognized field source: %s", *field.Source)
+			return fmt.Errorf("unrecognized field source: %s", field.Source)
 		}
 	}
 	return nil
