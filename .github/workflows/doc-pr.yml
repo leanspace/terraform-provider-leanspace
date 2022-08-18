@@ -1,4 +1,9 @@
 name: create doc pr
+
+env:
+  GITHUB_USERNAME: leanspace-bot
+  GITHUB_EMAIL: yannick+github-bot@leanspace.io
+
 on:
   push:
     tags:
