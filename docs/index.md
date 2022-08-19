@@ -2,7 +2,7 @@
 page_title: "Provider: Leanspace"
 ---
 
-# LEANSPACE Provider
+# Leanspace Provider
 
 The leanspace provider provides utilities for working with the
 various resources available on the platform. It provides all
@@ -68,6 +68,6 @@ The resource created through this provider will be created on your
 tenant, and will be accessible through the console. This also means
 that this provider is not immune to name collisions! If you attempt
 creating a resource that has the same name as an existing resource
-on your tenant, an error will be thrown (usually with code `429`).
+on your tenant, an error will be thrown (usually with code `409`).
 If this happens, either rename or delete (this can't be undone!) 
 one of the two resources.
