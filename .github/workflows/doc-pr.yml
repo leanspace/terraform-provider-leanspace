@@ -16,51 +16,36 @@ jobs:
     env:
       BRANCH_NAME: preview
     steps:
-      - name: Checkout
+      - name: Checkout `terraform-provider-leanspace`
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
-
-      - name: Reorganize Directory
-        run: |
-          echo Creating target structure
-          cd docs
-          ls
-          mv resources Resources
-          mv data-sources DataSources
-
-          # Moving to "Terraform" subfolder
-          # mkdir -p Terraform
-          # ls | grep -v Terraform | xargs mv -t Terraform
-
-      - name: Push to `docs-tools`
-        uses: cpina/github-action-push-to-another-repository@main
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.LEANSPACE_BOT_TOKEN }}
-        with:
-          user-email: ${{ env.GITHUB_EMAIL }}
-          user-name: ${{ env.GITHUB_USERNAME }}
-
-          source-directory: docs
-
-          destination-github-username: leanspace
-          destination-repository-name: docs-tools
-          target-branch: ${{ env.BRANCH_NAME }}
-          target-directory: docs/Terraform
-          commit-message: Terraform provider ${{ github.ref_name }}
+          path: tf-repo
+          ref: SDEVOPS-199
 
       - name: Checkout `docs-tools` repo
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
-          path: docs-tools-repo
+          path: docs-repo
           repository: leanspace/docs-tools
+
+      - name: Reorganize Directory
+        run: |
+          echo Moving files to destination repo
+          rm -r docs-repo/docs/Terraform
+          mv tf-repo/docs docs-repo/docs/Terraform
+          
+          echo Reorganising/Renaming files
+          cd docs-repo/docs/Terraform
+          mv resources Resources
+          mv data-sources DataSources
       
       - name: Open PR
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
-          path: docs-tools-repo
+          path: docs-repo
           branch: preview
           base: main
           title: (Terraform) Update provider to ${{ github.ref_name }}
