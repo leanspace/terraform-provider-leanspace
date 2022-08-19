@@ -11,29 +11,54 @@ on:
 jobs:
   doc-pr:
     runs-on: ubuntu-latest
+    env:
+      BRANCH_NAME: preview
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
+
       - name: Reorganize Directory
         run: |
           echo Creating target structure
           cd docs
-          mkdir -p Terraform
-          ls | grep -v Terraform | xargs mv -t Terraform
-      - name: Create pull request
-        uses: car-on-sale/action-pull-request-another-repo@v1.3.0
+          ls
+          mv resources Resources
+          mv data-sources DataSources
+
+          # Moving to "Terraform" subfolder
+          # mkdir -p Terraform
+          # ls | grep -v Terraform | xargs mv -t Terraform
+
+      - name: Push to `docs-tools`
+        uses: cpina/github-action-push-to-another-repository@main
         env:
           API_TOKEN_GITHUB: ${{ secrets.LEANSPACE_BOT_TOKEN }}
-          GH_TOKEN: ${{ secrets.LEANSPACE_BOT_TOKEN }}
         with:
-          source_folder: docs/Terraform
-          destination_repo: leanspace/docs-tools
-          destination_folder: docs
-          destination_base_branch: main
-          destination_head_branch: feature/terra-${{ github.ref_name }}
-          user_email: ${{ env.GITHUB_EMAIL }}
-          user_name: ${{ env.GITHUB_USERNAME }}
-          pr_title: (Terraform) Update provider to ${{ github.ref_name }}
-          commit_msg: Terraform provider ${{ github.ref_name }}
+          user-email: ${{ env.GITHUB_EMAIL }}
+          user-name: ${{ env.GITHUB_USERNAME }}
+
+          source-directory: docs
+
+          destination-github-username: leanspace
+          destination-repository-name: docs-tools
+          target-branch: ${{ env.BRANCH_NAME }}
+          target-directory: docs/Terraform
+          commit-message: Terraform provider ${{ github.ref_name }}
+
+      - name: Checkout `docs-tools` repo
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
+          path: docs-tools-repo
+          repository: leanspace/docs-tools
+      
+      - name: Open PR
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
+          path: docs-tools-repo
+          branch: preview
+          base: main
+          title: (Terraform) Update provider to ${{ github.ref_name }}
