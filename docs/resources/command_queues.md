@@ -13,11 +13,9 @@ description: |-
 
 ```terraform
 resource "leanspace_command_queues" "command_queue" {
-  command_queue {
-    name               = "Terraform Command Queue"
-    asset_id           = var.asset_id
-    ground_station_ids = var.ground_station_ids
-  }
+  name               = "Terraform Command Queue"
+  asset_id           = var.asset_id
+  ground_station_ids = var.ground_station_ids
 }
 ```
 
@@ -26,28 +24,17 @@ resource "leanspace_command_queues" "command_queue" {
 
 ### Required
 
-- `command_queue` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--command_queue))
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
-
-<a id="nestedblock--command_queue"></a>
-### Nested Schema for `command_queue`
-
-Required:
-
 - `asset_id` (String)
 - `name` (String)
 
-Optional:
+### Optional
 
 - `command_transformer_plugin_id` (String) The Id of the Command Transformer's Plugin
 - `ground_station_ids` (Set of String)
 - `protocol_transformer_init_data` (String) Initialization data used by the Protocol Transformer
 - `protocol_transformer_plugin_id` (String) The Id of the Protocol Transformer's Plugin
 
-Read-Only:
+### Read-Only
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it

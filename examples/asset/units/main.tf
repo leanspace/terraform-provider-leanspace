@@ -18,10 +18,8 @@ resource "leanspace_units" "custom_units" {
     "c" : "Centi"
     "m" : "Milli"
   }
-  unit {
-    symbol       = "${each.key}Cus"
-    display_name = "${each.value}Customium"
-  }
+  symbol       = "${each.key}Cus"
+  display_name = "${each.value}Customium"
 }
 
 output "test_units" {

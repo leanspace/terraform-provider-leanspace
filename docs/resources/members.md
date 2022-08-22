@@ -13,11 +13,9 @@ description: |-
 
 ```terraform
 resource "leanspace_members" "test" {
-  member {
-    name       = "John Doe"
-    email      = "john@terraform.leanspace.io"
-    policy_ids = var.access_policies
-  }
+  name       = "John Doe"
+  email      = "john@terraform.leanspace.io"
+  policy_ids = var.access_policies
 }
 ```
 
@@ -26,22 +24,11 @@ resource "leanspace_members" "test" {
 
 ### Required
 
-- `member` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--member))
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
-
-<a id="nestedblock--member"></a>
-### Nested Schema for `member`
-
-Required:
-
 - `email` (String)
 - `name` (String)
 - `policy_ids` (Set of String)
 
-Read-Only:
+### Read-Only
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it

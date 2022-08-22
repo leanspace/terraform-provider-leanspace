@@ -13,16 +13,14 @@ description: |-
 
 ```terraform
 resource "leanspace_monitors" "monitor" {
-  monitor {
-    name                         = "Terraform Monitor"
-    description                  = "A monitor created throug terraform."
-    polling_frequency_in_minutes = 60
-    metric_id                    = var.metric_id
-    expression {
-      comparison_operator  = "GREATER_THAN"
-      comparison_value     = 200
-      aggregation_function = "HIGHEST_VALUE"
-    }
+  name                         = "Terraform Monitor"
+  description                  = "A monitor created throug terraform."
+  polling_frequency_in_minutes = 60
+  metric_id                    = var.metric_id
+  expression {
+    comparison_operator  = "GREATER_THAN"
+    comparison_value     = 200
+    aggregation_function = "HIGHEST_VALUE"
   }
 }
 ```
@@ -32,42 +30,31 @@ resource "leanspace_monitors" "monitor" {
 
 ### Required
 
-- `monitor` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--monitor))
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
-
-<a id="nestedblock--monitor"></a>
-### Nested Schema for `monitor`
-
-Required:
-
-- `expression` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--monitor--expression))
+- `expression` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--expression))
 - `metric_id` (String)
 - `name` (String)
 - `polling_frequency_in_minutes` (Number) it must be one of these values: 1, 60, 1440
 
-Optional:
+### Optional
 
 - `action_template_ids` (Set of String)
 - `description` (String)
-- `tags` (Block Set) (see [below for nested schema](#nestedblock--monitor--tags))
+- `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
 
-Read-Only:
+### Read-Only
 
-- `action_templates` (Set of Object) (see [below for nested schema](#nestedatt--monitor--action_templates))
+- `action_templates` (Set of Object) (see [below for nested schema](#nestedatt--action_templates))
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it
 - `id` (String) The ID of this resource.
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
 - `node_id` (String)
-- `statistics` (List of Object) (see [below for nested schema](#nestedatt--monitor--statistics))
+- `statistics` (List of Object) (see [below for nested schema](#nestedatt--statistics))
 - `status` (String)
 
-<a id="nestedblock--monitor--expression"></a>
-### Nested Schema for `monitor.expression`
+<a id="nestedblock--expression"></a>
+### Nested Schema for `expression`
 
 Required:
 
@@ -80,8 +67,8 @@ Optional:
 - `tolerance` (Number) Only valid for EQUAL_TO or NOT_EQUAL_TO comparison operator
 
 
-<a id="nestedblock--monitor--tags"></a>
-### Nested Schema for `monitor.tags`
+<a id="nestedblock--tags"></a>
+### Nested Schema for `tags`
 
 Required:
 
@@ -92,8 +79,8 @@ Optional:
 - `value` (String)
 
 
-<a id="nestedatt--monitor--action_templates"></a>
-### Nested Schema for `monitor.action_templates`
+<a id="nestedatt--action_templates"></a>
+### Nested Schema for `action_templates`
 
 Read-Only:
 
@@ -109,15 +96,15 @@ Read-Only:
 - `url` (String)
 
 
-<a id="nestedatt--monitor--statistics"></a>
-### Nested Schema for `monitor.statistics`
+<a id="nestedatt--statistics"></a>
+### Nested Schema for `statistics`
 
 Read-Only:
 
-- `last_evaluation` (List of Object) (see [below for nested schema](#nestedobjatt--monitor--statistics--last_evaluation))
+- `last_evaluation` (List of Object) (see [below for nested schema](#nestedobjatt--statistics--last_evaluation))
 
-<a id="nestedobjatt--monitor--statistics--last_evaluation"></a>
-### Nested Schema for `monitor.statistics.last_evaluation`
+<a id="nestedobjatt--statistics--last_evaluation"></a>
+### Nested Schema for `statistics.last_evaluation`
 
 Read-Only:
 

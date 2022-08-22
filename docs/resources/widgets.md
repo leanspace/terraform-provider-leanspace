@@ -13,25 +13,23 @@ description: |-
 
 ```terraform
 resource "leanspace_widgets" "test_line" {
-  widget {
-    name        = "Terraform Line Widget"
-    description = "A line widget created with Terraform"
-    type        = "LINE"
-    granularity = "second"
-    series {
-      id          = var.numeric_metric_id
-      datasource  = "metric"
-      aggregation = "avg"
-      filters {
-        filter_by = var.numeric_metric_id
-        operator  = "gt"
-        value     = 3
-      }
+  name        = "Terraform Line Widget"
+  description = "A line widget created with Terraform"
+  type        = "LINE"
+  granularity = "second"
+  series {
+    id          = var.numeric_metric_id
+    datasource  = "metric"
+    aggregation = "avg"
+    filters {
+      filter_by = var.numeric_metric_id
+      operator  = "gt"
+      value     = 3
     }
-    metadata {
-      y_axis_range_max = [100]
-      y_axis_label     = "This is a label"
-    }
+  }
+  metadata {
+    y_axis_range_max = [100]
+    y_axis_label     = "This is a label"
   }
 }
 ```
@@ -41,40 +39,29 @@ resource "leanspace_widgets" "test_line" {
 
 ### Required
 
-- `widget` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--widget))
+- `granularity` (String) it must be one of these values: second, minute, hour, day, week, month, raw
+- `name` (String)
+- `series` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--series))
+- `type` (String) it must be one of these values: TABLE, LINE, BAR, AREA, VALUE
+
+### Optional
+
+- `description` (String)
+- `metadata` (Block List, Max: 1) (see [below for nested schema](#nestedblock--metadata))
+- `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
 
 ### Read-Only
 
-- `id` (String) The ID of this resource.
-
-<a id="nestedblock--widget"></a>
-### Nested Schema for `widget`
-
-Required:
-
-- `granularity` (String) it must be one of these values: second, minute, hour, day, week, month, raw
-- `name` (String)
-- `series` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--widget--series))
-- `type` (String) it must be one of these values: TABLE, LINE, BAR, AREA, VALUE
-
-Optional:
-
-- `description` (String)
-- `metadata` (Block List, Max: 1) (see [below for nested schema](#nestedblock--widget--metadata))
-- `tags` (Block Set) (see [below for nested schema](#nestedblock--widget--tags))
-
-Read-Only:
-
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it
-- `dashboards` (Set of Object) (see [below for nested schema](#nestedatt--widget--dashboards))
+- `dashboards` (Set of Object) (see [below for nested schema](#nestedatt--dashboards))
 - `id` (String) The ID of this resource.
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
-- `metrics` (List of Object) (see [below for nested schema](#nestedatt--widget--metrics))
+- `metrics` (List of Object) (see [below for nested schema](#nestedatt--metrics))
 
-<a id="nestedblock--widget--series"></a>
-### Nested Schema for `widget.series`
+<a id="nestedblock--series"></a>
+### Nested Schema for `series`
 
 Required:
 
@@ -83,14 +70,14 @@ Required:
 
 Optional:
 
-- `filters` (Block Set, Max: 3) (see [below for nested schema](#nestedblock--widget--series--filters))
+- `filters` (Block Set, Max: 3) (see [below for nested schema](#nestedblock--series--filters))
 
 Read-Only:
 
 - `id` (String) The ID of this resource.
 
-<a id="nestedblock--widget--series--filters"></a>
-### Nested Schema for `widget.series.filters`
+<a id="nestedblock--series--filters"></a>
+### Nested Schema for `series.filters`
 
 Required:
 
@@ -100,8 +87,8 @@ Required:
 
 
 
-<a id="nestedblock--widget--metadata"></a>
-### Nested Schema for `widget.metadata`
+<a id="nestedblock--metadata"></a>
+### Nested Schema for `metadata`
 
 Optional:
 
@@ -110,8 +97,8 @@ Optional:
 - `y_axis_range_min` (List of Number)
 
 
-<a id="nestedblock--widget--tags"></a>
-### Nested Schema for `widget.tags`
+<a id="nestedblock--tags"></a>
+### Nested Schema for `tags`
 
 Required:
 
@@ -122,8 +109,8 @@ Optional:
 - `value` (String)
 
 
-<a id="nestedatt--widget--dashboards"></a>
-### Nested Schema for `widget.dashboards`
+<a id="nestedatt--dashboards"></a>
+### Nested Schema for `dashboards`
 
 Read-Only:
 
@@ -131,8 +118,8 @@ Read-Only:
 - `name` (String)
 
 
-<a id="nestedatt--widget--metrics"></a>
-### Nested Schema for `widget.metrics`
+<a id="nestedatt--metrics"></a>
+### Nested Schema for `metrics`
 
 Read-Only:
 

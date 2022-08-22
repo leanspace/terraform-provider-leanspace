@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     leanspace = {
-      source  = "app.terraform.io/leanspace/leanspace"
+      source = "app.terraform.io/leanspace/leanspace"
     }
   }
 }
@@ -14,82 +14,68 @@ variable "node_id" {
 }
 
 resource "leanspace_metrics" "test_numeric" {
-  metric {
-    name        = "Terra Number Metric"
-    description = "A numeric metric, entirely created under terraform."
-    node_id     = var.node_id
+  name        = "Terra Number Metric"
+  description = "A numeric metric, entirely created under terraform."
+  node_id     = var.node_id
 
-    attributes {
-      type          = "NUMERIC"
-    }
+  attributes {
+    type = "NUMERIC"
   }
 }
 
 resource "leanspace_metrics" "test_text" {
-  metric {
-    name        = "Terra Text Metric"
-    description = "A text metric, entirely created under terraform."
-    node_id     = var.node_id
-    attributes {
-      type          = "TEXT"
-    }
+  name        = "Terra Text Metric"
+  description = "A text metric, entirely created under terraform."
+  node_id     = var.node_id
+  attributes {
+    type = "TEXT"
   }
 }
 
 resource "leanspace_metrics" "test_bool" {
-  metric {
-    name        = "Terra Boolean Metric"
-    description = "A boolean metric, entirely created under terraform."
-    node_id     = var.node_id
-    attributes {
-      type          = "BOOLEAN"
-    }
+  name        = "Terra Boolean Metric"
+  description = "A boolean metric, entirely created under terraform."
+  node_id     = var.node_id
+  attributes {
+    type = "BOOLEAN"
   }
 }
 
 
 resource "leanspace_metrics" "test_timestamp" {
-  metric {
-    name        = "Terra Timestamp Metric"
-    description = "A timestamp metric, entirely created under terraform."
-    node_id     = var.node_id
-    attributes {
-      type          = "TIMESTAMP"
-    }
+  name        = "Terra Timestamp Metric"
+  description = "A timestamp metric, entirely created under terraform."
+  node_id     = var.node_id
+  attributes {
+    type = "TIMESTAMP"
   }
 }
 
 resource "leanspace_metrics" "test_date" {
-  metric {
-    name        = "Terra Date Metric"
-    description = "A date metric, entirely created under terraform."
-    node_id     = var.node_id
-    attributes {
-      type          = "DATE"
-    }
+  name        = "Terra Date Metric"
+  description = "A date metric, entirely created under terraform."
+  node_id     = var.node_id
+  attributes {
+    type = "DATE"
   }
 }
 
 resource "leanspace_metrics" "test_enum" {
-  metric {
-    name        = "Terra Enum Metric"
-    description = "An enumeration metric, entirely created under terraform."
-    node_id     = var.node_id
-    attributes {
-      options       = { 1 = "test" }
-      type          = "ENUM"
-    }
+  name        = "Terra Enum Metric"
+  description = "An enumeration metric, entirely created under terraform."
+  node_id     = var.node_id
+  attributes {
+    options = { 1 = "test" }
+    type    = "ENUM"
   }
 }
 
 resource "leanspace_metrics" "test_binary" {
-  metric {
-    name        = "Terra Binary Metric"
-    description = "A binary metric, entirely created under terraform."
-    node_id     = var.node_id
-    attributes {
-      type          = "BINARY"
-    }
+  name        = "Terra Binary Metric"
+  description = "A binary metric, entirely created under terraform."
+  node_id     = var.node_id
+  attributes {
+    type = "BINARY"
   }
 }
 

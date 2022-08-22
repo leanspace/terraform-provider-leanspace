@@ -13,30 +13,28 @@ description: |-
 
 ```terraform
 resource "leanspace_command_definitions" "command_definition" {
-  command_definition {
-    name        = "Terraform Command"
-    description = "A command definition, created under terraform."
-    node_id     = var.node_id
-    identifier  = "TERRA_CMD"
+  name        = "Terraform Command"
+  description = "A command definition, created under terraform."
+  node_id     = var.node_id
+  identifier  = "TERRA_CMD"
 
-    metadata {
-      name        = "TestMetadataText"
-      description = "A text metadata value"
-      attributes {
-        value = "test"
-        type  = "TEXT"
-      }
+  metadata {
+    name        = "TestMetadataText"
+    description = "A text metadata value"
+    attributes {
+      value = "test"
+      type  = "TEXT"
     }
+  }
 
-    arguments {
-      name        = "TestArgumentNumeric"
-      identifier  = "NUMERIC"
-      description = "A numeric input"
-      attributes {
-        default_value = 2
-        type          = "NUMERIC"
-        required      = true
-      }
+  arguments {
+    name        = "TestArgumentNumeric"
+    identifier  = "NUMERIC"
+    description = "A numeric input"
+    attributes {
+      default_value = 2
+      type          = "NUMERIC"
+      required      = true
     }
   }
 }
@@ -47,28 +45,17 @@ resource "leanspace_command_definitions" "command_definition" {
 
 ### Required
 
-- `command_definition` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--command_definition))
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
-
-<a id="nestedblock--command_definition"></a>
-### Nested Schema for `command_definition`
-
-Required:
-
 - `name` (String)
 - `node_id` (String)
 
-Optional:
+### Optional
 
-- `arguments` (Block Set) (see [below for nested schema](#nestedblock--command_definition--arguments))
+- `arguments` (Block Set) (see [below for nested schema](#nestedblock--arguments))
 - `description` (String)
 - `identifier` (String)
-- `metadata` (Block Set) (see [below for nested schema](#nestedblock--command_definition--metadata))
+- `metadata` (Block Set) (see [below for nested schema](#nestedblock--metadata))
 
-Read-Only:
+### Read-Only
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it
@@ -76,12 +63,12 @@ Read-Only:
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
 
-<a id="nestedblock--command_definition--arguments"></a>
-### Nested Schema for `command_definition.arguments`
+<a id="nestedblock--arguments"></a>
+### Nested Schema for `arguments`
 
 Required:
 
-- `attributes` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--command_definition--arguments--attributes))
+- `attributes` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--arguments--attributes))
 - `identifier` (String)
 - `name` (String)
 
@@ -93,8 +80,8 @@ Read-Only:
 
 - `id` (String) The ID of this resource.
 
-<a id="nestedblock--command_definition--arguments--attributes"></a>
-### Nested Schema for `command_definition.arguments.attributes`
+<a id="nestedblock--arguments--attributes"></a>
+### Nested Schema for `arguments.attributes`
 
 Required:
 
@@ -118,12 +105,12 @@ Optional:
 
 
 
-<a id="nestedblock--command_definition--metadata"></a>
-### Nested Schema for `command_definition.metadata`
+<a id="nestedblock--metadata"></a>
+### Nested Schema for `metadata`
 
 Required:
 
-- `attributes` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--command_definition--metadata--attributes))
+- `attributes` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--metadata--attributes))
 - `name` (String)
 
 Optional:
@@ -134,8 +121,8 @@ Read-Only:
 
 - `id` (String) The ID of this resource.
 
-<a id="nestedblock--command_definition--metadata--attributes"></a>
-### Nested Schema for `command_definition.metadata.attributes`
+<a id="nestedblock--metadata--attributes"></a>
+### Nested Schema for `metadata.attributes`
 
 Required:
 

@@ -13,10 +13,8 @@ description: |-
 
 ```terraform
 resource "leanspace_service_accounts" "service_account" {
-  service_account {
-    name       = "My Service Account"
-    policy_ids = var.access_policies
-  }
+  name       = "My Service Account"
+  policy_ids = var.access_policies
 }
 ```
 
@@ -25,21 +23,10 @@ resource "leanspace_service_accounts" "service_account" {
 
 ### Required
 
-- `service_account` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--service_account))
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
-
-<a id="nestedblock--service_account"></a>
-### Nested Schema for `service_account`
-
-Required:
-
 - `name` (String)
 - `policy_ids` (Set of String)
 
-Read-Only:
+### Read-Only
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it

@@ -13,14 +13,12 @@ description: |-
 
 ```terraform
 resource "leanspace_plugins" "plugin" {
-  plugin {
-    file_path                            = var.path
-    type                                 = "COMMANDS_COMMAND_TRANSFORMER_PLUGIN_TYPE"
-    implementation_class_name            = "io.myplugin.SimpleCommandTransformer"
-    name                                 = "Terraform Command Transformer Plugin"
-    description                          = "This is a plugin created through terraform!"
-    source_code_file_download_authorized = true
-  }
+  file_path                            = var.path
+  type                                 = "COMMANDS_COMMAND_TRANSFORMER_PLUGIN_TYPE"
+  implementation_class_name            = "io.myplugin.SimpleCommandTransformer"
+  name                                 = "Terraform Command Transformer Plugin"
+  description                          = "This is a plugin created through terraform!"
+  source_code_file_download_authorized = true
 }
 ```
 
@@ -29,28 +27,17 @@ resource "leanspace_plugins" "plugin" {
 
 ### Required
 
-- `plugin` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--plugin))
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
-
-<a id="nestedblock--plugin"></a>
-### Nested Schema for `plugin`
-
-Required:
-
 - `file_path` (String) It must be a valid path to a .jar file
 - `implementation_class_name` (String) It must be a valid java class path
 - `name` (String)
 - `type` (String)
 
-Optional:
+### Optional
 
 - `description` (String)
 - `source_code_file_download_authorized` (Boolean)
 
-Read-Only:
+### Read-Only
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it

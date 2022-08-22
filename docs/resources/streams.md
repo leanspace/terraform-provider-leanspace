@@ -13,81 +13,79 @@ description: |-
 
 ```terraform
 resource "leanspace_streams" "stream" {
-  stream {
-    name     = "Terraform Stream"
-    asset_id = var.asset_id
+  name     = "Terraform Stream"
+  asset_id = var.asset_id
 
-    configuration {
-      endianness = "BE"
-      structure {
-        elements {
-          type           = "FIELD"
-          data_type      = "UINTEGER"
-          name           = "version"
-          length_in_bits = 8
+  configuration {
+    endianness = "BE"
+    structure {
+      elements {
+        type           = "FIELD"
+        data_type      = "UINTEGER"
+        name           = "version"
+        length_in_bits = 8
+      }
+      elements {
+        type = "SWITCH"
+        name = "data"
+        expression {
+          switch_on = "structure.version"
+          options {
+            component = "structure.data.data_0"
+            value {
+              data_type = "INTEGER"
+              data      = 0
+            }
+          }
+          options {
+            component = "structure.data.data_1"
+            value {
+              data_type = "INTEGER"
+              data      = 1
+            }
+          }
         }
         elements {
-          type = "SWITCH"
-          name = "data"
-          expression {
-            switch_on = "structure.version"
-            options {
-              component = "structure.data.data_0"
-              value {
-                data_type = "INTEGER"
-                data      = 0
-              }
-            }
-            options {
-              component = "structure.data.data_1"
-              value {
-                data_type = "INTEGER"
-                data      = 1
-              }
-            }
-          }
+          type = "CONTAINER"
+          name = "data_0"
           elements {
-            type = "CONTAINER"
-            name = "data_0"
-            elements {
-              type           = "FIELD"
-              data_type      = "TEXT"
-              name           = "name"
-              length_in_bits = 32
-              processor      = "zlib"
-            }
+            type           = "FIELD"
+            data_type      = "TEXT"
+            name           = "name"
+            length_in_bits = 32
+            processor      = "zlib"
           }
+        }
+        elements {
+          type = "CONTAINER"
+          name = "data_1"
           elements {
-            type = "CONTAINER"
-            name = "data_1"
-            elements {
-              type           = "FIELD"
-              data_type      = "BOOLEAN"
-              name           = "is_active"
-              length_in_bits = 8
-            }
+            type           = "FIELD"
+            data_type      = "BOOLEAN"
+            name           = "is_active"
+            length_in_bits = 8
           }
         }
       }
-      metadata {
-        timestamp {
-          expression = "(ctx, raw) => ctx['metadata.received_at'];"
-        }
+    }
+    metadata {
+      timestamp {
+        expression = "(ctx, raw) => ctx['metadata.received_at'];"
       }
-      computations {
-        elements {
-          data_type  = "UINTEGER"
-          name       = "is_version_0"
-          expression = <<-EOT
+    }
+    computations {
+      elements {
+        data_type  = "UINTEGER"
+        name       = "is_version_0"
+        expression = <<-EOT
             (ctx) => ctx['structure.version'] === 0
           EOT
-        }
       }
     }
-    mappings {
-      metric_id = var.numeric_metric_id
-      component = "x"
-    }
+  }
+  mappings {
+    metric_id = var.numeric_metric_id
+    component = "x"
   }
 }
 ```
@@ -97,27 +95,16 @@ resource "leanspace_streams" "stream" {
 
 ### Required
 
-- `stream` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--stream))
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
-
-<a id="nestedblock--stream"></a>
-### Nested Schema for `stream`
-
-Required:
-
 - `asset_id` (String)
-- `configuration` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--stream--configuration))
+- `configuration` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--configuration))
 - `name` (String)
 
-Optional:
+### Optional
 
 - `description` (String)
-- `mappings` (Block Set) (see [below for nested schema](#nestedblock--stream--mappings))
+- `mappings` (Block Set) (see [below for nested schema](#nestedblock--mappings))
 
-Read-Only:
+### Read-Only
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it
@@ -126,35 +113,35 @@ Read-Only:
 - `last_modified_by` (String) Who modified it the last
 - `version` (Number) Version of the stream, this is incremented each time the stream is updated
 
-<a id="nestedblock--stream--configuration"></a>
-### Nested Schema for `stream.configuration`
+<a id="nestedblock--configuration"></a>
+### Nested Schema for `configuration`
 
 Required:
 
-- `computations` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--stream--configuration--computations))
+- `computations` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--configuration--computations))
 - `endianness` (String) Endianness of the stream, it must be one of these values: BE, LE
-- `metadata` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--stream--configuration--metadata))
-- `structure` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--stream--configuration--structure))
+- `metadata` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--configuration--metadata))
+- `structure` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure))
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--stream--configuration--errors))
+- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--errors))
 - `valid` (Boolean)
 
-<a id="nestedblock--stream--configuration--computations"></a>
-### Nested Schema for `stream.configuration.computations`
+<a id="nestedblock--configuration--computations"></a>
+### Nested Schema for `configuration.computations`
 
 Optional:
 
-- `elements` (Block List) (see [below for nested schema](#nestedblock--stream--configuration--computations--elements))
+- `elements` (Block List) (see [below for nested schema](#nestedblock--configuration--computations--elements))
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--stream--configuration--computations--errors))
+- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--computations--errors))
 - `valid` (Boolean)
 
-<a id="nestedblock--stream--configuration--computations--elements"></a>
-### Nested Schema for `stream.configuration.computations.elements`
+<a id="nestedblock--configuration--computations--elements"></a>
+### Nested Schema for `configuration.computations.elements`
 
 Required:
 
@@ -164,13 +151,13 @@ Required:
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--stream--configuration--computations--elements--errors))
+- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--computations--elements--errors))
 - `order` (Number)
 - `type` (String)
 - `valid` (Boolean)
 
-<a id="nestedatt--stream--configuration--computations--elements--errors"></a>
-### Nested Schema for `stream.configuration.computations.elements.errors`
+<a id="nestedatt--configuration--computations--elements--errors"></a>
+### Nested Schema for `configuration.computations.elements.errors`
 
 Read-Only:
 
@@ -179,8 +166,8 @@ Read-Only:
 
 
 
-<a id="nestedatt--stream--configuration--computations--errors"></a>
-### Nested Schema for `stream.configuration.computations.errors`
+<a id="nestedatt--configuration--computations--errors"></a>
+### Nested Schema for `configuration.computations.errors`
 
 Read-Only:
 
@@ -189,21 +176,21 @@ Read-Only:
 
 
 
-<a id="nestedblock--stream--configuration--metadata"></a>
-### Nested Schema for `stream.configuration.metadata`
+<a id="nestedblock--configuration--metadata"></a>
+### Nested Schema for `configuration.metadata`
 
 Optional:
 
-- `timestamp` (Block List, Max: 1) (see [below for nested schema](#nestedblock--stream--configuration--metadata--timestamp))
+- `timestamp` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--metadata--timestamp))
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--stream--configuration--metadata--errors))
-- `packet_id` (List of Object) (see [below for nested schema](#nestedatt--stream--configuration--metadata--packet_id))
+- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--metadata--errors))
+- `packet_id` (List of Object) (see [below for nested schema](#nestedatt--configuration--metadata--packet_id))
 - `valid` (Boolean)
 
-<a id="nestedblock--stream--configuration--metadata--timestamp"></a>
-### Nested Schema for `stream.configuration.metadata.timestamp`
+<a id="nestedblock--configuration--metadata--timestamp"></a>
+### Nested Schema for `configuration.metadata.timestamp`
 
 Required:
 
@@ -211,11 +198,11 @@ Required:
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--stream--configuration--metadata--timestamp--errors))
+- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--metadata--timestamp--errors))
 - `valid` (Boolean)
 
-<a id="nestedatt--stream--configuration--metadata--timestamp--errors"></a>
-### Nested Schema for `stream.configuration.metadata.timestamp.errors`
+<a id="nestedatt--configuration--metadata--timestamp--errors"></a>
+### Nested Schema for `configuration.metadata.timestamp.errors`
 
 Read-Only:
 
@@ -224,8 +211,8 @@ Read-Only:
 
 
 
-<a id="nestedatt--stream--configuration--metadata--errors"></a>
-### Nested Schema for `stream.configuration.metadata.errors`
+<a id="nestedatt--configuration--metadata--errors"></a>
+### Nested Schema for `configuration.metadata.errors`
 
 Read-Only:
 
@@ -233,181 +220,16 @@ Read-Only:
 - `message` (String)
 
 
-<a id="nestedatt--stream--configuration--metadata--packet_id"></a>
-### Nested Schema for `stream.configuration.metadata.packet_id`
+<a id="nestedatt--configuration--metadata--packet_id"></a>
+### Nested Schema for `configuration.metadata.packet_id`
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedobjatt--stream--configuration--metadata--packet_id--errors))
+- `errors` (Set of Object) (see [below for nested schema](#nestedobjatt--configuration--metadata--packet_id--errors))
 - `valid` (Boolean)
 
-<a id="nestedobjatt--stream--configuration--metadata--packet_id--errors"></a>
-### Nested Schema for `stream.configuration.metadata.packet_id.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
-
-
-
-
-<a id="nestedblock--stream--configuration--structure"></a>
-### Nested Schema for `stream.configuration.structure`
-
-Optional:
-
-- `elements` (Block List) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements))
-
-Read-Only:
-
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--stream--configuration--structure--errors))
-- `valid` (Boolean)
-
-<a id="nestedblock--stream--configuration--structure--elements"></a>
-### Nested Schema for `stream.configuration.structure.elements`
-
-Required:
-
-- `name` (String)
-- `type` (String)
-
-Optional:
-
-- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
-- `elements` (Block List) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--elements))
-- `endianness` (String) it must be one of these values: BE, LE
-- `expression` (Block List, Max: 1) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--expression))
-- `length_in_bits` (Number)
-- `processor` (String)
-
-Read-Only:
-
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--stream--configuration--structure--elements--errors))
-- `order` (Number) Position of this component in the current context
-- `path` (String) Path of this component in the current context
-- `valid` (Boolean)
-
-<a id="nestedblock--stream--configuration--structure--elements--elements"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements`
-
-Required:
-
-- `name` (String)
-- `type` (String)
-
-Optional:
-
-- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
-- `elements` (Block List) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--elements--elements))
-- `endianness` (String) it must be one of these values: BE, LE
-- `expression` (Block List, Max: 1) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--elements--expression))
-- `length_in_bits` (Number)
-- `processor` (String)
-
-Read-Only:
-
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--stream--configuration--structure--elements--elements--errors))
-- `order` (Number) Position of this component in the current context
-- `path` (String) Path of this component in the current context
-- `valid` (Boolean)
-
-<a id="nestedblock--stream--configuration--structure--elements--elements--elements"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.elements`
-
-Required:
-
-- `name` (String)
-- `type` (String)
-
-Optional:
-
-- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
-- `elements` (Block List) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--elements--elements--elements))
-- `endianness` (String) it must be one of these values: BE, LE
-- `expression` (Block List, Max: 1) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--elements--elements--expression))
-- `length_in_bits` (Number)
-- `processor` (String)
-
-Read-Only:
-
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--stream--configuration--structure--elements--elements--elements--errors))
-- `order` (Number) Position of this component in the current context
-- `path` (String) Path of this component in the current context
-- `valid` (Boolean)
-
-<a id="nestedblock--stream--configuration--structure--elements--elements--elements--elements"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.elements.elements`
-
-Required:
-
-- `name` (String)
-- `type` (String)
-
-Optional:
-
-- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
-- `elements` (Block List) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--elements--elements--elements--elements))
-- `endianness` (String) it must be one of these values: BE, LE
-- `expression` (Block List, Max: 1) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--elements--elements--elements--expression))
-- `length_in_bits` (Number)
-- `processor` (String)
-
-Read-Only:
-
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--stream--configuration--structure--elements--elements--elements--elements--errors))
-- `order` (Number) Position of this component in the current context
-- `path` (String) Path of this component in the current context
-- `valid` (Boolean)
-
-<a id="nestedblock--stream--configuration--structure--elements--elements--elements--elements--elements"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.elements.elements.elements`
-
-Required:
-
-- `name` (String)
-- `type` (String)
-
-Optional:
-
-- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
-- `elements` (Block List) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--elements--elements--elements--elements--elements))
-- `endianness` (String) it must be one of these values: BE, LE
-- `expression` (Block List, Max: 1) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--elements--elements--elements--elements--expression))
-- `length_in_bits` (Number)
-- `processor` (String)
-
-Read-Only:
-
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--stream--configuration--structure--elements--elements--elements--elements--elements--errors))
-- `order` (Number) Position of this component in the current context
-- `path` (String) Path of this component in the current context
-- `valid` (Boolean)
-
-<a id="nestedblock--stream--configuration--structure--elements--elements--elements--elements--elements--elements"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.elements.elements.elements.elements`
-
-Required:
-
-- `name` (String)
-- `type` (String)
-
-Optional:
-
-- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
-- `endianness` (String) it must be one of these values: BE, LE
-- `length_in_bits` (Number)
-- `processor` (String)
-
-Read-Only:
-
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--stream--configuration--structure--elements--elements--elements--elements--elements--elements--errors))
-- `order` (Number) Position of this component in the current context
-- `path` (String) Path of this component in the current context
-- `valid` (Boolean)
-
-<a id="nestedatt--stream--configuration--structure--elements--elements--elements--elements--elements--elements--errors"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.elements.elements.elements.elements.errors`
+<a id="nestedobjatt--configuration--metadata--packet_id--errors"></a>
+### Nested Schema for `configuration.metadata.packet_id.errors`
 
 Read-Only:
 
@@ -416,24 +238,189 @@ Read-Only:
 
 
 
-<a id="nestedblock--stream--configuration--structure--elements--elements--elements--elements--elements--expression"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.elements.elements.elements.expression`
+
+<a id="nestedblock--configuration--structure"></a>
+### Nested Schema for `configuration.structure`
+
+Optional:
+
+- `elements` (Block List) (see [below for nested schema](#nestedblock--configuration--structure--elements))
+
+Read-Only:
+
+- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--errors))
+- `valid` (Boolean)
+
+<a id="nestedblock--configuration--structure--elements"></a>
+### Nested Schema for `configuration.structure.elements`
 
 Required:
 
-- `options` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--elements--elements--elements--elements--expression--options))
+- `name` (String)
+- `type` (String)
+
+Optional:
+
+- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
+- `elements` (Block List) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements))
+- `endianness` (String) it must be one of these values: BE, LE
+- `expression` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--expression))
+- `length_in_bits` (Number)
+- `processor` (String)
+
+Read-Only:
+
+- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--errors))
+- `order` (Number) Position of this component in the current context
+- `path` (String) Path of this component in the current context
+- `valid` (Boolean)
+
+<a id="nestedblock--configuration--structure--elements--elements"></a>
+### Nested Schema for `configuration.structure.elements.elements`
+
+Required:
+
+- `name` (String)
+- `type` (String)
+
+Optional:
+
+- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
+- `elements` (Block List) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements))
+- `endianness` (String) it must be one of these values: BE, LE
+- `expression` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--expression))
+- `length_in_bits` (Number)
+- `processor` (String)
+
+Read-Only:
+
+- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--errors))
+- `order` (Number) Position of this component in the current context
+- `path` (String) Path of this component in the current context
+- `valid` (Boolean)
+
+<a id="nestedblock--configuration--structure--elements--elements--elements"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements`
+
+Required:
+
+- `name` (String)
+- `type` (String)
+
+Optional:
+
+- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
+- `elements` (Block List) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements))
+- `endianness` (String) it must be one of these values: BE, LE
+- `expression` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--expression))
+- `length_in_bits` (Number)
+- `processor` (String)
+
+Read-Only:
+
+- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--errors))
+- `order` (Number) Position of this component in the current context
+- `path` (String) Path of this component in the current context
+- `valid` (Boolean)
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements`
+
+Required:
+
+- `name` (String)
+- `type` (String)
+
+Optional:
+
+- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
+- `elements` (Block List) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements))
+- `endianness` (String) it must be one of these values: BE, LE
+- `expression` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--expression))
+- `length_in_bits` (Number)
+- `processor` (String)
+
+Read-Only:
+
+- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--elements--errors))
+- `order` (Number) Position of this component in the current context
+- `path` (String) Path of this component in the current context
+- `valid` (Boolean)
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements`
+
+Required:
+
+- `name` (String)
+- `type` (String)
+
+Optional:
+
+- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
+- `elements` (Block List) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements))
+- `endianness` (String) it must be one of these values: BE, LE
+- `expression` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--expression))
+- `length_in_bits` (Number)
+- `processor` (String)
+
+Read-Only:
+
+- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--elements--elements--errors))
+- `order` (Number) Position of this component in the current context
+- `path` (String) Path of this component in the current context
+- `valid` (Boolean)
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements`
+
+Required:
+
+- `name` (String)
+- `type` (String)
+
+Optional:
+
+- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
+- `endianness` (String) it must be one of these values: BE, LE
+- `length_in_bits` (Number)
+- `processor` (String)
+
+Read-Only:
+
+- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--errors))
+- `order` (Number) Position of this component in the current context
+- `path` (String) Path of this component in the current context
+- `valid` (Boolean)
+
+<a id="nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--errors"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.errors`
+
+Read-Only:
+
+- `code` (String)
+- `message` (String)
+
+
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--expression"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.expression`
+
+Required:
+
+- `options` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--expression--options))
 - `switch_on` (String) Path of the field that the switch will use
 
-<a id="nestedblock--stream--configuration--structure--elements--elements--elements--elements--elements--expression--options"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.elements.elements.elements.expression.options`
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--expression--options"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.expression.options`
 
 Required:
 
 - `component` (String)
-- `value` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--elements--elements--elements--elements--expression--options--value))
+- `value` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--expression--options--value))
 
-<a id="nestedblock--stream--configuration--structure--elements--elements--elements--elements--elements--expression--options--value"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.elements.elements.elements.expression.options.value`
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--expression--options--value"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.expression.options.value`
 
 Required:
 
@@ -443,8 +430,8 @@ Required:
 
 
 
-<a id="nestedatt--stream--configuration--structure--elements--elements--elements--elements--elements--errors"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.elements.elements.elements.errors`
+<a id="nestedatt--configuration--structure--elements--elements--elements--elements--elements--errors"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.errors`
 
 Read-Only:
 
@@ -453,24 +440,24 @@ Read-Only:
 
 
 
-<a id="nestedblock--stream--configuration--structure--elements--elements--elements--elements--expression"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.elements.elements.expression`
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--expression"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.expression`
 
 Required:
 
-- `options` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--elements--elements--elements--expression--options))
+- `options` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--expression--options))
 - `switch_on` (String) Path of the field that the switch will use
 
-<a id="nestedblock--stream--configuration--structure--elements--elements--elements--elements--expression--options"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.elements.elements.expression.options`
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--expression--options"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.expression.options`
 
 Required:
 
 - `component` (String)
-- `value` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--elements--elements--elements--expression--options--value))
+- `value` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--expression--options--value))
 
-<a id="nestedblock--stream--configuration--structure--elements--elements--elements--elements--expression--options--value"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.elements.elements.expression.options.value`
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--expression--options--value"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.expression.options.value`
 
 Required:
 
@@ -480,8 +467,8 @@ Required:
 
 
 
-<a id="nestedatt--stream--configuration--structure--elements--elements--elements--elements--errors"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.elements.elements.errors`
+<a id="nestedatt--configuration--structure--elements--elements--elements--elements--errors"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.errors`
 
 Read-Only:
 
@@ -490,24 +477,24 @@ Read-Only:
 
 
 
-<a id="nestedblock--stream--configuration--structure--elements--elements--elements--expression"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.elements.expression`
+<a id="nestedblock--configuration--structure--elements--elements--elements--expression"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.expression`
 
 Required:
 
-- `options` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--elements--elements--expression--options))
+- `options` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--expression--options))
 - `switch_on` (String) Path of the field that the switch will use
 
-<a id="nestedblock--stream--configuration--structure--elements--elements--elements--expression--options"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.elements.expression.options`
+<a id="nestedblock--configuration--structure--elements--elements--elements--expression--options"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.expression.options`
 
 Required:
 
 - `component` (String)
-- `value` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--elements--elements--expression--options--value))
+- `value` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--expression--options--value))
 
-<a id="nestedblock--stream--configuration--structure--elements--elements--elements--expression--options--value"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.elements.expression.options.value`
+<a id="nestedblock--configuration--structure--elements--elements--elements--expression--options--value"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.expression.options.value`
 
 Required:
 
@@ -517,8 +504,8 @@ Required:
 
 
 
-<a id="nestedatt--stream--configuration--structure--elements--elements--elements--errors"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.elements.errors`
+<a id="nestedatt--configuration--structure--elements--elements--elements--errors"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.errors`
 
 Read-Only:
 
@@ -527,24 +514,24 @@ Read-Only:
 
 
 
-<a id="nestedblock--stream--configuration--structure--elements--elements--expression"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.expression`
+<a id="nestedblock--configuration--structure--elements--elements--expression"></a>
+### Nested Schema for `configuration.structure.elements.elements.expression`
 
 Required:
 
-- `options` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--elements--expression--options))
+- `options` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--expression--options))
 - `switch_on` (String) Path of the field that the switch will use
 
-<a id="nestedblock--stream--configuration--structure--elements--elements--expression--options"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.expression.options`
+<a id="nestedblock--configuration--structure--elements--elements--expression--options"></a>
+### Nested Schema for `configuration.structure.elements.elements.expression.options`
 
 Required:
 
 - `component` (String)
-- `value` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--elements--expression--options--value))
+- `value` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--expression--options--value))
 
-<a id="nestedblock--stream--configuration--structure--elements--elements--expression--options--value"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.expression.options.value`
+<a id="nestedblock--configuration--structure--elements--elements--expression--options--value"></a>
+### Nested Schema for `configuration.structure.elements.elements.expression.options.value`
 
 Required:
 
@@ -554,8 +541,8 @@ Required:
 
 
 
-<a id="nestedatt--stream--configuration--structure--elements--elements--errors"></a>
-### Nested Schema for `stream.configuration.structure.elements.elements.errors`
+<a id="nestedatt--configuration--structure--elements--elements--errors"></a>
+### Nested Schema for `configuration.structure.elements.elements.errors`
 
 Read-Only:
 
@@ -564,24 +551,24 @@ Read-Only:
 
 
 
-<a id="nestedblock--stream--configuration--structure--elements--expression"></a>
-### Nested Schema for `stream.configuration.structure.elements.expression`
+<a id="nestedblock--configuration--structure--elements--expression"></a>
+### Nested Schema for `configuration.structure.elements.expression`
 
 Required:
 
-- `options` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--expression--options))
+- `options` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--expression--options))
 - `switch_on` (String) Path of the field that the switch will use
 
-<a id="nestedblock--stream--configuration--structure--elements--expression--options"></a>
-### Nested Schema for `stream.configuration.structure.elements.expression.options`
+<a id="nestedblock--configuration--structure--elements--expression--options"></a>
+### Nested Schema for `configuration.structure.elements.expression.options`
 
 Required:
 
 - `component` (String)
-- `value` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--stream--configuration--structure--elements--expression--options--value))
+- `value` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--expression--options--value))
 
-<a id="nestedblock--stream--configuration--structure--elements--expression--options--value"></a>
-### Nested Schema for `stream.configuration.structure.elements.expression.options.value`
+<a id="nestedblock--configuration--structure--elements--expression--options--value"></a>
+### Nested Schema for `configuration.structure.elements.expression.options.value`
 
 Required:
 
@@ -591,8 +578,8 @@ Required:
 
 
 
-<a id="nestedatt--stream--configuration--structure--elements--errors"></a>
-### Nested Schema for `stream.configuration.structure.elements.errors`
+<a id="nestedatt--configuration--structure--elements--errors"></a>
+### Nested Schema for `configuration.structure.elements.errors`
 
 Read-Only:
 
@@ -601,8 +588,8 @@ Read-Only:
 
 
 
-<a id="nestedatt--stream--configuration--structure--errors"></a>
-### Nested Schema for `stream.configuration.structure.errors`
+<a id="nestedatt--configuration--structure--errors"></a>
+### Nested Schema for `configuration.structure.errors`
 
 Read-Only:
 
@@ -611,8 +598,8 @@ Read-Only:
 
 
 
-<a id="nestedatt--stream--configuration--errors"></a>
-### Nested Schema for `stream.configuration.errors`
+<a id="nestedatt--configuration--errors"></a>
+### Nested Schema for `configuration.errors`
 
 Read-Only:
 
@@ -621,8 +608,8 @@ Read-Only:
 
 
 
-<a id="nestedblock--stream--mappings"></a>
-### Nested Schema for `stream.mappings`
+<a id="nestedblock--mappings"></a>
+### Nested Schema for `mappings`
 
 Required:
 

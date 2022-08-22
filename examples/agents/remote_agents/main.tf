@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     leanspace = {
-      source  = "app.terraform.io/leanspace/leanspace"
+      source = "app.terraform.io/leanspace/leanspace"
     }
   }
 }
@@ -24,30 +24,28 @@ variable "ground_station_id" {
 }
 
 resource "leanspace_remote_agents" "test" {
-  remote_agent {
-    name        = "Terraform Remote Agent"
-    description = "A basic remote agent made with terraform."
-    connectors {
-      gateway_id       = var.ground_station_id
-      type             = "OUTBOUND"
-      command_queue_id = var.command_queue_id
-      socket {
-        type = "UDP"
-        host = "myhost"
-        port = 456
-      }
+  name        = "Terraform Remote Agent"
+  description = "A basic remote agent made with terraform."
+  connectors {
+    gateway_id       = var.ground_station_id
+    type             = "OUTBOUND"
+    command_queue_id = var.command_queue_id
+    socket {
+      type = "UDP"
+      host = "myhost"
+      port = 456
     }
-    connectors {
-      gateway_id = var.ground_station_id
-      type       = "INBOUND"
-      stream_id  = var.stream_id
-      socket {
-        type = "TCP"
-        port = 123
-      }
-    }
-
   }
+  connectors {
+    gateway_id = var.ground_station_id
+    type       = "INBOUND"
+    stream_id  = var.stream_id
+    socket {
+      type = "TCP"
+      port = 123
+    }
+  }
+
 }
 
 output "test_remote_agent" {

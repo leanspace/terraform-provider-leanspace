@@ -13,18 +13,16 @@ description: |-
 
 ```terraform
 resource "leanspace_action_templates" "action_template" {
-  action_template {
-    name = "Terraform Action Template"
-    type = "WEBHOOK"
-    url  = "https://my-custom-webhook.com"
-    payload = jsonencode({
-      pi   = 3.1415
-      data = "This is my action template."
-    })
-    headers = {
-      "Authorization" : "Bearer token",
-      "Content-Type" : "application/json",
-    }
+  name = "Terraform Action Template"
+  type = "WEBHOOK"
+  url  = "https://my-custom-webhook.com"
+  payload = jsonencode({
+    pi   = 3.1415
+    data = "This is my action template."
+  })
+  headers = {
+    "Authorization" : "Bearer token",
+    "Content-Type" : "application/json",
   }
 }
 ```
@@ -34,27 +32,16 @@ resource "leanspace_action_templates" "action_template" {
 
 ### Required
 
-- `action_template` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--action_template))
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
-
-<a id="nestedblock--action_template"></a>
-### Nested Schema for `action_template`
-
-Required:
-
 - `name` (String)
 - `payload` (String)
 - `url` (String)
 
-Optional:
+### Optional
 
 - `headers` (Map of String)
 - `type` (String) it must be one of these values: WEBHOOK
 
-Read-Only:
+### Read-Only
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it

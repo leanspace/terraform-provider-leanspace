@@ -13,21 +13,19 @@ description: |-
 
 ```terraform
 resource "leanspace_dashboards" "dashboard" {
-  dashboard {
-    name        = "Terraform Dashboard"
-    description = "A dashboard created through terraform!"
-    node_ids    = var.attached_node_ids
+  name        = "Terraform Dashboard"
+  description = "A dashboard created through terraform!"
+  node_ids    = var.attached_node_ids
 
-    widget_info {
-      id    = var.line_widget_id
-      type  = "LINE"
-      x     = 1
-      y     = 0
-      w     = 2
-      h     = 5
-      min_w = 1
-      min_h = 5
-    }
+  widget_info {
+    id    = var.line_widget_id
+    type  = "LINE"
+    x     = 1
+    y     = 0
+    w     = 2
+    h     = 5
+    min_w = 1
+    min_h = 5
   }
 }
 ```
@@ -37,37 +35,26 @@ resource "leanspace_dashboards" "dashboard" {
 
 ### Required
 
-- `dashboard` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--dashboard))
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
-
-<a id="nestedblock--dashboard"></a>
-### Nested Schema for `dashboard`
-
-Required:
-
 - `name` (String)
 
-Optional:
+### Optional
 
 - `description` (String)
 - `node_ids` (Set of String)
-- `tags` (Block Set) (see [below for nested schema](#nestedblock--dashboard--tags))
-- `widget_info` (Block Set) (see [below for nested schema](#nestedblock--dashboard--widget_info))
+- `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
+- `widget_info` (Block Set) (see [below for nested schema](#nestedblock--widget_info))
 
-Read-Only:
+### Read-Only
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it
 - `id` (String) The ID of this resource.
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
-- `widgets` (Set of Object) (see [below for nested schema](#nestedatt--dashboard--widgets))
+- `widgets` (Set of Object) (see [below for nested schema](#nestedatt--widgets))
 
-<a id="nestedblock--dashboard--tags"></a>
-### Nested Schema for `dashboard.tags`
+<a id="nestedblock--tags"></a>
+### Nested Schema for `tags`
 
 Required:
 
@@ -78,8 +65,8 @@ Optional:
 - `value` (String)
 
 
-<a id="nestedblock--dashboard--widget_info"></a>
-### Nested Schema for `dashboard.widget_info`
+<a id="nestedblock--widget_info"></a>
+### Nested Schema for `widget_info`
 
 Required:
 
@@ -99,8 +86,8 @@ Read-Only:
 - `id` (String) The ID of this resource.
 
 
-<a id="nestedatt--dashboard--widgets"></a>
-### Nested Schema for `dashboard.widgets`
+<a id="nestedatt--widgets"></a>
+### Nested Schema for `widgets`
 
 Read-Only:
 
@@ -111,16 +98,16 @@ Read-Only:
 - `id` (String)
 - `last_modified_at` (String)
 - `last_modified_by` (String)
-- `metadata` (List of Object) (see [below for nested schema](#nestedobjatt--dashboard--widgets--metadata))
-- `metrics` (List of Object) (see [below for nested schema](#nestedobjatt--dashboard--widgets--metrics))
+- `metadata` (List of Object) (see [below for nested schema](#nestedobjatt--widgets--metadata))
+- `metrics` (List of Object) (see [below for nested schema](#nestedobjatt--widgets--metrics))
 - `name` (String)
-- `series` (List of Object) (see [below for nested schema](#nestedobjatt--dashboard--widgets--series))
-- `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--dashboard--widgets--tags))
+- `series` (List of Object) (see [below for nested schema](#nestedobjatt--widgets--series))
+- `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--widgets--tags))
 - `type` (String)
-- `view` (List of Object) (see [below for nested schema](#nestedobjatt--dashboard--widgets--view))
+- `view` (List of Object) (see [below for nested schema](#nestedobjatt--widgets--view))
 
-<a id="nestedobjatt--dashboard--widgets--metadata"></a>
-### Nested Schema for `dashboard.widgets.metadata`
+<a id="nestedobjatt--widgets--metadata"></a>
+### Nested Schema for `widgets.metadata`
 
 Read-Only:
 
@@ -129,8 +116,8 @@ Read-Only:
 - `y_axis_range_min` (List of Number)
 
 
-<a id="nestedobjatt--dashboard--widgets--metrics"></a>
-### Nested Schema for `dashboard.widgets.metrics`
+<a id="nestedobjatt--widgets--metrics"></a>
+### Nested Schema for `widgets.metrics`
 
 Read-Only:
 
@@ -138,18 +125,18 @@ Read-Only:
 - `id` (String)
 
 
-<a id="nestedobjatt--dashboard--widgets--series"></a>
-### Nested Schema for `dashboard.widgets.series`
+<a id="nestedobjatt--widgets--series"></a>
+### Nested Schema for `widgets.series`
 
 Read-Only:
 
 - `aggregation` (String)
 - `datasource` (String)
-- `filters` (Set of Object) (see [below for nested schema](#nestedobjatt--dashboard--widgets--series--filters))
+- `filters` (Set of Object) (see [below for nested schema](#nestedobjatt--widgets--series--filters))
 - `id` (String)
 
-<a id="nestedobjatt--dashboard--widgets--series--filters"></a>
-### Nested Schema for `dashboard.widgets.series.id`
+<a id="nestedobjatt--widgets--series--filters"></a>
+### Nested Schema for `widgets.series.filters`
 
 Read-Only:
 
@@ -159,8 +146,8 @@ Read-Only:
 
 
 
-<a id="nestedobjatt--dashboard--widgets--tags"></a>
-### Nested Schema for `dashboard.widgets.tags`
+<a id="nestedobjatt--widgets--tags"></a>
+### Nested Schema for `widgets.tags`
 
 Read-Only:
 
@@ -168,8 +155,8 @@ Read-Only:
 - `value` (String)
 
 
-<a id="nestedobjatt--dashboard--widgets--view"></a>
-### Nested Schema for `dashboard.widgets.view`
+<a id="nestedobjatt--widgets--view"></a>
+### Nested Schema for `widgets.view`
 
 Read-Only:
 

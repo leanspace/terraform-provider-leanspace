@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     leanspace = {
-      source  = "app.terraform.io/leanspace/leanspace"
+      source = "app.terraform.io/leanspace/leanspace"
     }
   }
 }
@@ -19,11 +19,9 @@ variable "ground_station_ids" {
 }
 
 resource "leanspace_command_queues" "test" {
-  command_queue {
-    name               = "Terraform Command Queue"
-    asset_id           = var.asset_id
-    ground_station_ids = var.ground_station_ids
-  }
+  name               = "Terraform Command Queue"
+  asset_id           = var.asset_id
+  ground_station_ids = var.ground_station_ids
 }
 
 output "test_command_queue" {

@@ -13,29 +13,27 @@ description: |-
 
 ```terraform
 resource "leanspace_analysis_definitions" "test" {
-  analysis_definition {
-    name        = "Terraform Analysis Definition"
-    description = "An analysis definition made under terraform!"
-    model_id    = var.model_id
-    node_id     = var.node_id
+  name        = "Terraform Analysis Definition"
+  description = "An analysis definition made under terraform!"
+  model_id    = var.model_id
+  node_id     = var.node_id
 
-    inputs {
+  inputs {
+    type = "STRUCTURE"
+    fields {
+      name = "eclipses"
       type = "STRUCTURE"
       fields {
-        name = "eclipses"
-        type = "STRUCTURE"
-        fields {
-          name   = "earthEclipseEnabled"
-          type   = "BOOLEAN"
-          source = "STATIC"
-          value  = false
-        }
-        fields {
-          name   = "moonEclipseEnabled"
-          type   = "BOOLEAN"
-          source = "STATIC"
-          value  = true
-        }
+        name   = "earthEclipseEnabled"
+        type   = "BOOLEAN"
+        source = "STATIC"
+        value  = false
+      }
+      fields {
+        name   = "moonEclipseEnabled"
+        type   = "BOOLEAN"
+        source = "STATIC"
+        value  = true
       }
     }
   }
@@ -47,27 +45,16 @@ resource "leanspace_analysis_definitions" "test" {
 
 ### Required
 
-- `analysis_definition` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--analysis_definition))
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
-
-<a id="nestedblock--analysis_definition"></a>
-### Nested Schema for `analysis_definition`
-
-Required:
-
-- `inputs` (Block List, Min: 1) Inputs used to configure the simulation. (see [below for nested schema](#nestedblock--analysis_definition--inputs))
+- `inputs` (Block List, Min: 1) Inputs used to configure the simulation. (see [below for nested schema](#nestedblock--inputs))
 - `model_id` (String) The UUID of the model to run the simulation with.
 - `name` (String)
 - `node_id` (String) The UUID of the node to run the simulation for.
 
-Optional:
+### Optional
 
 - `description` (String)
 
-Read-Only:
+### Read-Only
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it
@@ -75,10 +62,10 @@ Read-Only:
 - `id` (String) The ID of this resource.
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
-- `statistics` (List of Object) Statistics about the simulation. (see [below for nested schema](#nestedatt--analysis_definition--statistics))
+- `statistics` (List of Object) Statistics about the simulation. (see [below for nested schema](#nestedatt--statistics))
 
-<a id="nestedblock--analysis_definition--inputs"></a>
-### Nested Schema for `analysis_definition.inputs`
+<a id="nestedblock--inputs"></a>
+### Nested Schema for `inputs`
 
 Required:
 
@@ -86,14 +73,14 @@ Required:
 
 Optional:
 
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items))
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--items))
 - `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
 - `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
-<a id="nestedblock--analysis_definition--inputs--fields"></a>
-### Nested Schema for `analysis_definition.inputs.fields`
+<a id="nestedblock--inputs--fields"></a>
+### Nested Schema for `inputs.fields`
 
 Required:
 
@@ -102,14 +89,14 @@ Required:
 
 Optional:
 
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--items))
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--fields--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--fields--items))
 - `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
 - `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
-<a id="nestedblock--analysis_definition--inputs--fields--fields"></a>
-### Nested Schema for `analysis_definition.inputs.fields.fields`
+<a id="nestedblock--inputs--fields--fields"></a>
+### Nested Schema for `inputs.fields.fields`
 
 Required:
 
@@ -118,14 +105,14 @@ Required:
 
 Optional:
 
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--fields--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--fields--items))
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--fields--fields--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--fields--fields--items))
 - `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
 - `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
-<a id="nestedblock--analysis_definition--inputs--fields--fields--fields"></a>
-### Nested Schema for `analysis_definition.inputs.fields.fields.fields`
+<a id="nestedblock--inputs--fields--fields--fields"></a>
+### Nested Schema for `inputs.fields.fields.fields`
 
 Required:
 
@@ -134,14 +121,14 @@ Required:
 
 Optional:
 
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--fields--fields--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--fields--fields--items))
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--fields--fields--fields--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--fields--fields--fields--items))
 - `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
 - `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
-<a id="nestedblock--analysis_definition--inputs--fields--fields--fields--fields"></a>
-### Nested Schema for `analysis_definition.inputs.fields.fields.fields.fields`
+<a id="nestedblock--inputs--fields--fields--fields--fields"></a>
+### Nested Schema for `inputs.fields.fields.fields.fields`
 
 Required:
 
@@ -150,59 +137,14 @@ Required:
 
 Optional:
 
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--fields--fields--fields--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--fields--fields--fields--items))
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--fields--fields--fields--fields--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--fields--fields--fields--fields--items))
 - `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
 - `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
-<a id="nestedblock--analysis_definition--inputs--fields--fields--fields--fields--fields"></a>
-### Nested Schema for `analysis_definition.inputs.fields.fields.fields.fields.fields`
-
-Required:
-
-- `name` (String) The name of the field - must be set if field is child of structure field.
-- `type` (String) it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
-
-Optional:
-
-- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
-- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
-- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
-
-
-<a id="nestedblock--analysis_definition--inputs--fields--fields--fields--fields--items"></a>
-### Nested Schema for `analysis_definition.inputs.fields.fields.fields.fields.items`
-
-Required:
-
-- `type` (String) it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
-
-Optional:
-
-- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
-- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
-- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
-
-
-
-<a id="nestedblock--analysis_definition--inputs--fields--fields--fields--items"></a>
-### Nested Schema for `analysis_definition.inputs.fields.fields.fields.items`
-
-Required:
-
-- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
-
-Optional:
-
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--fields--fields--items--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--fields--fields--items--items))
-- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
-- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
-- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
-
-<a id="nestedblock--analysis_definition--inputs--fields--fields--fields--items--fields"></a>
-### Nested Schema for `analysis_definition.inputs.fields.fields.fields.items.fields`
+<a id="nestedblock--inputs--fields--fields--fields--fields--fields"></a>
+### Nested Schema for `inputs.fields.fields.fields.fields.fields`
 
 Required:
 
@@ -216,8 +158,8 @@ Optional:
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
 
-<a id="nestedblock--analysis_definition--inputs--fields--fields--fields--items--items"></a>
-### Nested Schema for `analysis_definition.inputs.fields.fields.fields.items.items`
+<a id="nestedblock--inputs--fields--fields--fields--fields--items"></a>
+### Nested Schema for `inputs.fields.fields.fields.fields.items`
 
 Required:
 
@@ -231,9 +173,8 @@ Optional:
 
 
 
-
-<a id="nestedblock--analysis_definition--inputs--fields--fields--items"></a>
-### Nested Schema for `analysis_definition.inputs.fields.fields.items`
+<a id="nestedblock--inputs--fields--fields--fields--items"></a>
+### Nested Schema for `inputs.fields.fields.fields.items`
 
 Required:
 
@@ -241,30 +182,14 @@ Required:
 
 Optional:
 
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--fields--items--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--fields--items--items))
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--fields--fields--fields--items--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--fields--fields--fields--items--items))
 - `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
 - `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
-<a id="nestedblock--analysis_definition--inputs--fields--fields--items--fields"></a>
-### Nested Schema for `analysis_definition.inputs.fields.fields.items.fields`
-
-Required:
-
-- `name` (String) The name of the field - must be set if field is child of structure field.
-- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
-
-Optional:
-
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--fields--items--fields--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--fields--items--fields--items))
-- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
-- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
-- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
-
-<a id="nestedblock--analysis_definition--inputs--fields--fields--items--fields--fields"></a>
-### Nested Schema for `analysis_definition.inputs.fields.fields.items.fields.fields`
+<a id="nestedblock--inputs--fields--fields--fields--items--fields"></a>
+### Nested Schema for `inputs.fields.fields.fields.items.fields`
 
 Required:
 
@@ -278,8 +203,8 @@ Optional:
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
 
-<a id="nestedblock--analysis_definition--inputs--fields--fields--items--fields--items"></a>
-### Nested Schema for `analysis_definition.inputs.fields.fields.items.fields.items`
+<a id="nestedblock--inputs--fields--fields--fields--items--items"></a>
+### Nested Schema for `inputs.fields.fields.fields.items.items`
 
 Required:
 
@@ -293,8 +218,9 @@ Optional:
 
 
 
-<a id="nestedblock--analysis_definition--inputs--fields--fields--items--items"></a>
-### Nested Schema for `analysis_definition.inputs.fields.fields.items.items`
+
+<a id="nestedblock--inputs--fields--fields--items"></a>
+### Nested Schema for `inputs.fields.fields.items`
 
 Required:
 
@@ -302,14 +228,30 @@ Required:
 
 Optional:
 
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--fields--items--items--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--fields--items--items--items))
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--fields--fields--items--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--fields--fields--items--items))
 - `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
 - `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
-<a id="nestedblock--analysis_definition--inputs--fields--fields--items--items--fields"></a>
-### Nested Schema for `analysis_definition.inputs.fields.fields.items.items.fields`
+<a id="nestedblock--inputs--fields--fields--items--fields"></a>
+### Nested Schema for `inputs.fields.fields.items.fields`
+
+Required:
+
+- `name` (String) The name of the field - must be set if field is child of structure field.
+- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
+
+Optional:
+
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--fields--fields--items--fields--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--fields--fields--items--fields--items))
+- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
+- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
+- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
+
+<a id="nestedblock--inputs--fields--fields--items--fields--fields"></a>
+### Nested Schema for `inputs.fields.fields.items.fields.fields`
 
 Required:
 
@@ -323,8 +265,8 @@ Optional:
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
 
-<a id="nestedblock--analysis_definition--inputs--fields--fields--items--items--items"></a>
-### Nested Schema for `analysis_definition.inputs.fields.fields.items.items.items`
+<a id="nestedblock--inputs--fields--fields--items--fields--items"></a>
+### Nested Schema for `inputs.fields.fields.items.fields.items`
 
 Required:
 
@@ -338,10 +280,8 @@ Optional:
 
 
 
-
-
-<a id="nestedblock--analysis_definition--inputs--fields--items"></a>
-### Nested Schema for `analysis_definition.inputs.fields.items`
+<a id="nestedblock--inputs--fields--fields--items--items"></a>
+### Nested Schema for `inputs.fields.fields.items.items`
 
 Required:
 
@@ -349,46 +289,14 @@ Required:
 
 Optional:
 
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--items--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--items--items))
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--fields--fields--items--items--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--fields--fields--items--items--items))
 - `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
 - `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
-<a id="nestedblock--analysis_definition--inputs--fields--items--fields"></a>
-### Nested Schema for `analysis_definition.inputs.fields.items.fields`
-
-Required:
-
-- `name` (String) The name of the field - must be set if field is child of structure field.
-- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
-
-Optional:
-
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--items--fields--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--items--fields--items))
-- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
-- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
-- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
-
-<a id="nestedblock--analysis_definition--inputs--fields--items--fields--fields"></a>
-### Nested Schema for `analysis_definition.inputs.fields.items.fields.fields`
-
-Required:
-
-- `name` (String) The name of the field - must be set if field is child of structure field.
-- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
-
-Optional:
-
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--items--fields--fields--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--items--fields--fields--items))
-- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
-- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
-- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
-
-<a id="nestedblock--analysis_definition--inputs--fields--items--fields--fields--fields"></a>
-### Nested Schema for `analysis_definition.inputs.fields.items.fields.fields.fields`
+<a id="nestedblock--inputs--fields--fields--items--items--fields"></a>
+### Nested Schema for `inputs.fields.fields.items.items.fields`
 
 Required:
 
@@ -402,8 +310,8 @@ Optional:
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
 
-<a id="nestedblock--analysis_definition--inputs--fields--items--fields--fields--items"></a>
-### Nested Schema for `analysis_definition.inputs.fields.items.fields.fields.items`
+<a id="nestedblock--inputs--fields--fields--items--items--items"></a>
+### Nested Schema for `inputs.fields.fields.items.items.items`
 
 Required:
 
@@ -417,8 +325,10 @@ Optional:
 
 
 
-<a id="nestedblock--analysis_definition--inputs--fields--items--fields--items"></a>
-### Nested Schema for `analysis_definition.inputs.fields.items.fields.items`
+
+
+<a id="nestedblock--inputs--fields--items"></a>
+### Nested Schema for `inputs.fields.items`
 
 Required:
 
@@ -426,14 +336,46 @@ Required:
 
 Optional:
 
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--items--fields--items--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--items--fields--items--items))
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--fields--items--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--fields--items--items))
 - `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
 - `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
-<a id="nestedblock--analysis_definition--inputs--fields--items--fields--items--fields"></a>
-### Nested Schema for `analysis_definition.inputs.fields.items.fields.items.fields`
+<a id="nestedblock--inputs--fields--items--fields"></a>
+### Nested Schema for `inputs.fields.items.fields`
+
+Required:
+
+- `name` (String) The name of the field - must be set if field is child of structure field.
+- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
+
+Optional:
+
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--fields--items--fields--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--fields--items--fields--items))
+- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
+- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
+- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
+
+<a id="nestedblock--inputs--fields--items--fields--fields"></a>
+### Nested Schema for `inputs.fields.items.fields.fields`
+
+Required:
+
+- `name` (String) The name of the field - must be set if field is child of structure field.
+- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
+
+Optional:
+
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--fields--items--fields--fields--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--fields--items--fields--fields--items))
+- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
+- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
+- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
+
+<a id="nestedblock--inputs--fields--items--fields--fields--fields"></a>
+### Nested Schema for `inputs.fields.items.fields.fields.fields`
 
 Required:
 
@@ -447,8 +389,8 @@ Optional:
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
 
-<a id="nestedblock--analysis_definition--inputs--fields--items--fields--items--items"></a>
-### Nested Schema for `analysis_definition.inputs.fields.items.fields.items.items`
+<a id="nestedblock--inputs--fields--items--fields--fields--items"></a>
+### Nested Schema for `inputs.fields.items.fields.fields.items`
 
 Required:
 
@@ -462,9 +404,8 @@ Optional:
 
 
 
-
-<a id="nestedblock--analysis_definition--inputs--fields--items--items"></a>
-### Nested Schema for `analysis_definition.inputs.fields.items.items`
+<a id="nestedblock--inputs--fields--items--fields--items"></a>
+### Nested Schema for `inputs.fields.items.fields.items`
 
 Required:
 
@@ -472,30 +413,14 @@ Required:
 
 Optional:
 
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--items--items--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--items--items--items))
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--fields--items--fields--items--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--fields--items--fields--items--items))
 - `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
 - `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
-<a id="nestedblock--analysis_definition--inputs--fields--items--items--fields"></a>
-### Nested Schema for `analysis_definition.inputs.fields.items.items.fields`
-
-Required:
-
-- `name` (String) The name of the field - must be set if field is child of structure field.
-- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
-
-Optional:
-
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--items--items--fields--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--items--items--fields--items))
-- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
-- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
-- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
-
-<a id="nestedblock--analysis_definition--inputs--fields--items--items--fields--fields"></a>
-### Nested Schema for `analysis_definition.inputs.fields.items.items.fields.fields`
+<a id="nestedblock--inputs--fields--items--fields--items--fields"></a>
+### Nested Schema for `inputs.fields.items.fields.items.fields`
 
 Required:
 
@@ -509,8 +434,8 @@ Optional:
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
 
-<a id="nestedblock--analysis_definition--inputs--fields--items--items--fields--items"></a>
-### Nested Schema for `analysis_definition.inputs.fields.items.items.fields.items`
+<a id="nestedblock--inputs--fields--items--fields--items--items"></a>
+### Nested Schema for `inputs.fields.items.fields.items.items`
 
 Required:
 
@@ -524,8 +449,9 @@ Optional:
 
 
 
-<a id="nestedblock--analysis_definition--inputs--fields--items--items--items"></a>
-### Nested Schema for `analysis_definition.inputs.fields.items.items.items`
+
+<a id="nestedblock--inputs--fields--items--items"></a>
+### Nested Schema for `inputs.fields.items.items`
 
 Required:
 
@@ -533,14 +459,30 @@ Required:
 
 Optional:
 
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--items--items--items--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--fields--items--items--items--items))
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--fields--items--items--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--fields--items--items--items))
 - `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
 - `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
-<a id="nestedblock--analysis_definition--inputs--fields--items--items--items--fields"></a>
-### Nested Schema for `analysis_definition.inputs.fields.items.items.items.fields`
+<a id="nestedblock--inputs--fields--items--items--fields"></a>
+### Nested Schema for `inputs.fields.items.items.fields`
+
+Required:
+
+- `name` (String) The name of the field - must be set if field is child of structure field.
+- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
+
+Optional:
+
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--fields--items--items--fields--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--fields--items--items--fields--items))
+- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
+- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
+- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
+
+<a id="nestedblock--inputs--fields--items--items--fields--fields"></a>
+### Nested Schema for `inputs.fields.items.items.fields.fields`
 
 Required:
 
@@ -554,8 +496,8 @@ Optional:
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
 
-<a id="nestedblock--analysis_definition--inputs--fields--items--items--items--items"></a>
-### Nested Schema for `analysis_definition.inputs.fields.items.items.items.items`
+<a id="nestedblock--inputs--fields--items--items--fields--items"></a>
+### Nested Schema for `inputs.fields.items.items.fields.items`
 
 Required:
 
@@ -569,11 +511,8 @@ Optional:
 
 
 
-
-
-
-<a id="nestedblock--analysis_definition--inputs--items"></a>
-### Nested Schema for `analysis_definition.inputs.items`
+<a id="nestedblock--inputs--fields--items--items--items"></a>
+### Nested Schema for `inputs.fields.items.items.items`
 
 Required:
 
@@ -581,62 +520,14 @@ Required:
 
 Optional:
 
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--items))
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--fields--items--items--items--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--fields--items--items--items--items))
 - `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
 - `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
-<a id="nestedblock--analysis_definition--inputs--items--fields"></a>
-### Nested Schema for `analysis_definition.inputs.items.fields`
-
-Required:
-
-- `name` (String) The name of the field - must be set if field is child of structure field.
-- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
-
-Optional:
-
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--fields--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--fields--items))
-- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
-- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
-- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
-
-<a id="nestedblock--analysis_definition--inputs--items--fields--fields"></a>
-### Nested Schema for `analysis_definition.inputs.items.fields.fields`
-
-Required:
-
-- `name` (String) The name of the field - must be set if field is child of structure field.
-- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
-
-Optional:
-
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--fields--fields--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--fields--fields--items))
-- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
-- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
-- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
-
-<a id="nestedblock--analysis_definition--inputs--items--fields--fields--fields"></a>
-### Nested Schema for `analysis_definition.inputs.items.fields.fields.fields`
-
-Required:
-
-- `name` (String) The name of the field - must be set if field is child of structure field.
-- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
-
-Optional:
-
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--fields--fields--fields--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--fields--fields--fields--items))
-- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
-- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
-- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
-
-<a id="nestedblock--analysis_definition--inputs--items--fields--fields--fields--fields"></a>
-### Nested Schema for `analysis_definition.inputs.items.fields.fields.fields.fields`
+<a id="nestedblock--inputs--fields--items--items--items--fields"></a>
+### Nested Schema for `inputs.fields.items.items.items.fields`
 
 Required:
 
@@ -650,8 +541,8 @@ Optional:
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
 
-<a id="nestedblock--analysis_definition--inputs--items--fields--fields--fields--items"></a>
-### Nested Schema for `analysis_definition.inputs.items.fields.fields.fields.items`
+<a id="nestedblock--inputs--fields--items--items--items--items"></a>
+### Nested Schema for `inputs.fields.items.items.items.items`
 
 Required:
 
@@ -665,8 +556,11 @@ Optional:
 
 
 
-<a id="nestedblock--analysis_definition--inputs--items--fields--fields--items"></a>
-### Nested Schema for `analysis_definition.inputs.items.fields.fields.items`
+
+
+
+<a id="nestedblock--inputs--items"></a>
+### Nested Schema for `inputs.items`
 
 Required:
 
@@ -674,14 +568,62 @@ Required:
 
 Optional:
 
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--fields--fields--items--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--fields--fields--items--items))
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--items--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--items--items))
 - `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
 - `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
-<a id="nestedblock--analysis_definition--inputs--items--fields--fields--items--fields"></a>
-### Nested Schema for `analysis_definition.inputs.items.fields.fields.items.fields`
+<a id="nestedblock--inputs--items--fields"></a>
+### Nested Schema for `inputs.items.fields`
+
+Required:
+
+- `name` (String) The name of the field - must be set if field is child of structure field.
+- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
+
+Optional:
+
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--items--fields--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--items--fields--items))
+- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
+- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
+- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
+
+<a id="nestedblock--inputs--items--fields--fields"></a>
+### Nested Schema for `inputs.items.fields.fields`
+
+Required:
+
+- `name` (String) The name of the field - must be set if field is child of structure field.
+- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
+
+Optional:
+
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--items--fields--fields--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--items--fields--fields--items))
+- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
+- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
+- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
+
+<a id="nestedblock--inputs--items--fields--fields--fields"></a>
+### Nested Schema for `inputs.items.fields.fields.fields`
+
+Required:
+
+- `name` (String) The name of the field - must be set if field is child of structure field.
+- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
+
+Optional:
+
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--items--fields--fields--fields--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--items--fields--fields--fields--items))
+- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
+- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
+- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
+
+<a id="nestedblock--inputs--items--fields--fields--fields--fields"></a>
+### Nested Schema for `inputs.items.fields.fields.fields.fields`
 
 Required:
 
@@ -695,8 +637,8 @@ Optional:
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
 
-<a id="nestedblock--analysis_definition--inputs--items--fields--fields--items--items"></a>
-### Nested Schema for `analysis_definition.inputs.items.fields.fields.items.items`
+<a id="nestedblock--inputs--items--fields--fields--fields--items"></a>
+### Nested Schema for `inputs.items.fields.fields.fields.items`
 
 Required:
 
@@ -710,9 +652,8 @@ Optional:
 
 
 
-
-<a id="nestedblock--analysis_definition--inputs--items--fields--items"></a>
-### Nested Schema for `analysis_definition.inputs.items.fields.items`
+<a id="nestedblock--inputs--items--fields--fields--items"></a>
+### Nested Schema for `inputs.items.fields.fields.items`
 
 Required:
 
@@ -720,30 +661,14 @@ Required:
 
 Optional:
 
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--fields--items--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--fields--items--items))
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--items--fields--fields--items--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--items--fields--fields--items--items))
 - `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
 - `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
-<a id="nestedblock--analysis_definition--inputs--items--fields--items--fields"></a>
-### Nested Schema for `analysis_definition.inputs.items.fields.items.fields`
-
-Required:
-
-- `name` (String) The name of the field - must be set if field is child of structure field.
-- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
-
-Optional:
-
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--fields--items--fields--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--fields--items--fields--items))
-- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
-- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
-- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
-
-<a id="nestedblock--analysis_definition--inputs--items--fields--items--fields--fields"></a>
-### Nested Schema for `analysis_definition.inputs.items.fields.items.fields.fields`
+<a id="nestedblock--inputs--items--fields--fields--items--fields"></a>
+### Nested Schema for `inputs.items.fields.fields.items.fields`
 
 Required:
 
@@ -757,8 +682,8 @@ Optional:
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
 
-<a id="nestedblock--analysis_definition--inputs--items--fields--items--fields--items"></a>
-### Nested Schema for `analysis_definition.inputs.items.fields.items.fields.items`
+<a id="nestedblock--inputs--items--fields--fields--items--items"></a>
+### Nested Schema for `inputs.items.fields.fields.items.items`
 
 Required:
 
@@ -772,8 +697,9 @@ Optional:
 
 
 
-<a id="nestedblock--analysis_definition--inputs--items--fields--items--items"></a>
-### Nested Schema for `analysis_definition.inputs.items.fields.items.items`
+
+<a id="nestedblock--inputs--items--fields--items"></a>
+### Nested Schema for `inputs.items.fields.items`
 
 Required:
 
@@ -781,14 +707,30 @@ Required:
 
 Optional:
 
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--fields--items--items--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--fields--items--items--items))
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--items--fields--items--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--items--fields--items--items))
 - `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
 - `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
-<a id="nestedblock--analysis_definition--inputs--items--fields--items--items--fields"></a>
-### Nested Schema for `analysis_definition.inputs.items.fields.items.items.fields`
+<a id="nestedblock--inputs--items--fields--items--fields"></a>
+### Nested Schema for `inputs.items.fields.items.fields`
+
+Required:
+
+- `name` (String) The name of the field - must be set if field is child of structure field.
+- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
+
+Optional:
+
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--items--fields--items--fields--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--items--fields--items--fields--items))
+- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
+- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
+- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
+
+<a id="nestedblock--inputs--items--fields--items--fields--fields"></a>
+### Nested Schema for `inputs.items.fields.items.fields.fields`
 
 Required:
 
@@ -802,8 +744,8 @@ Optional:
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
 
-<a id="nestedblock--analysis_definition--inputs--items--fields--items--items--items"></a>
-### Nested Schema for `analysis_definition.inputs.items.fields.items.items.items`
+<a id="nestedblock--inputs--items--fields--items--fields--items"></a>
+### Nested Schema for `inputs.items.fields.items.fields.items`
 
 Required:
 
@@ -817,10 +759,8 @@ Optional:
 
 
 
-
-
-<a id="nestedblock--analysis_definition--inputs--items--items"></a>
-### Nested Schema for `analysis_definition.inputs.items.items`
+<a id="nestedblock--inputs--items--fields--items--items"></a>
+### Nested Schema for `inputs.items.fields.items.items`
 
 Required:
 
@@ -828,46 +768,14 @@ Required:
 
 Optional:
 
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--items--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--items--items))
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--items--fields--items--items--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--items--fields--items--items--items))
 - `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
 - `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
-<a id="nestedblock--analysis_definition--inputs--items--items--fields"></a>
-### Nested Schema for `analysis_definition.inputs.items.items.fields`
-
-Required:
-
-- `name` (String) The name of the field - must be set if field is child of structure field.
-- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
-
-Optional:
-
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--items--fields--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--items--fields--items))
-- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
-- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
-- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
-
-<a id="nestedblock--analysis_definition--inputs--items--items--fields--fields"></a>
-### Nested Schema for `analysis_definition.inputs.items.items.fields.fields`
-
-Required:
-
-- `name` (String) The name of the field - must be set if field is child of structure field.
-- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
-
-Optional:
-
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--items--fields--fields--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--items--fields--fields--items))
-- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
-- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
-- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
-
-<a id="nestedblock--analysis_definition--inputs--items--items--fields--fields--fields"></a>
-### Nested Schema for `analysis_definition.inputs.items.items.fields.fields.fields`
+<a id="nestedblock--inputs--items--fields--items--items--fields"></a>
+### Nested Schema for `inputs.items.fields.items.items.fields`
 
 Required:
 
@@ -881,8 +789,8 @@ Optional:
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
 
-<a id="nestedblock--analysis_definition--inputs--items--items--fields--fields--items"></a>
-### Nested Schema for `analysis_definition.inputs.items.items.fields.fields.items`
+<a id="nestedblock--inputs--items--fields--items--items--items"></a>
+### Nested Schema for `inputs.items.fields.items.items.items`
 
 Required:
 
@@ -896,8 +804,10 @@ Optional:
 
 
 
-<a id="nestedblock--analysis_definition--inputs--items--items--fields--items"></a>
-### Nested Schema for `analysis_definition.inputs.items.items.fields.items`
+
+
+<a id="nestedblock--inputs--items--items"></a>
+### Nested Schema for `inputs.items.items`
 
 Required:
 
@@ -905,14 +815,46 @@ Required:
 
 Optional:
 
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--items--fields--items--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--items--fields--items--items))
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--items--items--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--items--items--items))
 - `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
 - `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
-<a id="nestedblock--analysis_definition--inputs--items--items--fields--items--fields"></a>
-### Nested Schema for `analysis_definition.inputs.items.items.fields.items.fields`
+<a id="nestedblock--inputs--items--items--fields"></a>
+### Nested Schema for `inputs.items.items.fields`
+
+Required:
+
+- `name` (String) The name of the field - must be set if field is child of structure field.
+- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
+
+Optional:
+
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--items--items--fields--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--items--items--fields--items))
+- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
+- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
+- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
+
+<a id="nestedblock--inputs--items--items--fields--fields"></a>
+### Nested Schema for `inputs.items.items.fields.fields`
+
+Required:
+
+- `name` (String) The name of the field - must be set if field is child of structure field.
+- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
+
+Optional:
+
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--items--items--fields--fields--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--items--items--fields--fields--items))
+- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
+- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
+- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
+
+<a id="nestedblock--inputs--items--items--fields--fields--fields"></a>
+### Nested Schema for `inputs.items.items.fields.fields.fields`
 
 Required:
 
@@ -926,8 +868,8 @@ Optional:
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
 
-<a id="nestedblock--analysis_definition--inputs--items--items--fields--items--items"></a>
-### Nested Schema for `analysis_definition.inputs.items.items.fields.items.items`
+<a id="nestedblock--inputs--items--items--fields--fields--items"></a>
+### Nested Schema for `inputs.items.items.fields.fields.items`
 
 Required:
 
@@ -941,9 +883,8 @@ Optional:
 
 
 
-
-<a id="nestedblock--analysis_definition--inputs--items--items--items"></a>
-### Nested Schema for `analysis_definition.inputs.items.items.items`
+<a id="nestedblock--inputs--items--items--fields--items"></a>
+### Nested Schema for `inputs.items.items.fields.items`
 
 Required:
 
@@ -951,30 +892,14 @@ Required:
 
 Optional:
 
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--items--items--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--items--items--items))
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--items--items--fields--items--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--items--items--fields--items--items))
 - `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
 - `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
-<a id="nestedblock--analysis_definition--inputs--items--items--items--fields"></a>
-### Nested Schema for `analysis_definition.inputs.items.items.items.fields`
-
-Required:
-
-- `name` (String) The name of the field - must be set if field is child of structure field.
-- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
-
-Optional:
-
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--items--items--fields--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--items--items--fields--items))
-- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
-- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
-- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
-
-<a id="nestedblock--analysis_definition--inputs--items--items--items--fields--fields"></a>
-### Nested Schema for `analysis_definition.inputs.items.items.items.fields.fields`
+<a id="nestedblock--inputs--items--items--fields--items--fields"></a>
+### Nested Schema for `inputs.items.items.fields.items.fields`
 
 Required:
 
@@ -988,8 +913,8 @@ Optional:
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
 
-<a id="nestedblock--analysis_definition--inputs--items--items--items--fields--items"></a>
-### Nested Schema for `analysis_definition.inputs.items.items.items.fields.items`
+<a id="nestedblock--inputs--items--items--fields--items--items"></a>
+### Nested Schema for `inputs.items.items.fields.items.items`
 
 Required:
 
@@ -1003,8 +928,9 @@ Optional:
 
 
 
-<a id="nestedblock--analysis_definition--inputs--items--items--items--items"></a>
-### Nested Schema for `analysis_definition.inputs.items.items.items.items`
+
+<a id="nestedblock--inputs--items--items--items"></a>
+### Nested Schema for `inputs.items.items.items`
 
 Required:
 
@@ -1012,14 +938,30 @@ Required:
 
 Optional:
 
-- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--items--items--items--fields))
-- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--analysis_definition--inputs--items--items--items--items--items))
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--items--items--items--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--items--items--items--items))
 - `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
 - `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
-<a id="nestedblock--analysis_definition--inputs--items--items--items--items--fields"></a>
-### Nested Schema for `analysis_definition.inputs.items.items.items.items.fields`
+<a id="nestedblock--inputs--items--items--items--fields"></a>
+### Nested Schema for `inputs.items.items.items.fields`
+
+Required:
+
+- `name` (String) The name of the field - must be set if field is child of structure field.
+- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
+
+Optional:
+
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--items--items--items--fields--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--items--items--items--fields--items))
+- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
+- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
+- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
+
+<a id="nestedblock--inputs--items--items--items--fields--fields"></a>
+### Nested Schema for `inputs.items.items.items.fields.fields`
 
 Required:
 
@@ -1033,8 +975,53 @@ Optional:
 - `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
 
 
-<a id="nestedblock--analysis_definition--inputs--items--items--items--items--items"></a>
-### Nested Schema for `analysis_definition.inputs.items.items.items.items.items`
+<a id="nestedblock--inputs--items--items--items--fields--items"></a>
+### Nested Schema for `inputs.items.items.items.fields.items`
+
+Required:
+
+- `type` (String) it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
+
+Optional:
+
+- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
+- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
+- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
+
+
+
+<a id="nestedblock--inputs--items--items--items--items"></a>
+### Nested Schema for `inputs.items.items.items.items`
+
+Required:
+
+- `type` (String) it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
+
+Optional:
+
+- `fields` (Block Set) Must be set if type is STRUCTURE. A map of fields. (see [below for nested schema](#nestedblock--inputs--items--items--items--items--fields))
+- `items` (Block List) Must be set if type is ARRAY. A list of fields. (see [below for nested schema](#nestedblock--inputs--items--items--items--items--items))
+- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
+- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
+- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
+
+<a id="nestedblock--inputs--items--items--items--items--fields"></a>
+### Nested Schema for `inputs.items.items.items.items.fields`
+
+Required:
+
+- `name` (String) The name of the field - must be set if field is child of structure field.
+- `type` (String) it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE
+
+Optional:
+
+- `ref` (String) Must be set if source is "REFERENCE". An LRN, formatted as "lrn::leanspace::<tenant>::<service>::<resource>::<resourceId>/<attribute>".
+- `source` (String) Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC
+- `value` (String) Must be set if source is "STATIC". Must match with type. For complex types, requires a JSON-encoding.
+
+
+<a id="nestedblock--inputs--items--items--items--items--items"></a>
+### Nested Schema for `inputs.items.items.items.items.items`
 
 Required:
 
@@ -1052,8 +1039,8 @@ Optional:
 
 
 
-<a id="nestedatt--analysis_definition--statistics"></a>
-### Nested Schema for `analysis_definition.statistics`
+<a id="nestedatt--statistics"></a>
+### Nested Schema for `statistics`
 
 Read-Only:
 

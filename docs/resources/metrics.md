@@ -13,14 +13,12 @@ description: |-
 
 ```terraform
 resource "leanspace_metrics" "metric" {
-  metric {
-    name        = "Terra Metric"
-    description = "A numeric metric, created under terraform."
-    node_id     = var.node_id
+  name        = "Terra Metric"
+  description = "A numeric metric, created under terraform."
+  node_id     = var.node_id
 
-    attributes {
-      type = "NUMERIC"
-    }
+  attributes {
+    type = "NUMERIC"
   }
 }
 ```
@@ -30,27 +28,16 @@ resource "leanspace_metrics" "metric" {
 
 ### Required
 
-- `metric` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--metric))
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
-
-<a id="nestedblock--metric"></a>
-### Nested Schema for `metric`
-
-Required:
-
-- `attributes` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--metric--attributes))
+- `attributes` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--attributes))
 - `name` (String)
 - `node_id` (String)
 
-Optional:
+### Optional
 
 - `description` (String)
-- `tags` (Block Set) (see [below for nested schema](#nestedblock--metric--tags))
+- `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
 
-Read-Only:
+### Read-Only
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it
@@ -58,8 +45,8 @@ Read-Only:
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
 
-<a id="nestedblock--metric--attributes"></a>
-### Nested Schema for `metric.attributes`
+<a id="nestedblock--attributes"></a>
+### Nested Schema for `attributes`
 
 Required:
 
@@ -80,8 +67,8 @@ Optional:
 - `unit_id` (String) Numeric only
 
 
-<a id="nestedblock--metric--tags"></a>
-### Nested Schema for `metric.tags`
+<a id="nestedblock--tags"></a>
+### Nested Schema for `tags`
 
 Required:
 

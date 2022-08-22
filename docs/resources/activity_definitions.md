@@ -13,40 +13,38 @@ description: |-
 
 ```terraform
 resource "leanspace_activity_definitions" "activity_definition" {
-  activity_definition {
-    name               = "Terraform Activity Definition"
-    description        = "An activity definition, created under terraform."
-    node_id            = var.node_id
-    estimated_duration = 3
+  name               = "Terraform Activity Definition"
+  description        = "An activity definition, created under terraform."
+  node_id            = var.node_id
+  estimated_duration = 3
 
-    metadata {
-      name        = "ActivityMetadataNumeric"
-      description = "A numeric metadata value"
-      attributes {
-        value = 2
-        type  = "NUMERIC"
-      }
+  metadata {
+    name        = "ActivityMetadataNumeric"
+    description = "A numeric metadata value"
+    attributes {
+      value = 2
+      type  = "NUMERIC"
     }
+  }
 
-    argument_definitions {
-      name        = "ActivityArgumentText"
-      description = "A text input"
-      attributes {
-        type = "TEXT"
-      }
+  argument_definitions {
+    name        = "ActivityArgumentText"
+    description = "A text input"
+    attributes {
+      type = "TEXT"
     }
+  }
 
-    command_mappings {
-      command_definition_id = var.command_definition_id
-      delay_in_milliseconds = 0
-      metadata_mappings {
-        activity_definition_metadata_name = "ActivityMetadataNumeric"
-        command_definition_argument_name  = "CommandArgumentNumeric"
-      }
-      argument_mappings {
-        activity_definition_argument_name = "ActivityArgumentText"
-        command_definition_argument_name  = "CommandArgumentText"
-      }
+  command_mappings {
+    command_definition_id = var.command_definition_id
+    delay_in_milliseconds = 0
+    metadata_mappings {
+      activity_definition_metadata_name = "ActivityMetadataNumeric"
+      command_definition_argument_name  = "CommandArgumentNumeric"
+    }
+    argument_mappings {
+      activity_definition_argument_name = "ActivityArgumentText"
+      command_definition_argument_name  = "CommandArgumentText"
     }
   }
 }
@@ -57,29 +55,18 @@ resource "leanspace_activity_definitions" "activity_definition" {
 
 ### Required
 
-- `activity_definition` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--activity_definition))
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
-
-<a id="nestedblock--activity_definition"></a>
-### Nested Schema for `activity_definition`
-
-Required:
-
 - `name` (String)
 - `node_id` (String)
 
-Optional:
+### Optional
 
-- `argument_definitions` (Block Set) (see [below for nested schema](#nestedblock--activity_definition--argument_definitions))
-- `command_mappings` (Block List) (see [below for nested schema](#nestedblock--activity_definition--command_mappings))
+- `argument_definitions` (Block Set) (see [below for nested schema](#nestedblock--argument_definitions))
+- `command_mappings` (Block List) (see [below for nested schema](#nestedblock--command_mappings))
 - `description` (String)
 - `estimated_duration` (Number)
-- `metadata` (Block Set) (see [below for nested schema](#nestedblock--activity_definition--metadata))
+- `metadata` (Block Set) (see [below for nested schema](#nestedblock--metadata))
 
-Read-Only:
+### Read-Only
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it
@@ -87,12 +74,12 @@ Read-Only:
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
 
-<a id="nestedblock--activity_definition--argument_definitions"></a>
-### Nested Schema for `activity_definition.argument_definitions`
+<a id="nestedblock--argument_definitions"></a>
+### Nested Schema for `argument_definitions`
 
 Required:
 
-- `attributes` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--activity_definition--argument_definitions--attributes))
+- `attributes` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--argument_definitions--attributes))
 - `name` (String)
 
 Optional:
@@ -103,8 +90,8 @@ Read-Only:
 
 - `id` (String) The ID of this resource.
 
-<a id="nestedblock--activity_definition--argument_definitions--attributes"></a>
-### Nested Schema for `activity_definition.argument_definitions.attributes`
+<a id="nestedblock--argument_definitions--attributes"></a>
+### Nested Schema for `argument_definitions.attributes`
 
 Required:
 
@@ -128,8 +115,8 @@ Optional:
 
 
 
-<a id="nestedblock--activity_definition--command_mappings"></a>
-### Nested Schema for `activity_definition.command_mappings`
+<a id="nestedblock--command_mappings"></a>
+### Nested Schema for `command_mappings`
 
 Required:
 
@@ -138,15 +125,15 @@ Required:
 
 Optional:
 
-- `argument_mappings` (Block Set) (see [below for nested schema](#nestedblock--activity_definition--command_mappings--argument_mappings))
-- `metadata_mappings` (Block Set) (see [below for nested schema](#nestedblock--activity_definition--command_mappings--metadata_mappings))
+- `argument_mappings` (Block Set) (see [below for nested schema](#nestedblock--command_mappings--argument_mappings))
+- `metadata_mappings` (Block Set) (see [below for nested schema](#nestedblock--command_mappings--metadata_mappings))
 
 Read-Only:
 
 - `position` (Number)
 
-<a id="nestedblock--activity_definition--command_mappings--argument_mappings"></a>
-### Nested Schema for `activity_definition.command_mappings.argument_mappings`
+<a id="nestedblock--command_mappings--argument_mappings"></a>
+### Nested Schema for `command_mappings.argument_mappings`
 
 Required:
 
@@ -154,8 +141,8 @@ Required:
 - `command_definition_argument_name` (String)
 
 
-<a id="nestedblock--activity_definition--command_mappings--metadata_mappings"></a>
-### Nested Schema for `activity_definition.command_mappings.metadata_mappings`
+<a id="nestedblock--command_mappings--metadata_mappings"></a>
+### Nested Schema for `command_mappings.metadata_mappings`
 
 Required:
 
@@ -164,12 +151,12 @@ Required:
 
 
 
-<a id="nestedblock--activity_definition--metadata"></a>
-### Nested Schema for `activity_definition.metadata`
+<a id="nestedblock--metadata"></a>
+### Nested Schema for `metadata`
 
 Required:
 
-- `attributes` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--activity_definition--metadata--attributes))
+- `attributes` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--metadata--attributes))
 - `name` (String)
 
 Optional:
@@ -180,8 +167,8 @@ Read-Only:
 
 - `id` (String) The ID of this resource.
 
-<a id="nestedblock--activity_definition--metadata--attributes"></a>
-### Nested Schema for `activity_definition.metadata.attributes`
+<a id="nestedblock--metadata--attributes"></a>
+### Nested Schema for `metadata.attributes`
 
 Required:
 

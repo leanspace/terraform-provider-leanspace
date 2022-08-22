@@ -13,30 +13,28 @@ description: |-
 
 ```terraform
 resource "leanspace_remote_agents" "remote_agent" {
-  remote_agent {
-    name        = "Terraform Remote Agent"
-    description = "A basic remote agent made with terraform."
-    connectors {
-      type             = "OUTBOUND"
-      gateway_id       = var.ground_station_id
-      command_queue_id = var.command_queue_id
-      socket {
-        type = "UDP"
-        host = "myhost"
-        port = 456
-      }
+  name        = "Terraform Remote Agent"
+  description = "A basic remote agent made with terraform."
+  connectors {
+    type             = "OUTBOUND"
+    gateway_id       = var.ground_station_id
+    command_queue_id = var.command_queue_id
+    socket {
+      type = "UDP"
+      host = "myhost"
+      port = 456
     }
-    connectors {
-      type       = "INBOUND"
-      gateway_id = var.ground_station_id
-      stream_id  = var.stream_id
-      socket {
-        type = "TCP"
-        port = 123
-      }
-    }
-
   }
+  connectors {
+    type       = "INBOUND"
+    gateway_id = var.ground_station_id
+    stream_id  = var.stream_id
+    socket {
+      type = "TCP"
+      port = 123
+    }
+  }
+
 }
 ```
 
@@ -45,26 +43,15 @@ resource "leanspace_remote_agents" "remote_agent" {
 
 ### Required
 
-- `remote_agent` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--remote_agent))
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
-
-<a id="nestedblock--remote_agent"></a>
-### Nested Schema for `remote_agent`
-
-Required:
-
 - `name` (String)
 
-Optional:
+### Optional
 
-- `connectors` (Block Set) (see [below for nested schema](#nestedblock--remote_agent--connectors))
+- `connectors` (Block Set) (see [below for nested schema](#nestedblock--connectors))
 - `description` (String)
 - `service_account_id` (String)
 
-Read-Only:
+### Read-Only
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it
@@ -72,13 +59,13 @@ Read-Only:
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
 
-<a id="nestedblock--remote_agent--connectors"></a>
-### Nested Schema for `remote_agent.connectors`
+<a id="nestedblock--connectors"></a>
+### Nested Schema for `connectors`
 
 Required:
 
 - `gateway_id` (String) Id of the node
-- `socket` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--remote_agent--connectors--socket))
+- `socket` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--connectors--socket))
 - `type` (String) it must be one of these values: INBOUND, OUTBOUND
 
 Optional:
@@ -90,14 +77,14 @@ Read-Only:
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it
-- `destination` (List of Object) (see [below for nested schema](#nestedatt--remote_agent--connectors--destination))
+- `destination` (List of Object) (see [below for nested schema](#nestedatt--connectors--destination))
 - `id` (String) The ID of this resource.
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
-- `source` (List of Object) (see [below for nested schema](#nestedatt--remote_agent--connectors--source))
+- `source` (List of Object) (see [below for nested schema](#nestedatt--connectors--source))
 
-<a id="nestedblock--remote_agent--connectors--socket"></a>
-### Nested Schema for `remote_agent.connectors.socket`
+<a id="nestedblock--connectors--socket"></a>
+### Nested Schema for `connectors.socket`
 
 Required:
 
@@ -109,8 +96,8 @@ Optional:
 - `host` (String)
 
 
-<a id="nestedatt--remote_agent--connectors--destination"></a>
-### Nested Schema for `remote_agent.connectors.destination`
+<a id="nestedatt--connectors--destination"></a>
+### Nested Schema for `connectors.destination`
 
 Read-Only:
 
@@ -118,8 +105,8 @@ Read-Only:
 - `type` (String)
 
 
-<a id="nestedatt--remote_agent--connectors--source"></a>
-### Nested Schema for `remote_agent.connectors.source`
+<a id="nestedatt--connectors--source"></a>
+### Nested Schema for `connectors.source`
 
 Read-Only:
 

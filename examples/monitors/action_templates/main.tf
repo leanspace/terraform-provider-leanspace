@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     leanspace = {
-      source  = "app.terraform.io/leanspace/leanspace"
+      source = "app.terraform.io/leanspace/leanspace"
     }
   }
 }
@@ -9,18 +9,16 @@ terraform {
 data "leanspace_action_templates" "all" {}
 
 resource "leanspace_action_templates" "test" {
-  action_template {
-    name = "Terraform Action Template"
-    type = "WEBHOOK"
-    url  = "https://my-custom-webhook.com"
-    payload = jsonencode({
-      pi   = 3.1415
-      data = "This is my action template."
-    })
-    headers = {
-      "Authorization" : "Bearer token",
-      "Content-Type" : "application/json",
-    }
+  name = "Terraform Action Template"
+  type = "WEBHOOK"
+  url  = "https://my-custom-webhook.com"
+  payload = jsonencode({
+    pi   = 3.1415
+    data = "This is my action template."
+  })
+  headers = {
+    "Authorization" : "Bearer token",
+    "Content-Type" : "application/json",
   }
 }
 

@@ -13,39 +13,33 @@ description: |-
 
 ```terraform
 resource "leanspace_nodes" "group_node" {
-  node {
-    name = "Group Node"
-    type = "GROUP"
-  }
+  name = "Group Node"
+  type = "GROUP"
 }
 
 resource "leanspace_nodes" "satellite_node" {
-  node {
-    parent_node_id = leanspace_nodes.group_node.id
-    name           = "My Satellite"
-    description    = "A satellite made with Terraform."
-    type           = "ASSET"
-    kind           = "SATELLITE"
+  parent_node_id = leanspace_nodes.group_node.id
+  name           = "My Satellite"
+  description    = "A satellite made with Terraform."
+  type           = "ASSET"
+  kind           = "SATELLITE"
 
-    norad_id                 = "33462"
-    international_designator = "33462A"
-    tle = [
-      "1 25544U 98067A   08264.51782528 -.00002182  00000-0 -11606-4 0  2927",
-      "2 25544  51.6416 247.4627 0006703 130.5360 325.0288 15.72125391563537"
-    ]
-  }
+  norad_id                 = "33462"
+  international_designator = "33462A"
+  tle = [
+    "1 25544U 98067A   08264.51782528 -.00002182  00000-0 -11606-4 0  2927",
+    "2 25544  51.6416 247.4627 0006703 130.5360 325.0288 15.72125391563537"
+  ]
 }
 
 resource "leanspace_nodes" "groundstation_node" {
-  node {
-    parent_node_id = leanspace_nodes.group_node.id
-    name           = "My Ground Station"
-    type           = "ASSET"
-    kind           = "GROUND_STATION"
-    latitude       = 13.0344
-    longitude      = 77.5116
-    elevation      = 823
-  }
+  parent_node_id = leanspace_nodes.group_node.id
+  name           = "My Ground Station"
+  type           = "ASSET"
+  kind           = "GROUND_STATION"
+  latitude       = 13.0344
+  longitude      = 77.5116
+  elevation      = 823
 }
 ```
 
@@ -54,21 +48,10 @@ resource "leanspace_nodes" "groundstation_node" {
 
 ### Required
 
-- `node` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--node))
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
-
-<a id="nestedblock--node"></a>
-### Nested Schema for `node`
-
-Required:
-
 - `name` (String)
 - `type` (String) it must be one of these values: ASSET, GROUP, COMPONENT
 
-Optional:
+### Optional
 
 - `description` (String)
 - `elevation` (Number)
@@ -78,20 +61,20 @@ Optional:
 - `longitude` (Number)
 - `norad_id` (String) It must be 5 digits
 - `parent_node_id` (String)
-- `tags` (Block Set) (see [below for nested schema](#nestedblock--node--tags))
+- `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
 - `tle` (List of String) TLE composed of its 2 lines
 
-Read-Only:
+### Read-Only
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it
 - `id` (String) The ID of this resource.
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
-- `nodes` (Set of Object) (see [below for nested schema](#nestedatt--node--nodes))
+- `nodes` (Set of Object) (see [below for nested schema](#nestedatt--nodes))
 
-<a id="nestedblock--node--tags"></a>
-### Nested Schema for `node.tags`
+<a id="nestedblock--tags"></a>
+### Nested Schema for `tags`
 
 Required:
 
@@ -102,8 +85,8 @@ Optional:
 - `value` (String)
 
 
-<a id="nestedatt--node--nodes"></a>
-### Nested Schema for `node.nodes`
+<a id="nestedatt--nodes"></a>
+### Nested Schema for `nodes`
 
 Read-Only:
 
@@ -121,12 +104,12 @@ Read-Only:
 - `name` (String)
 - `norad_id` (String)
 - `parent_node_id` (String)
-- `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--node--nodes--tags))
+- `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--nodes--tags))
 - `tle` (List of String)
 - `type` (String)
 
-<a id="nestedobjatt--node--nodes--tags"></a>
-### Nested Schema for `node.nodes.tags`
+<a id="nestedobjatt--nodes--tags"></a>
+### Nested Schema for `nodes.tags`
 
 Read-Only:
 

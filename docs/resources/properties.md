@@ -13,12 +13,10 @@ description: |-
 
 ```terraform
 resource "leanspace_properties" "property" {
-  property {
-    name    = "Text Property"
-    node_id = var.node_id
-    type    = "TEXT"
-    value   = "Hello World!"
-  }
+  name    = "Text Property"
+  node_id = var.node_id
+  type    = "TEXT"
+  value   = "Hello World!"
 }
 ```
 
@@ -27,27 +25,16 @@ resource "leanspace_properties" "property" {
 
 ### Required
 
-- `property` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--property))
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
-
-<a id="nestedblock--property"></a>
-### Nested Schema for `property`
-
-Required:
-
 - `name` (String)
 - `node_id` (String)
 - `type` (String) it must be one of these values: NUMERIC, ENUM, TEXT, TIMESTAMP, DATE, TIME, BOOLEAN, GEOPOINT
 
-Optional:
+### Optional
 
 - `after` (String) Time/date/timestamp only: Minimum date allowed
 - `before` (String) Time/date/timestamp only: Maximum date allowed
 - `description` (String)
-- `fields` (Block List, Max: 1) Geopoint only (see [below for nested schema](#nestedblock--property--fields))
+- `fields` (Block List, Max: 1) Geopoint only (see [below for nested schema](#nestedblock--fields))
 - `max` (Number) Numeric only
 - `max_length` (Number) Text only: Maximum length of this text (at least 1)
 - `min` (Number) Numeric only
@@ -56,11 +43,11 @@ Optional:
 - `pattern` (String) Text only: Regex defined the allowed pattern of this text
 - `precision` (Number) Numeric only: How many values after the comma should be accepted
 - `scale` (Number) Numeric only
-- `tags` (Block Set) (see [below for nested schema](#nestedblock--property--tags))
+- `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
 - `unit_id` (String) Numeric only
 - `value` (String)
 
-Read-Only:
+### Read-Only
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it
@@ -68,39 +55,17 @@ Read-Only:
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
 
-<a id="nestedblock--property--fields"></a>
-### Nested Schema for `property.fields`
+<a id="nestedblock--fields"></a>
+### Nested Schema for `fields`
 
 Required:
 
-- `elevation` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--property--fields--elevation))
-- `latitude` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--property--fields--latitude))
-- `longitude` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--property--fields--longitude))
+- `elevation` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--fields--elevation))
+- `latitude` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--fields--latitude))
+- `longitude` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--fields--longitude))
 
-<a id="nestedblock--property--fields--elevation"></a>
-### Nested Schema for `property.fields.elevation`
-
-Required:
-
-- `name` (String)
-- `type` (String) it must be one of these values: NUMERIC, ENUM, TEXT, TIMESTAMP, DATE, TIME, BOOLEAN, GEOPOINT
-
-Optional:
-
-- `description` (String)
-- `value` (String)
-
-Read-Only:
-
-- `created_at` (String) When it was created
-- `created_by` (String) Who created it
-- `id` (String) The ID of this resource.
-- `last_modified_at` (String) When it was last modified
-- `last_modified_by` (String) Who modified it the last
-
-
-<a id="nestedblock--property--fields--latitude"></a>
-### Nested Schema for `property.fields.latitude`
+<a id="nestedblock--fields--elevation"></a>
+### Nested Schema for `fields.elevation`
 
 Required:
 
@@ -121,8 +86,30 @@ Read-Only:
 - `last_modified_by` (String) Who modified it the last
 
 
-<a id="nestedblock--property--fields--longitude"></a>
-### Nested Schema for `property.fields.longitude`
+<a id="nestedblock--fields--latitude"></a>
+### Nested Schema for `fields.latitude`
+
+Required:
+
+- `name` (String)
+- `type` (String) it must be one of these values: NUMERIC, ENUM, TEXT, TIMESTAMP, DATE, TIME, BOOLEAN, GEOPOINT
+
+Optional:
+
+- `description` (String)
+- `value` (String)
+
+Read-Only:
+
+- `created_at` (String) When it was created
+- `created_by` (String) Who created it
+- `id` (String) The ID of this resource.
+- `last_modified_at` (String) When it was last modified
+- `last_modified_by` (String) Who modified it the last
+
+
+<a id="nestedblock--fields--longitude"></a>
+### Nested Schema for `fields.longitude`
 
 Required:
 
@@ -144,8 +131,8 @@ Read-Only:
 
 
 
-<a id="nestedblock--property--tags"></a>
-### Nested Schema for `property.tags`
+<a id="nestedblock--tags"></a>
+### Nested Schema for `tags`
 
 Required:
 

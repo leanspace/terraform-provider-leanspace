@@ -13,23 +13,21 @@ description: |-
 
 ```terraform
 resource "leanspace_access_policies" "access_policy" {
-  access_policy {
-    name        = "Terraform Access Policy"
-    description = "An access policy made through Terraform, for easy team management."
-    statements {
-      name    = "Dashboard Full Access"
-      actions = ["dashboards:*"]
-    }
-    statements {
-      name = "MonitorsReadAccess"
-      actions = [
-        "monitors:getMonitor",
-        "monitors:searchActionTemplates",
-        "monitors:searchMonitors",
-        "monitors:searchMonitorsStatesHistory",
-        "monitors:searchMonitorTags"
-      ]
-    }
+  name        = "Terraform Access Policy"
+  description = "An access policy made through Terraform, for easy team management."
+  statements {
+    name    = "Dashboard Full Access"
+    actions = ["dashboards:*"]
+  }
+  statements {
+    name = "MonitorsReadAccess"
+    actions = [
+      "monitors:getMonitor",
+      "monitors:searchActionTemplates",
+      "monitors:searchMonitors",
+      "monitors:searchMonitorsStatesHistory",
+      "monitors:searchMonitorTags"
+    ]
   }
 }
 ```
@@ -39,25 +37,14 @@ resource "leanspace_access_policies" "access_policy" {
 
 ### Required
 
-- `access_policy` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--access_policy))
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
-
-<a id="nestedblock--access_policy"></a>
-### Nested Schema for `access_policy`
-
-Required:
-
 - `name` (String)
-- `statements` (Block List, Min: 1) (see [below for nested schema](#nestedblock--access_policy--statements))
+- `statements` (Block List, Min: 1) (see [below for nested schema](#nestedblock--statements))
 
-Optional:
+### Optional
 
 - `description` (String)
 
-Read-Only:
+### Read-Only
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it
@@ -66,8 +53,8 @@ Read-Only:
 - `last_modified_by` (String) Who modified it the last
 - `read_only` (Boolean)
 
-<a id="nestedblock--access_policy--statements"></a>
-### Nested Schema for `access_policy.statements`
+<a id="nestedblock--statements"></a>
+### Nested Schema for `statements`
 
 Required:
 

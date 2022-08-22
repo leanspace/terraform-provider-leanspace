@@ -13,10 +13,8 @@ description: |-
 
 ```terraform
 resource "leanspace_units" "unit" {
-  unit {
-    symbol       = "Kg"
-    display_name = "Kilogram"
-  }
+  symbol       = "Kg"
+  display_name = "Kilogram"
 }
 ```
 
@@ -25,20 +23,9 @@ resource "leanspace_units" "unit" {
 
 ### Required
 
-- `unit` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--unit))
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
-
-<a id="nestedblock--unit"></a>
-### Nested Schema for `unit`
-
-Required:
-
 - `display_name` (String)
 - `symbol` (String)
 
-Read-Only:
+### Read-Only
 
 - `id` (String) The ID of this resource.

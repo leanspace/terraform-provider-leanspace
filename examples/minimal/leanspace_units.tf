@@ -1,6 +1,4 @@
 resource "leanspace_units" "unit" {
-  unit {
-    symbol       = "Kg"
-    display_name = "Kilogram"
-  }
+  symbol       = "Kg"
+  display_name = "Kilogram"
 }

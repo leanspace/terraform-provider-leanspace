@@ -83,8 +83,6 @@ type GenericClient[T any, PT ParseableModel[T]] struct {
 type DataSourceType[T any, PT ParseableModel[T]] struct {
 	// Will be used in the terraform file!
 	ResourceIdentifier string
-	// Will be used in the terraform file!
-	Name string
 	// The path to which API requests are sent (e.g. "asset-repository/nodes")
 	// This path will be used for all requests (GET/POST/PUT/DELETE), except if `CreatePath` is specified.
 	Path string

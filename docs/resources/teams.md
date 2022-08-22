@@ -13,11 +13,9 @@ description: |-
 
 ```terraform
 resource "leanspace_teams" "team" {
-  team {
-    name       = "Terraform Team"
-    policy_ids = var.access_policies
-    members    = var.members
-  }
+  name       = "Terraform Team"
+  policy_ids = var.access_policies
+  members    = var.members
 }
 ```
 
@@ -26,22 +24,11 @@ resource "leanspace_teams" "team" {
 
 ### Required
 
-- `team` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--team))
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
-
-<a id="nestedblock--team"></a>
-### Nested Schema for `team`
-
-Required:
-
 - `members` (Set of String)
 - `name` (String)
 - `policy_ids` (Set of String)
 
-Read-Only:
+### Read-Only
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it
