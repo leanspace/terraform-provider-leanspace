@@ -52,7 +52,8 @@ resource "leanspace_widgets" "test_line" {
 		},
 		"dashboards": {
 			"readOnly": true,
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		},
 		"description": {
 			"type": "string"
@@ -141,7 +142,8 @@ resource "leanspace_widgets" "test_line" {
 						"properties": {},
 						"required": [],
 						"title": "filters",
-						"type": "array"
+						"type": "array",
+						"uniqueItems": true
 					},
 					"id": {
 						"description": "The ID of this resource.",
@@ -159,7 +161,8 @@ resource "leanspace_widgets" "test_line" {
 			"properties": {},
 			"required": [],
 			"title": "series",
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		},
 		"tags": {
 			"items": {
@@ -179,7 +182,8 @@ resource "leanspace_widgets" "test_line" {
 			"properties": {},
 			"required": [],
 			"title": "tags",
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		},
 		"type": {
 			"description": "it must be one of these values: TABLE, LINE, BAR, AREA, VALUE",

@@ -114,7 +114,8 @@ resource "leanspace_streams" "stream" {
 											},
 											"errors": {
 												"readOnly": true,
-												"type": "array"
+												"type": "array",
+												"uniqueItems": true
 											},
 											"expression": {
 												"description": "i.e.: javascript function with 2 input parameters and a return value (ctx, raw) =\u003e ctx['metadata.received_at']",
@@ -154,7 +155,8 @@ resource "leanspace_streams" "stream" {
 								},
 								"errors": {
 									"readOnly": true,
-									"type": "array"
+									"type": "array",
+									"uniqueItems": true
 								},
 								"valid": {
 									"readOnly": true,
@@ -180,14 +182,16 @@ resource "leanspace_streams" "stream" {
 					},
 					"errors": {
 						"readOnly": true,
-						"type": "array"
+						"type": "array",
+						"uniqueItems": true
 					},
 					"metadata": {
 						"items": {
 							"properties": {
 								"errors": {
 									"readOnly": true,
-									"type": "array"
+									"type": "array",
+									"uniqueItems": true
 								},
 								"packet_id": {
 									"readOnly": true,
@@ -198,7 +202,8 @@ resource "leanspace_streams" "stream" {
 										"properties": {
 											"errors": {
 												"readOnly": true,
-												"type": "array"
+												"type": "array",
+												"uniqueItems": true
 											},
 											"expression": {
 												"type": "string"
@@ -291,7 +296,8 @@ resource "leanspace_streams" "stream" {
 																										},
 																										"errors": {
 																											"readOnly": true,
-																											"type": "array"
+																											"type": "array",
+																											"uniqueItems": true
 																										},
 																										"length_in_bits": {
 																											"type": "number"
@@ -341,7 +347,8 @@ resource "leanspace_streams" "stream" {
 																							},
 																							"errors": {
 																								"readOnly": true,
-																								"type": "array"
+																								"type": "array",
+																								"uniqueItems": true
 																							},
 																							"expression": {
 																								"items": {
@@ -387,7 +394,8 @@ resource "leanspace_streams" "stream" {
 																											"properties": {},
 																											"required": [],
 																											"title": "options",
-																											"type": "array"
+																											"type": "array",
+																											"uniqueItems": true
 																										},
 																										"switch_on": {
 																											"description": "Path of the field that the switch will use",
@@ -454,7 +462,8 @@ resource "leanspace_streams" "stream" {
 																				},
 																				"errors": {
 																					"readOnly": true,
-																					"type": "array"
+																					"type": "array",
+																					"uniqueItems": true
 																				},
 																				"expression": {
 																					"items": {
@@ -500,7 +509,8 @@ resource "leanspace_streams" "stream" {
 																								"properties": {},
 																								"required": [],
 																								"title": "options",
-																								"type": "array"
+																								"type": "array",
+																								"uniqueItems": true
 																							},
 																							"switch_on": {
 																								"description": "Path of the field that the switch will use",
@@ -567,7 +577,8 @@ resource "leanspace_streams" "stream" {
 																	},
 																	"errors": {
 																		"readOnly": true,
-																		"type": "array"
+																		"type": "array",
+																		"uniqueItems": true
 																	},
 																	"expression": {
 																		"items": {
@@ -613,7 +624,8 @@ resource "leanspace_streams" "stream" {
 																					"properties": {},
 																					"required": [],
 																					"title": "options",
-																					"type": "array"
+																					"type": "array",
+																					"uniqueItems": true
 																				},
 																				"switch_on": {
 																					"description": "Path of the field that the switch will use",
@@ -680,7 +692,8 @@ resource "leanspace_streams" "stream" {
 														},
 														"errors": {
 															"readOnly": true,
-															"type": "array"
+															"type": "array",
+															"uniqueItems": true
 														},
 														"expression": {
 															"items": {
@@ -726,7 +739,8 @@ resource "leanspace_streams" "stream" {
 																		"properties": {},
 																		"required": [],
 																		"title": "options",
-																		"type": "array"
+																		"type": "array",
+																		"uniqueItems": true
 																	},
 																	"switch_on": {
 																		"description": "Path of the field that the switch will use",
@@ -793,7 +807,8 @@ resource "leanspace_streams" "stream" {
 											},
 											"errors": {
 												"readOnly": true,
-												"type": "array"
+												"type": "array",
+												"uniqueItems": true
 											},
 											"expression": {
 												"items": {
@@ -839,7 +854,8 @@ resource "leanspace_streams" "stream" {
 															"properties": {},
 															"required": [],
 															"title": "options",
-															"type": "array"
+															"type": "array",
+															"uniqueItems": true
 														},
 														"switch_on": {
 															"description": "Path of the field that the switch will use",
@@ -902,7 +918,8 @@ resource "leanspace_streams" "stream" {
 								},
 								"errors": {
 									"readOnly": true,
-									"type": "array"
+									"type": "array",
+									"uniqueItems": true
 								},
 								"valid": {
 									"readOnly": true,
@@ -991,7 +1008,8 @@ resource "leanspace_streams" "stream" {
 			"properties": {},
 			"required": [],
 			"title": "mappings",
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		},
 		"name": {
 			"type": "string"

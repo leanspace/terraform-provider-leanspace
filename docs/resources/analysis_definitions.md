@@ -123,7 +123,8 @@ resource "leanspace_analysis_definitions" "test" {
 																		"properties": {},
 																		"required": [],
 																		"title": "fields",
-																		"type": "array"
+																		"type": "array",
+																		"uniqueItems": true
 																	},
 																	"items": {
 																		"description": "Must be set if type is ARRAY. A list of fields.",
@@ -186,7 +187,8 @@ resource "leanspace_analysis_definitions" "test" {
 															"properties": {},
 															"required": [],
 															"title": "fields",
-															"type": "array"
+															"type": "array",
+															"uniqueItems": true
 														},
 														"items": {
 															"description": "Must be set if type is ARRAY. A list of fields.",
@@ -226,7 +228,8 @@ resource "leanspace_analysis_definitions" "test" {
 																		"properties": {},
 																		"required": [],
 																		"title": "fields",
-																		"type": "array"
+																		"type": "array",
+																		"uniqueItems": true
 																	},
 																	"items": {
 																		"description": "Must be set if type is ARRAY. A list of fields.",
@@ -316,7 +319,8 @@ resource "leanspace_analysis_definitions" "test" {
 												"properties": {},
 												"required": [],
 												"title": "fields",
-												"type": "array"
+												"type": "array",
+												"uniqueItems": true
 											},
 											"items": {
 												"description": "Must be set if type is ARRAY. A list of fields.",
@@ -360,7 +364,8 @@ resource "leanspace_analysis_definitions" "test" {
 																		"properties": {},
 																		"required": [],
 																		"title": "fields",
-																		"type": "array"
+																		"type": "array",
+																		"uniqueItems": true
 																	},
 																	"items": {
 																		"description": "Must be set if type is ARRAY. A list of fields.",
@@ -423,7 +428,8 @@ resource "leanspace_analysis_definitions" "test" {
 															"properties": {},
 															"required": [],
 															"title": "fields",
-															"type": "array"
+															"type": "array",
+															"uniqueItems": true
 														},
 														"items": {
 															"description": "Must be set if type is ARRAY. A list of fields.",
@@ -463,7 +469,8 @@ resource "leanspace_analysis_definitions" "test" {
 																		"properties": {},
 																		"required": [],
 																		"title": "fields",
-																		"type": "array"
+																		"type": "array",
+																		"uniqueItems": true
 																	},
 																	"items": {
 																		"description": "Must be set if type is ARRAY. A list of fields.",
@@ -580,7 +587,8 @@ resource "leanspace_analysis_definitions" "test" {
 									"properties": {},
 									"required": [],
 									"title": "fields",
-									"type": "array"
+									"type": "array",
+									"uniqueItems": true
 								},
 								"items": {
 									"description": "Must be set if type is ARRAY. A list of fields.",
@@ -628,7 +636,8 @@ resource "leanspace_analysis_definitions" "test" {
 																		"properties": {},
 																		"required": [],
 																		"title": "fields",
-																		"type": "array"
+																		"type": "array",
+																		"uniqueItems": true
 																	},
 																	"items": {
 																		"description": "Must be set if type is ARRAY. A list of fields.",
@@ -691,7 +700,8 @@ resource "leanspace_analysis_definitions" "test" {
 															"properties": {},
 															"required": [],
 															"title": "fields",
-															"type": "array"
+															"type": "array",
+															"uniqueItems": true
 														},
 														"items": {
 															"description": "Must be set if type is ARRAY. A list of fields.",
@@ -731,7 +741,8 @@ resource "leanspace_analysis_definitions" "test" {
 																		"properties": {},
 																		"required": [],
 																		"title": "fields",
-																		"type": "array"
+																		"type": "array",
+																		"uniqueItems": true
 																	},
 																	"items": {
 																		"description": "Must be set if type is ARRAY. A list of fields.",
@@ -821,7 +832,8 @@ resource "leanspace_analysis_definitions" "test" {
 												"properties": {},
 												"required": [],
 												"title": "fields",
-												"type": "array"
+												"type": "array",
+												"uniqueItems": true
 											},
 											"items": {
 												"description": "Must be set if type is ARRAY. A list of fields.",
@@ -865,7 +877,8 @@ resource "leanspace_analysis_definitions" "test" {
 																		"properties": {},
 																		"required": [],
 																		"title": "fields",
-																		"type": "array"
+																		"type": "array",
+																		"uniqueItems": true
 																	},
 																	"items": {
 																		"description": "Must be set if type is ARRAY. A list of fields.",
@@ -928,7 +941,8 @@ resource "leanspace_analysis_definitions" "test" {
 															"properties": {},
 															"required": [],
 															"title": "fields",
-															"type": "array"
+															"type": "array",
+															"uniqueItems": true
 														},
 														"items": {
 															"description": "Must be set if type is ARRAY. A list of fields.",
@@ -968,7 +982,8 @@ resource "leanspace_analysis_definitions" "test" {
 																		"properties": {},
 																		"required": [],
 																		"title": "fields",
-																		"type": "array"
+																		"type": "array",
+																		"uniqueItems": true
 																	},
 																	"items": {
 																		"description": "Must be set if type is ARRAY. A list of fields.",
@@ -1112,7 +1127,8 @@ resource "leanspace_analysis_definitions" "test" {
 						"properties": {},
 						"required": [],
 						"title": "fields",
-						"type": "array"
+						"type": "array",
+						"uniqueItems": true
 					},
 					"items": {
 						"description": "Must be set if type is ARRAY. A list of fields.",
@@ -1164,7 +1180,8 @@ resource "leanspace_analysis_definitions" "test" {
 																		"properties": {},
 																		"required": [],
 																		"title": "fields",
-																		"type": "array"
+																		"type": "array",
+																		"uniqueItems": true
 																	},
 																	"items": {
 																		"description": "Must be set if type is ARRAY. A list of fields.",
@@ -1227,7 +1244,8 @@ resource "leanspace_analysis_definitions" "test" {
 															"properties": {},
 															"required": [],
 															"title": "fields",
-															"type": "array"
+															"type": "array",
+															"uniqueItems": true
 														},
 														"items": {
 															"description": "Must be set if type is ARRAY. A list of fields.",
@@ -1267,7 +1285,8 @@ resource "leanspace_analysis_definitions" "test" {
 																		"properties": {},
 																		"required": [],
 																		"title": "fields",
-																		"type": "array"
+																		"type": "array",
+																		"uniqueItems": true
 																	},
 																	"items": {
 																		"description": "Must be set if type is ARRAY. A list of fields.",
@@ -1357,7 +1376,8 @@ resource "leanspace_analysis_definitions" "test" {
 												"properties": {},
 												"required": [],
 												"title": "fields",
-												"type": "array"
+												"type": "array",
+												"uniqueItems": true
 											},
 											"items": {
 												"description": "Must be set if type is ARRAY. A list of fields.",
@@ -1401,7 +1421,8 @@ resource "leanspace_analysis_definitions" "test" {
 																		"properties": {},
 																		"required": [],
 																		"title": "fields",
-																		"type": "array"
+																		"type": "array",
+																		"uniqueItems": true
 																	},
 																	"items": {
 																		"description": "Must be set if type is ARRAY. A list of fields.",
@@ -1464,7 +1485,8 @@ resource "leanspace_analysis_definitions" "test" {
 															"properties": {},
 															"required": [],
 															"title": "fields",
-															"type": "array"
+															"type": "array",
+															"uniqueItems": true
 														},
 														"items": {
 															"description": "Must be set if type is ARRAY. A list of fields.",
@@ -1504,7 +1526,8 @@ resource "leanspace_analysis_definitions" "test" {
 																		"properties": {},
 																		"required": [],
 																		"title": "fields",
-																		"type": "array"
+																		"type": "array",
+																		"uniqueItems": true
 																	},
 																	"items": {
 																		"description": "Must be set if type is ARRAY. A list of fields.",
@@ -1621,7 +1644,8 @@ resource "leanspace_analysis_definitions" "test" {
 									"properties": {},
 									"required": [],
 									"title": "fields",
-									"type": "array"
+									"type": "array",
+									"uniqueItems": true
 								},
 								"items": {
 									"description": "Must be set if type is ARRAY. A list of fields.",
@@ -1669,7 +1693,8 @@ resource "leanspace_analysis_definitions" "test" {
 																		"properties": {},
 																		"required": [],
 																		"title": "fields",
-																		"type": "array"
+																		"type": "array",
+																		"uniqueItems": true
 																	},
 																	"items": {
 																		"description": "Must be set if type is ARRAY. A list of fields.",
@@ -1732,7 +1757,8 @@ resource "leanspace_analysis_definitions" "test" {
 															"properties": {},
 															"required": [],
 															"title": "fields",
-															"type": "array"
+															"type": "array",
+															"uniqueItems": true
 														},
 														"items": {
 															"description": "Must be set if type is ARRAY. A list of fields.",
@@ -1772,7 +1798,8 @@ resource "leanspace_analysis_definitions" "test" {
 																		"properties": {},
 																		"required": [],
 																		"title": "fields",
-																		"type": "array"
+																		"type": "array",
+																		"uniqueItems": true
 																	},
 																	"items": {
 																		"description": "Must be set if type is ARRAY. A list of fields.",
@@ -1862,7 +1889,8 @@ resource "leanspace_analysis_definitions" "test" {
 												"properties": {},
 												"required": [],
 												"title": "fields",
-												"type": "array"
+												"type": "array",
+												"uniqueItems": true
 											},
 											"items": {
 												"description": "Must be set if type is ARRAY. A list of fields.",
@@ -1906,7 +1934,8 @@ resource "leanspace_analysis_definitions" "test" {
 																		"properties": {},
 																		"required": [],
 																		"title": "fields",
-																		"type": "array"
+																		"type": "array",
+																		"uniqueItems": true
 																	},
 																	"items": {
 																		"description": "Must be set if type is ARRAY. A list of fields.",
@@ -1969,7 +1998,8 @@ resource "leanspace_analysis_definitions" "test" {
 															"properties": {},
 															"required": [],
 															"title": "fields",
-															"type": "array"
+															"type": "array",
+															"uniqueItems": true
 														},
 														"items": {
 															"description": "Must be set if type is ARRAY. A list of fields.",
@@ -2009,7 +2039,8 @@ resource "leanspace_analysis_definitions" "test" {
 																		"properties": {},
 																		"required": [],
 																		"title": "fields",
-																		"type": "array"
+																		"type": "array",
+																		"uniqueItems": true
 																	},
 																	"items": {
 																		"description": "Must be set if type is ARRAY. A list of fields.",

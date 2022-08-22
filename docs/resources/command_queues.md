@@ -43,7 +43,8 @@ resource "leanspace_command_queues" "command_queue" {
 			"type": "string"
 		},
 		"ground_station_ids": {
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		},
 		"id": {
 			"description": "The ID of this resource.",

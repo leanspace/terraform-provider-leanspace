@@ -151,7 +151,8 @@ resource "leanspace_activity_definitions" "activity_definition" {
 			"properties": {},
 			"required": [],
 			"title": "argument_definitions",
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		},
 		"command_mappings": {
 			"items": {
@@ -175,7 +176,8 @@ resource "leanspace_activity_definitions" "activity_definition" {
 						"properties": {},
 						"required": [],
 						"title": "argument_mappings",
-						"type": "array"
+						"type": "array",
+						"uniqueItems": true
 					},
 					"command_definition_id": {
 						"type": "string"
@@ -203,7 +205,8 @@ resource "leanspace_activity_definitions" "activity_definition" {
 						"properties": {},
 						"required": [],
 						"title": "metadata_mappings",
-						"type": "array"
+						"type": "array",
+						"uniqueItems": true
 					},
 					"position": {
 						"readOnly": true,
@@ -304,7 +307,8 @@ resource "leanspace_activity_definitions" "activity_definition" {
 			"properties": {},
 			"required": [],
 			"title": "metadata",
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		},
 		"name": {
 			"type": "string"

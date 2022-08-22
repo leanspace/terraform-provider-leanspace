@@ -51,13 +51,15 @@ resource "leanspace_teams" "team" {
 			"type": "string"
 		},
 		"members": {
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		},
 		"name": {
 			"type": "string"
 		},
 		"policy_ids": {
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		}
 	},
 	"required": [

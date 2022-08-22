@@ -97,7 +97,8 @@ resource "leanspace_nodes" "groundstation_node" {
 		},
 		"nodes": {
 			"readOnly": true,
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		},
 		"norad_id": {
 			"description": "It must be 5 digits",
@@ -124,7 +125,8 @@ resource "leanspace_nodes" "groundstation_node" {
 			"properties": {},
 			"required": [],
 			"title": "tags",
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		},
 		"tle": {
 			"description": "TLE composed of its 2 lines",

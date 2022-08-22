@@ -32,11 +32,13 @@ resource "leanspace_monitors" "monitor" {
 {
 	"properties": {
 		"action_template_ids": {
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		},
 		"action_templates": {
 			"readOnly": true,
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		},
 		"created_at": {
 			"description": "When it was created",
@@ -139,7 +141,8 @@ resource "leanspace_monitors" "monitor" {
 			"properties": {},
 			"required": [],
 			"title": "tags",
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		}
 	},
 	"required": [

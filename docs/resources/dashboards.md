@@ -68,7 +68,8 @@ resource "leanspace_dashboards" "dashboard" {
 			"type": "string"
 		},
 		"node_ids": {
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		},
 		"tags": {
 			"items": {
@@ -88,7 +89,8 @@ resource "leanspace_dashboards" "dashboard" {
 			"properties": {},
 			"required": [],
 			"title": "tags",
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		},
 		"widget_info": {
 			"items": {
@@ -133,11 +135,13 @@ resource "leanspace_dashboards" "dashboard" {
 			"properties": {},
 			"required": [],
 			"title": "widget_info",
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		},
 		"widgets": {
 			"readOnly": true,
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		}
 	},
 	"required": [

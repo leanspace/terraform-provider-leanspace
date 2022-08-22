@@ -139,7 +139,8 @@ resource "leanspace_remote_agents" "remote_agent" {
 			"properties": {},
 			"required": [],
 			"title": "connectors",
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		},
 		"created_at": {
 			"description": "When it was created",

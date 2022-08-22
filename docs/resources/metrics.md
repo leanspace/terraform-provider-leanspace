@@ -145,7 +145,8 @@ resource "leanspace_metrics" "metric" {
 			"properties": {},
 			"required": [],
 			"title": "tags",
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		}
 	},
 	"required": [

@@ -145,7 +145,8 @@ resource "leanspace_command_definitions" "command_definition" {
 			"properties": {},
 			"required": [],
 			"title": "arguments",
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		},
 		"created_at": {
 			"description": "When it was created",
@@ -229,7 +230,8 @@ resource "leanspace_command_definitions" "command_definition" {
 			"properties": {},
 			"required": [],
 			"title": "metadata",
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		},
 		"name": {
 			"type": "string"

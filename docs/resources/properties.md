@@ -316,7 +316,8 @@ resource "leanspace_properties" "property" {
 			"properties": {},
 			"required": [],
 			"title": "tags",
-			"type": "array"
+			"type": "array",
+			"uniqueItems": true
 		},
 		"type": {
 			"description": "it must be one of these values: NUMERIC, ENUM, TEXT, TIMESTAMP, DATE, TIME, BOOLEAN, GEOPOINT",
