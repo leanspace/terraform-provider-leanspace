@@ -32,10 +32,16 @@ resource "leanspace_monitors" "monitor" {
 {
 	"properties": {
 		"action_template_ids": {
+			"items": {
+				"type": "string"
+			},
 			"type": "array",
 			"uniqueItems": true
 		},
 		"action_templates": {
+			"items": {
+				"type": "object"
+			},
 			"readOnly": true,
 			"type": "array",
 			"uniqueItems": true
@@ -57,11 +63,24 @@ resource "leanspace_monitors" "monitor" {
 			"items": {
 				"properties": {
 					"aggregation_function": {
-						"description": "it must be one of these values: AVERAGE_VALUE, HIGHEST_VALUE, LOWEST_VALUE, SUM_VALUE, COUNT_VALUE",
+						"enum": [
+							"AVERAGE_VALUE",
+							"HIGHEST_VALUE",
+							"LOWEST_VALUE",
+							"SUM_VALUE",
+							"COUNT_VALUE"
+						],
 						"type": "string"
 					},
 					"comparison_operator": {
-						"description": "it must be one of these values: GREATER_THAN, LESSER_THAN, GREATER_THAN_OR_EQUAL_TO, LESSER_THAN_OR_EQUAL_TO, EQUAL_TO, NOT_EQUAL_TO",
+						"enum": [
+							"GREATER_THAN",
+							"LESSER_THAN",
+							"GREATER_THAN_OR_EQUAL_TO",
+							"LESSER_THAN_OR_EQUAL_TO",
+							"EQUAL_TO",
+							"NOT_EQUAL_TO"
+						],
 						"type": "string"
 					},
 					"comparison_value": {
@@ -112,10 +131,17 @@ resource "leanspace_monitors" "monitor" {
 			"type": "string"
 		},
 		"polling_frequency_in_minutes": {
-			"description": "it must be one of these values: 1, 60, 1440",
+			"enum": [
+				"1",
+				"60",
+				"1440"
+			],
 			"type": "number"
 		},
 		"statistics": {
+			"items": {
+				"type": "object"
+			},
 			"readOnly": true,
 			"type": "array"
 		},

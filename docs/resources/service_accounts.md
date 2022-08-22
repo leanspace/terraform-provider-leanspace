@@ -53,6 +53,9 @@ resource "leanspace_service_accounts" "service_account" {
 			"type": "string"
 		},
 		"policy_ids": {
+			"items": {
+				"type": "string"
+			},
 			"type": "array",
 			"uniqueItems": true
 		}

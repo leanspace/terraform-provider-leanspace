@@ -61,6 +61,9 @@ resource "leanspace_remote_agents" "remote_agent" {
 						"type": "string"
 					},
 					"destination": {
+						"items": {
+							"type": "object"
+						},
 						"readOnly": true,
 						"type": "array"
 					},
@@ -93,7 +96,10 @@ resource "leanspace_remote_agents" "remote_agent" {
 									"type": "number"
 								},
 								"type": {
-									"description": "it must be one of these values: TCP, UDP",
+									"enum": [
+										"TCP",
+										"UDP"
+									],
 									"type": "string"
 								}
 							},
@@ -111,6 +117,9 @@ resource "leanspace_remote_agents" "remote_agent" {
 						"type": "array"
 					},
 					"source": {
+						"items": {
+							"type": "object"
+						},
 						"readOnly": true,
 						"type": "array"
 					},
@@ -118,7 +127,10 @@ resource "leanspace_remote_agents" "remote_agent" {
 						"type": "string"
 					},
 					"type": {
-						"description": "it must be one of these values: INBOUND, OUTBOUND",
+						"enum": [
+							"INBOUND",
+							"OUTBOUND"
+						],
 						"type": "string"
 					}
 				},

@@ -80,6 +80,9 @@ resource "leanspace_command_definitions" "command_definition" {
 									"type": "number"
 								},
 								"options": {
+									"additionalProperties": {
+										"type": "string"
+									},
 									"description": "Enum only: The allowed values for the enum in the format 1 = \"value\"",
 									"type": "object"
 								},
@@ -99,7 +102,15 @@ resource "leanspace_command_definitions" "command_definition" {
 									"type": "number"
 								},
 								"type": {
-									"description": "it must be one of these values: NUMERIC, BOOLEAN, TEXT, DATE, TIME, TIMESTAMP, ENUM",
+									"enum": [
+										"NUMERIC",
+										"BOOLEAN",
+										"TEXT",
+										"DATE",
+										"TIME",
+										"TIMESTAMP",
+										"ENUM"
+									],
 									"type": "string"
 								},
 								"unit_id": {
@@ -186,7 +197,15 @@ resource "leanspace_command_definitions" "command_definition" {
 						"items": {
 							"properties": {
 								"type": {
-									"description": "it must be one of these values: NUMERIC, BOOLEAN, TEXT, DATE, TIME, TIMESTAMP, ENUM",
+									"enum": [
+										"NUMERIC",
+										"BOOLEAN",
+										"TEXT",
+										"DATE",
+										"TIME",
+										"TIMESTAMP",
+										"ENUM"
+									],
 									"type": "string"
 								},
 								"unit_id": {

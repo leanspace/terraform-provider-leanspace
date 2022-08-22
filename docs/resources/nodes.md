@@ -96,6 +96,9 @@ resource "leanspace_nodes" "groundstation_node" {
 			"type": "string"
 		},
 		"nodes": {
+			"items": {
+				"type": "object"
+			},
 			"readOnly": true,
 			"type": "array",
 			"uniqueItems": true
@@ -130,10 +133,17 @@ resource "leanspace_nodes" "groundstation_node" {
 		},
 		"tle": {
 			"description": "TLE composed of its 2 lines",
+			"items": {
+				"type": "string"
+			},
 			"type": "array"
 		},
 		"type": {
-			"description": "it must be one of these values: ASSET, GROUP, COMPONENT",
+			"enum": [
+				"ASSET",
+				"GROUP",
+				"COMPONENT"
+			],
 			"type": "string"
 		}
 	},

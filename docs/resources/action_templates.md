@@ -44,6 +44,9 @@ resource "leanspace_action_templates" "action_template" {
 			"type": "string"
 		},
 		"headers": {
+			"additionalProperties": {
+				"type": "string"
+			},
 			"type": "object"
 		},
 		"id": {
@@ -68,7 +71,9 @@ resource "leanspace_action_templates" "action_template" {
 			"type": "string"
 		},
 		"type": {
-			"description": "it must be one of these values: WEBHOOK",
+			"enum": [
+				"WEBHOOK"
+			],
 			"type": "string"
 		},
 		"url": {

@@ -102,11 +102,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -135,11 +149,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -166,11 +194,26 @@ resource "leanspace_analysis_definitions" "test" {
 																		"type": "string"
 																	},
 																	"source": {
-																		"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																		"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																		"enum": [
+																			"REFERENCE",
+																			"STATIC"
+																		],
 																		"type": "string"
 																	},
 																	"type": {
-																		"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																		"enum": [
+																			"STRUCTURE",
+																			"ARRAY",
+																			"NUMERIC",
+																			"TEXT",
+																			"BOOLEAN",
+																			"ENUM",
+																			"TIMESTAMP",
+																			"DATE",
+																			"TIME",
+																			"TLE"
+																		],
 																		"type": "string"
 																	},
 																	"value": {
@@ -207,11 +250,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -240,11 +297,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -267,11 +338,26 @@ resource "leanspace_analysis_definitions" "test" {
 																		"type": "string"
 																	},
 																	"source": {
-																		"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																		"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																		"enum": [
+																			"REFERENCE",
+																			"STATIC"
+																		],
 																		"type": "string"
 																	},
 																	"type": {
-																		"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																		"enum": [
+																			"STRUCTURE",
+																			"ARRAY",
+																			"NUMERIC",
+																			"TEXT",
+																			"BOOLEAN",
+																			"ENUM",
+																			"TIMESTAMP",
+																			"DATE",
+																			"TIME",
+																			"TLE"
+																		],
 																		"type": "string"
 																	},
 																	"value": {
@@ -298,11 +384,26 @@ resource "leanspace_analysis_definitions" "test" {
 															"type": "string"
 														},
 														"source": {
-															"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+															"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+															"enum": [
+																"REFERENCE",
+																"STATIC"
+															],
 															"type": "string"
 														},
 														"type": {
-															"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+															"enum": [
+																"STRUCTURE",
+																"ARRAY",
+																"NUMERIC",
+																"TEXT",
+																"BOOLEAN",
+																"ENUM",
+																"TIMESTAMP",
+																"DATE",
+																"TIME",
+																"TLE"
+															],
 															"type": "string"
 														},
 														"value": {
@@ -343,11 +444,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -376,11 +491,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -407,11 +536,26 @@ resource "leanspace_analysis_definitions" "test" {
 																		"type": "string"
 																	},
 																	"source": {
-																		"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																		"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																		"enum": [
+																			"REFERENCE",
+																			"STATIC"
+																		],
 																		"type": "string"
 																	},
 																	"type": {
-																		"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																		"enum": [
+																			"STRUCTURE",
+																			"ARRAY",
+																			"NUMERIC",
+																			"TEXT",
+																			"BOOLEAN",
+																			"ENUM",
+																			"TIMESTAMP",
+																			"DATE",
+																			"TIME",
+																			"TLE"
+																		],
 																		"type": "string"
 																	},
 																	"value": {
@@ -448,11 +592,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -481,11 +639,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -508,11 +680,26 @@ resource "leanspace_analysis_definitions" "test" {
 																		"type": "string"
 																	},
 																	"source": {
-																		"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																		"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																		"enum": [
+																			"REFERENCE",
+																			"STATIC"
+																		],
 																		"type": "string"
 																	},
 																	"type": {
-																		"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																		"enum": [
+																			"STRUCTURE",
+																			"ARRAY",
+																			"NUMERIC",
+																			"TEXT",
+																			"BOOLEAN",
+																			"ENUM",
+																			"TIMESTAMP",
+																			"DATE",
+																			"TIME",
+																			"TLE"
+																		],
 																		"type": "string"
 																	},
 																	"value": {
@@ -535,11 +722,26 @@ resource "leanspace_analysis_definitions" "test" {
 															"type": "string"
 														},
 														"source": {
-															"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+															"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+															"enum": [
+																"REFERENCE",
+																"STATIC"
+															],
 															"type": "string"
 														},
 														"type": {
-															"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+															"enum": [
+																"STRUCTURE",
+																"ARRAY",
+																"NUMERIC",
+																"TEXT",
+																"BOOLEAN",
+																"ENUM",
+																"TIMESTAMP",
+																"DATE",
+																"TIME",
+																"TLE"
+															],
 															"type": "string"
 														},
 														"value": {
@@ -566,11 +768,26 @@ resource "leanspace_analysis_definitions" "test" {
 												"type": "string"
 											},
 											"source": {
-												"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+												"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+												"enum": [
+													"REFERENCE",
+													"STATIC"
+												],
 												"type": "string"
 											},
 											"type": {
-												"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+												"enum": [
+													"STRUCTURE",
+													"ARRAY",
+													"NUMERIC",
+													"TEXT",
+													"BOOLEAN",
+													"ENUM",
+													"TIMESTAMP",
+													"DATE",
+													"TIME",
+													"TLE"
+												],
 												"type": "string"
 											},
 											"value": {
@@ -615,11 +832,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -648,11 +879,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -679,11 +924,26 @@ resource "leanspace_analysis_definitions" "test" {
 																		"type": "string"
 																	},
 																	"source": {
-																		"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																		"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																		"enum": [
+																			"REFERENCE",
+																			"STATIC"
+																		],
 																		"type": "string"
 																	},
 																	"type": {
-																		"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																		"enum": [
+																			"STRUCTURE",
+																			"ARRAY",
+																			"NUMERIC",
+																			"TEXT",
+																			"BOOLEAN",
+																			"ENUM",
+																			"TIMESTAMP",
+																			"DATE",
+																			"TIME",
+																			"TLE"
+																		],
 																		"type": "string"
 																	},
 																	"value": {
@@ -720,11 +980,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -753,11 +1027,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -780,11 +1068,26 @@ resource "leanspace_analysis_definitions" "test" {
 																		"type": "string"
 																	},
 																	"source": {
-																		"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																		"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																		"enum": [
+																			"REFERENCE",
+																			"STATIC"
+																		],
 																		"type": "string"
 																	},
 																	"type": {
-																		"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																		"enum": [
+																			"STRUCTURE",
+																			"ARRAY",
+																			"NUMERIC",
+																			"TEXT",
+																			"BOOLEAN",
+																			"ENUM",
+																			"TIMESTAMP",
+																			"DATE",
+																			"TIME",
+																			"TLE"
+																		],
 																		"type": "string"
 																	},
 																	"value": {
@@ -811,11 +1114,26 @@ resource "leanspace_analysis_definitions" "test" {
 															"type": "string"
 														},
 														"source": {
-															"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+															"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+															"enum": [
+																"REFERENCE",
+																"STATIC"
+															],
 															"type": "string"
 														},
 														"type": {
-															"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+															"enum": [
+																"STRUCTURE",
+																"ARRAY",
+																"NUMERIC",
+																"TEXT",
+																"BOOLEAN",
+																"ENUM",
+																"TIMESTAMP",
+																"DATE",
+																"TIME",
+																"TLE"
+															],
 															"type": "string"
 														},
 														"value": {
@@ -856,11 +1174,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -889,11 +1221,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -920,11 +1266,26 @@ resource "leanspace_analysis_definitions" "test" {
 																		"type": "string"
 																	},
 																	"source": {
-																		"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																		"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																		"enum": [
+																			"REFERENCE",
+																			"STATIC"
+																		],
 																		"type": "string"
 																	},
 																	"type": {
-																		"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																		"enum": [
+																			"STRUCTURE",
+																			"ARRAY",
+																			"NUMERIC",
+																			"TEXT",
+																			"BOOLEAN",
+																			"ENUM",
+																			"TIMESTAMP",
+																			"DATE",
+																			"TIME",
+																			"TLE"
+																		],
 																		"type": "string"
 																	},
 																	"value": {
@@ -961,11 +1322,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -994,11 +1369,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -1021,11 +1410,26 @@ resource "leanspace_analysis_definitions" "test" {
 																		"type": "string"
 																	},
 																	"source": {
-																		"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																		"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																		"enum": [
+																			"REFERENCE",
+																			"STATIC"
+																		],
 																		"type": "string"
 																	},
 																	"type": {
-																		"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																		"enum": [
+																			"STRUCTURE",
+																			"ARRAY",
+																			"NUMERIC",
+																			"TEXT",
+																			"BOOLEAN",
+																			"ENUM",
+																			"TIMESTAMP",
+																			"DATE",
+																			"TIME",
+																			"TLE"
+																		],
 																		"type": "string"
 																	},
 																	"value": {
@@ -1048,11 +1452,26 @@ resource "leanspace_analysis_definitions" "test" {
 															"type": "string"
 														},
 														"source": {
-															"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+															"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+															"enum": [
+																"REFERENCE",
+																"STATIC"
+															],
 															"type": "string"
 														},
 														"type": {
-															"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+															"enum": [
+																"STRUCTURE",
+																"ARRAY",
+																"NUMERIC",
+																"TEXT",
+																"BOOLEAN",
+																"ENUM",
+																"TIMESTAMP",
+																"DATE",
+																"TIME",
+																"TLE"
+															],
 															"type": "string"
 														},
 														"value": {
@@ -1075,11 +1494,26 @@ resource "leanspace_analysis_definitions" "test" {
 												"type": "string"
 											},
 											"source": {
-												"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+												"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+												"enum": [
+													"REFERENCE",
+													"STATIC"
+												],
 												"type": "string"
 											},
 											"type": {
-												"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+												"enum": [
+													"STRUCTURE",
+													"ARRAY",
+													"NUMERIC",
+													"TEXT",
+													"BOOLEAN",
+													"ENUM",
+													"TIMESTAMP",
+													"DATE",
+													"TIME",
+													"TLE"
+												],
 												"type": "string"
 											},
 											"value": {
@@ -1106,11 +1540,26 @@ resource "leanspace_analysis_definitions" "test" {
 									"type": "string"
 								},
 								"source": {
-									"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+									"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+									"enum": [
+										"REFERENCE",
+										"STATIC"
+									],
 									"type": "string"
 								},
 								"type": {
-									"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+									"enum": [
+										"STRUCTURE",
+										"ARRAY",
+										"NUMERIC",
+										"TEXT",
+										"BOOLEAN",
+										"ENUM",
+										"TIMESTAMP",
+										"DATE",
+										"TIME",
+										"TLE"
+									],
 									"type": "string"
 								},
 								"value": {
@@ -1159,11 +1608,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -1192,11 +1655,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -1223,11 +1700,26 @@ resource "leanspace_analysis_definitions" "test" {
 																		"type": "string"
 																	},
 																	"source": {
-																		"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																		"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																		"enum": [
+																			"REFERENCE",
+																			"STATIC"
+																		],
 																		"type": "string"
 																	},
 																	"type": {
-																		"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																		"enum": [
+																			"STRUCTURE",
+																			"ARRAY",
+																			"NUMERIC",
+																			"TEXT",
+																			"BOOLEAN",
+																			"ENUM",
+																			"TIMESTAMP",
+																			"DATE",
+																			"TIME",
+																			"TLE"
+																		],
 																		"type": "string"
 																	},
 																	"value": {
@@ -1264,11 +1756,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -1297,11 +1803,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -1324,11 +1844,26 @@ resource "leanspace_analysis_definitions" "test" {
 																		"type": "string"
 																	},
 																	"source": {
-																		"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																		"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																		"enum": [
+																			"REFERENCE",
+																			"STATIC"
+																		],
 																		"type": "string"
 																	},
 																	"type": {
-																		"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																		"enum": [
+																			"STRUCTURE",
+																			"ARRAY",
+																			"NUMERIC",
+																			"TEXT",
+																			"BOOLEAN",
+																			"ENUM",
+																			"TIMESTAMP",
+																			"DATE",
+																			"TIME",
+																			"TLE"
+																		],
 																		"type": "string"
 																	},
 																	"value": {
@@ -1355,11 +1890,26 @@ resource "leanspace_analysis_definitions" "test" {
 															"type": "string"
 														},
 														"source": {
-															"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+															"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+															"enum": [
+																"REFERENCE",
+																"STATIC"
+															],
 															"type": "string"
 														},
 														"type": {
-															"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+															"enum": [
+																"STRUCTURE",
+																"ARRAY",
+																"NUMERIC",
+																"TEXT",
+																"BOOLEAN",
+																"ENUM",
+																"TIMESTAMP",
+																"DATE",
+																"TIME",
+																"TLE"
+															],
 															"type": "string"
 														},
 														"value": {
@@ -1400,11 +1950,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -1433,11 +1997,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -1464,11 +2042,26 @@ resource "leanspace_analysis_definitions" "test" {
 																		"type": "string"
 																	},
 																	"source": {
-																		"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																		"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																		"enum": [
+																			"REFERENCE",
+																			"STATIC"
+																		],
 																		"type": "string"
 																	},
 																	"type": {
-																		"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																		"enum": [
+																			"STRUCTURE",
+																			"ARRAY",
+																			"NUMERIC",
+																			"TEXT",
+																			"BOOLEAN",
+																			"ENUM",
+																			"TIMESTAMP",
+																			"DATE",
+																			"TIME",
+																			"TLE"
+																		],
 																		"type": "string"
 																	},
 																	"value": {
@@ -1505,11 +2098,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -1538,11 +2145,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -1565,11 +2186,26 @@ resource "leanspace_analysis_definitions" "test" {
 																		"type": "string"
 																	},
 																	"source": {
-																		"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																		"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																		"enum": [
+																			"REFERENCE",
+																			"STATIC"
+																		],
 																		"type": "string"
 																	},
 																	"type": {
-																		"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																		"enum": [
+																			"STRUCTURE",
+																			"ARRAY",
+																			"NUMERIC",
+																			"TEXT",
+																			"BOOLEAN",
+																			"ENUM",
+																			"TIMESTAMP",
+																			"DATE",
+																			"TIME",
+																			"TLE"
+																		],
 																		"type": "string"
 																	},
 																	"value": {
@@ -1592,11 +2228,26 @@ resource "leanspace_analysis_definitions" "test" {
 															"type": "string"
 														},
 														"source": {
-															"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+															"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+															"enum": [
+																"REFERENCE",
+																"STATIC"
+															],
 															"type": "string"
 														},
 														"type": {
-															"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+															"enum": [
+																"STRUCTURE",
+																"ARRAY",
+																"NUMERIC",
+																"TEXT",
+																"BOOLEAN",
+																"ENUM",
+																"TIMESTAMP",
+																"DATE",
+																"TIME",
+																"TLE"
+															],
 															"type": "string"
 														},
 														"value": {
@@ -1623,11 +2274,26 @@ resource "leanspace_analysis_definitions" "test" {
 												"type": "string"
 											},
 											"source": {
-												"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+												"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+												"enum": [
+													"REFERENCE",
+													"STATIC"
+												],
 												"type": "string"
 											},
 											"type": {
-												"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+												"enum": [
+													"STRUCTURE",
+													"ARRAY",
+													"NUMERIC",
+													"TEXT",
+													"BOOLEAN",
+													"ENUM",
+													"TIMESTAMP",
+													"DATE",
+													"TIME",
+													"TLE"
+												],
 												"type": "string"
 											},
 											"value": {
@@ -1672,11 +2338,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -1705,11 +2385,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -1736,11 +2430,26 @@ resource "leanspace_analysis_definitions" "test" {
 																		"type": "string"
 																	},
 																	"source": {
-																		"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																		"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																		"enum": [
+																			"REFERENCE",
+																			"STATIC"
+																		],
 																		"type": "string"
 																	},
 																	"type": {
-																		"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																		"enum": [
+																			"STRUCTURE",
+																			"ARRAY",
+																			"NUMERIC",
+																			"TEXT",
+																			"BOOLEAN",
+																			"ENUM",
+																			"TIMESTAMP",
+																			"DATE",
+																			"TIME",
+																			"TLE"
+																		],
 																		"type": "string"
 																	},
 																	"value": {
@@ -1777,11 +2486,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -1810,11 +2533,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -1837,11 +2574,26 @@ resource "leanspace_analysis_definitions" "test" {
 																		"type": "string"
 																	},
 																	"source": {
-																		"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																		"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																		"enum": [
+																			"REFERENCE",
+																			"STATIC"
+																		],
 																		"type": "string"
 																	},
 																	"type": {
-																		"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																		"enum": [
+																			"STRUCTURE",
+																			"ARRAY",
+																			"NUMERIC",
+																			"TEXT",
+																			"BOOLEAN",
+																			"ENUM",
+																			"TIMESTAMP",
+																			"DATE",
+																			"TIME",
+																			"TLE"
+																		],
 																		"type": "string"
 																	},
 																	"value": {
@@ -1868,11 +2620,26 @@ resource "leanspace_analysis_definitions" "test" {
 															"type": "string"
 														},
 														"source": {
-															"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+															"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+															"enum": [
+																"REFERENCE",
+																"STATIC"
+															],
 															"type": "string"
 														},
 														"type": {
-															"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+															"enum": [
+																"STRUCTURE",
+																"ARRAY",
+																"NUMERIC",
+																"TEXT",
+																"BOOLEAN",
+																"ENUM",
+																"TIMESTAMP",
+																"DATE",
+																"TIME",
+																"TLE"
+															],
 															"type": "string"
 														},
 														"value": {
@@ -1913,11 +2680,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -1946,11 +2727,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -1977,11 +2772,26 @@ resource "leanspace_analysis_definitions" "test" {
 																		"type": "string"
 																	},
 																	"source": {
-																		"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																		"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																		"enum": [
+																			"REFERENCE",
+																			"STATIC"
+																		],
 																		"type": "string"
 																	},
 																	"type": {
-																		"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																		"enum": [
+																			"STRUCTURE",
+																			"ARRAY",
+																			"NUMERIC",
+																			"TEXT",
+																			"BOOLEAN",
+																			"ENUM",
+																			"TIMESTAMP",
+																			"DATE",
+																			"TIME",
+																			"TLE"
+																		],
 																		"type": "string"
 																	},
 																	"value": {
@@ -2018,11 +2828,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -2051,11 +2875,25 @@ resource "leanspace_analysis_definitions" "test" {
 																					"type": "string"
 																				},
 																				"source": {
-																					"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																					"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																					"enum": [
+																						"REFERENCE",
+																						"STATIC"
+																					],
 																					"type": "string"
 																				},
 																				"type": {
-																					"description": "it must be one of these values: ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																					"enum": [
+																						"ARRAY",
+																						"NUMERIC",
+																						"TEXT",
+																						"BOOLEAN",
+																						"ENUM",
+																						"TIMESTAMP",
+																						"DATE",
+																						"TIME",
+																						"TLE"
+																					],
 																					"type": "string"
 																				},
 																				"value": {
@@ -2078,11 +2916,26 @@ resource "leanspace_analysis_definitions" "test" {
 																		"type": "string"
 																	},
 																	"source": {
-																		"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+																		"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+																		"enum": [
+																			"REFERENCE",
+																			"STATIC"
+																		],
 																		"type": "string"
 																	},
 																	"type": {
-																		"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+																		"enum": [
+																			"STRUCTURE",
+																			"ARRAY",
+																			"NUMERIC",
+																			"TEXT",
+																			"BOOLEAN",
+																			"ENUM",
+																			"TIMESTAMP",
+																			"DATE",
+																			"TIME",
+																			"TLE"
+																		],
 																		"type": "string"
 																	},
 																	"value": {
@@ -2105,11 +2958,26 @@ resource "leanspace_analysis_definitions" "test" {
 															"type": "string"
 														},
 														"source": {
-															"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+															"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+															"enum": [
+																"REFERENCE",
+																"STATIC"
+															],
 															"type": "string"
 														},
 														"type": {
-															"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+															"enum": [
+																"STRUCTURE",
+																"ARRAY",
+																"NUMERIC",
+																"TEXT",
+																"BOOLEAN",
+																"ENUM",
+																"TIMESTAMP",
+																"DATE",
+																"TIME",
+																"TLE"
+															],
 															"type": "string"
 														},
 														"value": {
@@ -2132,11 +3000,26 @@ resource "leanspace_analysis_definitions" "test" {
 												"type": "string"
 											},
 											"source": {
-												"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+												"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+												"enum": [
+													"REFERENCE",
+													"STATIC"
+												],
 												"type": "string"
 											},
 											"type": {
-												"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+												"enum": [
+													"STRUCTURE",
+													"ARRAY",
+													"NUMERIC",
+													"TEXT",
+													"BOOLEAN",
+													"ENUM",
+													"TIMESTAMP",
+													"DATE",
+													"TIME",
+													"TLE"
+												],
 												"type": "string"
 											},
 											"value": {
@@ -2159,11 +3042,26 @@ resource "leanspace_analysis_definitions" "test" {
 									"type": "string"
 								},
 								"source": {
-									"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+									"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+									"enum": [
+										"REFERENCE",
+										"STATIC"
+									],
 									"type": "string"
 								},
 								"type": {
-									"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+									"enum": [
+										"STRUCTURE",
+										"ARRAY",
+										"NUMERIC",
+										"TEXT",
+										"BOOLEAN",
+										"ENUM",
+										"TIMESTAMP",
+										"DATE",
+										"TIME",
+										"TLE"
+									],
 									"type": "string"
 								},
 								"value": {
@@ -2186,11 +3084,26 @@ resource "leanspace_analysis_definitions" "test" {
 						"type": "string"
 					},
 					"source": {
-						"description": "Must be set if type isn't STRUCTURE or ARRAY, it must be one of these values: REFERENCE, STATIC",
+						"description": "Must be set if type isn't STRUCTURE or ARRAY,",
+						"enum": [
+							"REFERENCE",
+							"STATIC"
+						],
 						"type": "string"
 					},
 					"type": {
-						"description": "it must be one of these values: STRUCTURE, ARRAY, NUMERIC, TEXT, BOOLEAN, ENUM, TIMESTAMP, DATE, TIME, TLE",
+						"enum": [
+							"STRUCTURE",
+							"ARRAY",
+							"NUMERIC",
+							"TEXT",
+							"BOOLEAN",
+							"ENUM",
+							"TIMESTAMP",
+							"DATE",
+							"TIME",
+							"TLE"
+						],
 						"type": "string"
 					},
 					"value": {
@@ -2232,6 +3145,9 @@ resource "leanspace_analysis_definitions" "test" {
 		},
 		"statistics": {
 			"description": "Statistics about the simulation.",
+			"items": {
+				"type": "object"
+			},
 			"readOnly": true,
 			"type": "array"
 		}

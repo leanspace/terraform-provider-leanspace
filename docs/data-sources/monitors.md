@@ -19,6 +19,9 @@ description: |-
 {
 	"properties": {
 		"content": {
+			"items": {
+				"type": "object"
+			},
 			"readOnly": true,
 			"type": "array"
 		},
@@ -28,6 +31,9 @@ description: |-
 			"type": "boolean"
 		},
 		"filters": {
+			"additionalProperties": {
+				"type": "string"
+			},
 			"type": "object"
 		},
 		"first": {
@@ -55,6 +61,9 @@ description: |-
 			"type": "number"
 		},
 		"pageable": {
+			"items": {
+				"type": "object"
+			},
 			"readOnly": true,
 			"type": "array"
 		},
@@ -64,6 +73,9 @@ description: |-
 			"type": "number"
 		},
 		"sort": {
+			"items": {
+				"type": "object"
+			},
 			"readOnly": true,
 			"type": "array"
 		},

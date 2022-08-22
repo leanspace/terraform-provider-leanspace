@@ -57,6 +57,9 @@ resource "leanspace_metrics" "metric" {
 						"type": "number"
 					},
 					"options": {
+						"additionalProperties": {
+							"type": "string"
+						},
 						"description": "Enum only: The allowed values for the enum in the format 1 = \"value\"",
 						"type": "object"
 					},
@@ -73,7 +76,15 @@ resource "leanspace_metrics" "metric" {
 						"type": "number"
 					},
 					"type": {
-						"description": "it must be one of these values: NUMERIC, BOOLEAN, TEXT, DATE, TIMESTAMP, ENUM, BINARY",
+						"enum": [
+							"NUMERIC",
+							"BOOLEAN",
+							"TEXT",
+							"DATE",
+							"TIMESTAMP",
+							"ENUM",
+							"BINARY"
+						],
 						"type": "string"
 					},
 					"unit_id": {

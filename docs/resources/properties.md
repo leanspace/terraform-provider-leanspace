@@ -86,7 +86,16 @@ resource "leanspace_properties" "property" {
 									"type": "string"
 								},
 								"type": {
-									"description": "it must be one of these values: NUMERIC, ENUM, TEXT, TIMESTAMP, DATE, TIME, BOOLEAN, GEOPOINT",
+									"enum": [
+										"NUMERIC",
+										"ENUM",
+										"TEXT",
+										"TIMESTAMP",
+										"DATE",
+										"TIME",
+										"BOOLEAN",
+										"GEOPOINT"
+									],
 									"type": "string"
 								},
 								"value": {
@@ -146,7 +155,16 @@ resource "leanspace_properties" "property" {
 									"type": "string"
 								},
 								"type": {
-									"description": "it must be one of these values: NUMERIC, ENUM, TEXT, TIMESTAMP, DATE, TIME, BOOLEAN, GEOPOINT",
+									"enum": [
+										"NUMERIC",
+										"ENUM",
+										"TEXT",
+										"TIMESTAMP",
+										"DATE",
+										"TIME",
+										"BOOLEAN",
+										"GEOPOINT"
+									],
 									"type": "string"
 								},
 								"value": {
@@ -206,7 +224,16 @@ resource "leanspace_properties" "property" {
 									"type": "string"
 								},
 								"type": {
-									"description": "it must be one of these values: NUMERIC, ENUM, TEXT, TIMESTAMP, DATE, TIME, BOOLEAN, GEOPOINT",
+									"enum": [
+										"NUMERIC",
+										"ENUM",
+										"TEXT",
+										"TIMESTAMP",
+										"DATE",
+										"TIME",
+										"BOOLEAN",
+										"GEOPOINT"
+									],
 									"type": "string"
 								},
 								"value": {
@@ -283,6 +310,9 @@ resource "leanspace_properties" "property" {
 			"type": "string"
 		},
 		"options": {
+			"additionalProperties": {
+				"type": "string"
+			},
 			"description": "Enum only: The allowed values for the enum in the format 1 = \"value\"",
 			"type": "object"
 		},
@@ -320,7 +350,16 @@ resource "leanspace_properties" "property" {
 			"uniqueItems": true
 		},
 		"type": {
-			"description": "it must be one of these values: NUMERIC, ENUM, TEXT, TIMESTAMP, DATE, TIME, BOOLEAN, GEOPOINT",
+			"enum": [
+				"NUMERIC",
+				"ENUM",
+				"TEXT",
+				"TIMESTAMP",
+				"DATE",
+				"TIME",
+				"BOOLEAN",
+				"GEOPOINT"
+			],
 			"type": "string"
 		},
 		"unit_id": {

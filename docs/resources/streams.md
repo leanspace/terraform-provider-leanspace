@@ -109,10 +109,19 @@ resource "leanspace_streams" "stream" {
 									"items": {
 										"properties": {
 											"data_type": {
-												"description": "it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN",
+												"enum": [
+													"INTEGER",
+													"UINTEGER",
+													"DECIMAL",
+													"TEXT",
+													"BOOLEAN"
+												],
 												"type": "string"
 											},
 											"errors": {
+												"items": {
+													"type": "object"
+												},
 												"readOnly": true,
 												"type": "array",
 												"uniqueItems": true
@@ -154,6 +163,9 @@ resource "leanspace_streams" "stream" {
 									"type": "array"
 								},
 								"errors": {
+									"items": {
+										"type": "object"
+									},
 									"readOnly": true,
 									"type": "array",
 									"uniqueItems": true
@@ -177,10 +189,17 @@ resource "leanspace_streams" "stream" {
 						"type": "array"
 					},
 					"endianness": {
-						"description": "Endianness of the stream, it must be one of these values: BE, LE",
+						"description": "Endianness of the stream,",
+						"enum": [
+							"BE",
+							"LE"
+						],
 						"type": "string"
 					},
 					"errors": {
+						"items": {
+							"type": "object"
+						},
 						"readOnly": true,
 						"type": "array",
 						"uniqueItems": true
@@ -189,11 +208,17 @@ resource "leanspace_streams" "stream" {
 						"items": {
 							"properties": {
 								"errors": {
+									"items": {
+										"type": "object"
+									},
 									"readOnly": true,
 									"type": "array",
 									"uniqueItems": true
 								},
 								"packet_id": {
+									"items": {
+										"type": "object"
+									},
 									"readOnly": true,
 									"type": "array"
 								},
@@ -201,6 +226,9 @@ resource "leanspace_streams" "stream" {
 									"items": {
 										"properties": {
 											"errors": {
+												"items": {
+													"type": "object"
+												},
 												"readOnly": true,
 												"type": "array",
 												"uniqueItems": true
@@ -252,49 +280,91 @@ resource "leanspace_streams" "stream" {
 									"items": {
 										"properties": {
 											"data_type": {
-												"description": "it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN",
+												"enum": [
+													"INTEGER",
+													"UINTEGER",
+													"DECIMAL",
+													"TEXT",
+													"BOOLEAN"
+												],
 												"type": "string"
 											},
 											"elements": {
 												"items": {
 													"properties": {
 														"data_type": {
-															"description": "it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN",
+															"enum": [
+																"INTEGER",
+																"UINTEGER",
+																"DECIMAL",
+																"TEXT",
+																"BOOLEAN"
+															],
 															"type": "string"
 														},
 														"elements": {
 															"items": {
 																"properties": {
 																	"data_type": {
-																		"description": "it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN",
+																		"enum": [
+																			"INTEGER",
+																			"UINTEGER",
+																			"DECIMAL",
+																			"TEXT",
+																			"BOOLEAN"
+																		],
 																		"type": "string"
 																	},
 																	"elements": {
 																		"items": {
 																			"properties": {
 																				"data_type": {
-																					"description": "it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN",
+																					"enum": [
+																						"INTEGER",
+																						"UINTEGER",
+																						"DECIMAL",
+																						"TEXT",
+																						"BOOLEAN"
+																					],
 																					"type": "string"
 																				},
 																				"elements": {
 																					"items": {
 																						"properties": {
 																							"data_type": {
-																								"description": "it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN",
+																								"enum": [
+																									"INTEGER",
+																									"UINTEGER",
+																									"DECIMAL",
+																									"TEXT",
+																									"BOOLEAN"
+																								],
 																								"type": "string"
 																							},
 																							"elements": {
 																								"items": {
 																									"properties": {
 																										"data_type": {
-																											"description": "it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN",
+																											"enum": [
+																												"INTEGER",
+																												"UINTEGER",
+																												"DECIMAL",
+																												"TEXT",
+																												"BOOLEAN"
+																											],
 																											"type": "string"
 																										},
 																										"endianness": {
-																											"description": "it must be one of these values: BE, LE",
+																											"enum": [
+																												"BE",
+																												"LE"
+																											],
 																											"type": "string"
 																										},
 																										"errors": {
+																											"items": {
+																												"type": "object"
+																											},
 																											"readOnly": true,
 																											"type": "array",
 																											"uniqueItems": true
@@ -342,10 +412,16 @@ resource "leanspace_streams" "stream" {
 																								"type": "array"
 																							},
 																							"endianness": {
-																								"description": "it must be one of these values: BE, LE",
+																								"enum": [
+																									"BE",
+																									"LE"
+																								],
 																								"type": "string"
 																							},
 																							"errors": {
+																								"items": {
+																									"type": "object"
+																								},
 																								"readOnly": true,
 																								"type": "array",
 																								"uniqueItems": true
@@ -366,7 +442,13 @@ resource "leanspace_streams" "stream" {
 																																	"type": "string"
 																																},
 																																"data_type": {
-																																	"description": "it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN",
+																																	"enum": [
+																																		"INTEGER",
+																																		"UINTEGER",
+																																		"DECIMAL",
+																																		"TEXT",
+																																		"BOOLEAN"
+																																	],
 																																	"type": "string"
 																																}
 																															},
@@ -457,10 +539,16 @@ resource "leanspace_streams" "stream" {
 																					"type": "array"
 																				},
 																				"endianness": {
-																					"description": "it must be one of these values: BE, LE",
+																					"enum": [
+																						"BE",
+																						"LE"
+																					],
 																					"type": "string"
 																				},
 																				"errors": {
+																					"items": {
+																						"type": "object"
+																					},
 																					"readOnly": true,
 																					"type": "array",
 																					"uniqueItems": true
@@ -481,7 +569,13 @@ resource "leanspace_streams" "stream" {
 																														"type": "string"
 																													},
 																													"data_type": {
-																														"description": "it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN",
+																														"enum": [
+																															"INTEGER",
+																															"UINTEGER",
+																															"DECIMAL",
+																															"TEXT",
+																															"BOOLEAN"
+																														],
 																														"type": "string"
 																													}
 																												},
@@ -572,10 +666,16 @@ resource "leanspace_streams" "stream" {
 																		"type": "array"
 																	},
 																	"endianness": {
-																		"description": "it must be one of these values: BE, LE",
+																		"enum": [
+																			"BE",
+																			"LE"
+																		],
 																		"type": "string"
 																	},
 																	"errors": {
+																		"items": {
+																			"type": "object"
+																		},
 																		"readOnly": true,
 																		"type": "array",
 																		"uniqueItems": true
@@ -596,7 +696,13 @@ resource "leanspace_streams" "stream" {
 																											"type": "string"
 																										},
 																										"data_type": {
-																											"description": "it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN",
+																											"enum": [
+																												"INTEGER",
+																												"UINTEGER",
+																												"DECIMAL",
+																												"TEXT",
+																												"BOOLEAN"
+																											],
 																											"type": "string"
 																										}
 																									},
@@ -687,10 +793,16 @@ resource "leanspace_streams" "stream" {
 															"type": "array"
 														},
 														"endianness": {
-															"description": "it must be one of these values: BE, LE",
+															"enum": [
+																"BE",
+																"LE"
+															],
 															"type": "string"
 														},
 														"errors": {
+															"items": {
+																"type": "object"
+															},
 															"readOnly": true,
 															"type": "array",
 															"uniqueItems": true
@@ -711,7 +823,13 @@ resource "leanspace_streams" "stream" {
 																								"type": "string"
 																							},
 																							"data_type": {
-																								"description": "it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN",
+																								"enum": [
+																									"INTEGER",
+																									"UINTEGER",
+																									"DECIMAL",
+																									"TEXT",
+																									"BOOLEAN"
+																								],
 																								"type": "string"
 																							}
 																						},
@@ -802,10 +920,16 @@ resource "leanspace_streams" "stream" {
 												"type": "array"
 											},
 											"endianness": {
-												"description": "it must be one of these values: BE, LE",
+												"enum": [
+													"BE",
+													"LE"
+												],
 												"type": "string"
 											},
 											"errors": {
+												"items": {
+													"type": "object"
+												},
 												"readOnly": true,
 												"type": "array",
 												"uniqueItems": true
@@ -826,7 +950,13 @@ resource "leanspace_streams" "stream" {
 																					"type": "string"
 																				},
 																				"data_type": {
-																					"description": "it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN",
+																					"enum": [
+																						"INTEGER",
+																						"UINTEGER",
+																						"DECIMAL",
+																						"TEXT",
+																						"BOOLEAN"
+																					],
 																					"type": "string"
 																				}
 																			},
@@ -917,6 +1047,9 @@ resource "leanspace_streams" "stream" {
 									"type": "array"
 								},
 								"errors": {
+									"items": {
+										"type": "object"
+									},
 									"readOnly": true,
 									"type": "array",
 									"uniqueItems": true

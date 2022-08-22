@@ -57,6 +57,9 @@ resource "leanspace_members" "test" {
 			"type": "string"
 		},
 		"policy_ids": {
+			"items": {
+				"type": "string"
+			},
 			"type": "array",
 			"uniqueItems": true
 		},

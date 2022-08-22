@@ -68,6 +68,9 @@ resource "leanspace_dashboards" "dashboard" {
 			"type": "string"
 		},
 		"node_ids": {
+			"items": {
+				"type": "string"
+			},
 			"type": "array",
 			"uniqueItems": true
 		},
@@ -109,7 +112,13 @@ resource "leanspace_dashboards" "dashboard" {
 						"type": "number"
 					},
 					"type": {
-						"description": "it must be one of these values: TABLE, LINE, BAR, AREA, VALUE",
+						"enum": [
+							"TABLE",
+							"LINE",
+							"BAR",
+							"AREA",
+							"VALUE"
+						],
 						"type": "string"
 					},
 					"w": {
@@ -139,6 +148,9 @@ resource "leanspace_dashboards" "dashboard" {
 			"uniqueItems": true
 		},
 		"widgets": {
+			"items": {
+				"type": "object"
+			},
 			"readOnly": true,
 			"type": "array",
 			"uniqueItems": true

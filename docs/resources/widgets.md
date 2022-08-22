@@ -51,6 +51,9 @@ resource "leanspace_widgets" "test_line" {
 			"type": "string"
 		},
 		"dashboards": {
+			"items": {
+				"type": "object"
+			},
 			"readOnly": true,
 			"type": "array",
 			"uniqueItems": true
@@ -59,7 +62,15 @@ resource "leanspace_widgets" "test_line" {
 			"type": "string"
 		},
 		"granularity": {
-			"description": "it must be one of these values: second, minute, hour, day, week, month, raw",
+			"enum": [
+				"second",
+				"minute",
+				"hour",
+				"day",
+				"week",
+				"month",
+				"raw"
+			],
 			"type": "string"
 		},
 		"id": {
@@ -84,9 +95,15 @@ resource "leanspace_widgets" "test_line" {
 						"type": "string"
 					},
 					"y_axis_range_max": {
+						"items": {
+							"type": "number"
+						},
 						"type": "array"
 					},
 					"y_axis_range_min": {
+						"items": {
+							"type": "number"
+						},
 						"type": "array"
 					}
 				},
@@ -100,6 +117,9 @@ resource "leanspace_widgets" "test_line" {
 			"type": "array"
 		},
 		"metrics": {
+			"items": {
+				"type": "object"
+			},
 			"readOnly": true,
 			"type": "array"
 		},
@@ -110,11 +130,21 @@ resource "leanspace_widgets" "test_line" {
 			"items": {
 				"properties": {
 					"aggregation": {
-						"description": "it must be one of these values: avg, count, sum, min, max, none",
+						"enum": [
+							"avg",
+							"count",
+							"sum",
+							"min",
+							"max",
+							"none"
+						],
 						"type": "string"
 					},
 					"datasource": {
-						"description": "it must be one of these values: metric, raw_stream",
+						"enum": [
+							"metric",
+							"raw_stream"
+						],
 						"type": "string"
 					},
 					"filters": {
@@ -124,7 +154,12 @@ resource "leanspace_widgets" "test_line" {
 									"type": "string"
 								},
 								"operator": {
-									"description": "it must be one of these values: gt, lt, equals, notEquals",
+									"enum": [
+										"gt",
+										"lt",
+										"equals",
+										"notEquals"
+									],
 									"type": "string"
 								},
 								"value": {
@@ -186,7 +221,13 @@ resource "leanspace_widgets" "test_line" {
 			"uniqueItems": true
 		},
 		"type": {
-			"description": "it must be one of these values: TABLE, LINE, BAR, AREA, VALUE",
+			"enum": [
+				"TABLE",
+				"LINE",
+				"BAR",
+				"AREA",
+				"VALUE"
+			],
 			"type": "string"
 		}
 	},

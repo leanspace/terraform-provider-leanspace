@@ -51,6 +51,9 @@ resource "leanspace_teams" "team" {
 			"type": "string"
 		},
 		"members": {
+			"items": {
+				"type": "string"
+			},
 			"type": "array",
 			"uniqueItems": true
 		},
@@ -58,6 +61,9 @@ resource "leanspace_teams" "team" {
 			"type": "string"
 		},
 		"policy_ids": {
+			"items": {
+				"type": "string"
+			},
 			"type": "array",
 			"uniqueItems": true
 		}

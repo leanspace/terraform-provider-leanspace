@@ -77,6 +77,9 @@ resource "leanspace_access_policies" "access_policy" {
 			"items": {
 				"properties": {
 					"actions": {
+						"items": {
+							"type": "string"
+						},
 						"type": "array"
 					},
 					"name": {
