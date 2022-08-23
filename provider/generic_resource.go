@@ -30,15 +30,15 @@ func (dataSource DataSourceType[T, PT]) getSchemaKeys() []string {
 
 func (dataSource DataSourceType[T, PT]) getData(d *schema.ResourceData) (string, PT, error) {
 	valueId := d.Id()
-	hasNonNil := false
+	onlyNil := true
 	valueRaw := make(map[string]any)
 	for _, key := range dataSource.getSchemaKeys() {
 		valueRaw[key] = d.Get(key)
 		if valueRaw[key] != nil {
-			hasNonNil = true
+			onlyNil = false
 		}
 	}
-	if !hasNonNil || len(valueRaw) == 0 {
+	if onlyNil || len(valueRaw) == 0 {
 		return valueId, nil, nil
 	}
 	var value PT = new(T)
