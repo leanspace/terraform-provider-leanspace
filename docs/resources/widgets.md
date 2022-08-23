@@ -52,6 +52,18 @@ resource "leanspace_widgets" "test_line" {
 		},
 		"dashboards": {
 			"items": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name"
+				],
 				"type": "object"
 			},
 			"readOnly": true,
@@ -118,6 +130,18 @@ resource "leanspace_widgets" "test_line" {
 		},
 		"metrics": {
 			"items": {
+				"properties": {
+					"aggregation": {
+						"type": "string"
+					},
+					"id": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"aggregation",
+					"id"
+				],
 				"type": "object"
 			},
 			"readOnly": true,

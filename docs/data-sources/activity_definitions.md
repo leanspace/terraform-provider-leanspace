@@ -20,6 +20,250 @@ description: |-
 	"properties": {
 		"content": {
 			"items": {
+				"properties": {
+					"argument_definitions": {
+						"items": {
+							"properties": {
+								"attributes": {
+									"items": {
+										"properties": {
+											"after": {
+												"type": "string"
+											},
+											"before": {
+												"type": "string"
+											},
+											"default_value": {
+												"type": "string"
+											},
+											"max": {
+												"type": "number"
+											},
+											"max_length": {
+												"type": "number"
+											},
+											"min": {
+												"type": "number"
+											},
+											"min_length": {
+												"type": "number"
+											},
+											"options": {
+												"additionalProperties": {
+													"type": "string"
+												},
+												"type": "object"
+											},
+											"pattern": {
+												"type": "string"
+											},
+											"precision": {
+												"type": "number"
+											},
+											"required": {
+												"type": "boolean"
+											},
+											"scale": {
+												"type": "number"
+											},
+											"type": {
+												"type": "string"
+											},
+											"unit_id": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"after",
+											"before",
+											"default_value",
+											"max",
+											"max_length",
+											"min",
+											"min_length",
+											"options",
+											"pattern",
+											"precision",
+											"required",
+											"scale",
+											"type",
+											"unit_id"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								},
+								"description": {
+									"type": "string"
+								},
+								"id": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"attributes",
+								"description",
+								"id",
+								"name"
+							],
+							"type": "object"
+						},
+						"type": "array",
+						"uniqueItems": true
+					},
+					"command_mappings": {
+						"items": {
+							"properties": {
+								"argument_mappings": {
+									"items": {
+										"properties": {
+											"activity_definition_argument_name": {
+												"type": "string"
+											},
+											"command_definition_argument_name": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"activity_definition_argument_name",
+											"command_definition_argument_name"
+										],
+										"type": "object"
+									},
+									"type": "array",
+									"uniqueItems": true
+								},
+								"command_definition_id": {
+									"type": "string"
+								},
+								"delay_in_milliseconds": {
+									"type": "number"
+								},
+								"metadata_mappings": {
+									"items": {
+										"properties": {
+											"activity_definition_metadata_name": {
+												"type": "string"
+											},
+											"command_definition_argument_name": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"activity_definition_metadata_name",
+											"command_definition_argument_name"
+										],
+										"type": "object"
+									},
+									"type": "array",
+									"uniqueItems": true
+								},
+								"position": {
+									"type": "number"
+								}
+							},
+							"required": [
+								"argument_mappings",
+								"command_definition_id",
+								"delay_in_milliseconds",
+								"metadata_mappings",
+								"position"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"created_by": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"estimated_duration": {
+						"type": "number"
+					},
+					"id": {
+						"type": "string"
+					},
+					"last_modified_at": {
+						"type": "string"
+					},
+					"last_modified_by": {
+						"type": "string"
+					},
+					"metadata": {
+						"items": {
+							"properties": {
+								"attributes": {
+									"items": {
+										"properties": {
+											"type": {
+												"type": "string"
+											},
+											"unit_id": {
+												"type": "string"
+											},
+											"value": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"type",
+											"unit_id",
+											"value"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								},
+								"description": {
+									"type": "string"
+								},
+								"id": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"attributes",
+								"description",
+								"id",
+								"name"
+							],
+							"type": "object"
+						},
+						"type": "array",
+						"uniqueItems": true
+					},
+					"name": {
+						"type": "string"
+					},
+					"node_id": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"argument_definitions",
+					"command_mappings",
+					"created_at",
+					"created_by",
+					"description",
+					"estimated_duration",
+					"id",
+					"last_modified_at",
+					"last_modified_by",
+					"metadata",
+					"name",
+					"node_id"
+				],
 				"type": "object"
 			},
 			"readOnly": true,
@@ -62,6 +306,65 @@ description: |-
 		},
 		"pageable": {
 			"items": {
+				"properties": {
+					"offset": {
+						"type": "number"
+					},
+					"page_number": {
+						"type": "number"
+					},
+					"page_size": {
+						"type": "number"
+					},
+					"paged": {
+						"type": "boolean"
+					},
+					"sort": {
+						"items": {
+							"properties": {
+								"ascending": {
+									"type": "boolean"
+								},
+								"descending": {
+									"type": "boolean"
+								},
+								"direction": {
+									"type": "string"
+								},
+								"ignore_case": {
+									"type": "boolean"
+								},
+								"null_handling": {
+									"type": "string"
+								},
+								"property": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"ascending",
+								"descending",
+								"direction",
+								"ignore_case",
+								"null_handling",
+								"property"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"unpaged": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"offset",
+					"page_number",
+					"page_size",
+					"paged",
+					"sort",
+					"unpaged"
+				],
 				"type": "object"
 			},
 			"readOnly": true,
@@ -74,6 +377,34 @@ description: |-
 		},
 		"sort": {
 			"items": {
+				"properties": {
+					"ascending": {
+						"type": "boolean"
+					},
+					"descending": {
+						"type": "boolean"
+					},
+					"direction": {
+						"type": "string"
+					},
+					"ignore_case": {
+						"type": "boolean"
+					},
+					"null_handling": {
+						"type": "string"
+					},
+					"property": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"ascending",
+					"descending",
+					"direction",
+					"ignore_case",
+					"null_handling",
+					"property"
+				],
 				"type": "object"
 			},
 			"readOnly": true,

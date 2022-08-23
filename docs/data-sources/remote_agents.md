@@ -20,6 +20,151 @@ description: |-
 	"properties": {
 		"content": {
 			"items": {
+				"properties": {
+					"connectors": {
+						"items": {
+							"properties": {
+								"command_queue_id": {
+									"type": "string"
+								},
+								"created_at": {
+									"type": "string"
+								},
+								"created_by": {
+									"type": "string"
+								},
+								"destination": {
+									"items": {
+										"properties": {
+											"binding": {
+												"type": "string"
+											},
+											"type": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"binding",
+											"type"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								},
+								"gateway_id": {
+									"type": "string"
+								},
+								"id": {
+									"type": "string"
+								},
+								"last_modified_at": {
+									"type": "string"
+								},
+								"last_modified_by": {
+									"type": "string"
+								},
+								"socket": {
+									"items": {
+										"properties": {
+											"host": {
+												"type": "string"
+											},
+											"port": {
+												"type": "number"
+											},
+											"type": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"host",
+											"port",
+											"type"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								},
+								"source": {
+									"items": {
+										"properties": {
+											"binding": {
+												"type": "string"
+											},
+											"type": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"binding",
+											"type"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								},
+								"stream_id": {
+									"type": "string"
+								},
+								"type": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"command_queue_id",
+								"created_at",
+								"created_by",
+								"destination",
+								"gateway_id",
+								"id",
+								"last_modified_at",
+								"last_modified_by",
+								"socket",
+								"source",
+								"stream_id",
+								"type"
+							],
+							"type": "object"
+						},
+						"type": "array",
+						"uniqueItems": true
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"created_by": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"id": {
+						"type": "string"
+					},
+					"last_modified_at": {
+						"type": "string"
+					},
+					"last_modified_by": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"service_account_id": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"connectors",
+					"created_at",
+					"created_by",
+					"description",
+					"id",
+					"last_modified_at",
+					"last_modified_by",
+					"name",
+					"service_account_id"
+				],
 				"type": "object"
 			},
 			"readOnly": true,
@@ -62,6 +207,65 @@ description: |-
 		},
 		"pageable": {
 			"items": {
+				"properties": {
+					"offset": {
+						"type": "number"
+					},
+					"page_number": {
+						"type": "number"
+					},
+					"page_size": {
+						"type": "number"
+					},
+					"paged": {
+						"type": "boolean"
+					},
+					"sort": {
+						"items": {
+							"properties": {
+								"ascending": {
+									"type": "boolean"
+								},
+								"descending": {
+									"type": "boolean"
+								},
+								"direction": {
+									"type": "string"
+								},
+								"ignore_case": {
+									"type": "boolean"
+								},
+								"null_handling": {
+									"type": "string"
+								},
+								"property": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"ascending",
+								"descending",
+								"direction",
+								"ignore_case",
+								"null_handling",
+								"property"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"unpaged": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"offset",
+					"page_number",
+					"page_size",
+					"paged",
+					"sort",
+					"unpaged"
+				],
 				"type": "object"
 			},
 			"readOnly": true,
@@ -74,6 +278,34 @@ description: |-
 		},
 		"sort": {
 			"items": {
+				"properties": {
+					"ascending": {
+						"type": "boolean"
+					},
+					"descending": {
+						"type": "boolean"
+					},
+					"direction": {
+						"type": "string"
+					},
+					"ignore_case": {
+						"type": "boolean"
+					},
+					"null_handling": {
+						"type": "string"
+					},
+					"property": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"ascending",
+					"descending",
+					"direction",
+					"ignore_case",
+					"null_handling",
+					"property"
+				],
 				"type": "object"
 			},
 			"readOnly": true,

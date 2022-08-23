@@ -20,6 +20,22 @@ description: |-
 	"properties": {
 		"content": {
 			"items": {
+				"properties": {
+					"display_name": {
+						"type": "string"
+					},
+					"id": {
+						"type": "string"
+					},
+					"symbol": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"display_name",
+					"id",
+					"symbol"
+				],
 				"type": "object"
 			},
 			"readOnly": true,
@@ -62,6 +78,65 @@ description: |-
 		},
 		"pageable": {
 			"items": {
+				"properties": {
+					"offset": {
+						"type": "number"
+					},
+					"page_number": {
+						"type": "number"
+					},
+					"page_size": {
+						"type": "number"
+					},
+					"paged": {
+						"type": "boolean"
+					},
+					"sort": {
+						"items": {
+							"properties": {
+								"ascending": {
+									"type": "boolean"
+								},
+								"descending": {
+									"type": "boolean"
+								},
+								"direction": {
+									"type": "string"
+								},
+								"ignore_case": {
+									"type": "boolean"
+								},
+								"null_handling": {
+									"type": "string"
+								},
+								"property": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"ascending",
+								"descending",
+								"direction",
+								"ignore_case",
+								"null_handling",
+								"property"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"unpaged": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"offset",
+					"page_number",
+					"page_size",
+					"paged",
+					"sort",
+					"unpaged"
+				],
 				"type": "object"
 			},
 			"readOnly": true,
@@ -74,6 +149,34 @@ description: |-
 		},
 		"sort": {
 			"items": {
+				"properties": {
+					"ascending": {
+						"type": "boolean"
+					},
+					"descending": {
+						"type": "boolean"
+					},
+					"direction": {
+						"type": "string"
+					},
+					"ignore_case": {
+						"type": "boolean"
+					},
+					"null_handling": {
+						"type": "string"
+					},
+					"property": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"ascending",
+					"descending",
+					"direction",
+					"ignore_case",
+					"null_handling",
+					"property"
+				],
 				"type": "object"
 			},
 			"readOnly": true,

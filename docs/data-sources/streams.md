@@ -20,6 +20,991 @@ description: |-
 	"properties": {
 		"content": {
 			"items": {
+				"properties": {
+					"asset_id": {
+						"type": "string"
+					},
+					"configuration": {
+						"items": {
+							"properties": {
+								"computations": {
+									"items": {
+										"properties": {
+											"elements": {
+												"items": {
+													"properties": {
+														"data_type": {
+															"type": "string"
+														},
+														"errors": {
+															"items": {
+																"properties": {
+																	"code": {
+																		"type": "string"
+																	},
+																	"message": {
+																		"type": "string"
+																	}
+																},
+																"required": [
+																	"code",
+																	"message"
+																],
+																"type": "object"
+															},
+															"type": "array",
+															"uniqueItems": true
+														},
+														"expression": {
+															"type": "string"
+														},
+														"name": {
+															"type": "string"
+														},
+														"order": {
+															"type": "number"
+														},
+														"type": {
+															"type": "string"
+														},
+														"valid": {
+															"type": "boolean"
+														}
+													},
+													"required": [
+														"data_type",
+														"errors",
+														"expression",
+														"name",
+														"order",
+														"type",
+														"valid"
+													],
+													"type": "object"
+												},
+												"type": "array"
+											},
+											"errors": {
+												"items": {
+													"properties": {
+														"code": {
+															"type": "string"
+														},
+														"message": {
+															"type": "string"
+														}
+													},
+													"required": [
+														"code",
+														"message"
+													],
+													"type": "object"
+												},
+												"type": "array",
+												"uniqueItems": true
+											},
+											"valid": {
+												"type": "boolean"
+											}
+										},
+										"required": [
+											"elements",
+											"errors",
+											"valid"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								},
+								"endianness": {
+									"type": "string"
+								},
+								"errors": {
+									"items": {
+										"properties": {
+											"code": {
+												"type": "string"
+											},
+											"message": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"code",
+											"message"
+										],
+										"type": "object"
+									},
+									"type": "array",
+									"uniqueItems": true
+								},
+								"metadata": {
+									"items": {
+										"properties": {
+											"errors": {
+												"items": {
+													"properties": {
+														"code": {
+															"type": "string"
+														},
+														"message": {
+															"type": "string"
+														}
+													},
+													"required": [
+														"code",
+														"message"
+													],
+													"type": "object"
+												},
+												"type": "array",
+												"uniqueItems": true
+											},
+											"packet_id": {
+												"items": {
+													"properties": {
+														"errors": {
+															"items": {
+																"properties": {
+																	"code": {
+																		"type": "string"
+																	},
+																	"message": {
+																		"type": "string"
+																	}
+																},
+																"required": [
+																	"code",
+																	"message"
+																],
+																"type": "object"
+															},
+															"type": "array",
+															"uniqueItems": true
+														},
+														"valid": {
+															"type": "boolean"
+														}
+													},
+													"required": [
+														"errors",
+														"valid"
+													],
+													"type": "object"
+												},
+												"type": "array"
+											},
+											"timestamp": {
+												"items": {
+													"properties": {
+														"errors": {
+															"items": {
+																"properties": {
+																	"code": {
+																		"type": "string"
+																	},
+																	"message": {
+																		"type": "string"
+																	}
+																},
+																"required": [
+																	"code",
+																	"message"
+																],
+																"type": "object"
+															},
+															"type": "array",
+															"uniqueItems": true
+														},
+														"expression": {
+															"type": "string"
+														},
+														"valid": {
+															"type": "boolean"
+														}
+													},
+													"required": [
+														"errors",
+														"expression",
+														"valid"
+													],
+													"type": "object"
+												},
+												"type": "array"
+											},
+											"valid": {
+												"type": "boolean"
+											}
+										},
+										"required": [
+											"errors",
+											"packet_id",
+											"timestamp",
+											"valid"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								},
+								"structure": {
+									"items": {
+										"properties": {
+											"elements": {
+												"items": {
+													"properties": {
+														"data_type": {
+															"type": "string"
+														},
+														"elements": {
+															"items": {
+																"properties": {
+																	"data_type": {
+																		"type": "string"
+																	},
+																	"elements": {
+																		"items": {
+																			"properties": {
+																				"data_type": {
+																					"type": "string"
+																				},
+																				"elements": {
+																					"items": {
+																						"properties": {
+																							"data_type": {
+																								"type": "string"
+																							},
+																							"elements": {
+																								"items": {
+																									"properties": {
+																										"data_type": {
+																											"type": "string"
+																										},
+																										"elements": {
+																											"items": {
+																												"properties": {
+																													"data_type": {
+																														"type": "string"
+																													},
+																													"endianness": {
+																														"type": "string"
+																													},
+																													"errors": {
+																														"items": {
+																															"properties": {
+																																"code": {
+																																	"type": "string"
+																																},
+																																"message": {
+																																	"type": "string"
+																																}
+																															},
+																															"required": [
+																																"code",
+																																"message"
+																															],
+																															"type": "object"
+																														},
+																														"type": "array",
+																														"uniqueItems": true
+																													},
+																													"length_in_bits": {
+																														"type": "number"
+																													},
+																													"name": {
+																														"type": "string"
+																													},
+																													"order": {
+																														"type": "number"
+																													},
+																													"path": {
+																														"type": "string"
+																													},
+																													"processor": {
+																														"type": "string"
+																													},
+																													"type": {
+																														"type": "string"
+																													},
+																													"valid": {
+																														"type": "boolean"
+																													}
+																												},
+																												"required": [
+																													"data_type",
+																													"endianness",
+																													"errors",
+																													"length_in_bits",
+																													"name",
+																													"order",
+																													"path",
+																													"processor",
+																													"type",
+																													"valid"
+																												],
+																												"type": "object"
+																											},
+																											"type": "array"
+																										},
+																										"endianness": {
+																											"type": "string"
+																										},
+																										"errors": {
+																											"items": {
+																												"properties": {
+																													"code": {
+																														"type": "string"
+																													},
+																													"message": {
+																														"type": "string"
+																													}
+																												},
+																												"required": [
+																													"code",
+																													"message"
+																												],
+																												"type": "object"
+																											},
+																											"type": "array",
+																											"uniqueItems": true
+																										},
+																										"expression": {
+																											"items": {
+																												"properties": {
+																													"options": {
+																														"items": {
+																															"properties": {
+																																"component": {
+																																	"type": "string"
+																																},
+																																"value": {
+																																	"items": {
+																																		"properties": {
+																																			"data": {
+																																				"type": "string"
+																																			},
+																																			"data_type": {
+																																				"type": "string"
+																																			}
+																																		},
+																																		"required": [
+																																			"data",
+																																			"data_type"
+																																		],
+																																		"type": "object"
+																																	},
+																																	"type": "array"
+																																}
+																															},
+																															"required": [
+																																"component",
+																																"value"
+																															],
+																															"type": "object"
+																														},
+																														"type": "array",
+																														"uniqueItems": true
+																													},
+																													"switch_on": {
+																														"type": "string"
+																													}
+																												},
+																												"required": [
+																													"options",
+																													"switch_on"
+																												],
+																												"type": "object"
+																											},
+																											"type": "array"
+																										},
+																										"length_in_bits": {
+																											"type": "number"
+																										},
+																										"name": {
+																											"type": "string"
+																										},
+																										"order": {
+																											"type": "number"
+																										},
+																										"path": {
+																											"type": "string"
+																										},
+																										"processor": {
+																											"type": "string"
+																										},
+																										"type": {
+																											"type": "string"
+																										},
+																										"valid": {
+																											"type": "boolean"
+																										}
+																									},
+																									"required": [
+																										"data_type",
+																										"elements",
+																										"endianness",
+																										"errors",
+																										"expression",
+																										"length_in_bits",
+																										"name",
+																										"order",
+																										"path",
+																										"processor",
+																										"type",
+																										"valid"
+																									],
+																									"type": "object"
+																								},
+																								"type": "array"
+																							},
+																							"endianness": {
+																								"type": "string"
+																							},
+																							"errors": {
+																								"items": {
+																									"properties": {
+																										"code": {
+																											"type": "string"
+																										},
+																										"message": {
+																											"type": "string"
+																										}
+																									},
+																									"required": [
+																										"code",
+																										"message"
+																									],
+																									"type": "object"
+																								},
+																								"type": "array",
+																								"uniqueItems": true
+																							},
+																							"expression": {
+																								"items": {
+																									"properties": {
+																										"options": {
+																											"items": {
+																												"properties": {
+																													"component": {
+																														"type": "string"
+																													},
+																													"value": {
+																														"items": {
+																															"properties": {
+																																"data": {
+																																	"type": "string"
+																																},
+																																"data_type": {
+																																	"type": "string"
+																																}
+																															},
+																															"required": [
+																																"data",
+																																"data_type"
+																															],
+																															"type": "object"
+																														},
+																														"type": "array"
+																													}
+																												},
+																												"required": [
+																													"component",
+																													"value"
+																												],
+																												"type": "object"
+																											},
+																											"type": "array",
+																											"uniqueItems": true
+																										},
+																										"switch_on": {
+																											"type": "string"
+																										}
+																									},
+																									"required": [
+																										"options",
+																										"switch_on"
+																									],
+																									"type": "object"
+																								},
+																								"type": "array"
+																							},
+																							"length_in_bits": {
+																								"type": "number"
+																							},
+																							"name": {
+																								"type": "string"
+																							},
+																							"order": {
+																								"type": "number"
+																							},
+																							"path": {
+																								"type": "string"
+																							},
+																							"processor": {
+																								"type": "string"
+																							},
+																							"type": {
+																								"type": "string"
+																							},
+																							"valid": {
+																								"type": "boolean"
+																							}
+																						},
+																						"required": [
+																							"data_type",
+																							"elements",
+																							"endianness",
+																							"errors",
+																							"expression",
+																							"length_in_bits",
+																							"name",
+																							"order",
+																							"path",
+																							"processor",
+																							"type",
+																							"valid"
+																						],
+																						"type": "object"
+																					},
+																					"type": "array"
+																				},
+																				"endianness": {
+																					"type": "string"
+																				},
+																				"errors": {
+																					"items": {
+																						"properties": {
+																							"code": {
+																								"type": "string"
+																							},
+																							"message": {
+																								"type": "string"
+																							}
+																						},
+																						"required": [
+																							"code",
+																							"message"
+																						],
+																						"type": "object"
+																					},
+																					"type": "array",
+																					"uniqueItems": true
+																				},
+																				"expression": {
+																					"items": {
+																						"properties": {
+																							"options": {
+																								"items": {
+																									"properties": {
+																										"component": {
+																											"type": "string"
+																										},
+																										"value": {
+																											"items": {
+																												"properties": {
+																													"data": {
+																														"type": "string"
+																													},
+																													"data_type": {
+																														"type": "string"
+																													}
+																												},
+																												"required": [
+																													"data",
+																													"data_type"
+																												],
+																												"type": "object"
+																											},
+																											"type": "array"
+																										}
+																									},
+																									"required": [
+																										"component",
+																										"value"
+																									],
+																									"type": "object"
+																								},
+																								"type": "array",
+																								"uniqueItems": true
+																							},
+																							"switch_on": {
+																								"type": "string"
+																							}
+																						},
+																						"required": [
+																							"options",
+																							"switch_on"
+																						],
+																						"type": "object"
+																					},
+																					"type": "array"
+																				},
+																				"length_in_bits": {
+																					"type": "number"
+																				},
+																				"name": {
+																					"type": "string"
+																				},
+																				"order": {
+																					"type": "number"
+																				},
+																				"path": {
+																					"type": "string"
+																				},
+																				"processor": {
+																					"type": "string"
+																				},
+																				"type": {
+																					"type": "string"
+																				},
+																				"valid": {
+																					"type": "boolean"
+																				}
+																			},
+																			"required": [
+																				"data_type",
+																				"elements",
+																				"endianness",
+																				"errors",
+																				"expression",
+																				"length_in_bits",
+																				"name",
+																				"order",
+																				"path",
+																				"processor",
+																				"type",
+																				"valid"
+																			],
+																			"type": "object"
+																		},
+																		"type": "array"
+																	},
+																	"endianness": {
+																		"type": "string"
+																	},
+																	"errors": {
+																		"items": {
+																			"properties": {
+																				"code": {
+																					"type": "string"
+																				},
+																				"message": {
+																					"type": "string"
+																				}
+																			},
+																			"required": [
+																				"code",
+																				"message"
+																			],
+																			"type": "object"
+																		},
+																		"type": "array",
+																		"uniqueItems": true
+																	},
+																	"expression": {
+																		"items": {
+																			"properties": {
+																				"options": {
+																					"items": {
+																						"properties": {
+																							"component": {
+																								"type": "string"
+																							},
+																							"value": {
+																								"items": {
+																									"properties": {
+																										"data": {
+																											"type": "string"
+																										},
+																										"data_type": {
+																											"type": "string"
+																										}
+																									},
+																									"required": [
+																										"data",
+																										"data_type"
+																									],
+																									"type": "object"
+																								},
+																								"type": "array"
+																							}
+																						},
+																						"required": [
+																							"component",
+																							"value"
+																						],
+																						"type": "object"
+																					},
+																					"type": "array",
+																					"uniqueItems": true
+																				},
+																				"switch_on": {
+																					"type": "string"
+																				}
+																			},
+																			"required": [
+																				"options",
+																				"switch_on"
+																			],
+																			"type": "object"
+																		},
+																		"type": "array"
+																	},
+																	"length_in_bits": {
+																		"type": "number"
+																	},
+																	"name": {
+																		"type": "string"
+																	},
+																	"order": {
+																		"type": "number"
+																	},
+																	"path": {
+																		"type": "string"
+																	},
+																	"processor": {
+																		"type": "string"
+																	},
+																	"type": {
+																		"type": "string"
+																	},
+																	"valid": {
+																		"type": "boolean"
+																	}
+																},
+																"required": [
+																	"data_type",
+																	"elements",
+																	"endianness",
+																	"errors",
+																	"expression",
+																	"length_in_bits",
+																	"name",
+																	"order",
+																	"path",
+																	"processor",
+																	"type",
+																	"valid"
+																],
+																"type": "object"
+															},
+															"type": "array"
+														},
+														"endianness": {
+															"type": "string"
+														},
+														"errors": {
+															"items": {
+																"properties": {
+																	"code": {
+																		"type": "string"
+																	},
+																	"message": {
+																		"type": "string"
+																	}
+																},
+																"required": [
+																	"code",
+																	"message"
+																],
+																"type": "object"
+															},
+															"type": "array",
+															"uniqueItems": true
+														},
+														"expression": {
+															"items": {
+																"properties": {
+																	"options": {
+																		"items": {
+																			"properties": {
+																				"component": {
+																					"type": "string"
+																				},
+																				"value": {
+																					"items": {
+																						"properties": {
+																							"data": {
+																								"type": "string"
+																							},
+																							"data_type": {
+																								"type": "string"
+																							}
+																						},
+																						"required": [
+																							"data",
+																							"data_type"
+																						],
+																						"type": "object"
+																					},
+																					"type": "array"
+																				}
+																			},
+																			"required": [
+																				"component",
+																				"value"
+																			],
+																			"type": "object"
+																		},
+																		"type": "array",
+																		"uniqueItems": true
+																	},
+																	"switch_on": {
+																		"type": "string"
+																	}
+																},
+																"required": [
+																	"options",
+																	"switch_on"
+																],
+																"type": "object"
+															},
+															"type": "array"
+														},
+														"length_in_bits": {
+															"type": "number"
+														},
+														"name": {
+															"type": "string"
+														},
+														"order": {
+															"type": "number"
+														},
+														"path": {
+															"type": "string"
+														},
+														"processor": {
+															"type": "string"
+														},
+														"type": {
+															"type": "string"
+														},
+														"valid": {
+															"type": "boolean"
+														}
+													},
+													"required": [
+														"data_type",
+														"elements",
+														"endianness",
+														"errors",
+														"expression",
+														"length_in_bits",
+														"name",
+														"order",
+														"path",
+														"processor",
+														"type",
+														"valid"
+													],
+													"type": "object"
+												},
+												"type": "array"
+											},
+											"errors": {
+												"items": {
+													"properties": {
+														"code": {
+															"type": "string"
+														},
+														"message": {
+															"type": "string"
+														}
+													},
+													"required": [
+														"code",
+														"message"
+													],
+													"type": "object"
+												},
+												"type": "array",
+												"uniqueItems": true
+											},
+											"valid": {
+												"type": "boolean"
+											}
+										},
+										"required": [
+											"elements",
+											"errors",
+											"valid"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								},
+								"valid": {
+									"type": "boolean"
+								}
+							},
+							"required": [
+								"computations",
+								"endianness",
+								"errors",
+								"metadata",
+								"structure",
+								"valid"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"created_by": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"id": {
+						"type": "string"
+					},
+					"last_modified_at": {
+						"type": "string"
+					},
+					"last_modified_by": {
+						"type": "string"
+					},
+					"mappings": {
+						"items": {
+							"properties": {
+								"component": {
+									"type": "string"
+								},
+								"metric_id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"component",
+								"metric_id"
+							],
+							"type": "object"
+						},
+						"type": "array",
+						"uniqueItems": true
+					},
+					"name": {
+						"type": "string"
+					},
+					"version": {
+						"type": "number"
+					}
+				},
+				"required": [
+					"asset_id",
+					"configuration",
+					"created_at",
+					"created_by",
+					"description",
+					"id",
+					"last_modified_at",
+					"last_modified_by",
+					"mappings",
+					"name",
+					"version"
+				],
 				"type": "object"
 			},
 			"readOnly": true,
@@ -62,6 +1047,65 @@ description: |-
 		},
 		"pageable": {
 			"items": {
+				"properties": {
+					"offset": {
+						"type": "number"
+					},
+					"page_number": {
+						"type": "number"
+					},
+					"page_size": {
+						"type": "number"
+					},
+					"paged": {
+						"type": "boolean"
+					},
+					"sort": {
+						"items": {
+							"properties": {
+								"ascending": {
+									"type": "boolean"
+								},
+								"descending": {
+									"type": "boolean"
+								},
+								"direction": {
+									"type": "string"
+								},
+								"ignore_case": {
+									"type": "boolean"
+								},
+								"null_handling": {
+									"type": "string"
+								},
+								"property": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"ascending",
+								"descending",
+								"direction",
+								"ignore_case",
+								"null_handling",
+								"property"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"unpaged": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"offset",
+					"page_number",
+					"page_size",
+					"paged",
+					"sort",
+					"unpaged"
+				],
 				"type": "object"
 			},
 			"readOnly": true,
@@ -74,6 +1118,34 @@ description: |-
 		},
 		"sort": {
 			"items": {
+				"properties": {
+					"ascending": {
+						"type": "boolean"
+					},
+					"descending": {
+						"type": "boolean"
+					},
+					"direction": {
+						"type": "string"
+					},
+					"ignore_case": {
+						"type": "boolean"
+					},
+					"null_handling": {
+						"type": "string"
+					},
+					"property": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"ascending",
+					"descending",
+					"direction",
+					"ignore_case",
+					"null_handling",
+					"property"
+				],
 				"type": "object"
 			},
 			"readOnly": true,

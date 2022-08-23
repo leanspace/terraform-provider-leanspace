@@ -20,6 +20,292 @@ description: |-
 	"properties": {
 		"content": {
 			"items": {
+				"properties": {
+					"created_at": {
+						"type": "string"
+					},
+					"created_by": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"id": {
+						"type": "string"
+					},
+					"last_modified_at": {
+						"type": "string"
+					},
+					"last_modified_by": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"node_ids": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"uniqueItems": true
+					},
+					"tags": {
+						"items": {
+							"properties": {
+								"key": {
+									"type": "string"
+								},
+								"value": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"key",
+								"value"
+							],
+							"type": "object"
+						},
+						"type": "array",
+						"uniqueItems": true
+					},
+					"widget_info": {
+						"items": {
+							"properties": {
+								"h": {
+									"type": "number"
+								},
+								"id": {
+									"type": "string"
+								},
+								"min_h": {
+									"type": "number"
+								},
+								"min_w": {
+									"type": "number"
+								},
+								"type": {
+									"type": "string"
+								},
+								"w": {
+									"type": "number"
+								},
+								"x": {
+									"type": "number"
+								},
+								"y": {
+									"type": "number"
+								}
+							},
+							"required": [
+								"h",
+								"id",
+								"min_h",
+								"min_w",
+								"type",
+								"w",
+								"x",
+								"y"
+							],
+							"type": "object"
+						},
+						"type": "array",
+						"uniqueItems": true
+					},
+					"widgets": {
+						"items": {
+							"properties": {
+								"created_at": {
+									"type": "string"
+								},
+								"created_by": {
+									"type": "string"
+								},
+								"description": {
+									"type": "string"
+								},
+								"granularity": {
+									"type": "string"
+								},
+								"id": {
+									"type": "string"
+								},
+								"last_modified_at": {
+									"type": "string"
+								},
+								"last_modified_by": {
+									"type": "string"
+								},
+								"metadata": {
+									"items": {
+										"properties": {
+											"y_axis_label": {
+												"type": "string"
+											},
+											"y_axis_range_max": {
+												"items": {
+													"type": "number"
+												},
+												"type": "array"
+											},
+											"y_axis_range_min": {
+												"items": {
+													"type": "number"
+												},
+												"type": "array"
+											}
+										},
+										"required": [
+											"y_axis_label",
+											"y_axis_range_max",
+											"y_axis_range_min"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								},
+								"metrics": {
+									"items": {
+										"properties": {
+											"aggregation": {
+												"type": "string"
+											},
+											"id": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"aggregation",
+											"id"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								},
+								"name": {
+									"type": "string"
+								},
+								"series": {
+									"items": {
+										"properties": {
+											"aggregation": {
+												"type": "string"
+											},
+											"datasource": {
+												"type": "string"
+											},
+											"filters": {
+												"items": {
+													"properties": {
+														"filter_by": {
+															"type": "string"
+														},
+														"operator": {
+															"type": "string"
+														},
+														"value": {
+															"type": "string"
+														}
+													},
+													"required": [
+														"filter_by",
+														"operator",
+														"value"
+													],
+													"type": "object"
+												},
+												"type": "array",
+												"uniqueItems": true
+											},
+											"id": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"aggregation",
+											"datasource",
+											"filters",
+											"id"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								},
+								"tags": {
+									"items": {
+										"properties": {
+											"key": {
+												"type": "string"
+											},
+											"value": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"key",
+											"value"
+										],
+										"type": "object"
+									},
+									"type": "array",
+									"uniqueItems": true
+								},
+								"type": {
+									"type": "string"
+								},
+								"view": {
+									"items": {
+										"properties": {
+											"id": {
+												"type": "string"
+											},
+											"name": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"id",
+											"name"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								}
+							},
+							"required": [
+								"created_at",
+								"created_by",
+								"description",
+								"granularity",
+								"id",
+								"last_modified_at",
+								"last_modified_by",
+								"metadata",
+								"metrics",
+								"name",
+								"series",
+								"tags",
+								"type",
+								"view"
+							],
+							"type": "object"
+						},
+						"type": "array",
+						"uniqueItems": true
+					}
+				},
+				"required": [
+					"created_at",
+					"created_by",
+					"description",
+					"id",
+					"last_modified_at",
+					"last_modified_by",
+					"name",
+					"node_ids",
+					"tags",
+					"widget_info",
+					"widgets"
+				],
 				"type": "object"
 			},
 			"readOnly": true,
@@ -62,6 +348,65 @@ description: |-
 		},
 		"pageable": {
 			"items": {
+				"properties": {
+					"offset": {
+						"type": "number"
+					},
+					"page_number": {
+						"type": "number"
+					},
+					"page_size": {
+						"type": "number"
+					},
+					"paged": {
+						"type": "boolean"
+					},
+					"sort": {
+						"items": {
+							"properties": {
+								"ascending": {
+									"type": "boolean"
+								},
+								"descending": {
+									"type": "boolean"
+								},
+								"direction": {
+									"type": "string"
+								},
+								"ignore_case": {
+									"type": "boolean"
+								},
+								"null_handling": {
+									"type": "string"
+								},
+								"property": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"ascending",
+								"descending",
+								"direction",
+								"ignore_case",
+								"null_handling",
+								"property"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"unpaged": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"offset",
+					"page_number",
+					"page_size",
+					"paged",
+					"sort",
+					"unpaged"
+				],
 				"type": "object"
 			},
 			"readOnly": true,
@@ -74,6 +419,34 @@ description: |-
 		},
 		"sort": {
 			"items": {
+				"properties": {
+					"ascending": {
+						"type": "boolean"
+					},
+					"descending": {
+						"type": "boolean"
+					},
+					"direction": {
+						"type": "string"
+					},
+					"ignore_case": {
+						"type": "boolean"
+					},
+					"null_handling": {
+						"type": "string"
+					},
+					"property": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"ascending",
+					"descending",
+					"direction",
+					"ignore_case",
+					"null_handling",
+					"property"
+				],
 				"type": "object"
 			},
 			"readOnly": true,

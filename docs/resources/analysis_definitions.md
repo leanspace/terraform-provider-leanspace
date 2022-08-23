@@ -3146,6 +3146,18 @@ resource "leanspace_analysis_definitions" "test" {
 		"statistics": {
 			"description": "Statistics about the simulation.",
 			"items": {
+				"properties": {
+					"last_executed_at": {
+						"type": "string"
+					},
+					"number_of_executions": {
+						"type": "number"
+					}
+				},
+				"required": [
+					"last_executed_at",
+					"number_of_executions"
+				],
 				"type": "object"
 			},
 			"readOnly": true,

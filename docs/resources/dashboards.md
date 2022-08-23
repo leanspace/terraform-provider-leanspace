@@ -149,6 +149,180 @@ resource "leanspace_dashboards" "dashboard" {
 		},
 		"widgets": {
 			"items": {
+				"properties": {
+					"created_at": {
+						"type": "string"
+					},
+					"created_by": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"granularity": {
+						"type": "string"
+					},
+					"id": {
+						"type": "string"
+					},
+					"last_modified_at": {
+						"type": "string"
+					},
+					"last_modified_by": {
+						"type": "string"
+					},
+					"metadata": {
+						"items": {
+							"properties": {
+								"y_axis_label": {
+									"type": "string"
+								},
+								"y_axis_range_max": {
+									"items": {
+										"type": "number"
+									},
+									"type": "array"
+								},
+								"y_axis_range_min": {
+									"items": {
+										"type": "number"
+									},
+									"type": "array"
+								}
+							},
+							"required": [
+								"y_axis_label",
+								"y_axis_range_max",
+								"y_axis_range_min"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"metrics": {
+						"items": {
+							"properties": {
+								"aggregation": {
+									"type": "string"
+								},
+								"id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"aggregation",
+								"id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"name": {
+						"type": "string"
+					},
+					"series": {
+						"items": {
+							"properties": {
+								"aggregation": {
+									"type": "string"
+								},
+								"datasource": {
+									"type": "string"
+								},
+								"filters": {
+									"items": {
+										"properties": {
+											"filter_by": {
+												"type": "string"
+											},
+											"operator": {
+												"type": "string"
+											},
+											"value": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"filter_by",
+											"operator",
+											"value"
+										],
+										"type": "object"
+									},
+									"type": "array",
+									"uniqueItems": true
+								},
+								"id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"aggregation",
+								"datasource",
+								"filters",
+								"id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"tags": {
+						"items": {
+							"properties": {
+								"key": {
+									"type": "string"
+								},
+								"value": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"key",
+								"value"
+							],
+							"type": "object"
+						},
+						"type": "array",
+						"uniqueItems": true
+					},
+					"type": {
+						"type": "string"
+					},
+					"view": {
+						"items": {
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"id",
+								"name"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"created_at",
+					"created_by",
+					"description",
+					"granularity",
+					"id",
+					"last_modified_at",
+					"last_modified_by",
+					"metadata",
+					"metrics",
+					"name",
+					"series",
+					"tags",
+					"type",
+					"view"
+				],
 				"type": "object"
 			},
 			"readOnly": true,

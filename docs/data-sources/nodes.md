@@ -20,6 +20,196 @@ description: |-
 	"properties": {
 		"content": {
 			"items": {
+				"properties": {
+					"created_at": {
+						"type": "string"
+					},
+					"created_by": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"elevation": {
+						"type": "number"
+					},
+					"id": {
+						"type": "string"
+					},
+					"international_designator": {
+						"type": "string"
+					},
+					"kind": {
+						"type": "string"
+					},
+					"last_modified_at": {
+						"type": "string"
+					},
+					"last_modified_by": {
+						"type": "string"
+					},
+					"latitude": {
+						"type": "number"
+					},
+					"longitude": {
+						"type": "number"
+					},
+					"name": {
+						"type": "string"
+					},
+					"nodes": {
+						"items": {
+							"properties": {
+								"created_at": {
+									"type": "string"
+								},
+								"created_by": {
+									"type": "string"
+								},
+								"description": {
+									"type": "string"
+								},
+								"elevation": {
+									"type": "number"
+								},
+								"id": {
+									"type": "string"
+								},
+								"international_designator": {
+									"type": "string"
+								},
+								"kind": {
+									"type": "string"
+								},
+								"last_modified_at": {
+									"type": "string"
+								},
+								"last_modified_by": {
+									"type": "string"
+								},
+								"latitude": {
+									"type": "number"
+								},
+								"longitude": {
+									"type": "number"
+								},
+								"name": {
+									"type": "string"
+								},
+								"norad_id": {
+									"type": "string"
+								},
+								"parent_node_id": {
+									"type": "string"
+								},
+								"tags": {
+									"items": {
+										"properties": {
+											"key": {
+												"type": "string"
+											},
+											"value": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"key",
+											"value"
+										],
+										"type": "object"
+									},
+									"type": "array",
+									"uniqueItems": true
+								},
+								"tle": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								},
+								"type": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"created_at",
+								"created_by",
+								"description",
+								"elevation",
+								"id",
+								"international_designator",
+								"kind",
+								"last_modified_at",
+								"last_modified_by",
+								"latitude",
+								"longitude",
+								"name",
+								"norad_id",
+								"parent_node_id",
+								"tags",
+								"tle",
+								"type"
+							],
+							"type": "object"
+						},
+						"type": "array",
+						"uniqueItems": true
+					},
+					"norad_id": {
+						"type": "string"
+					},
+					"parent_node_id": {
+						"type": "string"
+					},
+					"tags": {
+						"items": {
+							"properties": {
+								"key": {
+									"type": "string"
+								},
+								"value": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"key",
+								"value"
+							],
+							"type": "object"
+						},
+						"type": "array",
+						"uniqueItems": true
+					},
+					"tle": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"type": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"created_at",
+					"created_by",
+					"description",
+					"elevation",
+					"id",
+					"international_designator",
+					"kind",
+					"last_modified_at",
+					"last_modified_by",
+					"latitude",
+					"longitude",
+					"name",
+					"nodes",
+					"norad_id",
+					"parent_node_id",
+					"tags",
+					"tle",
+					"type"
+				],
 				"type": "object"
 			},
 			"readOnly": true,
@@ -62,6 +252,65 @@ description: |-
 		},
 		"pageable": {
 			"items": {
+				"properties": {
+					"offset": {
+						"type": "number"
+					},
+					"page_number": {
+						"type": "number"
+					},
+					"page_size": {
+						"type": "number"
+					},
+					"paged": {
+						"type": "boolean"
+					},
+					"sort": {
+						"items": {
+							"properties": {
+								"ascending": {
+									"type": "boolean"
+								},
+								"descending": {
+									"type": "boolean"
+								},
+								"direction": {
+									"type": "string"
+								},
+								"ignore_case": {
+									"type": "boolean"
+								},
+								"null_handling": {
+									"type": "string"
+								},
+								"property": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"ascending",
+								"descending",
+								"direction",
+								"ignore_case",
+								"null_handling",
+								"property"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"unpaged": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"offset",
+					"page_number",
+					"page_size",
+					"paged",
+					"sort",
+					"unpaged"
+				],
 				"type": "object"
 			},
 			"readOnly": true,
@@ -74,6 +323,34 @@ description: |-
 		},
 		"sort": {
 			"items": {
+				"properties": {
+					"ascending": {
+						"type": "boolean"
+					},
+					"descending": {
+						"type": "boolean"
+					},
+					"direction": {
+						"type": "string"
+					},
+					"ignore_case": {
+						"type": "boolean"
+					},
+					"null_handling": {
+						"type": "string"
+					},
+					"property": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"ascending",
+					"descending",
+					"direction",
+					"ignore_case",
+					"null_handling",
+					"property"
+				],
 				"type": "object"
 			},
 			"readOnly": true,

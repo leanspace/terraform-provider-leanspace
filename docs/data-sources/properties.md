@@ -20,6 +20,269 @@ description: |-
 	"properties": {
 		"content": {
 			"items": {
+				"properties": {
+					"after": {
+						"type": "string"
+					},
+					"before": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"created_by": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"fields": {
+						"items": {
+							"properties": {
+								"elevation": {
+									"items": {
+										"properties": {
+											"created_at": {
+												"type": "string"
+											},
+											"created_by": {
+												"type": "string"
+											},
+											"description": {
+												"type": "string"
+											},
+											"id": {
+												"type": "string"
+											},
+											"last_modified_at": {
+												"type": "string"
+											},
+											"last_modified_by": {
+												"type": "string"
+											},
+											"name": {
+												"type": "string"
+											},
+											"type": {
+												"type": "string"
+											},
+											"value": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"created_at",
+											"created_by",
+											"description",
+											"id",
+											"last_modified_at",
+											"last_modified_by",
+											"name",
+											"type",
+											"value"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								},
+								"latitude": {
+									"items": {
+										"properties": {
+											"created_at": {
+												"type": "string"
+											},
+											"created_by": {
+												"type": "string"
+											},
+											"description": {
+												"type": "string"
+											},
+											"id": {
+												"type": "string"
+											},
+											"last_modified_at": {
+												"type": "string"
+											},
+											"last_modified_by": {
+												"type": "string"
+											},
+											"name": {
+												"type": "string"
+											},
+											"type": {
+												"type": "string"
+											},
+											"value": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"created_at",
+											"created_by",
+											"description",
+											"id",
+											"last_modified_at",
+											"last_modified_by",
+											"name",
+											"type",
+											"value"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								},
+								"longitude": {
+									"items": {
+										"properties": {
+											"created_at": {
+												"type": "string"
+											},
+											"created_by": {
+												"type": "string"
+											},
+											"description": {
+												"type": "string"
+											},
+											"id": {
+												"type": "string"
+											},
+											"last_modified_at": {
+												"type": "string"
+											},
+											"last_modified_by": {
+												"type": "string"
+											},
+											"name": {
+												"type": "string"
+											},
+											"type": {
+												"type": "string"
+											},
+											"value": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"created_at",
+											"created_by",
+											"description",
+											"id",
+											"last_modified_at",
+											"last_modified_by",
+											"name",
+											"type",
+											"value"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								}
+							},
+							"required": [
+								"elevation",
+								"latitude",
+								"longitude"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"id": {
+						"type": "string"
+					},
+					"last_modified_at": {
+						"type": "string"
+					},
+					"last_modified_by": {
+						"type": "string"
+					},
+					"max": {
+						"type": "number"
+					},
+					"max_length": {
+						"type": "number"
+					},
+					"min": {
+						"type": "number"
+					},
+					"min_length": {
+						"type": "number"
+					},
+					"name": {
+						"type": "string"
+					},
+					"node_id": {
+						"type": "string"
+					},
+					"options": {
+						"additionalProperties": {
+							"type": "string"
+						},
+						"type": "object"
+					},
+					"pattern": {
+						"type": "string"
+					},
+					"precision": {
+						"type": "number"
+					},
+					"scale": {
+						"type": "number"
+					},
+					"tags": {
+						"items": {
+							"properties": {
+								"key": {
+									"type": "string"
+								},
+								"value": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"key",
+								"value"
+							],
+							"type": "object"
+						},
+						"type": "array",
+						"uniqueItems": true
+					},
+					"type": {
+						"type": "string"
+					},
+					"unit_id": {
+						"type": "string"
+					},
+					"value": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"after",
+					"before",
+					"created_at",
+					"created_by",
+					"description",
+					"fields",
+					"id",
+					"last_modified_at",
+					"last_modified_by",
+					"max",
+					"max_length",
+					"min",
+					"min_length",
+					"name",
+					"node_id",
+					"options",
+					"pattern",
+					"precision",
+					"scale",
+					"tags",
+					"type",
+					"unit_id",
+					"value"
+				],
 				"type": "object"
 			},
 			"readOnly": true,
@@ -62,6 +325,65 @@ description: |-
 		},
 		"pageable": {
 			"items": {
+				"properties": {
+					"offset": {
+						"type": "number"
+					},
+					"page_number": {
+						"type": "number"
+					},
+					"page_size": {
+						"type": "number"
+					},
+					"paged": {
+						"type": "boolean"
+					},
+					"sort": {
+						"items": {
+							"properties": {
+								"ascending": {
+									"type": "boolean"
+								},
+								"descending": {
+									"type": "boolean"
+								},
+								"direction": {
+									"type": "string"
+								},
+								"ignore_case": {
+									"type": "boolean"
+								},
+								"null_handling": {
+									"type": "string"
+								},
+								"property": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"ascending",
+								"descending",
+								"direction",
+								"ignore_case",
+								"null_handling",
+								"property"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"unpaged": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"offset",
+					"page_number",
+					"page_size",
+					"paged",
+					"sort",
+					"unpaged"
+				],
 				"type": "object"
 			},
 			"readOnly": true,
@@ -74,6 +396,34 @@ description: |-
 		},
 		"sort": {
 			"items": {
+				"properties": {
+					"ascending": {
+						"type": "boolean"
+					},
+					"descending": {
+						"type": "boolean"
+					},
+					"direction": {
+						"type": "string"
+					},
+					"ignore_case": {
+						"type": "boolean"
+					},
+					"null_handling": {
+						"type": "string"
+					},
+					"property": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"ascending",
+					"descending",
+					"direction",
+					"ignore_case",
+					"null_handling",
+					"property"
+				],
 				"type": "object"
 			},
 			"readOnly": true,

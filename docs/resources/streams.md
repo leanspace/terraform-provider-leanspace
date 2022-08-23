@@ -120,6 +120,18 @@ resource "leanspace_streams" "stream" {
 											},
 											"errors": {
 												"items": {
+													"properties": {
+														"code": {
+															"type": "string"
+														},
+														"message": {
+															"type": "string"
+														}
+													},
+													"required": [
+														"code",
+														"message"
+													],
 													"type": "object"
 												},
 												"readOnly": true,
@@ -164,6 +176,18 @@ resource "leanspace_streams" "stream" {
 								},
 								"errors": {
 									"items": {
+										"properties": {
+											"code": {
+												"type": "string"
+											},
+											"message": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"code",
+											"message"
+										],
 										"type": "object"
 									},
 									"readOnly": true,
@@ -198,6 +222,18 @@ resource "leanspace_streams" "stream" {
 					},
 					"errors": {
 						"items": {
+							"properties": {
+								"code": {
+									"type": "string"
+								},
+								"message": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"code",
+								"message"
+							],
 							"type": "object"
 						},
 						"readOnly": true,
@@ -209,6 +245,18 @@ resource "leanspace_streams" "stream" {
 							"properties": {
 								"errors": {
 									"items": {
+										"properties": {
+											"code": {
+												"type": "string"
+											},
+											"message": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"code",
+											"message"
+										],
 										"type": "object"
 									},
 									"readOnly": true,
@@ -217,6 +265,34 @@ resource "leanspace_streams" "stream" {
 								},
 								"packet_id": {
 									"items": {
+										"properties": {
+											"errors": {
+												"items": {
+													"properties": {
+														"code": {
+															"type": "string"
+														},
+														"message": {
+															"type": "string"
+														}
+													},
+													"required": [
+														"code",
+														"message"
+													],
+													"type": "object"
+												},
+												"type": "array",
+												"uniqueItems": true
+											},
+											"valid": {
+												"type": "boolean"
+											}
+										},
+										"required": [
+											"errors",
+											"valid"
+										],
 										"type": "object"
 									},
 									"readOnly": true,
@@ -227,6 +303,18 @@ resource "leanspace_streams" "stream" {
 										"properties": {
 											"errors": {
 												"items": {
+													"properties": {
+														"code": {
+															"type": "string"
+														},
+														"message": {
+															"type": "string"
+														}
+													},
+													"required": [
+														"code",
+														"message"
+													],
 													"type": "object"
 												},
 												"readOnly": true,
@@ -363,6 +451,18 @@ resource "leanspace_streams" "stream" {
 																										},
 																										"errors": {
 																											"items": {
+																												"properties": {
+																													"code": {
+																														"type": "string"
+																													},
+																													"message": {
+																														"type": "string"
+																													}
+																												},
+																												"required": [
+																													"code",
+																													"message"
+																												],
 																												"type": "object"
 																											},
 																											"readOnly": true,
@@ -420,6 +520,18 @@ resource "leanspace_streams" "stream" {
 																							},
 																							"errors": {
 																								"items": {
+																									"properties": {
+																										"code": {
+																											"type": "string"
+																										},
+																										"message": {
+																											"type": "string"
+																										}
+																									},
+																									"required": [
+																										"code",
+																										"message"
+																									],
 																									"type": "object"
 																								},
 																								"readOnly": true,
@@ -547,6 +659,18 @@ resource "leanspace_streams" "stream" {
 																				},
 																				"errors": {
 																					"items": {
+																						"properties": {
+																							"code": {
+																								"type": "string"
+																							},
+																							"message": {
+																								"type": "string"
+																							}
+																						},
+																						"required": [
+																							"code",
+																							"message"
+																						],
 																						"type": "object"
 																					},
 																					"readOnly": true,
@@ -674,6 +798,18 @@ resource "leanspace_streams" "stream" {
 																	},
 																	"errors": {
 																		"items": {
+																			"properties": {
+																				"code": {
+																					"type": "string"
+																				},
+																				"message": {
+																					"type": "string"
+																				}
+																			},
+																			"required": [
+																				"code",
+																				"message"
+																			],
 																			"type": "object"
 																		},
 																		"readOnly": true,
@@ -801,6 +937,18 @@ resource "leanspace_streams" "stream" {
 														},
 														"errors": {
 															"items": {
+																"properties": {
+																	"code": {
+																		"type": "string"
+																	},
+																	"message": {
+																		"type": "string"
+																	}
+																},
+																"required": [
+																	"code",
+																	"message"
+																],
 																"type": "object"
 															},
 															"readOnly": true,
@@ -928,6 +1076,18 @@ resource "leanspace_streams" "stream" {
 											},
 											"errors": {
 												"items": {
+													"properties": {
+														"code": {
+															"type": "string"
+														},
+														"message": {
+															"type": "string"
+														}
+													},
+													"required": [
+														"code",
+														"message"
+													],
 													"type": "object"
 												},
 												"readOnly": true,
@@ -1048,6 +1208,18 @@ resource "leanspace_streams" "stream" {
 								},
 								"errors": {
 									"items": {
+										"properties": {
+											"code": {
+												"type": "string"
+											},
+											"message": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"code",
+											"message"
+										],
 										"type": "object"
 									},
 									"readOnly": true,

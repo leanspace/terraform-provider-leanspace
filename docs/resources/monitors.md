@@ -40,6 +40,53 @@ resource "leanspace_monitors" "monitor" {
 		},
 		"action_templates": {
 			"items": {
+				"properties": {
+					"created_at": {
+						"type": "string"
+					},
+					"created_by": {
+						"type": "string"
+					},
+					"headers": {
+						"additionalProperties": {
+							"type": "string"
+						},
+						"type": "object"
+					},
+					"id": {
+						"type": "string"
+					},
+					"last_modified_at": {
+						"type": "string"
+					},
+					"last_modified_by": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"payload": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"created_at",
+					"created_by",
+					"headers",
+					"id",
+					"last_modified_at",
+					"last_modified_by",
+					"name",
+					"payload",
+					"type",
+					"url"
+				],
 				"type": "object"
 			},
 			"readOnly": true,
@@ -140,6 +187,33 @@ resource "leanspace_monitors" "monitor" {
 		},
 		"statistics": {
 			"items": {
+				"properties": {
+					"last_evaluation": {
+						"items": {
+							"properties": {
+								"status": {
+									"type": "string"
+								},
+								"timestamp": {
+									"type": "string"
+								},
+								"value": {
+									"type": "number"
+								}
+							},
+							"required": [
+								"status",
+								"timestamp",
+								"value"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"last_evaluation"
+				],
 				"type": "object"
 			},
 			"readOnly": true,

@@ -62,6 +62,18 @@ resource "leanspace_remote_agents" "remote_agent" {
 					},
 					"destination": {
 						"items": {
+							"properties": {
+								"binding": {
+									"type": "string"
+								},
+								"type": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"binding",
+								"type"
+							],
 							"type": "object"
 						},
 						"readOnly": true,
@@ -118,6 +130,18 @@ resource "leanspace_remote_agents" "remote_agent" {
 					},
 					"source": {
 						"items": {
+							"properties": {
+								"binding": {
+									"type": "string"
+								},
+								"type": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"binding",
+								"type"
+							],
 							"type": "object"
 						},
 						"readOnly": true,
