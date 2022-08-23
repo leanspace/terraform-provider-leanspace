@@ -85,7 +85,8 @@ More information, as well as the API documentation, can be found [here](https://
 
 ## Documentation
 
-The resources and datasource are explained in the [docs](https://github.com/leanspace/terraform-provider-leanspace/blob/main/docs/index.md) folder.
+The resources and datasource are explained in the [docs](https://docs.leanspace.io/docs/tools/) folder.
+To build the documentation locally, clone and build the [docs plugin](https://github.com/leanspace/terraform-plugin-docs), and run the executable in the directory of the provider.
 
 ## Examples
 

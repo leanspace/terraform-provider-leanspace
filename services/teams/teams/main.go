@@ -6,7 +6,6 @@ import (
 
 var TeamDataType = provider.DataSourceType[Team, *Team]{
 	ResourceIdentifier: "leanspace_teams",
-	Name:               "team",
 	Path:               "teams-repository/teams",
 	Schema:             teamSchema,
 }

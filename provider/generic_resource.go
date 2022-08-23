@@ -13,30 +13,36 @@ func (dataSource DataSourceType[T, PT]) toResource() *schema.Resource {
 		ReadContext:   dataSource.get,
 		UpdateContext: dataSource.update,
 		DeleteContext: dataSource.delete,
-		Schema: map[string]*schema.Schema{
-			dataSource.Name: {
-				Type:     schema.TypeList,
-				MaxItems: 1,
-				Required: true,
-				Elem: &schema.Resource{
-					Schema: dataSource.Schema,
-				},
-			},
-		},
+		Schema:        dataSource.Schema,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
 	}
 }
 
+func (dataSource DataSourceType[T, PT]) getSchemaKeys() []string {
+	keys := []string{}
+	for key := range dataSource.Schema {
+		keys = append(keys, key)
+	}
+	return keys
+}
+
 func (dataSource DataSourceType[T, PT]) getData(d *schema.ResourceData) (string, PT, error) {
 	valueId := d.Id()
-	valueRaw := d.Get(dataSource.Name).([]any)
-	if len(valueRaw) == 0 {
+	onlyNil := true
+	valueRaw := make(map[string]any)
+	for _, key := range dataSource.getSchemaKeys() {
+		valueRaw[key] = d.Get(key)
+		if valueRaw[key] != nil {
+			onlyNil = false
+		}
+	}
+	if onlyNil || len(valueRaw) == 0 {
 		return valueId, nil, nil
 	}
 	var value PT = new(T)
-	error := value.FromMap(valueRaw[0].(map[string]any))
+	error := value.FromMap(valueRaw)
 	return valueId, value, error
 }
 
@@ -73,13 +79,21 @@ func (dataSource DataSourceType[T, PT]) get(ctx context.Context, d *schema.Resou
 		return diag.FromErr(err)
 	}
 
-	var storedData any = nil
 	if value != nil {
-		storedData = []map[string]any{value.ToMap()}
-	}
-	err = d.Set(dataSource.Name, storedData)
-	if err != nil {
-		return diag.FromErr(err)
+		storedData := value.ToMap()
+		for _, key := range dataSource.getSchemaKeys() {
+			err = d.Set(key, storedData[key])
+			if err != nil {
+				diags = append(diags, diag.FromErr(err)...)
+			}
+		}
+	} else { // Object was not found (404)
+		for _, key := range dataSource.getSchemaKeys() {
+			err = d.Set(key, nil)
+			if err != nil {
+				diags = append(diags, diag.FromErr(err)...)
+			}
+		}
 	}
 	return diags
 }
@@ -89,7 +103,16 @@ func (dataSource DataSourceType[T, PT]) update(ctx context.Context, d *schema.Re
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	if d.HasChange(dataSource.Name) {
+	containsChange := false
+
+	for _, key := range dataSource.getSchemaKeys() {
+		if d.HasChange(key) {
+			containsChange = true
+			break
+		}
+	}
+
+	if containsChange {
 		valueId, value, err := dataSource.getData(d)
 		if err != nil {
 			return diag.FromErr(err)

@@ -8,32 +8,65 @@ on:
   push:
     tags:
       - v*
+  workflow_dispatch:
+  
 jobs:
   doc-pr:
     runs-on: ubuntu-latest
+    env:
+      BRANCH_NAME: preview
     steps:
-      - name: Checkout
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '>=1.17.0'
+
+      - name: Checkout `terraform-provider-leanspace`
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
+          path: terraform-provider-leanspace
+
+      - name: Checkout `docs-tools`
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
+          path: docs-repo
+          repository: leanspace/docs-tools
+
+      - name: Checkout `terraform-plugin-docs`
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
+          path: tfplugindocs
+          repository: leanspace/terraform-plugin-docs
+
+      - name: Generate Documentation
+        run: |
+          echo Building documentation generator
+          cd tfplugindocs
+          go build -o ./ ./cmd/tfplugindocs
+
+          echo Generating documentation
+          cd ../terraform-provider-leanspace
+          ../tfplugindocs/tfplugindocs
+
       - name: Reorganize Directory
         run: |
-          echo Creating target structure
-          cd docs
-          mkdir -p Terraform
-          ls | grep -v Terraform | xargs mv -t Terraform
-      - name: Create pull request
-        uses: car-on-sale/action-pull-request-another-repo@v1.3.0
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.LEANSPACE_BOT_TOKEN }}
-          GH_TOKEN: ${{ secrets.LEANSPACE_BOT_TOKEN }}
+          echo Moving files to destination repo
+          rm -r docs-repo/docs/Terraform
+          mv terraform-provider-leanspace/docs docs-repo/docs/Terraform
+          
+          echo Reorganising/Renaming files
+          cd docs-repo/docs/Terraform
+          mv resources Resources
+          mv data-sources DataSources
+      
+      - name: Open PR
+        uses: peter-evans/create-pull-request@v4
         with:
-          source_folder: docs/Terraform
-          destination_repo: leanspace/docs-tools
-          destination_folder: docs
-          destination_base_branch: main
-          destination_head_branch: feature/terra-${{ github.ref_name }}
-          user_email: ${{ env.GITHUB_EMAIL }}
-          user_name: ${{ env.GITHUB_USERNAME }}
-          pr_title: (Terraform) Update provider to ${{ github.ref_name }}
-          commit_msg: Terraform provider ${{ github.ref_name }}
+          token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
+          path: docs-repo
+          branch: preview
+          base: main
+          title: (Terraform) Update provider to ${{ github.ref_name }}
