@@ -50,7 +50,6 @@ resource "leanspace_command_queues" "command_queue" {
 			"uniqueItems": true
 		},
 		"id": {
-			"description": "The ID of this resource.",
 			"readOnly": true,
 			"type": "string"
 		},
@@ -78,12 +77,12 @@ resource "leanspace_command_queues" "command_queue" {
 	},
 	"required": [
 		"asset_id",
-		"name",
 		"created_at",
 		"created_by",
 		"id",
 		"last_modified_at",
-		"last_modified_by"
+		"last_modified_by",
+		"name"
 	],
 	"title": "leanspace_command_queues",
 	"type": "object"

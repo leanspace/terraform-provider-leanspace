@@ -134,7 +134,6 @@ resource "leanspace_command_definitions" "command_definition" {
 						"type": "string"
 					},
 					"id": {
-						"description": "The ID of this resource.",
 						"readOnly": true,
 						"type": "string"
 					},
@@ -147,9 +146,9 @@ resource "leanspace_command_definitions" "command_definition" {
 				},
 				"required": [
 					"attributes",
+					"id",
 					"identifier",
-					"name",
-					"id"
+					"name"
 				],
 				"type": "object"
 			},
@@ -173,7 +172,6 @@ resource "leanspace_command_definitions" "command_definition" {
 			"type": "string"
 		},
 		"id": {
-			"description": "The ID of this resource.",
 			"readOnly": true,
 			"type": "string"
 		},
@@ -231,7 +229,6 @@ resource "leanspace_command_definitions" "command_definition" {
 						"type": "string"
 					},
 					"id": {
-						"description": "The ID of this resource.",
 						"readOnly": true,
 						"type": "string"
 					},
@@ -241,8 +238,8 @@ resource "leanspace_command_definitions" "command_definition" {
 				},
 				"required": [
 					"attributes",
-					"name",
-					"id"
+					"id",
+					"name"
 				],
 				"type": "object"
 			},
@@ -260,13 +257,13 @@ resource "leanspace_command_definitions" "command_definition" {
 		}
 	},
 	"required": [
-		"name",
-		"node_id",
 		"created_at",
 		"created_by",
 		"id",
 		"last_modified_at",
-		"last_modified_by"
+		"last_modified_by",
+		"name",
+		"node_id"
 	],
 	"title": "leanspace_command_definitions",
 	"type": "object"

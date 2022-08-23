@@ -227,7 +227,6 @@ description: |-
 			"type": "boolean"
 		},
 		"id": {
-			"description": "The ID of this resource.",
 			"type": "string"
 		},
 		"last": {

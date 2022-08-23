@@ -28,7 +28,6 @@ resource "leanspace_units" "unit" {
 			"type": "string"
 		},
 		"id": {
-			"description": "The ID of this resource.",
 			"readOnly": true,
 			"type": "string"
 		},
@@ -38,8 +37,8 @@ resource "leanspace_units" "unit" {
 	},
 	"required": [
 		"display_name",
-		"symbol",
-		"id"
+		"id",
+		"symbol"
 	],
 	"title": "leanspace_units",
 	"type": "object"

@@ -68,7 +68,6 @@ resource "leanspace_properties" "property" {
 									"type": "string"
 								},
 								"id": {
-									"description": "The ID of this resource.",
 									"readOnly": true,
 									"type": "string"
 								},
@@ -103,13 +102,13 @@ resource "leanspace_properties" "property" {
 								}
 							},
 							"required": [
-								"name",
-								"type",
 								"created_at",
 								"created_by",
 								"id",
 								"last_modified_at",
-								"last_modified_by"
+								"last_modified_by",
+								"name",
+								"type"
 							],
 							"type": "object"
 						},
@@ -137,7 +136,6 @@ resource "leanspace_properties" "property" {
 									"type": "string"
 								},
 								"id": {
-									"description": "The ID of this resource.",
 									"readOnly": true,
 									"type": "string"
 								},
@@ -172,13 +170,13 @@ resource "leanspace_properties" "property" {
 								}
 							},
 							"required": [
-								"name",
-								"type",
 								"created_at",
 								"created_by",
 								"id",
 								"last_modified_at",
-								"last_modified_by"
+								"last_modified_by",
+								"name",
+								"type"
 							],
 							"type": "object"
 						},
@@ -206,7 +204,6 @@ resource "leanspace_properties" "property" {
 									"type": "string"
 								},
 								"id": {
-									"description": "The ID of this resource.",
 									"readOnly": true,
 									"type": "string"
 								},
@@ -241,13 +238,13 @@ resource "leanspace_properties" "property" {
 								}
 							},
 							"required": [
-								"name",
-								"type",
 								"created_at",
 								"created_by",
 								"id",
 								"last_modified_at",
-								"last_modified_by"
+								"last_modified_by",
+								"name",
+								"type"
 							],
 							"type": "object"
 						},
@@ -273,7 +270,6 @@ resource "leanspace_properties" "property" {
 			"type": "array"
 		},
 		"id": {
-			"description": "The ID of this resource.",
 			"readOnly": true,
 			"type": "string"
 		},
@@ -371,14 +367,14 @@ resource "leanspace_properties" "property" {
 		}
 	},
 	"required": [
-		"name",
-		"node_id",
-		"type",
 		"created_at",
 		"created_by",
 		"id",
 		"last_modified_at",
-		"last_modified_by"
+		"last_modified_by",
+		"name",
+		"node_id",
+		"type"
 	],
 	"title": "leanspace_properties",
 	"type": "object"

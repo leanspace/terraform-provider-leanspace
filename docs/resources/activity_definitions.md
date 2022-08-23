@@ -144,7 +144,6 @@ resource "leanspace_activity_definitions" "activity_definition" {
 						"type": "string"
 					},
 					"id": {
-						"description": "The ID of this resource.",
 						"readOnly": true,
 						"type": "string"
 					},
@@ -154,8 +153,8 @@ resource "leanspace_activity_definitions" "activity_definition" {
 				},
 				"required": [
 					"attributes",
-					"name",
-					"id"
+					"id",
+					"name"
 				],
 				"type": "object"
 			},
@@ -253,7 +252,6 @@ resource "leanspace_activity_definitions" "activity_definition" {
 			"type": "number"
 		},
 		"id": {
-			"description": "The ID of this resource.",
 			"readOnly": true,
 			"type": "string"
 		},
@@ -308,7 +306,6 @@ resource "leanspace_activity_definitions" "activity_definition" {
 						"type": "string"
 					},
 					"id": {
-						"description": "The ID of this resource.",
 						"readOnly": true,
 						"type": "string"
 					},
@@ -318,8 +315,8 @@ resource "leanspace_activity_definitions" "activity_definition" {
 				},
 				"required": [
 					"attributes",
-					"name",
-					"id"
+					"id",
+					"name"
 				],
 				"type": "object"
 			},
@@ -337,13 +334,13 @@ resource "leanspace_activity_definitions" "activity_definition" {
 		}
 	},
 	"required": [
-		"name",
-		"node_id",
 		"created_at",
 		"created_by",
 		"id",
 		"last_modified_at",
-		"last_modified_by"
+		"last_modified_by",
+		"name",
+		"node_id"
 	],
 	"title": "leanspace_activity_definitions",
 	"type": "object"

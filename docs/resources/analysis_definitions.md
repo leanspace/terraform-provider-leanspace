@@ -65,7 +65,6 @@ resource "leanspace_analysis_definitions" "test" {
 			"type": "string"
 		},
 		"id": {
-			"description": "The ID of this resource.",
 			"readOnly": true,
 			"type": "string"
 		},
@@ -3165,16 +3164,16 @@ resource "leanspace_analysis_definitions" "test" {
 		}
 	},
 	"required": [
-		"inputs",
-		"model_id",
-		"name",
-		"node_id",
 		"created_at",
 		"created_by",
 		"framework",
 		"id",
+		"inputs",
 		"last_modified_at",
 		"last_modified_by",
+		"model_id",
+		"name",
+		"node_id",
 		"statistics"
 	],
 	"title": "leanspace_analysis_definitions",

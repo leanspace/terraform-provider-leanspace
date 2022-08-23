@@ -52,7 +52,6 @@ resource "leanspace_access_policies" "access_policy" {
 			"type": "string"
 		},
 		"id": {
-			"description": "The ID of this resource.",
 			"readOnly": true,
 			"type": "string"
 		},
@@ -100,14 +99,14 @@ resource "leanspace_access_policies" "access_policy" {
 		}
 	},
 	"required": [
-		"name",
-		"statements",
 		"created_at",
 		"created_by",
 		"id",
 		"last_modified_at",
 		"last_modified_by",
-		"read_only"
+		"name",
+		"read_only",
+		"statements"
 	],
 	"title": "leanspace_access_policies",
 	"type": "object"

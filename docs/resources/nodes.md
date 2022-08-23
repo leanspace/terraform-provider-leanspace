@@ -66,7 +66,6 @@ resource "leanspace_nodes" "groundstation_node" {
 			"type": "number"
 		},
 		"id": {
-			"description": "The ID of this resource.",
 			"readOnly": true,
 			"type": "string"
 		},
@@ -239,14 +238,14 @@ resource "leanspace_nodes" "groundstation_node" {
 		}
 	},
 	"required": [
-		"name",
-		"type",
 		"created_at",
 		"created_by",
 		"id",
 		"last_modified_at",
 		"last_modified_by",
-		"nodes"
+		"name",
+		"nodes",
+		"type"
 	],
 	"title": "leanspace_nodes",
 	"type": "object"

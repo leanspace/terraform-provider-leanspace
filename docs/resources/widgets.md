@@ -86,7 +86,6 @@ resource "leanspace_widgets" "test_line" {
 			"type": "string"
 		},
 		"id": {
-			"description": "The ID of this resource.",
 			"readOnly": true,
 			"type": "string"
 		},
@@ -107,12 +106,14 @@ resource "leanspace_widgets" "test_line" {
 						"type": "string"
 					},
 					"y_axis_range_max": {
+						"description": "The maximum value for the widget's Y axis. Set to an array with the value inside (an empty array is treated as unset). This is due to Terraform limitations.",
 						"items": {
 							"type": "number"
 						},
 						"type": "array"
 					},
 					"y_axis_range_min": {
+						"description": "The minimum value for the widget's Y axis. Set to an array with the value inside (an empty array is treated as unset). This is due to Terraform limitations.",
 						"items": {
 							"type": "number"
 						},
@@ -205,7 +206,6 @@ resource "leanspace_widgets" "test_line" {
 						"uniqueItems": true
 					},
 					"id": {
-						"description": "The ID of this resource.",
 						"type": "string"
 					}
 				},
@@ -256,17 +256,17 @@ resource "leanspace_widgets" "test_line" {
 		}
 	},
 	"required": [
-		"granularity",
-		"name",
-		"series",
-		"type",
 		"created_at",
 		"created_by",
 		"dashboards",
+		"granularity",
 		"id",
 		"last_modified_at",
 		"last_modified_by",
-		"metrics"
+		"metrics",
+		"name",
+		"series",
+		"type"
 	],
 	"title": "leanspace_widgets",
 	"type": "object"

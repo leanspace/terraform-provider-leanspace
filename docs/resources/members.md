@@ -39,7 +39,6 @@ resource "leanspace_members" "test" {
 			"type": "string"
 		},
 		"id": {
-			"description": "The ID of this resource.",
 			"readOnly": true,
 			"type": "string"
 		},
@@ -69,14 +68,14 @@ resource "leanspace_members" "test" {
 		}
 	},
 	"required": [
-		"email",
-		"name",
-		"policy_ids",
 		"created_at",
 		"created_by",
+		"email",
 		"id",
 		"last_modified_at",
 		"last_modified_by",
+		"name",
+		"policy_ids",
 		"status"
 	],
 	"title": "leanspace_members",

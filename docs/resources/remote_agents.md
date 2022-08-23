@@ -84,7 +84,6 @@ resource "leanspace_remote_agents" "remote_agent" {
 						"type": "string"
 					},
 					"id": {
-						"description": "The ID of this resource.",
 						"readOnly": true,
 						"type": "string"
 					},
@@ -159,16 +158,16 @@ resource "leanspace_remote_agents" "remote_agent" {
 					}
 				},
 				"required": [
-					"gateway_id",
-					"socket",
-					"type",
 					"created_at",
 					"created_by",
 					"destination",
+					"gateway_id",
 					"id",
 					"last_modified_at",
 					"last_modified_by",
-					"source"
+					"socket",
+					"source",
+					"type"
 				],
 				"type": "object"
 			},
@@ -192,7 +191,6 @@ resource "leanspace_remote_agents" "remote_agent" {
 			"type": "string"
 		},
 		"id": {
-			"description": "The ID of this resource.",
 			"readOnly": true,
 			"type": "string"
 		},
@@ -214,12 +212,12 @@ resource "leanspace_remote_agents" "remote_agent" {
 		}
 	},
 	"required": [
-		"name",
 		"created_at",
 		"created_by",
 		"id",
 		"last_modified_at",
-		"last_modified_by"
+		"last_modified_by",
+		"name"
 	],
 	"title": "leanspace_remote_agents",
 	"type": "object"

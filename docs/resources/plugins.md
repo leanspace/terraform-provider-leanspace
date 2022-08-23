@@ -46,7 +46,6 @@ resource "leanspace_plugins" "plugin" {
 			"type": "string"
 		},
 		"id": {
-			"description": "The ID of this resource.",
 			"readOnly": true,
 			"type": "string"
 		},
@@ -75,15 +74,15 @@ resource "leanspace_plugins" "plugin" {
 		}
 	},
 	"required": [
-		"file_path",
-		"implementation_class_name",
-		"name",
-		"type",
 		"created_at",
 		"created_by",
+		"file_path",
 		"id",
+		"implementation_class_name",
 		"last_modified_at",
-		"last_modified_by"
+		"last_modified_by",
+		"name",
+		"type"
 	],
 	"title": "leanspace_plugins",
 	"type": "object"

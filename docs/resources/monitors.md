@@ -153,7 +153,6 @@ resource "leanspace_monitors" "monitor" {
 			"type": "array"
 		},
 		"id": {
-			"description": "The ID of this resource.",
 			"readOnly": true,
 			"type": "string"
 		},
@@ -246,17 +245,17 @@ resource "leanspace_monitors" "monitor" {
 		}
 	},
 	"required": [
-		"expression",
-		"metric_id",
-		"name",
-		"polling_frequency_in_minutes",
 		"action_templates",
 		"created_at",
 		"created_by",
+		"expression",
 		"id",
 		"last_modified_at",
 		"last_modified_by",
+		"metric_id",
+		"name",
 		"node_id",
+		"polling_frequency_in_minutes",
 		"statistics",
 		"status"
 	],

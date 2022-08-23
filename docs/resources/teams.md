@@ -36,7 +36,6 @@ resource "leanspace_teams" "team" {
 			"type": "string"
 		},
 		"id": {
-			"description": "The ID of this resource.",
 			"readOnly": true,
 			"type": "string"
 		},
@@ -69,14 +68,14 @@ resource "leanspace_teams" "team" {
 		}
 	},
 	"required": [
-		"members",
-		"name",
-		"policy_ids",
 		"created_at",
 		"created_by",
 		"id",
 		"last_modified_at",
-		"last_modified_by"
+		"last_modified_by",
+		"members",
+		"name",
+		"policy_ids"
 	],
 	"title": "leanspace_teams",
 	"type": "object"

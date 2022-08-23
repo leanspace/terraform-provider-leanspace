@@ -50,7 +50,6 @@ resource "leanspace_action_templates" "action_template" {
 			"type": "object"
 		},
 		"id": {
-			"description": "The ID of this resource.",
 			"readOnly": true,
 			"type": "string"
 		},
@@ -81,14 +80,14 @@ resource "leanspace_action_templates" "action_template" {
 		}
 	},
 	"required": [
-		"name",
-		"payload",
-		"url",
 		"created_at",
 		"created_by",
 		"id",
 		"last_modified_at",
-		"last_modified_by"
+		"last_modified_by",
+		"name",
+		"payload",
+		"url"
 	],
 	"title": "leanspace_action_templates",
 	"type": "object"

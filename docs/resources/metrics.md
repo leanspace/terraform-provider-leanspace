@@ -118,7 +118,6 @@ resource "leanspace_metrics" "metric" {
 			"type": "string"
 		},
 		"id": {
-			"description": "The ID of this resource.",
 			"readOnly": true,
 			"type": "string"
 		},
@@ -162,13 +161,13 @@ resource "leanspace_metrics" "metric" {
 	},
 	"required": [
 		"attributes",
-		"name",
-		"node_id",
 		"created_at",
 		"created_by",
 		"id",
 		"last_modified_at",
-		"last_modified_by"
+		"last_modified_by",
+		"name",
+		"node_id"
 	],
 	"title": "leanspace_metrics",
 	"type": "object"

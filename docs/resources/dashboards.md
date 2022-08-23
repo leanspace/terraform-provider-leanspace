@@ -50,7 +50,6 @@ resource "leanspace_dashboards" "dashboard" {
 			"type": "string"
 		},
 		"id": {
-			"description": "The ID of this resource.",
 			"readOnly": true,
 			"type": "string"
 		},
@@ -102,7 +101,6 @@ resource "leanspace_dashboards" "dashboard" {
 						"type": "number"
 					},
 					"id": {
-						"description": "The ID of this resource.",
 						"type": "string"
 					},
 					"min_h": {
@@ -133,11 +131,11 @@ resource "leanspace_dashboards" "dashboard" {
 				},
 				"required": [
 					"h",
+					"id",
 					"type",
 					"w",
 					"x",
-					"y",
-					"id"
+					"y"
 				],
 				"type": "object"
 			},
@@ -331,12 +329,12 @@ resource "leanspace_dashboards" "dashboard" {
 		}
 	},
 	"required": [
-		"name",
 		"created_at",
 		"created_by",
 		"id",
 		"last_modified_at",
 		"last_modified_by",
+		"name",
 		"widgets"
 	],
 	"title": "leanspace_dashboards",

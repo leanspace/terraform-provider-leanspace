@@ -160,9 +160,9 @@ resource "leanspace_streams" "stream" {
 										},
 										"required": [
 											"data_type",
+											"errors",
 											"expression",
 											"name",
-											"errors",
 											"order",
 											"type",
 											"valid"
@@ -330,8 +330,8 @@ resource "leanspace_streams" "stream" {
 											}
 										},
 										"required": [
-											"expression",
 											"errors",
+											"expression",
 											"valid"
 										],
 										"type": "object"
@@ -497,11 +497,11 @@ resource "leanspace_streams" "stream" {
 																										}
 																									},
 																									"required": [
-																										"name",
-																										"type",
 																										"errors",
+																										"name",
 																										"order",
 																										"path",
+																										"type",
 																										"valid"
 																									],
 																									"type": "object"
@@ -636,11 +636,11 @@ resource "leanspace_streams" "stream" {
 																							}
 																						},
 																						"required": [
-																							"name",
-																							"type",
 																							"errors",
+																							"name",
 																							"order",
 																							"path",
+																							"type",
 																							"valid"
 																						],
 																						"type": "object"
@@ -775,11 +775,11 @@ resource "leanspace_streams" "stream" {
 																				}
 																			},
 																			"required": [
-																				"name",
-																				"type",
 																				"errors",
+																				"name",
 																				"order",
 																				"path",
+																				"type",
 																				"valid"
 																			],
 																			"type": "object"
@@ -914,11 +914,11 @@ resource "leanspace_streams" "stream" {
 																	}
 																},
 																"required": [
-																	"name",
-																	"type",
 																	"errors",
+																	"name",
 																	"order",
 																	"path",
+																	"type",
 																	"valid"
 																],
 																"type": "object"
@@ -1053,11 +1053,11 @@ resource "leanspace_streams" "stream" {
 														}
 													},
 													"required": [
-														"name",
-														"type",
 														"errors",
+														"name",
 														"order",
 														"path",
+														"type",
 														"valid"
 													],
 													"type": "object"
@@ -1192,11 +1192,11 @@ resource "leanspace_streams" "stream" {
 											}
 										},
 										"required": [
-											"name",
-											"type",
 											"errors",
+											"name",
 											"order",
 											"path",
+											"type",
 											"valid"
 										],
 										"type": "object"
@@ -1252,9 +1252,9 @@ resource "leanspace_streams" "stream" {
 				"required": [
 					"computations",
 					"endianness",
+					"errors",
 					"metadata",
 					"structure",
-					"errors",
 					"valid"
 				],
 				"type": "object"
@@ -1280,7 +1280,6 @@ resource "leanspace_streams" "stream" {
 			"type": "string"
 		},
 		"id": {
-			"description": "The ID of this resource.",
 			"readOnly": true,
 			"type": "string"
 		},
@@ -1328,12 +1327,12 @@ resource "leanspace_streams" "stream" {
 	"required": [
 		"asset_id",
 		"configuration",
-		"name",
 		"created_at",
 		"created_by",
 		"id",
 		"last_modified_at",
 		"last_modified_by",
+		"name",
 		"version"
 	],
 	"title": "leanspace_streams",

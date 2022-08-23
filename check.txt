@@ -1,0 +1,111 @@
+rendering website for provider "terraform-provider-leanspace" (as "terraform-provider-leanspace")
+copying any existing content to tmp dir
+exporting schema from Terraform
+compiling provider "leanspace"
+using Terraform CLI binary from PATH if available, otherwise downloading latest Terraform CLI binary
+running terraform init
+getting provider schema
+rendering missing docs
+generating missing resource content
+resource "leanspace_command_definitions" fallback template exists
+generating template for "leanspace_command_definitions"
+resource "leanspace_service_accounts" fallback template exists
+generating template for "leanspace_service_accounts"
+resource "leanspace_units" fallback template exists
+generating template for "leanspace_units"
+resource "leanspace_properties" fallback template exists
+generating template for "leanspace_properties"
+resource "leanspace_streams" fallback template exists
+generating template for "leanspace_streams"
+resource "leanspace_widgets" fallback template exists
+generating template for "leanspace_widgets"
+resource "leanspace_analysis_definitions" fallback template exists
+generating template for "leanspace_analysis_definitions"
+resource "leanspace_members" fallback template exists
+generating template for "leanspace_members"
+resource "leanspace_metrics" fallback template exists
+generating template for "leanspace_metrics"
+resource "leanspace_monitors" fallback template exists
+generating template for "leanspace_monitors"
+resource "leanspace_plugins" fallback template exists
+generating template for "leanspace_plugins"
+resource "leanspace_action_templates" fallback template exists
+generating template for "leanspace_action_templates"
+resource "leanspace_activity_definitions" fallback template exists
+generating template for "leanspace_activity_definitions"
+resource "leanspace_dashboards" fallback template exists
+generating template for "leanspace_dashboards"
+resource "leanspace_remote_agents" fallback template exists
+generating template for "leanspace_remote_agents"
+resource "leanspace_access_policies" fallback template exists
+generating template for "leanspace_access_policies"
+resource "leanspace_command_queues" fallback template exists
+generating template for "leanspace_command_queues"
+resource "leanspace_nodes" fallback template exists
+generating template for "leanspace_nodes"
+resource "leanspace_teams" fallback template exists
+generating template for "leanspace_teams"
+generating missing data source content
+generating template for "leanspace_units"
+generating template for "leanspace_access_policies"
+generating template for "leanspace_members"
+generating template for "leanspace_nodes"
+generating template for "leanspace_properties"
+generating template for "leanspace_action_templates"
+generating template for "leanspace_streams"
+generating template for "leanspace_widgets"
+generating template for "leanspace_remote_agents"
+generating template for "leanspace_activity_definitions"
+generating template for "leanspace_analysis_definitions"
+generating template for "leanspace_command_definitions"
+generating template for "leanspace_monitors"
+generating template for "leanspace_service_accounts"
+generating template for "leanspace_teams"
+generating template for "leanspace_command_queues"
+generating template for "leanspace_dashboards"
+generating template for "leanspace_metrics"
+generating template for "leanspace_plugins"
+generating missing provider content
+provider "terraform-provider-leanspace" template exists, skipping
+rendering static website
+cleaning rendered website dir
+rendering templated website to static markdown
+rendering "data-sources\\access_policies.md.tmpl"
+rendering "data-sources\\action_templates.md.tmpl"
+rendering "data-sources\\activity_definitions.md.tmpl"
+rendering "data-sources\\analysis_definitions.md.tmpl"
+rendering "data-sources\\command_definitions.md.tmpl"
+rendering "data-sources\\command_queues.md.tmpl"
+rendering "data-sources\\dashboards.md.tmpl"
+rendering "data-sources\\members.md.tmpl"
+rendering "data-sources\\metrics.md.tmpl"
+rendering "data-sources\\monitors.md.tmpl"
+rendering "data-sources\\nodes.md.tmpl"
+rendering "data-sources\\plugins.md.tmpl"
+rendering "data-sources\\properties.md.tmpl"
+rendering "data-sources\\remote_agents.md.tmpl"
+rendering "data-sources\\service_accounts.md.tmpl"
+rendering "data-sources\\streams.md.tmpl"
+rendering "data-sources\\teams.md.tmpl"
+rendering "data-sources\\units.md.tmpl"
+rendering "data-sources\\widgets.md.tmpl"
+rendering "index.md.tmpl"
+rendering "resources\\access_policies.md.tmpl"
+rendering "resources\\action_templates.md.tmpl"
+rendering "resources\\activity_definitions.md.tmpl"
+rendering "resources\\analysis_definitions.md.tmpl"
+rendering "resources\\command_definitions.md.tmpl"
+rendering "resources\\command_queues.md.tmpl"
+rendering "resources\\dashboards.md.tmpl"
+rendering "resources\\members.md.tmpl"
+rendering "resources\\metrics.md.tmpl"
+rendering "resources\\monitors.md.tmpl"
+rendering "resources\\nodes.md.tmpl"
+rendering "resources\\plugins.md.tmpl"
+rendering "resources\\properties.md.tmpl"
+rendering "resources\\remote_agents.md.tmpl"
+rendering "resources\\service_accounts.md.tmpl"
+rendering "resources\\streams.md.tmpl"
+rendering "resources\\teams.md.tmpl"
+rendering "resources\\units.md.tmpl"
+rendering "resources\\widgets.md.tmpl"
