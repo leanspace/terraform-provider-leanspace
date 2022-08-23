@@ -16,25 +16,46 @@ jobs:
     env:
       BRANCH_NAME: preview
     steps:
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '>=1.17.0'
+
       - name: Checkout `terraform-provider-leanspace`
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
-          path: tf-repo
-          ref: SDEVOPS-199
+          path: terraform-provider-leanspace
 
-      - name: Checkout `docs-tools` repo
+      - name: Checkout `docs-tools`
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
           path: docs-repo
           repository: leanspace/docs-tools
 
+      - name: Checkout `terraform-plugin-docs`
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
+          path: tfplugindocs
+          repository: leanspace/terraform-plugin-docs
+
+      - name: Generate Documentation
+        run: |
+          echo Building documentation generator
+          cd tfplugindocs
+          go build -o ./ ./cmd/tfplugindocs
+
+          echo Generating documentation
+          cd ../terraform-provider-leanspace
+          ../tfplugindocs/tfplugindocs
+
       - name: Reorganize Directory
         run: |
           echo Moving files to destination repo
           rm -r docs-repo/docs/Terraform
-          mv tf-repo/docs docs-repo/docs/Terraform
+          mv terraform-provider-leanspace/docs docs-repo/docs/Terraform
           
           echo Reorganising/Renaming files
           cd docs-repo/docs/Terraform
