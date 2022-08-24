@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     leanspace = {
-      source  = "app.terraform.io/leanspace/leanspace"
+      source = "app.terraform.io/leanspace/leanspace"
     }
   }
 }
@@ -19,12 +19,10 @@ variable "access_policies" {
 data "leanspace_members" "all" {}
 
 resource "leanspace_members" "test" {
-  for_each = var.usernames
-  member {
-    name       = each.value
-    email      = "${lower(each.value)}@terraform.leanspace.io"
-    policy_ids = var.access_policies
-  }
+  for_each   = var.usernames
+  name       = each.value
+  email      = "${lower(each.value)}@terraform.leanspace.io"
+  policy_ids = var.access_policies
 }
 
 output "test_members" {

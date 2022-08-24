@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     leanspace = {
-      source  = "app.terraform.io/leanspace/leanspace"
+      source = "app.terraform.io/leanspace/leanspace"
     }
   }
 }
@@ -19,12 +19,11 @@ variable "access_policies" {
 data "leanspace_teams" "all" {}
 
 resource "leanspace_teams" "test" {
-  team {
-    name       = "Terraform Team"
-    policy_ids = var.access_policies
-    members    = var.members
-  }
+  name       = "Terraform Team"
+  policy_ids = var.access_policies
+  members    = var.members
 }
+
 
 output "test_team" {
   value = leanspace_teams.test

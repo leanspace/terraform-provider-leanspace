@@ -3,9 +3,10 @@ package widgets
 import (
 	"leanspace-terraform-provider/helper/general_objects"
 
+	"leanspace-terraform-provider/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"leanspace-terraform-provider/helper"
 )
 
 var validWidgetTypes = []string{"TABLE", "LINE", "BAR", "AREA", "VALUE"}
@@ -157,6 +158,8 @@ var metadataSchema = map[string]*schema.Schema{
 		Optional: true,
 		MinItems: 1,
 		MaxItems: 1,
+		Description: "The minimum value for the widget's Y axis. Set to an array with the value " +
+			"inside (an empty array is treated as unset). This is due to Terraform limitations.",
 		Elem: &schema.Schema{
 			Type: schema.TypeFloat,
 		},
@@ -166,6 +169,8 @@ var metadataSchema = map[string]*schema.Schema{
 		Optional: true,
 		MinItems: 1,
 		MaxItems: 1,
+		Description: "The maximum value for the widget's Y axis. Set to an array with the value " +
+			"inside (an empty array is treated as unset). This is due to Terraform limitations.",
 		Elem: &schema.Schema{
 			Type: schema.TypeFloat,
 		},
