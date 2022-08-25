@@ -1,58 +1,58 @@
 package analysis_definitions
 
 import (
-	"encoding/json"
-	"fmt"
-	"leanspace-terraform-provider/helper"
+	. "leanspace-terraform-provider/helper"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func (analysisDefinition *AnalysisDefinition) Validate() error {
-	data, _ := json.Marshal(analysisDefinition)
-	helper.Logger.Printf("Validating, %v", string(data))
-	if err := analysisDefinition.Inputs.Validate(); err != nil {
+var fieldValidators = Validators{
+	Equivalence(
+		Equals("type", "ARRAY"),
+		And(IsSet("items"), Not(IsEmpty("items"))),
+	),
+	Equivalence(
+		Equals("type", "STRUCTURE"),
+		And(IsSet("fields"), Not(IsEmpty("fields"))),
+	),
+	Equivalence(
+		Not(Or(Equals("type", "ARRAY"), Equals("type", "STRUCTURE"))),
+		IsSet("source"),
+	),
+	Equivalence(
+		Equals("source", "STATIC"),
+		And(IsSet("value"), Not(IsSet("ref"))),
+	),
+	Equivalence(
+		Equals("source", "REFERENCE"),
+		And(IsSet("ref"), Not(IsSet("value"))),
+	),
+}
+
+func (analysisDefinition *AnalysisDefinition) Validate(data map[string]any) error {
+	if err := validateField(data["inputs"].([]any)[0].(map[string]any)); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (field *Field) Validate() error {
-	if field.Type != "ARRAY" && field.Items != nil && len(field.Items) != 0 {
-		return fmt.Errorf("items must only be set if type is ARRAY (is %q), got %v", field.Type, field.Items)
+func validateField(data map[string]any) error {
+	err := fieldValidators.Check(data)
+	if err != nil {
+		return err
 	}
 
-	if field.Type != "STRUCTURE" && field.Fields != nil && len(field.Fields) != 0 {
-		return fmt.Errorf("fields must only be set if type is STRUCTURE (is %q), got %v", field.Type, field.Items)
-	}
-
-	if field.Type != "STRUCTURE" && field.Type != "ARRAY" {
-		if field.Source == "" {
-			return fmt.Errorf("source must be set for field of type %q, but got %v", field.Type, field.Source)
-		}
-		if field.Source == "STATIC" && field.Value == "" {
-			return fmt.Errorf("value must be set if field source is STATIC")
-		}
-		if field.Source == "STATIC" && field.Ref != "" {
-			return fmt.Errorf("ref mustn't be set if field source is STATIC, got %q", field.Ref)
-		}
-		if field.Source == "REFERENCE" && field.Ref == "" {
-			return fmt.Errorf("ref must be set if field source is REFERENCE")
-		}
-		if field.Source == "REFERENCE" && field.Value != nil && field.Value != "" {
-			return fmt.Errorf("value mustn't be set if field source is REFERENCE, got %q", field.Value)
-		}
-	}
-
-	if field.Type == "ARRAY" {
-		for _, subfield := range field.Items {
-			if err := subfield.Validate(); err != nil {
+	if data["type"] == "ARRAY" {
+		for _, subfield := range data["items"].([]any) {
+			if err := validateField(subfield.(map[string]any)); err != nil {
 				return err
 			}
 		}
 	}
 
-	if field.Type == "STRUCTURE" {
-		for _, subfield := range field.Fields {
-			if err := subfield.Validate(); err != nil {
+	if data["type"] == "STRUCTURE" {
+		for _, subfield := range data["fields"].(*schema.Set).List() {
+			if err := validateField(subfield.(map[string]any)); err != nil {
 				return err
 			}
 		}
