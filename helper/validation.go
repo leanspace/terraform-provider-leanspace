@@ -2,6 +2,7 @@ package helper
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -189,7 +190,7 @@ type isSetCondition struct {
 }
 
 func (c isSetCondition) eval(v map[string]any) bool {
-	return v[c.key] != nil && v[c.key] != ""
+	return v[c.key] != nil && v[c.key] != "" && v[c.key] != 0
 }
 func (c isSetCondition) message() string {
 	return fmt.Sprintf("%q is set", c.key)
@@ -223,28 +224,112 @@ func Equals(key string, value any) Condition {
 	return isEqualsCondition{key: key, value: value}
 }
 
-type isEmptyCondition struct {
-	key string
+type hasLengthCondition struct {
+	key    string
+	length int
 }
 
-func (c isEmptyCondition) eval(v map[string]any) bool {
+func (c hasLengthCondition) eval(v map[string]any) bool {
 	if list, isList := v[c.key].([]any); isList {
-		return len(list) == 0
+		return len(list) == c.length
+	}
+	if map_, isMap := v[c.key].(map[string]any); isMap {
+		return len(map_) == c.length
 	}
 	if set, isSet := v[c.key].(*schema.Set); isSet {
-		return set.Len() == 0
+		return set.Len() == c.length
 	}
-	panic(fmt.Sprintf("Tried checking if %#v is empty", v[c.key]))
+	panic(fmt.Sprintf("Tried checking length of %#v (only accepts lists, maps and sets)", v[c.key]))
 }
-func (c isEmptyCondition) message() string {
-	return fmt.Sprintf("%q is empty", c.key)
+func (c hasLengthCondition) message() string {
+	return fmt.Sprintf("length(%q) = %v", c.key, c.length)
 }
-func (c isEmptyCondition) debug(v map[string]any) string {
+func (c hasLengthCondition) debug(v map[string]any) string {
 	return fmt.Sprintf("%q = %q", c.key, v[c.key])
 }
 
-// Will evaluate to true if the list/set at the given key is empty.
-// Panics if something other than a list/set is found.
+// Will evaluate to true if the list/set/map at the given key is empty.
+// Panics if something other than a list/set/map is found.
 func IsEmpty(key string) Condition {
-	return isEmptyCondition{key: key}
+	return hasLengthCondition{key: key, length: 0}
+}
+
+// Will evaluate to true if the list/set/map at the given key has the given
+// length. Panics if something other than a list/set/map is found.
+func HasLength(key string, length int) Condition {
+	return hasLengthCondition{key: key, length: length}
+}
+
+type regexCondition struct {
+	key   string
+	regex regexp.Regexp
+}
+
+func (c regexCondition) eval(v map[string]any) bool {
+	if str, isString := v[c.key].(string); isString {
+		return c.regex.MatchString(str)
+	}
+	panic(fmt.Sprintf("Tried regexing non-string: %#v", v[c.key]))
+}
+func (c regexCondition) message() string {
+	return fmt.Sprintf("%q matches %v", c.key, c.regex)
+}
+func (c regexCondition) debug(v map[string]any) string {
+	return fmt.Sprintf("%q = %q", c.key, v[c.key])
+}
+
+func Matches(key string, regex regexp.Regexp) Condition {
+	return regexCondition{key: key, regex: regex}
+}
+
+type Number interface {
+	int | int32 | int64 | float32 | float64
+}
+
+type compareCondition[T Number] struct {
+	key   string
+	value T
+	op    string
+}
+
+func (c compareCondition[T]) eval(v map[string]any) bool {
+	switch c.op {
+	case "<":
+		return v[c.key].(T) < c.value
+	case ">":
+		return v[c.key].(T) > c.value
+	case "<=":
+		return v[c.key].(T) <= c.value
+	case ">=":
+		return v[c.key].(T) >= c.value
+	default:
+		panic(fmt.Sprintf("unrecognized operator %q", c.op))
+	}
+}
+
+func (c compareCondition[T]) message() string {
+	return fmt.Sprintf("%q %v %v", c.key, c.op, c.value)
+}
+func (c compareCondition[T]) debug(v map[string]any) string {
+	return fmt.Sprintf("%q = %q", c.key, v[c.key])
+}
+
+// Evaluates to true if the value at the given key is less than the given value.
+func LessThan[T Number](key string, value T) Condition {
+	return compareCondition[T]{key: key, value: value, op: "<"}
+}
+
+// Evaluates to true if the value at the given key is greater than the given value.
+func GreaterThan[T Number](key string, value T) Condition {
+	return compareCondition[T]{key: key, value: value, op: ">"}
+}
+
+// Evaluates to true if the value at the given key is less than or equal to the given value.
+func LessThanEq[T Number](key string, value T) Condition {
+	return compareCondition[T]{key: key, value: value, op: "<="}
+}
+
+// Evaluates to true if the value at the given key is greater than or equal to the given value.
+func GreaterThanEq[T Number](key string, value T) Condition {
+	return compareCondition[T]{key: key, value: value, op: ">="}
 }
