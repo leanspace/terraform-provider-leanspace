@@ -8,14 +8,25 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// A condition is an interface that can be used to evaluate a map[string]any,
+// and decide if it is valid or not.
 type Condition interface {
+	// Will evaluate against the given object and return if it is valid or not.
 	eval(v map[string]any) bool
+	// A simple human readable formatting of this condition
 	message() string
+	// A debug message for the condition, usually containing the values used when evaluating.
 	debug(v map[string]any) string
 }
 
+// A slice of Conditions. It can be evaluated against a map[string]any, and all
+// errors will be aggregated together.
 type Validators []Condition
 
+// Will check these conditions, and ensure they all evaluate to true for the given object.
+// If all tests pass, returns nil.
+// Otherwise returns a human readable error with all failed conditions aggregated in a
+// human readable format.
 func (validators Validators) Check(obj map[string]any) error {
 	errorMsg := ""
 	for _, validator := range validators {
