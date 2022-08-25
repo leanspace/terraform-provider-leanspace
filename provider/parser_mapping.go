@@ -74,10 +74,14 @@ type CustomEncodingModel interface {
 }
 
 type ValidationModel interface {
-	// An optional extra function that is called on the loaded configuration state of an instance.
-	// It is called during "terraform plan", and returns whatever error is returned. Use this to provide
-	// resource validation that is separate from parsing.
-	Validate() error
+	// An optional extra function that is called before an instance of this resource is parsed
+	// (ie. FromMap is called) for creation / update. This can be used to ensure all values are valid
+	// and are coherent, and to avoid having validation and error throwing during FromMap (better
+	// isolating resource logic from parsing).
+	// The instance this method is called on is empty/irrelevant - all the data is in the map, and will
+	// be the same as what FromMap receives.
+	// If an error is thrown the action is stopped and the error is displayed to the user.
+	Validate(map[string]any) error
 }
 
 type GenericClient[T any, PT ParseableModel[T]] struct {
