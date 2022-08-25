@@ -190,13 +190,13 @@ type isSetCondition struct {
 }
 
 func (c isSetCondition) eval(v map[string]any) bool {
-	return v[c.key] != nil && v[c.key] != "" && v[c.key] != 0
+	return v[c.key] != nil && v[c.key] != "" && v[c.key] != 0 && v[c.key] != '\x00' && v[c.key] != 0.0
 }
 func (c isSetCondition) message() string {
 	return fmt.Sprintf("%q is set", c.key)
 }
 func (c isSetCondition) debug(v map[string]any) string {
-	return fmt.Sprintf("%q = %q", c.key, v[c.key])
+	return fmt.Sprintf("%q = %v", c.key, v[c.key])
 }
 
 // Will evaluate to true if the given key is set (ie. non-nil, not empty string)
@@ -213,10 +213,10 @@ func (c isEqualsCondition) eval(v map[string]any) bool {
 	return v[c.key] == c.value
 }
 func (c isEqualsCondition) message() string {
-	return fmt.Sprintf("%q = %q", c.key, c.value)
+	return fmt.Sprintf("%q = %v", c.key, c.value)
 }
 func (c isEqualsCondition) debug(v map[string]any) string {
-	return fmt.Sprintf("%q = %q", c.key, v[c.key])
+	return fmt.Sprintf("%q = %v", c.key, v[c.key])
 }
 
 // Will evaluate to true if the value at the given key equals the given value
@@ -245,7 +245,7 @@ func (c hasLengthCondition) message() string {
 	return fmt.Sprintf("length(%q) = %v", c.key, c.length)
 }
 func (c hasLengthCondition) debug(v map[string]any) string {
-	return fmt.Sprintf("%q = %q", c.key, v[c.key])
+	return fmt.Sprintf("%q = %v", c.key, v[c.key])
 }
 
 // Will evaluate to true if the list/set/map at the given key is empty.
@@ -269,13 +269,13 @@ func (c regexCondition) eval(v map[string]any) bool {
 	if str, isString := v[c.key].(string); isString {
 		return c.regex.MatchString(str)
 	}
-	panic(fmt.Sprintf("Tried regexing non-string: %#v", v[c.key]))
+	panic(fmt.Sprintf("Tried regexing non-string: %v", v[c.key]))
 }
 func (c regexCondition) message() string {
 	return fmt.Sprintf("%q matches %v", c.key, c.regex)
 }
 func (c regexCondition) debug(v map[string]any) string {
-	return fmt.Sprintf("%q = %q", c.key, v[c.key])
+	return fmt.Sprintf("%q = %v", c.key, v[c.key])
 }
 
 func Matches(key string, regex regexp.Regexp) Condition {
@@ -311,7 +311,7 @@ func (c compareCondition[T]) message() string {
 	return fmt.Sprintf("%q %v %v", c.key, c.op, c.value)
 }
 func (c compareCondition[T]) debug(v map[string]any) string {
-	return fmt.Sprintf("%q = %q", c.key, v[c.key])
+	return fmt.Sprintf("%q = %v", c.key, v[c.key])
 }
 
 // Evaluates to true if the value at the given key is less than the given value.

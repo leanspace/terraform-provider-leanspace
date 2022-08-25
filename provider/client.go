@@ -143,16 +143,24 @@ func (c *Client) DoRequest(req *http.Request, authToken *string) ([]byte, error,
 		var prettyResponseJSON bytes.Buffer
 		json.Indent(&prettyResponseJSON, body, "", "    ")
 
+		extra := ""
+		if res.StatusCode == 409 {
+			extra = "Hint: This seems to be an error caused by a name collision.\n" +
+				"Try renaming your resource or deleting the resource with the same name on Leanspace."
+		}
+
 		return nil, fmt.Errorf(
 			"status %d when performing the request.\n"+
 				"Sent %s to %s\n"+
 				"Request body: %s\n"+
-				"Response body: %s",
+				"Response body: %s\n"+
+				"%s",
 			res.StatusCode,
 			req.Method,
 			req.URL,
 			&prettyRequestJSON,
 			&prettyResponseJSON,
+			extra,
 		), res.StatusCode
 	}
 
