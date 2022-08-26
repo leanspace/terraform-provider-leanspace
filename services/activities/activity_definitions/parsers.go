@@ -117,14 +117,8 @@ func (metadata *Metadata[T]) FromMap(metadataMap map[string]any) error {
 	metadata.Name = metadataMap["name"].(string)
 	metadata.Description = metadataMap["description"].(string)
 
-	attributes := metadataMap["attributes"].([]any)[0].(map[string]any)
-	metadata.Attributes.Value = attributes["value"].(T)
-	metadata.Attributes.Type = attributes["type"].(string)
-	if metadataMap["type"] == "NUMERIC" {
-		metadata.Attributes.UnitId = attributes["unit_id"].(string)
-	}
-
-	return nil
+	err := metadata.Attributes.FromMap(metadataMap["attributes"].([]any)[0].(map[string]any))
+	return err
 }
 
 func (argument *ArgumentDefinition[T]) FromMap(argumentMap map[string]any) error {
@@ -132,8 +126,7 @@ func (argument *ArgumentDefinition[T]) FromMap(argumentMap map[string]any) error
 	argument.Name = argumentMap["name"].(string)
 	argument.Description = argumentMap["description"].(string)
 
-	attributeMap := argumentMap["attributes"].([]any)[0].(map[string]any)
-	err := argument.Attributes.FromMap(attributeMap)
+	err := argument.Attributes.FromMap(argumentMap["attributes"].([]any)[0].(map[string]any))
 	return err
 }
 

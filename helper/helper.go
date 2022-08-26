@@ -67,6 +67,12 @@ func Ptr[T any](value T) *T {
 	return &value
 }
 
+func Implements[T any, I any]() bool {
+	var ptr *T
+	_, isInstance := any(ptr).(I)
+	return isInstance
+}
+
 const Debug = false
 
 var Logger = func() *log.Logger {

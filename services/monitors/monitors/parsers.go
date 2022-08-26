@@ -1,7 +1,6 @@
 package monitors
 
 import (
-	"fmt"
 	"leanspace-terraform-provider/helper"
 	"leanspace-terraform-provider/helper/general_objects"
 	"leanspace-terraform-provider/services/monitors/action_templates"
@@ -109,9 +108,6 @@ func (expression *Expression) FromMap(expressionMap map[string]any) error {
 	expression.ComparisonValue = expressionMap["comparison_value"].(float64)
 	expression.AggregationFunction = expressionMap["aggregation_function"].(string)
 	expression.Tolerance = expressionMap["tolerance"].(float64)
-	if expression.Tolerance != 0 && expression.ComparisonOperator != "EQUAL_TO" && expression.ComparisonOperator != "NOT_EQUAL_TO" {
-		return fmt.Errorf("'tolerance' can only be set if the comparison operator is 'EQUAL_TO' or 'NOT_EQUAL_TO' (got %f)", expression.Tolerance)
-	}
 	return nil
 }
 

@@ -73,6 +73,17 @@ type CustomEncodingModel interface {
 	CustomEncoding([]byte) (io.Reader, string, error)
 }
 
+type ValidationModel interface {
+	// An optional extra function that is called before an instance of this resource is parsed
+	// (ie. FromMap is called) for creation / update. This can be used to ensure all values are valid
+	// and are coherent, and to avoid having validation and error throwing during FromMap (better
+	// isolating resource logic from parsing).
+	// The instance this method is called on is empty/irrelevant - all the data is in the map, and will
+	// be the same as what FromMap receives.
+	// If an error is thrown the action is stopped and the error is displayed to the user.
+	Validate(map[string]any) error
+}
+
 type GenericClient[T any, PT ParseableModel[T]] struct {
 	Client     *Client
 	Path       string
