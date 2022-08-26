@@ -13,10 +13,10 @@ import (
 type Condition interface {
 	// Will evaluate against the given object and return if it is valid or not.
 	eval(v map[string]any) bool
-	// A simple human readable formatting of this condition
-	message() string
-	// A debug message for the condition, usually containing the values used when evaluating.
-	debug(v map[string]any) string
+	// A human readable formatting of what this condition expects.
+	printExpected() string
+	// A hulan readable formatting of what this condition received.
+	printActual(v map[string]any) string
 }
 
 // A slice of Conditions. It can be evaluated against a map[string]any, and all
@@ -34,8 +34,8 @@ func (validators Validators) Check(obj map[string]any) error {
 			errorMsg += fmt.Sprintf(
 				"  - %v\n"+
 					"    got %v\n",
-				validator.message(),
-				validator.debug(obj),
+				validator.printExpected(),
+				validator.printActual(obj),
 			)
 		}
 	}
@@ -55,11 +55,11 @@ type ifCondition struct {
 func (c ifCondition) eval(v map[string]any) bool {
 	return !c.if_.eval(v) || c.then.eval(v)
 }
-func (c ifCondition) message() string {
-	return fmt.Sprintf("if %v then %v", c.if_.message(), c.then.message())
+func (c ifCondition) printExpected() string {
+	return fmt.Sprintf("if %v then %v", c.if_.printExpected(), c.then.printExpected())
 }
-func (c ifCondition) debug(v map[string]any) string {
-	return fmt.Sprintf("%v / %v", c.if_.debug(v), c.then.debug(v))
+func (c ifCondition) printActual(v map[string]any) string {
+	return fmt.Sprintf("%v / %v", c.if_.printActual(v), c.then.printActual(v))
 }
 
 // A standard if ... then ... condition, that only evaluates to false if
@@ -76,11 +76,11 @@ type equivCondition struct {
 func (c equivCondition) eval(v map[string]any) bool {
 	return c.equivA.eval(v) == c.equivB.eval(v)
 }
-func (c equivCondition) message() string {
-	return fmt.Sprintf("if and only if %v then %v", c.equivA.message(), c.equivB.message())
+func (c equivCondition) printExpected() string {
+	return fmt.Sprintf("if and only if %v then %v", c.equivA.printExpected(), c.equivB.printExpected())
 }
-func (c equivCondition) debug(v map[string]any) string {
-	return fmt.Sprintf("%v / %v", c.equivA.debug(v), c.equivB.debug(v))
+func (c equivCondition) printActual(v map[string]any) string {
+	return fmt.Sprintf("%v / %v", c.equivA.printActual(v), c.equivB.printActual(v))
 }
 
 // A "if and only if" (ie. equivalence) condition, that evaluates to true
@@ -96,11 +96,11 @@ type notCondition struct {
 func (c notCondition) eval(v map[string]any) bool {
 	return !c.cond.eval(v)
 }
-func (c notCondition) message() string {
-	return fmt.Sprintf("not %v", c.cond.message())
+func (c notCondition) printExpected() string {
+	return fmt.Sprintf("not %v", c.cond.printExpected())
 }
-func (c notCondition) debug(v map[string]any) string {
-	return c.cond.debug(v)
+func (c notCondition) printActual(v map[string]any) string {
+	return c.cond.printActual(v)
 }
 
 // Will inverse the given condition
@@ -120,22 +120,22 @@ func (c andCondition) eval(v map[string]any) bool {
 	}
 	return true
 }
-func (c andCondition) message() string {
+func (c andCondition) printExpected() string {
 	base := "("
 	for i, cond := range c.conds {
 		if i > 0 {
 			base += " & "
 		}
-		base += cond.message()
+		base += cond.printExpected()
 	}
 	base += ")"
 	return base
 }
-func (c andCondition) debug(v map[string]any) string {
+func (c andCondition) printActual(v map[string]any) string {
 	base := ""
 	isEmpty := true
 	for _, cond := range c.conds {
-		d := cond.debug(v)
+		d := cond.printActual(v)
 		if !strings.Contains(base, d) {
 			if !isEmpty {
 				base += ", "
@@ -164,22 +164,22 @@ func (c orCondition) eval(v map[string]any) bool {
 	}
 	return false
 }
-func (c orCondition) message() string {
+func (c orCondition) printExpected() string {
 	base := "("
 	for i, cond := range c.conds {
 		if i > 0 {
 			base += " | "
 		}
-		base += cond.message()
+		base += cond.printExpected()
 	}
 	base += ")"
 	return base
 }
-func (c orCondition) debug(v map[string]any) string {
+func (c orCondition) printActual(v map[string]any) string {
 	base := ""
 	isEmpty := true
 	for _, cond := range c.conds {
-		d := cond.debug(v)
+		d := cond.printActual(v)
 		if !strings.Contains(base, d) {
 			if !isEmpty {
 				base += ", "
@@ -203,10 +203,10 @@ type isSetCondition struct {
 func (c isSetCondition) eval(v map[string]any) bool {
 	return v[c.key] != nil && v[c.key] != "" && v[c.key] != 0 && v[c.key] != '\x00' && v[c.key] != 0.0
 }
-func (c isSetCondition) message() string {
+func (c isSetCondition) printExpected() string {
 	return fmt.Sprintf("%q is set", c.key)
 }
-func (c isSetCondition) debug(v map[string]any) string {
+func (c isSetCondition) printActual(v map[string]any) string {
 	return fmt.Sprintf("%q = %v", c.key, v[c.key])
 }
 
@@ -223,10 +223,10 @@ type isEqualsCondition struct {
 func (c isEqualsCondition) eval(v map[string]any) bool {
 	return v[c.key] == c.value
 }
-func (c isEqualsCondition) message() string {
+func (c isEqualsCondition) printExpected() string {
 	return fmt.Sprintf("%q = %v", c.key, c.value)
 }
-func (c isEqualsCondition) debug(v map[string]any) string {
+func (c isEqualsCondition) printActual(v map[string]any) string {
 	return fmt.Sprintf("%q = %v", c.key, v[c.key])
 }
 
@@ -252,10 +252,10 @@ func (c hasLengthCondition) eval(v map[string]any) bool {
 	}
 	panic(fmt.Sprintf("Tried checking length of %#v (only accepts lists, maps and sets)", v[c.key]))
 }
-func (c hasLengthCondition) message() string {
+func (c hasLengthCondition) printExpected() string {
 	return fmt.Sprintf("length(%q) = %v", c.key, c.length)
 }
-func (c hasLengthCondition) debug(v map[string]any) string {
+func (c hasLengthCondition) printActual(v map[string]any) string {
 	return fmt.Sprintf("%q = %v", c.key, v[c.key])
 }
 
@@ -282,10 +282,10 @@ func (c regexCondition) eval(v map[string]any) bool {
 	}
 	panic(fmt.Sprintf("Tried regexing non-string: %v", v[c.key]))
 }
-func (c regexCondition) message() string {
+func (c regexCondition) printExpected() string {
 	return fmt.Sprintf("%q matches %v", c.key, c.regex)
 }
-func (c regexCondition) debug(v map[string]any) string {
+func (c regexCondition) printActual(v map[string]any) string {
 	return fmt.Sprintf("%q = %v", c.key, v[c.key])
 }
 
@@ -318,10 +318,10 @@ func (c compareCondition[T]) eval(v map[string]any) bool {
 	}
 }
 
-func (c compareCondition[T]) message() string {
+func (c compareCondition[T]) printExpected() string {
 	return fmt.Sprintf("%q %v %v", c.key, c.op, c.value)
 }
-func (c compareCondition[T]) debug(v map[string]any) string {
+func (c compareCondition[T]) printActual(v map[string]any) string {
 	return fmt.Sprintf("%q = %v", c.key, v[c.key])
 }
 
