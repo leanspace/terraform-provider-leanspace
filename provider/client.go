@@ -110,6 +110,10 @@ func (c *Client) DoRequest(req *http.Request, authToken *string) ([]byte, error,
 		req.Header.Set("Authorization", "Bearer "+token)
 	}
 
+	// We want to be able to print the request body in the error message,
+	// in case it goes wrong.
+	// Because req.Body is a ReadCloser, reading it twice isn't possible. We thus
+	// need to make a copy of the content, and replace the current request body.
 	bodyOriginal := &bytes.Buffer{}
 	if req.Body != nil {
 		_, err := io.Copy(bodyOriginal, req.Body)
