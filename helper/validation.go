@@ -54,7 +54,7 @@ func (c ifCondition) debug(v map[string]any) string {
 // A standard if ... then ... condition, that only evaluates to false if
 // the "if" condition is true while "then" isn't.
 func If(if_ Condition, then Condition) Condition {
-	return ifCondition{if_: if_, then: then}
+	return ifCondition{if_, then}
 }
 
 type equivCondition struct {
@@ -75,7 +75,7 @@ func (c equivCondition) debug(v map[string]any) string {
 // A "if and only if" (ie. equivalence) condition, that evaluates to true
 // If both conditionals evaluate to the same.
 func Equivalence(equivA Condition, equivB Condition) Condition {
-	return equivCondition{equivA: equivA, equivB: equivB}
+	return equivCondition{equivA, equivB}
 }
 
 type notCondition struct {
@@ -94,7 +94,7 @@ func (c notCondition) debug(v map[string]any) string {
 
 // Will inverse the given condition
 func Not(cond Condition) Condition {
-	return notCondition{cond: cond}
+	return notCondition{cond}
 }
 
 type andCondition struct {
@@ -138,7 +138,7 @@ func (c andCondition) debug(v map[string]any) string {
 
 // Will only evaluate to true if all conditions evaluate to true.
 func And(conds ...Condition) Condition {
-	return andCondition{conds: conds}
+	return andCondition{conds}
 }
 
 type orCondition struct {
@@ -182,7 +182,7 @@ func (c orCondition) debug(v map[string]any) string {
 
 // Will evaluate to true if any of the conditions evaluates to true.
 func Or(conds ...Condition) Condition {
-	return orCondition{conds: conds}
+	return orCondition{conds}
 }
 
 type isSetCondition struct {
@@ -201,7 +201,7 @@ func (c isSetCondition) debug(v map[string]any) string {
 
 // Will evaluate to true if the given key is set (ie. non-nil, not empty string)
 func IsSet(key string) Condition {
-	return isSetCondition{key: key}
+	return isSetCondition{key}
 }
 
 type isEqualsCondition struct {
@@ -221,7 +221,7 @@ func (c isEqualsCondition) debug(v map[string]any) string {
 
 // Will evaluate to true if the value at the given key equals the given value
 func Equals(key string, value any) Condition {
-	return isEqualsCondition{key: key, value: value}
+	return isEqualsCondition{key, value}
 }
 
 type hasLengthCondition struct {
@@ -251,13 +251,13 @@ func (c hasLengthCondition) debug(v map[string]any) string {
 // Will evaluate to true if the list/set/map at the given key is empty.
 // Panics if something other than a list/set/map is found.
 func IsEmpty(key string) Condition {
-	return hasLengthCondition{key: key, length: 0}
+	return hasLengthCondition{key, 0}
 }
 
 // Will evaluate to true if the list/set/map at the given key has the given
 // length. Panics if something other than a list/set/map is found.
 func HasLength(key string, length int) Condition {
-	return hasLengthCondition{key: key, length: length}
+	return hasLengthCondition{key, length}
 }
 
 type regexCondition struct {
@@ -279,7 +279,7 @@ func (c regexCondition) debug(v map[string]any) string {
 }
 
 func Matches(key string, regex regexp.Regexp) Condition {
-	return regexCondition{key: key, regex: regex}
+	return regexCondition{key, regex}
 }
 
 type Number interface {
@@ -316,20 +316,20 @@ func (c compareCondition[T]) debug(v map[string]any) string {
 
 // Evaluates to true if the value at the given key is less than the given value.
 func LessThan[T Number](key string, value T) Condition {
-	return compareCondition[T]{key: key, value: value, op: "<"}
+	return compareCondition[T]{key, value, "<"}
 }
 
 // Evaluates to true if the value at the given key is greater than the given value.
 func GreaterThan[T Number](key string, value T) Condition {
-	return compareCondition[T]{key: key, value: value, op: ">"}
+	return compareCondition[T]{key, value, ">"}
 }
 
 // Evaluates to true if the value at the given key is less than or equal to the given value.
 func LessThanEq[T Number](key string, value T) Condition {
-	return compareCondition[T]{key: key, value: value, op: "<="}
+	return compareCondition[T]{key, value, "<="}
 }
 
 // Evaluates to true if the value at the given key is greater than or equal to the given value.
 func GreaterThanEq[T Number](key string, value T) Condition {
-	return compareCondition[T]{key: key, value: value, op: ">="}
+	return compareCondition[T]{key, value, ">="}
 }
