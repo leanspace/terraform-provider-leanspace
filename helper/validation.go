@@ -15,7 +15,7 @@ type Condition interface {
 	eval(v map[string]any) bool
 	// A human readable formatting of what this condition expects.
 	printExpected() string
-	// A hulan readable formatting of what this condition received.
+	// A human readable formatting of what this condition received.
 	printActual(v map[string]any) string
 }
 
