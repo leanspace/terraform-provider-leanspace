@@ -21,7 +21,8 @@ var fieldValidators = Validators{
 	),
 	Equivalence(
 		Equals("source", "STATIC"),
-		And(IsSet("value"), Not(IsSet("ref"))),
+		// value could be "unset" (eg. 0, "") and be valid
+		And( /* IsSet("value"), */ Not(IsSet("ref"))),
 	),
 	Equivalence(
 		Equals("source", "REFERENCE"),
