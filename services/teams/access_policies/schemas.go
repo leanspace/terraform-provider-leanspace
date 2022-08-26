@@ -69,3 +69,21 @@ var statementSchema = map[string]*schema.Schema{
 		},
 	},
 }
+
+var dataSourceFilterSchema = map[string]*schema.Schema{
+	"action_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"action_names": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
+		},
+	},
+}

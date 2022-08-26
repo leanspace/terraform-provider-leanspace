@@ -6,4 +6,5 @@ var AnalysisDefinitionDataType = provider.DataSourceType[AnalysisDefinition, *An
 	ResourceIdentifier: "leanspace_analysis_definitions",
 	Path:               "analyses-repository/analysis-definitions",
 	Schema:             analysisDefinitionSchema,
+	FilterSchema:       dataSourceFilterSchema,
 }

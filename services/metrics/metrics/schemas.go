@@ -1,6 +1,7 @@
 package metrics
 
 import (
+	"leanspace-terraform-provider/helper"
 	"leanspace-terraform-provider/helper/general_objects"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -58,5 +59,32 @@ var metricSchema = map[string]*schema.Schema{
 		Type:        schema.TypeString,
 		Computed:    true,
 		Description: "Who modified it the last",
+	},
+}
+
+var dataSourceFilterSchema = map[string]*schema.Schema{
+	"node_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"attribute_types": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringInSlice(general_objects.ValidAttributeSchemaTypes, false),
+			Description:  helper.AllowedValuesToDescription(general_objects.ValidAttributeSchemaTypes),
+		},
+	},
+	"tags": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
+		},
 	},
 }

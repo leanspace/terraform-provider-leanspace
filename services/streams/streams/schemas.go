@@ -1,9 +1,10 @@
 package streams
 
 import (
+	"leanspace-terraform-provider/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"leanspace-terraform-provider/helper"
 )
 
 var validDataTypes = []string{
@@ -394,5 +395,16 @@ var errorSchema = map[string]*schema.Schema{
 	"message": {
 		Type:     schema.TypeString,
 		Computed: true,
+	},
+}
+
+var dataSourceFilterSchema = map[string]*schema.Schema{
+	"asset_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
 	},
 }

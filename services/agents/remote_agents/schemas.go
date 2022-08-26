@@ -1,9 +1,10 @@
 package remote_agents
 
 import (
+	"leanspace-terraform-provider/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"leanspace-terraform-provider/helper"
 )
 
 var validConnectorTypes = []string{"INBOUND", "OUTBOUND"}
@@ -157,5 +158,33 @@ var connTargetSchema = map[string]*schema.Schema{
 	"binding": {
 		Type:     schema.TypeString,
 		Computed: true,
+	},
+}
+
+var dataSourceFilterSchema = map[string]*schema.Schema{
+	"gateway_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"service_account_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"connector_types": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringInSlice(validConnectorTypes, false),
+			Description:  helper.AllowedValuesToDescription(validConnectorTypes),
+		},
 	},
 }

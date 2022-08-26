@@ -6,4 +6,5 @@ var ActivityDefinitionDataType = provider.DataSourceType[ActivityDefinition, *Ac
 	ResourceIdentifier: "leanspace_activity_definitions",
 	Path:               "activities-repository/activity-definitions",
 	Schema:             activityDefinitionSchema,
+	FilterSchema:       dataSourceFilterSchema,
 }

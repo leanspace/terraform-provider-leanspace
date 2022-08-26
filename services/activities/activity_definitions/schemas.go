@@ -175,3 +175,14 @@ var metadataMappingSchema = map[string]*schema.Schema{
 		Required: true,
 	},
 }
+
+var dataSourceFilterSchema = map[string]*schema.Schema{
+	"node_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+}

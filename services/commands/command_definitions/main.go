@@ -6,4 +6,5 @@ var CommandDataType = provider.DataSourceType[CommandDefinition, *CommandDefinit
 	ResourceIdentifier: "leanspace_command_definitions",
 	Path:               "commands-repository/command-definitions",
 	Schema:             commandDefinitionSchema,
+	FilterSchema:       dataSourceFilterSchema,
 }

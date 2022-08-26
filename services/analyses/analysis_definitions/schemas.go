@@ -170,3 +170,29 @@ func analysisFieldSchema(depth int, nameRequired bool) map[string]*schema.Schema
 
 	return baseSchema
 }
+
+var dataSourceFilterSchema = map[string]*schema.Schema{
+	"model_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"node_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"frameworks": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
+		},
+	},
+}
