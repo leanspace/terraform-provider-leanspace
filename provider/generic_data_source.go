@@ -14,7 +14,7 @@ import (
 func (dataSourceType DataSourceType[T, PT]) toDataSource() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceType.read,
-		Schema:      general_objects.PaginatedListSchema(dataSourceType.Schema),
+		Schema:      general_objects.PaginatedListSchema(dataSourceType.Schema, dataSourceType.FilterSchema),
 	}
 }
 
