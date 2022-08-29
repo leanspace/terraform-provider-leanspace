@@ -1,7 +1,7 @@
 package monitors
 
 import (
-	. "leanspace-terraform-provider/helper"
+	. "github.com/leanspace/terraform-provider-leanspace/helper"
 )
 
 var monitorExpressionValidators = Validators{

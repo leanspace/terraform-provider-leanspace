@@ -3,8 +3,9 @@ package analysis_definitions
 import (
 	"encoding/json"
 	"fmt"
-	"leanspace-terraform-provider/helper"
 	"strings"
+
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )

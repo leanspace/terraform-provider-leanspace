@@ -1,7 +1,7 @@
 package activity_definitions
 
 import (
-	"leanspace-terraform-provider/helper/general_objects"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"

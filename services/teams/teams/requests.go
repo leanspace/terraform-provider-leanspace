@@ -3,10 +3,11 @@ package teams
 import (
 	"encoding/json"
 	"fmt"
-	"leanspace-terraform-provider/helper"
-	"leanspace-terraform-provider/provider"
 	"net/http"
 	"strings"
+
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
 func (team *Team) currentPolicies(client *provider.Client) ([]string, error) {

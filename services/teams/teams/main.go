@@ -1,7 +1,7 @@
 package teams
 
 import (
-	"leanspace-terraform-provider/provider"
+	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
 var TeamDataType = provider.DataSourceType[Team, *Team]{

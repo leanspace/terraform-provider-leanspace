@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"leanspace-terraform-provider/helper"
-	"leanspace-terraform-provider/helper/general_objects"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 func (client GenericClient[T, PT]) marshalElement(element PT) ([]byte, error) {

@@ -1,6 +1,6 @@
 package dashboards
 
-import "leanspace-terraform-provider/provider"
+import "github.com/leanspace/terraform-provider-leanspace/provider"
 
 var DashboardDataType = provider.DataSourceType[Dashboard, *Dashboard]{
 	ResourceIdentifier: "leanspace_dashboards",

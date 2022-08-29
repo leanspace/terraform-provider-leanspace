@@ -1,8 +1,9 @@
 package general_objects
 
 import (
-	"leanspace-terraform-provider/helper"
 	"strconv"
+
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 )
 
 func (paginatedList *PaginatedList[T, PT]) ToMap() map[string]any {

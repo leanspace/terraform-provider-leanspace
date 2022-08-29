@@ -1,8 +1,8 @@
 package monitors
 
 import (
-	"leanspace-terraform-provider/helper/general_objects"
-	"leanspace-terraform-provider/services/monitors/action_templates"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+	"github.com/leanspace/terraform-provider-leanspace/services/monitors/action_templates"
 )
 
 type Monitor struct {

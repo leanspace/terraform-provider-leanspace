@@ -3,10 +3,11 @@ package dashboards
 import (
 	"encoding/json"
 	"fmt"
-	"leanspace-terraform-provider/helper"
-	"leanspace-terraform-provider/provider"
 	"net/http"
 	"strings"
+
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
 type apiValidWidgetInfo struct {

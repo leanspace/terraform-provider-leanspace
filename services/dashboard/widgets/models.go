@@ -1,6 +1,6 @@
 package widgets
 
-import "leanspace-terraform-provider/helper/general_objects"
+import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 type Widget struct {
 	ID             string                `json:"id"`

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"regexp"
 
-	. "leanspace-terraform-provider/helper"
+	. "github.com/leanspace/terraform-provider-leanspace/helper"
 )
 
 var tle1stLineRegex = regexp.MustCompile(`^1 (?P<noradId>[ 0-9]{5})[A-Z] [ 0-9]{5}[ A-Z]{3} [ 0-9]{5}[.][ 0-9]{8} (?:(?:[ 0+-][.][ 0-9]{8})|(?: [ +-][.][ 0-9]{7})) [ +-][ 0-9]{5}[+-][ 0-9] [ +-][ 0-9]{5}[+-][ 0-9] [ 0-9] [ 0-9]{4}[ 0-9]$`)

@@ -1,6 +1,6 @@
 package streams
 
-import "leanspace-terraform-provider/provider"
+import "github.com/leanspace/terraform-provider-leanspace/provider"
 
 var StreamDataType = provider.DataSourceType[Stream, *Stream]{
 	ResourceIdentifier: "leanspace_streams",

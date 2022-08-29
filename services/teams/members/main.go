@@ -1,6 +1,6 @@
 package members
 
-import "leanspace-terraform-provider/provider"
+import "github.com/leanspace/terraform-provider-leanspace/provider"
 
 var MemberDataType = provider.DataSourceType[Member, *Member]{
 	ResourceIdentifier: "leanspace_members",

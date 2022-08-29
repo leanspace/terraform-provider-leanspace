@@ -2,9 +2,10 @@ package monitors
 
 import (
 	"fmt"
-	"leanspace-terraform-provider/helper"
-	"leanspace-terraform-provider/provider"
 	"net/http"
+
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
 func (monitor *Monitor) actionTemplateChange(action string, actionTemplateId string, client *provider.Client) error {

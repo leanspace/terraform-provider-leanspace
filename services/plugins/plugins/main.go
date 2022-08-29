@@ -2,7 +2,8 @@ package plugins
 
 import (
 	"fmt"
-	"leanspace-terraform-provider/provider"
+
+	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
 var PluginDataType = provider.DataSourceType[Plugin, *Plugin]{

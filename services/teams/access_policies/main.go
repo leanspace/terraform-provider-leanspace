@@ -1,6 +1,6 @@
 package access_policies
 
-import "leanspace-terraform-provider/provider"
+import "github.com/leanspace/terraform-provider-leanspace/provider"
 
 var AccessPolicyDataType = provider.DataSourceType[AccessPolicy, *AccessPolicy]{
 	ResourceIdentifier: "leanspace_access_policies",

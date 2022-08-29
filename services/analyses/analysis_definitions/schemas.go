@@ -1,8 +1,9 @@
 package analysis_definitions
 
 import (
-	"leanspace-terraform-provider/helper"
 	"regexp"
+
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"

@@ -1,6 +1,6 @@
 package general_objects
 
-import "leanspace-terraform-provider/helper"
+import "github.com/leanspace/terraform-provider-leanspace/helper"
 
 type Sort struct {
 	Direction    string `json:"direction"`

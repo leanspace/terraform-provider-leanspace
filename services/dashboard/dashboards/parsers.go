@@ -1,9 +1,9 @@
 package dashboards
 
 import (
-	"leanspace-terraform-provider/helper"
-	"leanspace-terraform-provider/helper/general_objects"
-	"leanspace-terraform-provider/services/dashboard/widgets"
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/widgets"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )

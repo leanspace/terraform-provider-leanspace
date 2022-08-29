@@ -1,6 +1,6 @@
 package service_accounts
 
-import "leanspace-terraform-provider/provider"
+import "github.com/leanspace/terraform-provider-leanspace/provider"
 
 var ServiceAccountDataType = provider.DataSourceType[ServiceAccount, *ServiceAccount]{
 	ResourceIdentifier: "leanspace_service_accounts",

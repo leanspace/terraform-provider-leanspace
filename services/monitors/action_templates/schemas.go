@@ -1,7 +1,7 @@
 package action_templates
 
 import (
-	"leanspace-terraform-provider/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"

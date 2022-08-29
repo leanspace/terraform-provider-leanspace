@@ -1,7 +1,7 @@
 package units
 
 import (
-	"leanspace-terraform-provider/provider"
+	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
 var UnitDataType = provider.DataSourceType[Unit, *Unit]{
