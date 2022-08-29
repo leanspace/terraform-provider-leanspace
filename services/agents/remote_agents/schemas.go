@@ -164,3 +164,31 @@ var connTargetSchema = map[string]*schema.Schema{
 		Computed: true,
 	},
 }
+
+var dataSourceFilterSchema = map[string]*schema.Schema{
+	"gateway_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"service_account_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"connector_types": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringInSlice(validConnectorTypes, false),
+			Description:  helper.AllowedValuesToDescription(validConnectorTypes),
+		},
+	},
+}

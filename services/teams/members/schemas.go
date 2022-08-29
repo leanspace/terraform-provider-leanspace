@@ -1,9 +1,13 @@
 package members
 
 import (
+	"leanspace-terraform-provider/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
+
+var validMemberStatus = []string{"ACTIVE", "DISABLED", "DELETED"}
 
 var memberSchema = map[string]*schema.Schema{
 	"id": {
@@ -50,5 +54,25 @@ var memberSchema = map[string]*schema.Schema{
 		Type:        schema.TypeString,
 		Computed:    true,
 		Description: "Who modified it the last",
+	},
+}
+
+var dataSourceFilterSchema = map[string]*schema.Schema{
+	"team_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"statuses": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringInSlice(validMemberStatus, false),
+			Description:  helper.AllowedValuesToDescription(validMemberStatus),
+		},
 	},
 }

@@ -14,6 +14,7 @@ var nodeSchema = makeNodeSchema(nil)            // no sub nodes
 var rootNodeSchema = makeNodeSchema(nodeSchema) // max depth 1
 
 var validNodeTypes = []string{"ASSET", "GROUP", "COMPONENT"}
+var validNodeKinds = []string{"GENERIC", "SATELLITE", "GROUND_STATION"}
 
 func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema.Schema {
 	baseSchema := map[string]*schema.Schema{
@@ -63,9 +64,11 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 			Description:  helper.AllowedValuesToDescription(validNodeTypes),
 		},
 		"kind": {
-			Type:     schema.TypeString,
-			Optional: true,
-			ForceNew: true,
+			Type:         schema.TypeString,
+			Optional:     true,
+			ForceNew:     true,
+			ValidateFunc: validation.StringInSlice(validNodeKinds, false),
+			Description:  helper.AllowedValuesToDescription(validNodeKinds),
 		},
 		"tags": general_objects.TagsSchema,
 		"norad_id": {
@@ -118,4 +121,56 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 	}
 
 	return baseSchema
+}
+
+var dataSourceFilterSchema = map[string]*schema.Schema{
+	"parent_node_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"property_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"metric_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"types": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringInSlice(validNodeTypes, false),
+			Description:  helper.AllowedValuesToDescription(validNodeTypes),
+		},
+	},
+	"kinds": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringInSlice(validNodeKinds, false),
+			Description:  helper.AllowedValuesToDescription(validNodeKinds),
+		},
+	},
+	"tags": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
+		},
+	},
 }

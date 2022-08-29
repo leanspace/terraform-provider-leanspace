@@ -1,9 +1,10 @@
 package action_templates
 
 import (
+	"leanspace-terraform-provider/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"leanspace-terraform-provider/helper"
 )
 
 var validTypes = []string{"WEBHOOK"}
@@ -60,5 +61,25 @@ var ActionTemplateSchema = map[string]*schema.Schema{
 		Type:        schema.TypeString,
 		Computed:    true,
 		Description: "Who modified it the last",
+	},
+}
+
+var dataSourceFilterSchema = map[string]*schema.Schema{
+	"types": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringInSlice(validTypes, false),
+			Description:  helper.AllowedValuesToDescription(validTypes),
+		},
+	},
+	"monitor_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
 	},
 }

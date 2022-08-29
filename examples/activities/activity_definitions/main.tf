@@ -6,8 +6,6 @@ terraform {
   }
 }
 
-data "leanspace_activity_definitions" "all" {}
-
 variable "node_id" {
   type        = string
   description = "The ID of the node to which the activity definitions will be added."
@@ -24,6 +22,17 @@ variable "command_definition" {
     }))
   })
   description = "The command definition that will be used for this activity definition"
+}
+
+data "leanspace_activity_definitions" "all" {
+  filters {
+    node_ids = [var.node_id]
+    ids      = []
+    query    = ""
+    page     = 0
+    size     = 10
+    sort     = ["name,asc"]
+  }
 }
 
 locals {

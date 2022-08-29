@@ -16,7 +16,17 @@ variable "access_policies" {
   description = "The policies to attach to the created users."
 }
 
-data "leanspace_members" "all" {}
+data "leanspace_members" "all" {
+  filters {
+    team_ids = []
+    statuses = ["ACTIVE"]
+    ids      = []
+    query    = ""
+    page     = 0
+    size     = 10
+    sort     = ["name,asc"]
+  }
+}
 
 resource "leanspace_members" "test" {
   for_each   = var.usernames

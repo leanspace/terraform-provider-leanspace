@@ -1,12 +1,13 @@
 package general_objects
 
 import (
+	"leanspace-terraform-provider/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"leanspace-terraform-provider/helper"
 )
 
-func PaginatedListSchema(content map[string]*schema.Schema) map[string]*schema.Schema {
+func PaginatedListSchema(content map[string]*schema.Schema, filters map[string]*schema.Schema) map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"content": {
 			Type:     schema.TypeList,
@@ -70,13 +71,54 @@ func PaginatedListSchema(content map[string]*schema.Schema) map[string]*schema.S
 			},
 		},
 		"filters": {
-			Type:     schema.TypeMap,
+			Type:     schema.TypeList,
+			MinItems: 1,
+			MaxItems: 1,
+			Optional: true,
+			Elem: &schema.Resource{
+				Schema: FilterSchema(filters),
+			},
+		},
+	}
+}
+
+func FilterSchema(filters map[string]*schema.Schema) map[string]*schema.Schema {
+	baseFilter := map[string]*schema.Schema{
+		"ids": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
+		},
+		"query": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"page": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			Default:  0,
+		},
+		"size": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			Default:  100,
+		},
+		"sort": {
+			Type:     schema.TypeList,
 			Optional: true,
 			Elem: &schema.Schema{
 				Type: schema.TypeString,
 			},
 		},
 	}
+
+	for key, value := range filters {
+		baseFilter[key] = value
+	}
+
+	return baseFilter
 }
 
 var SortSchema = map[string]*schema.Schema{
@@ -164,7 +206,7 @@ var TagsSchema = &schema.Schema{
 	},
 }
 
-var validAttributeSchemaTypes = []string{
+var ValidAttributeSchemaTypes = []string{
 	"NUMERIC", "BOOLEAN", "TEXT", "DATE", "TIME", "TIMESTAMP", "ENUM", "BINARY",
 }
 
@@ -179,7 +221,7 @@ func contains(slice []string, value string) bool {
 
 func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string) map[string]*schema.Schema {
 	validTypes := []string{}
-	for _, value := range validAttributeSchemaTypes {
+	for _, value := range ValidAttributeSchemaTypes {
 		if contains(excludeTypes, value) {
 			continue
 		}

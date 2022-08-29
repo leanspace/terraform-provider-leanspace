@@ -6,7 +6,15 @@ terraform {
   }
 }
 
-data "leanspace_units" "all" {}
+data "leanspace_units" "all" {
+  filters {
+    ids   = []
+    query = ""
+    page  = 0
+    size  = 10
+    sort  = ["symbol,asc"]
+  }
+}
 
 resource "leanspace_units" "custom_units" {
   for_each = {

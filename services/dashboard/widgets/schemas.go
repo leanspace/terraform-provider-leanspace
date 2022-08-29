@@ -187,3 +187,47 @@ var dashboardInfoSchema = map[string]*schema.Schema{
 		Computed: true,
 	},
 }
+
+var dataSourceFilterSchema = map[string]*schema.Schema{
+	"types": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringInSlice(validWidgetTypes, false),
+			Description:  helper.AllowedValuesToDescription(validWidgetTypes),
+		},
+	},
+	"tags": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
+		},
+	},
+	"dashboard_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"datasource_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"datasources": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringInSlice(validDatasources, false),
+			Description:  helper.AllowedValuesToDescription(validDatasources),
+		},
+	},
+}

@@ -117,3 +117,32 @@ var argumentSchema = map[string]*schema.Schema{
 		},
 	},
 }
+
+var dataSourceFilterSchema = map[string]*schema.Schema{
+	"node_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"node_types": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
+		},
+	},
+	"node_kinds": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
+		},
+	},
+	"with_arguments_and_metadata": {
+		Type:     schema.TypeBool,
+		Optional: true,
+	},
+}

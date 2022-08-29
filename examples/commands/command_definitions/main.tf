@@ -6,11 +6,23 @@ terraform {
   }
 }
 
-data "leanspace_command_definitions" "all" {}
-
 variable "node_id" {
   type        = string
   description = "The ID of the node to which the command definitions will be added."
+}
+
+data "leanspace_command_definitions" "all" {
+  filters {
+    node_ids                    = [var.node_id]
+    node_types                  = ["ASSET"]
+    node_kinds                  = ["SATELLITE"]
+    with_arguments_and_metadata = true
+    ids                         = []
+    query                       = ""
+    page                        = 0
+    size                        = 10
+    sort                        = ["name,asc"]
+  }
 }
 
 resource "leanspace_command_definitions" "test" {

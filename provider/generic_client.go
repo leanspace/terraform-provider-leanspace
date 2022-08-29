@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"leanspace-terraform-provider/helper"
 	"leanspace-terraform-provider/helper/general_objects"
 	"net/http"
 	"net/url"
@@ -45,14 +46,37 @@ func (client GenericClient[T, PT]) encodeElement(element PT) (io.Reader, string,
 	}
 }
 
+func (client GenericClient[T, PT]) encodeQueryParams(filters map[string]any) string {
+	queryParams := url.Values{}
+
+	addValue := func(key string, value any) {
+		if value == "" {
+			return
+		}
+		if str, isString := value.(string); isString {
+			queryParams.Add(key, str)
+		} else {
+			queryParams.Add(key, fmt.Sprint(value))
+		}
+	}
+
+	for key, value := range filters {
+		parsedKey := helper.SnakeToCamelCase(key)
+		if list, isList := value.([]any); isList {
+			for _, subValue := range list {
+				addValue(parsedKey, subValue)
+			}
+		} else {
+			addValue(parsedKey, value)
+		}
+	}
+	return queryParams.Encode()
+}
+
 func (client GenericClient[T, PT]) GetAll(filters map[string]any) (*general_objects.PaginatedList[T, PT], error) {
 	path := fmt.Sprintf("%s/%s", client.Client.HostURL, client.Path)
 	if filters != nil {
-		queryParams := url.Values{}
-		for key, value := range filters {
-			queryParams.Add(key, value.(string))
-		}
-		path += "?" + queryParams.Encode()
+		path += "?" + client.encodeQueryParams(filters)
 	}
 	req, err := http.NewRequest("GET", path, nil)
 	if err != nil {

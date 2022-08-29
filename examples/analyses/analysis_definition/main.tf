@@ -5,9 +5,6 @@ terraform {
     }
   }
 }
-
-data "leanspace_analysis_definitions" "all" {}
-
 variable "node_id" {
   type        = string
   description = "The ID of the node on which to run the simulation."
@@ -21,6 +18,19 @@ variable "mass_property_id" {
 variable "ground_station_id" {
   type        = string
   description = "The ID of the ground station to check the visibility for."
+}
+
+data "leanspace_analysis_definitions" "all" {
+  filters {
+    model_ids  = []
+    node_ids   = [var.node_id]
+    frameworks = []
+    ids        = []
+    query      = ""
+    page       = 0
+    size       = 10
+    sort       = ["name,asc"]
+  }
 }
 
 locals {

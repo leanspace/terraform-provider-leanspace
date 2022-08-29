@@ -6,8 +6,6 @@ terraform {
   }
 }
 
-data "leanspace_dashboards" "all" {}
-
 variable "attached_node_ids" {
   type        = list(string)
   description = "A list of nodes to attach to the dashboard."
@@ -26,6 +24,19 @@ variable "line_widget_id" {
 variable "value_widget_id" {
   type        = string
   description = "The ID of the value widget to display."
+}
+
+data "leanspace_dashboards" "all" {
+  filters {
+    node_ids   = var.attached_node_ids
+    widget_ids = [var.table_widget_id, var.value_widget_id]
+    tags       = []
+    ids        = []
+    query      = ""
+    page       = 0
+    size       = 10
+    sort       = ["name,asc"]
+  }
 }
 
 resource "leanspace_dashboards" "test" {

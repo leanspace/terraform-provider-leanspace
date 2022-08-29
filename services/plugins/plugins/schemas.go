@@ -1,6 +1,7 @@
 package plugins
 
 import (
+	"leanspace-terraform-provider/helper"
 	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -27,6 +28,7 @@ var pluginSchema = map[string]*schema.Schema{
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.StringInSlice(validPluginTypes, false),
+		Description:  helper.AllowedValuesToDescription(validPluginTypes),
 	},
 	"implementation_class_name": {
 		Type:     schema.TypeString,
@@ -78,5 +80,17 @@ var pluginSchema = map[string]*schema.Schema{
 		Type:        schema.TypeString,
 		Computed:    true,
 		Description: "Who modified it the last",
+	},
+}
+
+var dataSourceFilterSchema = map[string]*schema.Schema{
+	"types": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringInSlice(validPluginTypes, false),
+			Description:  helper.AllowedValuesToDescription(validPluginTypes),
+		},
 	},
 }

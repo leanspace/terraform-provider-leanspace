@@ -4,9 +4,10 @@ import (
 	"leanspace-terraform-provider/helper/general_objects"
 	"leanspace-terraform-provider/services/monitors/action_templates"
 
+	"leanspace-terraform-provider/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"leanspace-terraform-provider/helper"
 )
 
 var validComparisonOperators = []string{
@@ -161,5 +162,50 @@ var expressionSchema = map[string]*schema.Schema{
 		Optional:     true,
 		ValidateFunc: validation.FloatAtLeast(0),
 		Description:  "Only valid for EQUAL_TO or NOT_EQUAL_TO comparison operator",
+	},
+}
+
+var dataSourceFilterSchema = map[string]*schema.Schema{
+	"metric_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"name": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"node_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"statuses": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
+		},
+	},
+	"tags": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
+		},
+	},
+	"action_template_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
 	},
 }

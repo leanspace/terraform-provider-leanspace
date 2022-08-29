@@ -16,7 +16,21 @@ variable "action_template_ids" {
   description = "The list of the IDs of the action templates to trigger with these monitors."
 }
 
-data "leanspace_monitors" "all" {}
+data "leanspace_monitors" "all" {
+  filters {
+    metric_ids          = [var.metric_id]
+    name                = ""
+    node_ids            = []
+    statuses            = ["UNKNOWN", "TRIGGERED"]
+    tags                = []
+    action_template_ids = []
+    ids                 = []
+    query               = ""
+    page                = 0
+    size                = 10
+    sort                = ["name,asc"]
+  }
+}
 
 resource "leanspace_monitors" "test_greater_than_monitor" {
   name                         = "Terraform Monitor 1"

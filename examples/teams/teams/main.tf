@@ -16,7 +16,16 @@ variable "access_policies" {
   description = "The policies to attach to the created service accounts."
 }
 
-data "leanspace_teams" "all" {}
+data "leanspace_teams" "all" {
+  filters {
+    member_ids = var.members
+    ids        = []
+    query      = ""
+    page       = 0
+    size       = 10
+    sort       = ["name,asc"]
+  }
+}
 
 resource "leanspace_teams" "test" {
   name       = "Terraform Team"

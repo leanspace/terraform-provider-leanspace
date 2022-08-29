@@ -401,3 +401,14 @@ var errorSchema = map[string]*schema.Schema{
 		Computed: true,
 	},
 }
+
+var dataSourceFilterSchema = map[string]*schema.Schema{
+	"asset_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+}

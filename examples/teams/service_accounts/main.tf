@@ -16,7 +16,15 @@ variable "access_policies" {
   description = "The policies to attach to the created service accounts."
 }
 
-data "leanspace_service_accounts" "all" {}
+data "leanspace_service_accounts" "all" {
+  filters {
+    ids   = []
+    query = ""
+    page  = 0
+    size  = 10
+    sort  = ["name,asc"]
+  }
+}
 
 resource "leanspace_service_accounts" "test" {
   for_each   = var.usernames

@@ -105,6 +105,10 @@ type DataSourceType[T any, PT ParseableModel[T]] struct {
 	ReadPath func(string) string
 	// The schema to represent the data
 	Schema map[string]*schema.Schema
+	// The filters used for this resource's data source. The only allowed fields are primitives and lists of
+	// strings. Note that some fields are already declared and don't need to be redefined: ids, query, page, size, sort.
+	// A value of nil is treated as an empty map, and only the fields specified previously will be usable.
+	FilterSchema map[string]*schema.Schema
 }
 
 func (dataSource DataSourceType[T, PT]) convert(client *Client) GenericClient[T, PT] {

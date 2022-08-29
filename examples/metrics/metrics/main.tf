@@ -6,11 +6,22 @@ terraform {
   }
 }
 
-data "leanspace_metrics" "all" {}
-
 variable "node_id" {
   type        = string
   description = "The ID of the node to which the metrics will be added."
+}
+
+data "leanspace_metrics" "all" {
+  filters {
+    node_ids        = []
+    attribute_types = ["NUMERIC", "TEXT"]
+    tags            = []
+    ids             = []
+    query           = ""
+    page            = 0
+    size            = 10
+    sort            = ["name,asc"]
+  }
 }
 
 resource "leanspace_metrics" "test_numeric" {

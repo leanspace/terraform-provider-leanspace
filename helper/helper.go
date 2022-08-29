@@ -67,6 +67,15 @@ func Ptr[T any](value T) *T {
 	return &value
 }
 
+func SnakeToCamelCase(str string) string {
+	parts := strings.Split(str, "_")
+	base := strings.ToLower(parts[0])
+	for i := 1; i < len(parts); i++ {
+		base += strings.Title(parts[i])
+	}
+	return base
+}
+
 func Implements[T any, I any]() bool {
 	var ptr *T
 	_, isInstance := any(ptr).(I)

@@ -6,4 +6,5 @@ var ActionTemplateDataType = provider.DataSourceType[ActionTemplate, *ActionTemp
 	ResourceIdentifier: "leanspace_action_templates",
 	Path:               "monitors-repository/action-templates",
 	Schema:             ActionTemplateSchema,
+	FilterSchema:       dataSourceFilterSchema,
 }
