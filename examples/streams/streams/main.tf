@@ -6,8 +6,6 @@ terraform {
   }
 }
 
-data "leanspace_streams" "all" {}
-
 variable "asset_id" {
   type        = string
   description = "The ID of the node to which the stream will be added."
@@ -16,6 +14,17 @@ variable "asset_id" {
 variable "numeric_metric_id" {
   type        = string
   description = "The ID of a numeric metric to which the stream will be mapped."
+}
+
+data "leanspace_streams" "all" {
+  filters {
+    asset_ids = [var.asset_id]
+    ids       = []
+    query     = ""
+    page      = 0
+    size      = 10
+    sort      = ["name,asc"]
+  }
 }
 
 resource "leanspace_streams" "test" {

@@ -6,8 +6,6 @@ terraform {
   }
 }
 
-data "leanspace_command_queues" "all" {}
-
 variable "asset_id" {
   type        = string
   description = "The ID of the asset to which the command queue will be added."
@@ -16,6 +14,20 @@ variable "asset_id" {
 variable "ground_station_ids" {
   type        = list(string)
   description = "The list of ground station IDs to which the command queue will be linked."
+}
+
+data "leanspace_command_queues" "all" {
+  filters {
+    asset_ids                       = [var.asset_id]
+    ground_station_ids              = var.ground_station_ids
+    command_transformer_plugin_ids  = []
+    protocol_transformer_plugin_ids = []
+    ids                             = []
+    query                           = ""
+    page                            = 0
+    size                            = 10
+    sort                            = ["name,asc"]
+  }
 }
 
 resource "leanspace_command_queues" "test" {

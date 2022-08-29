@@ -6,8 +6,6 @@ terraform {
   }
 }
 
-data "leanspace_widgets" "all" {}
-
 variable "text_metric_id" {
   type        = string
   description = "The ID of the text metric to create widgets for."
@@ -16,6 +14,21 @@ variable "text_metric_id" {
 variable "numeric_metric_id" {
   type        = string
   description = "The ID of the numeric metric to create widgets for."
+}
+
+data "leanspace_widgets" "all" {
+  filters {
+    types          = ["LINE"]
+    tags           = []
+    dashboard_ids  = []
+    datasource_ids = [var.text_metric_id]
+    datasources    = ["metric"]
+    ids            = []
+    query          = ""
+    page           = 0
+    size           = 10
+    sort           = ["name,asc"]
+  }
 }
 
 resource "leanspace_widgets" "test_table" {

@@ -6,8 +6,6 @@ terraform {
   }
 }
 
-data "leanspace_remote_agents" "all" {}
-
 variable "command_queue_id" {
   type        = string
   description = "The ID of the command queue to be attached to the remote agent."
@@ -21,6 +19,19 @@ variable "stream_id" {
 variable "ground_station_id" {
   type        = string
   description = "The ground station ID that will be used as a gateway by the remote agent."
+}
+
+data "leanspace_remote_agents" "all" {
+  filters {
+    gateway_ids         = [var.ground_station_id]
+    service_account_ids = []
+    connector_types     = ["OUTBOUND"]
+    ids                 = []
+    query               = ""
+    page                = 0
+    size                = 10
+    sort                = ["name,asc"]
+  }
 }
 
 resource "leanspace_remote_agents" "test" {

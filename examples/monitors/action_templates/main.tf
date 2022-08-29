@@ -6,7 +6,17 @@ terraform {
   }
 }
 
-data "leanspace_action_templates" "all" {}
+data "leanspace_action_templates" "all" {
+  filters {
+    types       = ["WEBHOOK"]
+    monitor_ids = []
+    ids         = []
+    query       = ""
+    page        = 0
+    size        = 10
+    sort        = ["name,asc"]
+  }
+}
 
 resource "leanspace_action_templates" "test" {
   name = "Terraform Action Template"
