@@ -83,38 +83,42 @@ func PaginatedListSchema(content map[string]*schema.Schema, filters map[string]*
 }
 
 func FilterSchema(filters map[string]*schema.Schema) map[string]*schema.Schema {
-	if filters == nil {
-		filters = map[string]*schema.Schema{}
-	}
-	filters["ids"] = &schema.Schema{
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
+	baseFilter := map[string]*schema.Schema{
+		"ids": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
+		},
+		"query": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"page": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			Default:  0,
+		},
+		"size": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			Default:  100,
+		},
+		"sort": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
 		},
 	}
-	filters["query"] = &schema.Schema{
-		Type:     schema.TypeString,
-		Optional: true,
+
+	for key, value := range filters {
+		baseFilter[key] = value
 	}
-	filters["page"] = &schema.Schema{
-		Type:     schema.TypeInt,
-		Optional: true,
-		Default:  0,
-	}
-	filters["size"] = &schema.Schema{
-		Type:     schema.TypeInt,
-		Optional: true,
-		Default:  100,
-	}
-	filters["sort"] = &schema.Schema{
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
-	}
-	return filters
+
+	return baseFilter
 }
 
 var SortSchema = map[string]*schema.Schema{
