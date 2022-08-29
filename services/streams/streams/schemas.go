@@ -164,40 +164,44 @@ func streamComponentSchema(depth int) map[string]*schema.Schema {
 			Type:         schema.TypeInt,
 			Optional:     true,
 			ValidateFunc: validation.IntAtLeast(1),
+			Description:  "Only required for fields",
 		},
 		"processor": {
-			Type:     schema.TypeString,
-			Optional: true,
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Only required for fields",
 		},
 		"data_type": {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validation.StringInSlice(validDataTypes, false),
-			Description:  helper.AllowedValuesToDescription(validDataTypes),
+			Description:  "Only required for fields, " + helper.AllowedValuesToDescription(validDataTypes),
 		},
 		"endianness": {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validation.StringInSlice(validEndianness, false),
-			Description:  helper.AllowedValuesToDescription(validEndianness),
+			Description:  "Only required for fields, " + helper.AllowedValuesToDescription(validEndianness),
 		},
 	}
 
 	if depth > 0 {
 		// Switch only
 		baseSchema["expression"] = &schema.Schema{
-			Type:     schema.TypeList,
-			Optional: true,
-			MinItems: 1,
-			MaxItems: 1,
+			Type:        schema.TypeList,
+			Optional:    true,
+			MinItems:    1,
+			MaxItems:    1,
+			Description: "Only required for switches",
 			Elem: &schema.Resource{
 				Schema: switchExpressionSchema,
 			},
 		}
 		// Container and switch only
 		baseSchema["elements"] = &schema.Schema{
-			Type:     schema.TypeList,
-			Optional: true,
+			Type:        schema.TypeList,
+			Optional:    true,
+			Description: "Only required for switches and containers",
 			Elem: &schema.Resource{
 				Schema: streamComponentSchema(depth - 1),
 			},

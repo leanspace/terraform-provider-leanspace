@@ -24,8 +24,8 @@ type Statistics struct {
 
 type Field struct {
 	Type   string           `json:"type"`
-	Source *string          `json:"source,omitempty"`
-	Ref    *string          `json:"ref,omitempty"`
+	Source string           `json:"source,omitempty"`
+	Ref    string           `json:"ref,omitempty"`
 	Value  any              `json:"value,omitempty"`
 	Fields map[string]Field `json:"fields,omitempty"`
 	Items  []Field          `json:"items,omitempty"`

@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"leanspace-terraform-provider/helper"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -28,7 +29,7 @@ func (dataSource DataSourceType[T, PT]) getSchemaKeys() []string {
 	return keys
 }
 
-func (dataSource DataSourceType[T, PT]) getData(d *schema.ResourceData) (string, PT, error) {
+func (dataSource DataSourceType[T, PT]) getData(d *schema.ResourceData, checkValidity bool) (string, PT, error) {
 	valueId := d.Id()
 	onlyNil := true
 	valueRaw := make(map[string]any)
@@ -41,9 +42,18 @@ func (dataSource DataSourceType[T, PT]) getData(d *schema.ResourceData) (string,
 	if onlyNil || len(valueRaw) == 0 {
 		return valueId, nil, nil
 	}
+
 	var value PT = new(T)
-	error := value.FromMap(valueRaw)
-	return valueId, value, error
+
+	if checkValidity && helper.Implements[T, ValidationModel]() {
+		err := any(value).(ValidationModel).Validate(valueRaw)
+		if err != nil {
+			return valueId, nil, err
+		}
+	}
+
+	err := value.FromMap(valueRaw)
+	return valueId, value, err
 }
 
 func (dataSource DataSourceType[T, PT]) create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
@@ -51,7 +61,7 @@ func (dataSource DataSourceType[T, PT]) create(ctx context.Context, d *schema.Re
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	_, value, err := dataSource.getData(d)
+	_, value, err := dataSource.getData(d, true)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -70,7 +80,7 @@ func (dataSource DataSourceType[T, PT]) get(ctx context.Context, d *schema.Resou
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	valueId, value, err := dataSource.getData(d)
+	valueId, value, err := dataSource.getData(d, false)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -113,7 +123,7 @@ func (dataSource DataSourceType[T, PT]) update(ctx context.Context, d *schema.Re
 	}
 
 	if containsChange {
-		valueId, value, err := dataSource.getData(d)
+		valueId, value, err := dataSource.getData(d, true)
 		if err != nil {
 			return diag.FromErr(err)
 		}
@@ -135,7 +145,7 @@ func (dataSource DataSourceType[T, PT]) delete(ctx context.Context, d *schema.Re
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	valueId, value, err := dataSource.getData(d)
+	valueId, value, err := dataSource.getData(d, false)
 	if err != nil {
 		return diag.FromErr(err)
 	}

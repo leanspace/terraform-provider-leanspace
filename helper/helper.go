@@ -76,6 +76,12 @@ func SnakeToCamelCase(str string) string {
 	return base
 }
 
+func Implements[T any, I any]() bool {
+	var ptr *T
+	_, isInstance := any(ptr).(I)
+	return isInstance
+}
+
 const Debug = false
 
 var Logger = func() *log.Logger {

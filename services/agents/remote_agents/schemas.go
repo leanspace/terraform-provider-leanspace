@@ -110,10 +110,12 @@ var connectorSchema = map[string]*schema.Schema{
 		Type:         schema.TypeString,
 		Optional:     true,
 		ValidateFunc: validation.IsUUID,
+		Description:  "Only required for inbound connectors.",
 	},
 	"destination": {
-		Type:     schema.TypeList,
-		Computed: true,
+		Type:        schema.TypeList,
+		Computed:    true,
+		Description: "Only used for inbound connectors.",
 		Elem: &schema.Resource{
 			Schema: connTargetSchema,
 		},
@@ -123,10 +125,12 @@ var connectorSchema = map[string]*schema.Schema{
 		Type:         schema.TypeString,
 		Optional:     true,
 		ValidateFunc: validation.IsUUID,
+		Description:  "Only required for outbound connectors.",
 	},
 	"source": {
-		Type:     schema.TypeList,
-		Computed: true,
+		Type:        schema.TypeList,
+		Computed:    true,
+		Description: "Only used for outbound connectors.",
 		Elem: &schema.Resource{
 			Schema: connTargetSchema,
 		},

@@ -1,9 +1,6 @@
 package nodes
 
 import (
-	"fmt"
-	"regexp"
-
 	"leanspace-terraform-provider/helper"
 	"leanspace-terraform-provider/helper/general_objects"
 
@@ -53,9 +50,6 @@ func (node *Node) toMapRecursive(level int) map[string]any {
 	return nodeMap
 }
 
-var tle1stLineRegex = `^1 (?P<noradId>[ 0-9]{5})[A-Z] [ 0-9]{5}[ A-Z]{3} [ 0-9]{5}[.][ 0-9]{8} (?:(?:[ 0+-][.][ 0-9]{8})|(?: [ +-][.][ 0-9]{7})) [ +-][ 0-9]{5}[+-][ 0-9] [ +-][ 0-9]{5}[+-][ 0-9] [ 0-9] [ 0-9]{4}[ 0-9]$`
-var tle2ndLineRegex = `^2 (?P<noradId>[ 0-9]{5}) [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{7} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{2}[.][ 0-9]{13}[ 0-9]$`
-
 func (node *Node) FromMap(nodeMap map[string]any) error {
 	node.Name = nodeMap["name"].(string)
 	node.Description = nodeMap["description"].(string)
@@ -65,9 +59,6 @@ func (node *Node) FromMap(nodeMap map[string]any) error {
 	node.LastModifiedAt = nodeMap["last_modified_at"].(string)
 	node.LastModifiedBy = nodeMap["last_modified_by"].(string)
 	node.Type = nodeMap["type"].(string)
-	if node.Type == "ASSET" && !(nodeMap["kind"] == "GENERIC" || nodeMap["kind"] == "SATELLITE" || nodeMap["kind"] == "GROUND_STATION") {
-		return fmt.Errorf("kind must be either GENERIC, SATELLITE ou GROUND_STATION, got: %q", nodeMap["kind"])
-	}
 	node.Kind = nodeMap["kind"].(string)
 	if tags, err := helper.ParseFromMaps[general_objects.Tag](nodeMap["tags"].(*schema.Set).List()); err != nil {
 		return err
@@ -85,16 +76,8 @@ func (node *Node) FromMap(nodeMap map[string]any) error {
 	}
 	node.NoradId = nodeMap["norad_id"].(string)
 	node.InternationalDesignator = nodeMap["international_designator"].(string)
-	if nodeMap["tle"] != nil && len(nodeMap["tle"].([]any)) == 2 {
-		node.Tle = make([]string, 2)
-		matched, _ := regexp.MatchString(tle1stLineRegex, nodeMap["tle"].([]any)[0].(string))
-		if !matched {
-			return fmt.Errorf("TLE first line mutch match %q, got: %q", tle1stLineRegex, nodeMap["tle"].([]any)[0].(string))
-		}
-		matched, _ = regexp.MatchString(tle2ndLineRegex, nodeMap["tle"].([]any)[1].(string))
-		if !matched {
-			return fmt.Errorf("TLE second line mutch match %q, got: %q", tle2ndLineRegex, nodeMap["tle"].([]any)[1].(string))
-		}
+	if nodeMap["tle"] != nil {
+		node.Tle = make([]string, len(nodeMap["tle"].([]any)))
 		for i, tle := range nodeMap["tle"].([]any) {
 			node.Tle[i] = tle.(string)
 		}

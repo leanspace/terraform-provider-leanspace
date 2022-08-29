@@ -2,7 +2,6 @@ package streams
 
 import (
 	"encoding/base64"
-	"fmt"
 	"leanspace-terraform-provider/helper"
 	"strconv"
 
@@ -208,23 +207,6 @@ func (streamComp *StreamComponent) FromMap(streamCompMap map[string]any) error {
 		streamComp.Processor = streamCompMap["processor"].(string)
 		streamComp.DataType = streamCompMap["data_type"].(string)
 		streamComp.Endianness = streamCompMap["endianness"].(string)
-		switch streamComp.DataType {
-		case "INTEGER", "UINTEGER":
-			if streamComp.LengthInBits > 32 {
-				return fmt.Errorf(
-					"the maximum length in bits of an integer/unsigned integer field is 32, got %d",
-					streamComp.LengthInBits,
-				)
-			}
-		case "DECIMAL":
-			// Here we also need to allow 0 - when deleting that field is sometimes set to 0 and that is tolerable.
-			if streamComp.LengthInBits != 0 && streamComp.LengthInBits != 32 && streamComp.LengthInBits != 64 {
-				return fmt.Errorf(
-					"the length in bits of a decimal field must be 32 or 64, got %d",
-					streamComp.LengthInBits,
-				)
-			}
-		}
 	}
 	if streamComp.Type == "SWITCH" {
 		if err := streamComp.Expression.FromMap(streamCompMap["expression"].([]any)[0].(map[string]any)); err != nil {

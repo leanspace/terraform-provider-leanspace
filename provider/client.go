@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"bytes"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -109,6 +110,21 @@ func (c *Client) DoRequest(req *http.Request, authToken *string) ([]byte, error,
 		req.Header.Set("Authorization", "Bearer "+token)
 	}
 
+	// We want to be able to print the request body in the error message,
+	// in case it goes wrong.
+	// Because req.Body is a ReadCloser, reading it twice isn't possible. We thus
+	// need to make a copy of the content, and replace the current request body.
+	bodyOriginal := &bytes.Buffer{}
+	if req.Body != nil {
+		_, err := io.Copy(bodyOriginal, req.Body)
+		if err != nil {
+			return nil, err, 0
+		}
+		bodyCopy := bytes.NewReader(bodyOriginal.Bytes())
+		req.Body = io.NopCloser(bodyCopy)
+		bodyCopy.Seek(0, 0)
+	}
+
 	res, err := c.HTTPClient.Do(req)
 	if err != nil {
 		status := 0
@@ -125,7 +141,31 @@ func (c *Client) DoRequest(req *http.Request, authToken *string) ([]byte, error,
 	}
 
 	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("status: %d, body: %s, req [method: %s, url: %s, body: %s]", res.StatusCode, body, req.Method, req.URL, req.Body), res.StatusCode
+		var prettyRequestJSON bytes.Buffer
+		json.Indent(&prettyRequestJSON, bodyOriginal.Bytes(), "", "    ")
+
+		var prettyResponseJSON bytes.Buffer
+		json.Indent(&prettyResponseJSON, body, "", "    ")
+
+		extra := ""
+		if res.StatusCode == 409 {
+			extra = "Hint: This seems to be an error caused by a name collision.\n" +
+				"Try renaming your resource or deleting the resource with the same name on Leanspace."
+		}
+
+		return nil, fmt.Errorf(
+			"status %d when performing the request.\n"+
+				"Sent %s to %s\n"+
+				"Request body: %s\n"+
+				"Response body: %s\n"+
+				"%s",
+			res.StatusCode,
+			req.Method,
+			req.URL,
+			&prettyRequestJSON,
+			&prettyResponseJSON,
+			extra,
+		), res.StatusCode
 	}
 
 	return body, err, res.StatusCode
