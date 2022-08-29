@@ -1,36 +1,35 @@
 package main
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 
-	"leanspace-terraform-provider/provider"
+	"github.com/leanspace/terraform-provider-leanspace/provider"
 
-	"leanspace-terraform-provider/services/activities/activity_definitions"
-	"leanspace-terraform-provider/services/agents/remote_agents"
-	"leanspace-terraform-provider/services/analyses/analysis_definitions"
-	"leanspace-terraform-provider/services/asset/nodes"
-	"leanspace-terraform-provider/services/asset/properties"
-	"leanspace-terraform-provider/services/asset/units"
-	"leanspace-terraform-provider/services/commands/command_definitions"
-	"leanspace-terraform-provider/services/commands/command_queues"
-	"leanspace-terraform-provider/services/dashboard/dashboards"
-	"leanspace-terraform-provider/services/dashboard/widgets"
-	"leanspace-terraform-provider/services/metrics/metrics"
-	"leanspace-terraform-provider/services/monitors/action_templates"
-	"leanspace-terraform-provider/services/monitors/monitors"
-	"leanspace-terraform-provider/services/plugins/plugins"
-	"leanspace-terraform-provider/services/streams/streams"
-	"leanspace-terraform-provider/services/teams/access_policies"
-	"leanspace-terraform-provider/services/teams/members"
-	"leanspace-terraform-provider/services/teams/service_accounts"
-	"leanspace-terraform-provider/services/teams/teams"
+	"github.com/leanspace/terraform-provider-leanspace/services/activities/activity_definitions"
+	"github.com/leanspace/terraform-provider-leanspace/services/agents/remote_agents"
+	"github.com/leanspace/terraform-provider-leanspace/services/analyses/analysis_definitions"
+	"github.com/leanspace/terraform-provider-leanspace/services/asset/nodes"
+	"github.com/leanspace/terraform-provider-leanspace/services/asset/properties"
+	"github.com/leanspace/terraform-provider-leanspace/services/asset/units"
+	"github.com/leanspace/terraform-provider-leanspace/services/commands/command_definitions"
+	"github.com/leanspace/terraform-provider-leanspace/services/commands/command_queues"
+	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/dashboards"
+	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/widgets"
+	"github.com/leanspace/terraform-provider-leanspace/services/metrics/metrics"
+	"github.com/leanspace/terraform-provider-leanspace/services/monitors/action_templates"
+	"github.com/leanspace/terraform-provider-leanspace/services/monitors/monitors"
+	"github.com/leanspace/terraform-provider-leanspace/services/plugins/plugins"
+	"github.com/leanspace/terraform-provider-leanspace/services/streams/streams"
+	"github.com/leanspace/terraform-provider-leanspace/services/teams/access_policies"
+	"github.com/leanspace/terraform-provider-leanspace/services/teams/members"
+	"github.com/leanspace/terraform-provider-leanspace/services/teams/service_accounts"
+	"github.com/leanspace/terraform-provider-leanspace/services/teams/teams"
 )
 
 // Generate the Terraform provider documentation using `tfplugindocs`:
 //go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
 
-func main() {
+func AddDataTypes() {
 	access_policies.AccessPolicyDataType.Subscribe()
 	action_templates.ActionTemplateDataType.Subscribe()
 	activity_definitions.ActivityDefinitionDataType.Subscribe()
@@ -50,10 +49,11 @@ func main() {
 	teams.TeamDataType.Subscribe()
 	units.UnitDataType.Subscribe()
 	widgets.WidgetDataType.Subscribe()
+}
 
+func main() {
+	AddDataTypes()
 	plugin.Serve(&plugin.ServeOpts{
-		ProviderFunc: func() *schema.Provider {
-			return provider.Provider()
-		},
+		ProviderFunc: provider.Provider,
 	})
 }

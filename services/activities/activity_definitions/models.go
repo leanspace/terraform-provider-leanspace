@@ -1,6 +1,6 @@
 package activity_definitions
 
-import "leanspace-terraform-provider/helper/general_objects"
+import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 type ActivityDefinition struct {
 	ID                  string                    `json:"id"`

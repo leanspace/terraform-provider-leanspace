@@ -1,6 +1,6 @@
 package command_queues
 
-import "leanspace-terraform-provider/provider"
+import "github.com/leanspace/terraform-provider-leanspace/provider"
 
 var CommandQueueDataType = provider.DataSourceType[CommandQueue, *CommandQueue]{
 	ResourceIdentifier: "leanspace_command_queues",

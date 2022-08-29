@@ -3,8 +3,9 @@ package remote_agents
 import (
 	"encoding/json"
 	"fmt"
-	"leanspace-terraform-provider/provider"
 	"net/http"
+
+	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
 // Cleanup function needed because an access policy and a service account are created

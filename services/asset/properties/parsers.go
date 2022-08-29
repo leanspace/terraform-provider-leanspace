@@ -1,9 +1,10 @@
 package properties
 
 import (
-	"leanspace-terraform-provider/helper"
-	"leanspace-terraform-provider/helper/general_objects"
 	"strconv"
+
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )

@@ -1,6 +1,6 @@
 package streams
 
-import "leanspace-terraform-provider/helper"
+import "github.com/leanspace/terraform-provider-leanspace/helper"
 
 type Stream struct {
 	ID             string        `json:"id"`

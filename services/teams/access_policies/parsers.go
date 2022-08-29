@@ -1,6 +1,6 @@
 package access_policies
 
-import "leanspace-terraform-provider/helper"
+import "github.com/leanspace/terraform-provider-leanspace/helper"
 
 func (policy *AccessPolicy) ToMap() map[string]any {
 	policyMap := make(map[string]any)

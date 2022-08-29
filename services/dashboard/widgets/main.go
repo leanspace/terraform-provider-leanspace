@@ -1,6 +1,6 @@
 package widgets
 
-import "leanspace-terraform-provider/provider"
+import "github.com/leanspace/terraform-provider-leanspace/provider"
 
 var WidgetDataType = provider.DataSourceType[Widget, *Widget]{
 	ResourceIdentifier: "leanspace_widgets",

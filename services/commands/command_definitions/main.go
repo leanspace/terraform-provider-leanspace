@@ -1,6 +1,6 @@
 package command_definitions
 
-import "leanspace-terraform-provider/provider"
+import "github.com/leanspace/terraform-provider-leanspace/provider"
 
 var CommandDataType = provider.DataSourceType[CommandDefinition, *CommandDefinition]{
 	ResourceIdentifier: "leanspace_command_definitions",

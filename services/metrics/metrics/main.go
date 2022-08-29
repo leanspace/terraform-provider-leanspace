@@ -1,6 +1,6 @@
 package metrics
 
-import "leanspace-terraform-provider/provider"
+import "github.com/leanspace/terraform-provider-leanspace/provider"
 
 var MetricDataType = provider.DataSourceType[Metric[any], *Metric[any]]{
 	ResourceIdentifier: "leanspace_metrics",

@@ -1,6 +1,6 @@
 package nodes
 
-import "leanspace-terraform-provider/provider"
+import "github.com/leanspace/terraform-provider-leanspace/provider"
 
 var NodeDataType = provider.DataSourceType[Node, *Node]{
 	ResourceIdentifier: "leanspace_nodes",

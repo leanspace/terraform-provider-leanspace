@@ -1,7 +1,7 @@
 package streams
 
 import (
-	. "leanspace-terraform-provider/helper"
+	. "github.com/leanspace/terraform-provider-leanspace/helper"
 )
 
 var streamComponentValidators = Validators{

@@ -2,7 +2,8 @@ package provider
 
 import (
 	"context"
-	"leanspace-terraform-provider/helper"
+
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"

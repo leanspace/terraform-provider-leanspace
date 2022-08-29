@@ -1,6 +1,6 @@
 package properties
 
-import "leanspace-terraform-provider/helper/general_objects"
+import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 type Property[T any] struct {
 	ID             string                `json:"id"`

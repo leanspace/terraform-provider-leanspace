@@ -2,8 +2,9 @@ package streams
 
 import (
 	"encoding/base64"
-	"leanspace-terraform-provider/helper"
 	"strconv"
+
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )

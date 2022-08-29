@@ -1,6 +1,6 @@
 package plugins
 
-import "leanspace-terraform-provider/provider"
+import "github.com/leanspace/terraform-provider-leanspace/provider"
 
 func (plugin *Plugin) ToMap() map[string]any {
 	pluginMap := make(map[string]any)
