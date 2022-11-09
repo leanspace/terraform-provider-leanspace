@@ -161,3 +161,7 @@ module "analysis_definition" {
   ground_station_id = module.nodes.groundstation_node.id
   mass_property_id  = module.properties.test_numeric_property.id
 }
+
+module "plans" {
+  source = "./plans/states"
+}

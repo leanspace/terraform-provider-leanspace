@@ -1,9 +1,9 @@
 TEST?=$$(go list ./... | grep -v 'vendor')
-HOSTNAME=leanspace.io
-NAMESPACE=io
+HOSTNAME=app.terraform.io
+NAMESPACE=leanspace
 NAME=leanspace
 BINARY=terraform-provider-${NAME}.exe
-VERSION=0.4.0
+VERSION?=0.4.0
 PLATFORM=""
 ARCHITECTURE=""
 
@@ -36,7 +36,9 @@ else
     endif
 endif
 
-OS_ARCH=${PLATFORM}_${ARCHITECTURE}
+ifeq ($(OS_ARCH),"")
+    OS_ARCH=${PLATFORM}_${ARCHITECTURE}
+endif
 
 default: install
 
@@ -47,8 +49,8 @@ release:
 	goreleaser release --rm-dist --snapshot --skip-publish  --skip-sign
 
 install: build
-		mkdir -p ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
-		mv ${BINARY} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
+	mkdir -p ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
+	mv ${BINARY} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
 install-windows: build
 	if not exist %APPDATA%\terraform.d\plugins\${HOSTNAME}\${NAMESPACE}\${NAME}\${VERSION}\${OS_ARCH} mkdir %APPDATA%\terraform.d\plugins\${HOSTNAME}\${NAMESPACE}\${NAME}\${VERSION}\${OS_ARCH}
