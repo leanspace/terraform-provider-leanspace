@@ -28,19 +28,25 @@ These platforms are defined in `.goreleaser.yml`.
 
 ### Make modification
 
+- To set a specific version for the built binary, make sure you setup the environment variable `VERSION`.   
+For example, with linux: 
+
+```shell
+export VERSION=0.7.0
+```
+
 - Run `make install` or `make install-windows` if you are on windows to apply the changes.
-- In the terraform files (.tf), modify the source to "leanspace.io/io/leanspace", this way it will try to find the provider in your local machine first
 
 ⚠️ If you ever encounter the following error:
 
-```sh
+```shell
 error obtaining VCS status: exit status 128
     Use -buildvcs=false to disable VCS stamping.
 ```
 
 Just run the following command:
 
-```sh
+```shell
 git config --global --add safe.directory [your dir here]
 ```
 
