@@ -28,8 +28,27 @@ These platforms are defined in `.goreleaser.yml`.
 
 ### Make modification
 
+- To set a specific version for the built binary, make sure you setup the environment variable `VERSION`.   
+For example, with linux: 
+
+```shell
+export VERSION=0.7.0
+```
+
 - Run `make install` or `make install-windows` if you are on windows to apply the changes.
-- In the terraform files (.tf), modify the source to "leanspace.io/io/leanspace", this way it will try to find the provider in your local machine first
+
+⚠️ If you ever encounter the following error:
+
+```shell
+error obtaining VCS status: exit status 128
+    Use -buildvcs=false to disable VCS stamping.
+```
+
+Just run the following command:
+
+```shell
+git config --global --add safe.directory [your dir here]
+```
 
 ### Add a new service or a new resource
 
@@ -118,6 +137,8 @@ The available resources per service are:
 - monitors:
   - action_templates: it has one simple `leanspace_action_template` with a body and headers
   - monitors: it has two `leanspace_monitors`, one with and one without a tolerance set.
+- plans:
+  - states: it has one `leanspace_states` resource.
 - plugins:
   - plugins: it has one `leanspace_plugins` resource, with basic filler data.
 - streams:

@@ -1,3 +1,5 @@
 .terraform*
 terraform.tfstate*
 docs/
+terraform-provider-leanspace.exe
+.devcontainer/
