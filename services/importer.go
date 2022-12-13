@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/leanspace/terraform-provider-leanspace/services/activities/activity_definitions"
+	"github.com/leanspace/terraform-provider-leanspace/services/activities/activity_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/agents/remote_agents"
 	"github.com/leanspace/terraform-provider-leanspace/services/analyses/analysis_definitions"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/nodes"
@@ -14,7 +15,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/metrics/metrics"
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/action_templates"
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/monitors"
-	"github.com/leanspace/terraform-provider-leanspace/services/plans/states"
+	"github.com/leanspace/terraform-provider-leanspace/services/plans/plan_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/plugins/plugins"
 	"github.com/leanspace/terraform-provider-leanspace/services/streams/streams"
 	"github.com/leanspace/terraform-provider-leanspace/services/teams/access_policies"
@@ -43,5 +44,6 @@ func AddDataTypes() {
 	teams.TeamDataType.Subscribe()
 	units.UnitDataType.Subscribe()
 	widgets.WidgetDataType.Subscribe()
-	states.StateDataType.Subscribe()
+	plan_states.PlanStateDataType.Subscribe()
+	activity_states.ActivityStateDataType.Subscribe()
 }

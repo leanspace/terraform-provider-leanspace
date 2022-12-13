@@ -1,4 +1,4 @@
-data "leanspace_states" "all" {
+data "leanspace_activity_states" "all" {
   filters {
     ids          = []
     query        = ""

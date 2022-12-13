@@ -136,6 +136,10 @@ module "activity_definitions" {
   ]
 }
 
+module "activity_states" {
+  source             = "./activities/activity_states"
+}
+
 module "plugins" {
   source = "./plugins/plugins"
   path   = abspath("./plugins/plugins/my_plugin.jar")
