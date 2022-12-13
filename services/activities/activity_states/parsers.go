@@ -1,6 +1,6 @@
-package states
+package activity_states
 
-func (state *State) ToMap() map[string]any {
+func (state *ActivityState) ToMap() map[string]any {
 	stateMap := make(map[string]any)
 	stateMap["id"] = state.ID
 	stateMap["name"] = state.Name
@@ -13,7 +13,7 @@ func (state *State) ToMap() map[string]any {
 	return stateMap
 }
 
-func (state *State) FromMap(stateMap map[string]any) error {
+func (state *ActivityState) FromMap(stateMap map[string]any) error {
 	state.ID = stateMap["id"].(string)
 	state.Name = stateMap["name"].(string)
 	state.ReadOnly = stateMap["read_only"].(bool)

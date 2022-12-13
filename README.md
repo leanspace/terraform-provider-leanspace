@@ -118,10 +118,11 @@ The `main.tf` file imports all other modules. All modules are then organised per
 The available resources per service are:
 - activities:
   - activity definitions: it has one `leanspace_activity_definitions` resource, whth all possible metadata types (6) and all possible argument types (7), as well as two mappings
+  - activity_states: it has one `leanspace_activity_states` resource.
 - agents:
   - remote agents: it has one `leanspace_remote_agents` resource, with one inbound and one outbond connectors.
 - analyses:
-  - analysis_defintions: it has one `leanspace_analysis_definitions` resource, with a basic analysis definition configuration.
+  - analysis_definitions: it has one `leanspace_analysis_definitions` resource, with a basic analysis definition configuration.
 - asset:
   - nodes: it has 2 `leanspace_nodes` resources, one inside the other.
   - properties: it has as many `leanspace_properties` resources as available types (8)
@@ -138,7 +139,7 @@ The available resources per service are:
   - action_templates: it has one simple `leanspace_action_template` with a body and headers
   - monitors: it has two `leanspace_monitors`, one with and one without a tolerance set.
 - plans:
-  - states: it has one `leanspace_states` resource.
+  - plan_states: it has one `leanspace_plan_states` resource.
 - plugins:
   - plugins: it has one `leanspace_plugins` resource, with basic filler data.
 - streams:

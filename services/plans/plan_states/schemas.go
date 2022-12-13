@@ -1,4 +1,4 @@
-package states
+package plan_states
 
 import (
 	"regexp"
@@ -9,7 +9,7 @@ import (
 
 var nameRegex = regexp.MustCompile(`^[A-Z](?:[A-Z_]*[A-Z])?$`)
 
-var stateSchema = map[string]*schema.Schema{
+var planStateSchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
 		Computed: true,
