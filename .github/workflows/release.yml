@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
-        name: Checkout
+        name: Checkout local repo
         uses: actions/checkout@v3
       -
         name: Unshallow
@@ -26,6 +26,35 @@ jobs:
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
+
+      -
+        name: Checkout `terraform-plugin-docs`
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
+          path: tfplugindocs
+          repository: leanspace/terraform-plugin-docs
+      
+      - 
+        name: Generate Documentation
+        run: |
+          echo Building documentation generator
+          cd tfplugindocs
+          go build -o ./ ./cmd/tfplugindocs
+
+          echo Generating documentation
+          cd ../terraform-provider-leanspace
+          ../tfplugindocs/tfplugindocs
+      
+      -
+        name: Commit and push
+        run: |
+          git config --global user.name 'leanspace-bot'
+          git config --global user.email 'leanspace-bot@users.noreply.github.com'
+          git status
+          git commit -am "Update docs"
+          git push
+
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v3.0.0

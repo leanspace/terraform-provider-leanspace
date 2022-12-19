@@ -34,23 +34,6 @@ jobs:
           path: docs-repo
           repository: leanspace/docs-tools
 
-      - name: Checkout `terraform-plugin-docs`
-        uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
-          path: tfplugindocs
-          repository: leanspace/terraform-plugin-docs
-
-      - name: Generate Documentation
-        run: |
-          echo Building documentation generator
-          cd tfplugindocs
-          go build -o ./ ./cmd/tfplugindocs
-
-          echo Generating documentation
-          cd ../terraform-provider-leanspace
-          ../tfplugindocs/tfplugindocs
-
       - name: Reorganize Directory
         run: |
           echo Copying files to destination repo
