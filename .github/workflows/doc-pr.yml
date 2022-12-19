@@ -53,9 +53,9 @@ jobs:
 
       - name: Reorganize Directory
         run: |
-          echo Moving files to destination repo
+          echo Copying files to destination repo
           rm -r docs-repo/docs/Terraform
-          mv terraform-provider-leanspace/docs docs-repo/docs/Terraform
+          cp terraform-provider-leanspace/docs docs-repo/docs/Terraform
           
           echo Reorganising/Renaming files
           cd docs-repo/docs/Terraform
