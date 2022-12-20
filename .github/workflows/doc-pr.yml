@@ -41,7 +41,7 @@ jobs:
           cp terraform-provider-leanspace/docs docs-repo/docs/Terraform
           
           echo Reorganising/Renaming files
-          cd docs-repo/docs/Terraform
+          cd -r docs-repo/docs/Terraform
           mv resources Resources
           mv data-sources DataSources
       

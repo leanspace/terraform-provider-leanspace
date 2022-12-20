@@ -59,7 +59,8 @@ jobs:
           git config --global user.name 'leanspace-bot'
           git config --global user.email 'leanspace-bot@users.noreply.github.com'
           git status
-          git commit -am "Update docs"
+          git add -a
+          git diff-index --quiet HEAD || git commit -m "Update docs"
           git push
 
       -
