@@ -8,16 +8,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
-        name: Checkout
+        name: Checkout local repo
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
+          path: terraform-provider-leanspace
       -
         name: Unshallow
-        run: git fetch --prune --unshallow
+        run: |
+          cd terraform-provider-leanspace
+          git fetch --prune --unshallow
       -
         name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version-file: 'go.mod'
+          go-version-file: 'terraform-provider-leanspace/go.mod'
+          cache-dependency-path: terraform-provider-leanspace/go.sum
           cache: true
       -
         name: Import GPG key
@@ -26,6 +32,36 @@ jobs:
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
+
+      -
+        name: Checkout `terraform-plugin-docs`
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
+          path: tfplugindocs
+          repository: leanspace/terraform-plugin-docs
+      
+      - 
+        name: Generate Documentation
+        run: |
+          echo Building documentation generator
+          cd tfplugindocs
+          go build -o ./ ./cmd/tfplugindocs
+
+          echo Generating documentation
+          cd ../terraform-provider-leanspace
+          ../tfplugindocs/tfplugindocs
+      
+      -
+        name: Commit and push
+        run: |
+          cd terraform-provider-leanspace
+          git config --global user.name 'leanspace-bot'
+          git config --global user.email 'leanspace-bot@users.noreply.github.com'
+          git status
+          git commit -am "Update docs"
+          git push
+
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v3.0.0
@@ -41,6 +77,7 @@ jobs:
         name: Create version on Terraform Cloud
         id: create_version
         run: |
+          cd terraform-provider-leanspace
           VERSION_NUMBER=${{ github.ref_name }}
           VERSION=$(curl -s \
           -H "Authorization: Bearer ${{ secrets.TERRAFORM_TOKEN }}" \
@@ -68,6 +105,7 @@ jobs:
         name: Upload signature & checksum
         id: upload_signature_and_checksum
         run: |
+          cd terraform-provider-leanspace
           SHASUMS_SIG_PATH=$(echo '${{ steps.release.outputs.artifacts }}' | jq -r '.[] | select(.type=="Signature") | .path')
           SHASUMS_PATH=$(echo '${{ steps.release.outputs.artifacts }}' | jq -r '.[] | select(.type=="Checksum") | .path')
           
@@ -81,6 +119,7 @@ jobs:
       -
         name: Create OS + Architecture Combos
         run: |
+          cd terraform-provider-leanspace
           cat ${{ steps.upload_signature_and_checksum.outputs.SHASUMS_PATH }} | grep .zip | while read -r line
           do
               echo "Creating file:$file, sha:$sha, arch:$arch, os:$os"
