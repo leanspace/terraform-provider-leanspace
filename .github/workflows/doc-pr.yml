@@ -38,7 +38,7 @@ jobs:
         run: |
           echo Copying files to destination repo
           rm -r docs-repo/docs/Terraform
-          cp terraform-provider-leanspace/docs docs-repo/docs/Terraform
+          cp -r terraform-provider-leanspace/docs docs-repo/docs/Terraform
           
           echo Reorganising/Renaming files
           cd docs-repo/docs/Terraform

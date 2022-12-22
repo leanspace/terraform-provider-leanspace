@@ -11,6 +11,7 @@ jobs:
         name: Checkout local repo
         uses: actions/checkout@v3
         with:
+          ref: main
           token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
           path: terraform-provider-leanspace
       -
@@ -59,7 +60,8 @@ jobs:
           git config --global user.name 'leanspace-bot'
           git config --global user.email 'leanspace-bot@users.noreply.github.com'
           git status
-          git commit -am "Update docs"
+          git add -A
+          git diff-index --quiet HEAD || git commit -m "Update docs"
           git push
 
       -
@@ -69,6 +71,7 @@ jobs:
         with:
           version: latest
           args: release --rm-dist
+          workdir: terraform-provider-leanspace
         env:
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
           # GitHub sets this automatically
