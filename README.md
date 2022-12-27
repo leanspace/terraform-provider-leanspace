@@ -1,6 +1,6 @@
 # terraform-provider-leanspace
 
-This repository enables the use of Terraform for the different services of Leanspace. The provider is hosted on a private registry in Terraform cloud
+This repository enables the use of Terraform for the different services of Leanspace.
 
 ## Requirements
 
@@ -65,13 +65,11 @@ git config --global --add safe.directory [your dir here]
 ### Create a new version
 
 Create a tag on a commit with the following format `v{marjor}.{minor}.{patch}`; i.e.: v0.4.0; this will create a version accordingly.
-It will create a release in github and push this version to the private repository in Terraform cloud (see [Terraform](https://app.terraform.io/app/leanspace/registry/providers/private/leanspace/leanspace/latest/overview)).
+It will create a release in github and push this version to the Terraform Registry (see [Terraform](https://registry.terraform.io/providers/leanspace/leanspace/latest)).
 
 ### Run the plugin
 
-Since we host the provider in a private registry, you first have to login `terraform login` and then put a token to have access.
-
-Then either run the examples (navigate to `examples`, if so you can modify the master `main.tf` to point to the correct resource) or create custom files.
+You can run the examples (navigate to `examples`, if so you can modify the master `main.tf` to point to the correct resource) or create custom files.
 
 Then run `terraform init && terraform apply --auto-approve`: this will create the required resources.
 If you made some changes you can run it again to update the resources.

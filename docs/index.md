@@ -19,7 +19,7 @@ and their data source counterparts.
 terraform {
   required_providers {
     leanspace = {
-      source = "app.terraform.io/leanspace/leanspace"
+      source = "leanspace/leanspace"
     }
   }
 }
