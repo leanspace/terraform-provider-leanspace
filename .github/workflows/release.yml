@@ -3,8 +3,6 @@ on:
   push:
     tags:
       - 'v*'
-    branches:
-      - SDEVOPS-320-cleanup-private-registry-assets
 
 jobs:
   release:
@@ -42,26 +40,26 @@ jobs:
         run: |
           cd terraform-provider-leanspace
           go generate
-      # -
-      #   name: Commit and push
-      #   run: |
-      #     cd terraform-provider-leanspace
-      #     git config --global user.name 'leanspace-bot'
-      #     git config --global user.email 'leanspace-bot@users.noreply.github.com'
-      #     git status
-      #     git add -A
-      #     git diff-index --quiet HEAD || git commit -m "Update docs"
-      #     git push
+      -
+        name: Commit and push
+        run: |
+          cd terraform-provider-leanspace
+          git config --global user.name 'leanspace-bot'
+          git config --global user.email 'leanspace-bot@users.noreply.github.com'
+          git status
+          git add -A
+          git diff-index --quiet HEAD || git commit -m "Update docs"
+          git push
 
-      # -
-      #   name: Run GoReleaser
-      #   uses: goreleaser/goreleaser-action@v3.0.0
-      #   id: release
-      #   with:
-      #     version: latest
-      #     args: release --rm-dist
-      #     workdir: terraform-provider-leanspace
-      #   env:
-      #     GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
-      #     # GitHub sets this automatically
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v3.0.0
+        id: release
+        with:
+          version: latest
+          args: release --rm-dist
+          workdir: terraform-provider-leanspace
+        env:
+          GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
+          # GitHub sets this automatically
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
