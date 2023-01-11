@@ -159,8 +159,10 @@ func (widget *DashboardWidget) FromMap(widgetMap map[string]any) error {
 
 func (view *WidgetView) FromMap(viewMap map[string]any) error {
 	view.WidgetType = viewMap["type"].(string)
-	if err := view.Grid.FromMap(viewMap["grid"].([]any)[0].(map[string]any)); err != nil {
-		return err
+	if len(viewMap["grid"].([]any)) > 0 {
+		if err := view.Grid.FromMap(viewMap["grid"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
 	}
 	return nil
 }

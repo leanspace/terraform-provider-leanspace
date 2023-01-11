@@ -65,8 +65,10 @@ func (monitor *Monitor) FromMap(monitorMap map[string]any) error {
 			return err
 		}
 	}
-	if err := monitor.Expression.FromMap(monitorMap["expression"].([]any)[0].(map[string]any)); err != nil {
-		return err
+	if len(monitorMap["expression"].([]any)) > 0 {
+		if err := monitor.Expression.FromMap(monitorMap["expression"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
 	}
 	if actionTemplates, err := helper.ParseFromMaps[action_templates.ActionTemplate](monitorMap["action_templates"].(*schema.Set).List()); err != nil {
 		return err
@@ -90,8 +92,10 @@ func (monitor *Monitor) FromMap(monitorMap map[string]any) error {
 }
 
 func (statistics *Statistics) FromMap(statisticsMap map[string]any) error {
-	if err := statistics.LastEvaluation.FromMap(statisticsMap["last_evaluation"].([]any)[0].(map[string]any)); err != nil {
-		return err
+	if len(statisticsMap["last_evaluation"].([]any)) > 0 {
+		if err := statistics.LastEvaluation.FromMap(statisticsMap["last_evaluation"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
 	}
 	return nil
 }

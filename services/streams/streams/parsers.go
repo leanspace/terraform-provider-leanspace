@@ -153,8 +153,10 @@ func (stream *Stream) FromMap(streamMap map[string]any) error {
 	stream.Name = streamMap["name"].(string)
 	stream.Description = streamMap["description"].(string)
 	stream.AssetId = streamMap["asset_id"].(string)
-	if err := stream.Configuration.FromMap(streamMap["configuration"].([]any)[0].(map[string]any)); err != nil {
-		return err
+	if len(streamMap["configuration"].([]any)) > 0 {
+		if err := stream.Configuration.FromMap(streamMap["configuration"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
 	}
 	if mappings, err := helper.ParseFromMaps[Mapping](streamMap["mappings"].(*schema.Set).List()); err != nil {
 		return err
@@ -171,11 +173,15 @@ func (stream *Stream) FromMap(streamMap map[string]any) error {
 
 func (configuration *Configuration) FromMap(configMap map[string]any) error {
 	configuration.Endianness = configMap["endianness"].(string)
-	if err := configuration.Structure.FromMap(configMap["structure"].([]any)[0].(map[string]any)); err != nil {
-		return err
+	if len(configMap["structure"].([]any)) > 0 {
+		if err := configuration.Structure.FromMap(configMap["structure"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
 	}
-	if err := configuration.Metadata.FromMap(configMap["metadata"].([]any)[0].(map[string]any)); err != nil {
-		return err
+	if len(configMap["metadata"].([]any)) > 0 {
+		if err := configuration.Metadata.FromMap(configMap["metadata"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
 	}
 	if len(configMap["computations"].([]any)) > 0 {
 		if err := configuration.Computations.FromMap(configMap["computations"].([]any)[0].(map[string]any)); err != nil {
@@ -210,15 +216,19 @@ func (streamComp *StreamComponent) FromMap(streamCompMap map[string]any) error {
 		streamComp.Endianness = streamCompMap["endianness"].(string)
 	}
 	if streamComp.Type == "SWITCH" {
-		if err := streamComp.Expression.FromMap(streamCompMap["expression"].([]any)[0].(map[string]any)); err != nil {
-			return err
+		if len(streamCompMap["expression"].([]any)) > 0 {
+			if err := streamComp.Expression.FromMap(streamCompMap["expression"].([]any)[0].(map[string]any)); err != nil {
+				return err
+			}
 		}
 	}
 	if streamComp.Type == "SWITCH" || streamComp.Type == "CONTAINER" {
-		if elements, err := helper.ParseFromMaps[StreamComponent](streamCompMap["elements"].([]any)); err != nil {
-			return err
-		} else {
-			streamComp.Elements = elements
+		if len(streamCompMap["elements"].([]any)) > 0 {
+			if elements, err := helper.ParseFromMaps[StreamComponent](streamCompMap["elements"].([]any)); err != nil {
+				return err
+			} else {
+				streamComp.Elements = elements
+			}
 		}
 	}
 	return nil
@@ -254,8 +264,10 @@ func (metadata *Metadata) FromMap(metadataMap map[string]any) error {
 			return err
 		}
 	}
-	if err := metadata.Timestamp.FromMap(metadataMap["timestamp"].([]any)[0].(map[string]any)); err != nil {
-		return err
+	if len(metadataMap["timestamp"].([]any)) > 0 {
+		if err := metadata.Timestamp.FromMap(metadataMap["timestamp"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
 	}
 	metadata.Valid = metadataMap["valid"].(bool)
 	if errors, err := helper.ParseFromMaps[Error](metadataMap["errors"].(*schema.Set).List()); err != nil {

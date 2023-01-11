@@ -85,8 +85,10 @@ func (paginatedList *PaginatedList[T, PT]) FromMap(paginatedListMap map[string]a
 	paginatedList.First = paginatedListMap["first"].(bool)
 	paginatedList.Last = paginatedListMap["last"].(bool)
 	paginatedList.Empty = paginatedListMap["empty"].(bool)
-	if err := paginatedList.Pageable.FromMap(paginatedListMap["pageable"].([]any)[0].(map[string]any)); err != nil {
-		return err
+	if len(paginatedListMap["pageable"].([]any)) > 0 {
+		if err := paginatedList.Pageable.FromMap(paginatedListMap["pageable"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
 	}
 	return nil
 }

@@ -78,10 +78,12 @@ func (analysisDefinition *AnalysisDefinition) FromMap(analysisDefMap map[string]
 			return err
 		}
 	}
-	if err := analysisDefinition.Inputs.FromMap(
-		analysisDefMap["inputs"].([]any)[0].(map[string]any),
-	); err != nil {
-		return err
+	if len(analysisDefMap["inputs"].([]any)) > 0 {
+		if err := analysisDefinition.Inputs.FromMap(
+			analysisDefMap["inputs"].([]any)[0].(map[string]any),
+		); err != nil {
+			return err
+		}
 	}
 	analysisDefinition.CreatedAt = analysisDefMap["created_at"].(string)
 	analysisDefinition.CreatedBy = analysisDefMap["created_by"].(string)
