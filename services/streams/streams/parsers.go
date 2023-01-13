@@ -203,10 +203,10 @@ func (streamComp *StreamComponent) FromMap(streamCompMap map[string]any) error {
 	streamComp.Path = streamCompMap["path"].(string)
 	streamComp.Type = streamCompMap["type"].(string)
 	streamComp.Valid = streamCompMap["valid"].(bool)
-	if errors, err := helper.ParseFromMaps[Error](streamCompMap["errors"].(*schema.Set).List()); err != nil {
+	errors, err := helper.ParseFromMaps[Error](streamCompMap["errors"].(*schema.Set).List())
+	streamComp.Errors = errors
+	if err != nil {
 		return err
-	} else {
-		streamComp.Errors = errors
 	}
 
 	if streamComp.Type == "FIELD" {
@@ -224,10 +224,10 @@ func (streamComp *StreamComponent) FromMap(streamCompMap map[string]any) error {
 	}
 	if streamComp.Type == "SWITCH" || streamComp.Type == "CONTAINER" {
 		if len(streamCompMap["elements"].([]any)) > 0 {
-			if elements, err := helper.ParseFromMaps[StreamComponent](streamCompMap["elements"].([]any)); err != nil {
+			elements, err := helper.ParseFromMaps[StreamComponent](streamCompMap["elements"].([]any))
+			streamComp.Elements = elements
+			if err != nil {
 				return err
-			} else {
-				streamComp.Elements = elements
 			}
 		}
 	}
