@@ -117,8 +117,9 @@ func (metadata *Metadata[T]) FromMap(metadataMap map[string]any) error {
 	metadata.Name = metadataMap["name"].(string)
 	metadata.Description = metadataMap["description"].(string)
 	if len(metadataMap["attributes"].([]any)) > 0 {
-		err := metadata.Attributes.FromMap(metadataMap["attributes"].([]any)[0].(map[string]any))
-		return err
+		if err := metadata.Attributes.FromMap(metadataMap["attributes"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -129,8 +130,9 @@ func (argument *ArgumentDefinition[T]) FromMap(argumentMap map[string]any) error
 	argument.Description = argumentMap["description"].(string)
 
 	if len(argumentMap["attributes"].([]any)) > 0 {
-		err := argument.Attributes.FromMap(argumentMap["attributes"].([]any)[0].(map[string]any))
-		return err
+		if err := argument.Attributes.FromMap(argumentMap["attributes"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
 	}
 	return nil
 }

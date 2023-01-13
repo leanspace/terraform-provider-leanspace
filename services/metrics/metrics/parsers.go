@@ -32,8 +32,7 @@ func (metric *Metric[T]) FromMap(metricMap map[string]any) error {
 	metric.LastModifiedAt = metricMap["last_modified_at"].(string)
 	metric.LastModifiedBy = metricMap["last_modified_by"].(string)
 	if len(metricMap["attributes"].([]any)) > 0 {
-		err := metric.Attributes.FromMap(metricMap["attributes"].([]any)[0].(map[string]any))
-		if err != nil {
+		if err := metric.Attributes.FromMap(metricMap["attributes"].([]any)[0].(map[string]any)); err != nil {
 			return err
 		}
 	}

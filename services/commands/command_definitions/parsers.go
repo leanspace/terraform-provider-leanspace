@@ -96,10 +96,10 @@ func (argument *Argument[T]) FromMap(argumentMap map[string]any) error {
 	argument.Name = argumentMap["name"].(string)
 	argument.Identifier = argumentMap["identifier"].(string)
 	argument.Description = argumentMap["description"].(string)
-	if len(argumentMap["attributes"].([]any)) > 0{
-		attributeMap := argumentMap["attributes"].([]any)[0].(map[string]any)
-		err := argument.Attributes.FromMap(attributeMap)
-		return err
+	if len(argumentMap["attributes"].([]any)) > 0 {
+		if err := argument.Attributes.FromMap(argumentMap["attributes"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
 	}
 	return nil
 }
