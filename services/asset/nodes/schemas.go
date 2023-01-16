@@ -92,6 +92,11 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 			},
 			Description: "TLE composed of its 2 lines",
 		},
+		"number_of_children": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Numeric only",
+		},
 		// These fields are *required* when kind = GROUND_STATION
 		// However currently I don't think there is a way to have conditionally required fields
 		// A solution would be creating a new "ground station" schema, if we want to ensure type safety

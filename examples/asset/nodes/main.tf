@@ -34,6 +34,7 @@ resource "leanspace_nodes" "test_nodes_root" {
     key   = "Team"
     value = "Buzz"
   }
+  number_of_children = 2
 }
 
 resource "leanspace_nodes" "test_nodes_satellite" {

@@ -24,6 +24,7 @@ func (node *Node) toMapRecursive(level int) map[string]any {
 	nodeMap["last_modified_by"] = node.LastModifiedBy
 	nodeMap["type"] = node.Type
 	nodeMap["kind"] = node.Kind
+	nodeMap["number_of_children"] = node.NumberOfChildren
 	nodeMap["tags"] = helper.ParseToMaps(node.Tags)
 	if node.Nodes != nil && level == 0 {
 		nodes := make([]any, len(node.Nodes))
@@ -60,6 +61,7 @@ func (node *Node) FromMap(nodeMap map[string]any) error {
 	node.LastModifiedBy = nodeMap["last_modified_by"].(string)
 	node.Type = nodeMap["type"].(string)
 	node.Kind = nodeMap["kind"].(string)
+	node.NumberOfChildren = nodeMap["number_of_children"].(int)
 	if tags, err := helper.ParseFromMaps[general_objects.Tag](nodeMap["tags"].(*schema.Set).List()); err != nil {
 		return err
 	} else {
