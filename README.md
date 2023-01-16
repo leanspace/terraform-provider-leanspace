@@ -29,11 +29,7 @@ These platforms are defined in `.goreleaser.yml`.
 ### Make modification
 
 - To set a specific version for the built binary, make sure you setup the environment variable `VERSION`.   
-For example, with linux: 
-
-```shell
-export VERSION=0.7.0
-```
+For example, `export VERSION=0.7.0` with linux or `set VERSION=0.7.0` with windows.
 
 - Run `make install` or `make install-windows` if you are on windows to apply the changes.
 
