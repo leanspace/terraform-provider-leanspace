@@ -142,13 +142,13 @@ var propertySchema = map[string]*schema.Schema{
 	"before": {
 		Type:         schema.TypeString,
 		Optional:     true,
-		ValidateFunc: validation.IsRFC3339Time,
+		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
 		Description:  "Time/date/timestamp only: Maximum date allowed",
 	},
 	"after": {
 		Type:         schema.TypeString,
 		Optional:     true,
-		ValidateFunc: validation.IsRFC3339Time,
+		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
 		Description:  "Time/date/timestamp only: Minimum date allowed",
 	},
 	"fields": {

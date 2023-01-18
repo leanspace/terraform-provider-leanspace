@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -343,4 +344,24 @@ func LessThanEq[T Number](key string, value T) Condition {
 // Evaluates to true if the value at the given key is greater than or equal to the given value.
 func GreaterThanEq[T Number](key string, value T) Condition {
 	return compareCondition[T]{key, value, ">="}
+}
+
+func IsValidTimeDateOrTimestamp(i interface{}, k string) (warnings []string, errorsOnField []error) {
+	v, ok := i.(string)
+	if !ok {
+		errorsOnField = append(errorsOnField, fmt.Errorf("expected type of %q to be string", k))
+		return warnings, errorsOnField
+	}
+	const dateLayoutReference = "2006-01-02"
+	const timeLayoutReference = "15:04:05"
+	const timestampLayoutReference = time.RFC3339
+
+	_, errTimestamp := time.Parse(timestampLayoutReference, v)
+	_, errDate := time.Parse(dateLayoutReference, v)
+	_, errTime := time.Parse(timeLayoutReference, v)
+
+	if errTimestamp != nil && errDate != nil && errTime != nil {
+		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to be a valid date, time or timestamp, got %q: \n %+v \n %+v \n %+v", k, i, errTimestamp, errDate, errTime))
+	}
+	return warnings, errorsOnField
 }

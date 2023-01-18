@@ -207,7 +207,7 @@ var TagsSchema = &schema.Schema{
 }
 
 var ValidAttributeSchemaTypes = []string{
-	"NUMERIC", "BOOLEAN", "TEXT", "DATE", "TIME", "TIMESTAMP", "ENUM", "BINARY",
+	"NUMERIC", "BOOLEAN", "TEXT", "DATE", "TIME", "TIMESTAMP", "ENUM", "BINARY", "ARRAY",
 }
 
 func contains(slice []string, value string) bool {
@@ -241,10 +241,139 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string) ma
 			Optional: true,
 		},
 		"default_value": {
-			Type:     schema.TypeString,
-			Optional: true,
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "The default value can be of any type. In case of an array type, please surround the list values with double quotes and use the comma separator.",
+		},
+		// Text & Binary
+		"min_length": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			ValidateFunc: validation.IntAtLeast(1),
+			Description:  "Text only: Minimum length of this text (at least 1)",
+		},
+		"max_length": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			ValidateFunc: validation.IntAtLeast(1),
+			Description:  "Text only: Maximum length of this text (at least 1)",
 		},
 
+		// Text only
+		"pattern": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Text only: Regex defined the allowed pattern of this text",
+		},
+
+		// Numeric only
+		"min": {
+			Type:        schema.TypeFloat,
+			Optional:    true,
+			Description: "Numeric only",
+		},
+		"max": {
+			Type:        schema.TypeFloat,
+			Optional:    true,
+			Description: "Numeric only",
+		},
+		"scale": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Numeric only",
+		},
+		"precision": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Numeric only: How many values after the comma should be accepted",
+		},
+		"unit_id": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: validation.IsUUID,
+			Description:  "Numeric only",
+		},
+
+		// Time, date, timestamp only
+		"before": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+			Description:  "Time/date/timestamp only: Maximum date allowed",
+		},
+		"after": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+			Description:  "Time/date/timestamp only: Minimum date allowed",
+		},
+
+		// Enum only
+		"options": {
+			Type:        schema.TypeMap,
+			Optional:    true,
+			Description: "Enum only: The allowed values for the enum in the format 1 = \"value\"",
+		},
+
+		// Array
+		"min_size": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Array only: The minimum number of elements allowed",
+		},
+		"max_size": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Array only: The maximum number of elements allowed",
+		},
+		"unique": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Array only: No duplicated elements are allowed",
+		},
+		"constraint": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			Description: "Array only: Constraint applied to all elements in the array",
+			MaxItems:    1,
+			MinItems:    1,
+			Elem: &schema.Resource{
+				Schema: DefinitionAttributeArrayConstraintSchema(
+					[]string{"BINARY", "ARRAY", "STRUCTURE", "GEOPOINT", "TLE"}, // element types not allowed in array
+					[]string{"default_value"},                                   // Field unused as only the default value of the array is taken into account
+				),
+			},
+		},
+	}
+
+	for _, field := range excludeFields {
+		delete(schema, field)
+	}
+
+	return schema
+}
+
+func DefinitionAttributeArrayConstraintSchema(excludeTypes []string, excludeFields []string) map[string]*schema.Schema {
+	validTypes := []string{}
+	for _, value := range ValidAttributeSchemaTypes {
+		if contains(excludeTypes, value) {
+			continue
+		}
+		validTypes = append(validTypes, value)
+	}
+
+	schema := map[string]*schema.Schema{
+		// Common fields
+		"type": {
+			Type:         schema.TypeString,
+			Required:     true,
+			ValidateFunc: validation.StringInSlice(validTypes, false),
+			Description:  helper.AllowedValuesToDescription(validTypes),
+		},
+		"required": {
+			Type:     schema.TypeBool,
+			Optional: true,
+		},
 		// Text only
 		"min_length": {
 			Type:         schema.TypeInt,
@@ -296,16 +425,15 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string) ma
 		"before": {
 			Type:         schema.TypeString,
 			Optional:     true,
-			ValidateFunc: validation.IsRFC3339Time,
+			ValidateFunc: helper.IsValidTimeDateOrTimestamp,
 			Description:  "Time/date/timestamp only: Maximum date allowed",
 		},
 		"after": {
 			Type:         schema.TypeString,
 			Optional:     true,
-			ValidateFunc: validation.IsRFC3339Time,
+			ValidateFunc: helper.IsValidTimeDateOrTimestamp,
 			Description:  "Time/date/timestamp only: Minimum date allowed",
 		},
-
 		// Enum only
 		"options": {
 			Type:        schema.TypeMap,

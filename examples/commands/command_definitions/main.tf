@@ -150,6 +150,129 @@ resource "leanspace_command_definitions" "test" {
       required      = true
     }
   }
+  arguments {
+    name        = "TestArgumentNumericArray"
+    identifier  = "Numeric ARRAY"
+    description = "A numeric array"
+    attributes {
+      type          = "ARRAY"
+      required      = true
+      min_size      = 1
+      max_size      = 4
+      unique        = true
+      default_value = "1,2,3"
+      constraint    { 
+        type        = "NUMERIC"
+        min         = 1
+        max         = 10
+      }
+    }
+  }
+  arguments {
+    name        = "TestArgumentTextArray"
+    identifier  = "Text ARRAY"
+    description = "A text array"
+    attributes {
+      type          = "ARRAY"
+      required      = true
+      min_size      = 1
+      max_size      = 4
+      unique        = true
+      default_value = "value1,value2,value3"
+      constraint    { 
+        type        = "TEXT"
+        min_length  = 5
+        max_length  = 10
+      }
+    }
+  }
+  arguments {
+    name        = "TestArgumentBooleanArray"
+    identifier  = "Boolean ARRAY"
+    description = "A boolean array"
+    attributes {
+      type          = "ARRAY"
+      required      = true
+      min_size      = 1
+      max_size      = 4
+      unique        = false
+      default_value = "true,false,true"
+      constraint    { 
+        type        = "BOOLEAN"
+      }
+    }
+  }
+  arguments {
+    name        = "TestArgumentTimeArray"
+    identifier  = "Time ARRAY"
+    description = "A time array"
+    attributes {
+      type          = "ARRAY"
+      required      = true
+      min_size      = 1
+      max_size      = 4
+      unique        = true
+      default_value = "08:37:19,10:37:19,15:37:19"
+      constraint    { 
+        type        = "TIME"
+        before      = "20:00:00"
+        after       = "07:00:00"
+      }
+    }
+  }
+  arguments {
+    name        = "TestArgumentDateArray"
+    identifier  = "Date ARRAY"
+    description = "A date array"
+    attributes {
+      type          = "ARRAY"
+      required      = true
+      min_size      = 1
+      max_size      = 4
+      unique        = true
+      default_value = "2023-03-30,2023-05-11,2023-07-02"
+      constraint    { 
+        type        = "DATE"
+        before      = "2023-08-01"
+        after       = "2023-02-01"
+      }
+    }
+  }
+  arguments {
+    name        = "TestArgumentTimeStampArray"
+    identifier  = "TimeStamp ARRAY"
+    description = "A timeStamp array"
+    attributes {
+      type          = "ARRAY"
+      required      = true
+      min_size      = 1
+      max_size      = 4
+      unique        = true
+      default_value = "2023-01-30T13:00:00Z,2023-01-29T01:00:00Z,2023-01-31T19:57:23Z"
+      constraint    { 
+        type        = "TIMESTAMP"
+        before      = "2023-01-31T20:00:00Z"
+        after       = "2023-01-29T00:00:00Z"
+      }
+    }
+  }
+    arguments {
+    name        = "TestArgumentEnumArray"
+    identifier  = "Enum ARRAY"
+    description = "A enum array"
+    attributes {
+      type          = "ARRAY"
+      required      = true
+      min_size      = 1
+      max_size      = 4
+      unique        = false
+      default_value = "1,2,3,1"
+      constraint    { 
+        type        = "ENUM"
+        options       = { 1 = "value1", 2 = "value2", 3 = "value3" }
+      }
+    }
+  }
 }
 
 output "test_command_definition" {
