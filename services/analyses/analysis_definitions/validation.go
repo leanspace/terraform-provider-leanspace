@@ -31,8 +31,10 @@ var fieldValidators = Validators{
 }
 
 func (analysisDefinition *AnalysisDefinition) Validate(data map[string]any) error {
-	if err := validateField(data["inputs"].([]any)[0].(map[string]any)); err != nil {
-		return err
+	if len(data["inputs"].([]any)) > 0 {
+		if err := validateField(data["inputs"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
 	}
 	return nil
 }

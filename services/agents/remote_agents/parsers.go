@@ -77,8 +77,10 @@ func (connector *Connector) FromMap(connectorMap map[string]any) error {
 	connector.ID = connectorMap["id"].(string)
 	connector.GatewayId = connectorMap["gateway_id"].(string)
 	connector.Type = connectorMap["type"].(string)
-	if err := connector.Socket.FromMap(connectorMap["socket"].([]any)[0].(map[string]any)); err != nil {
-		return err
+	if len(connectorMap["socket"].([]any)) > 0 {
+		if err := connector.Socket.FromMap(connectorMap["socket"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
 	}
 	if connector.Type == "INBOUND" {
 		connector.StreamId = connectorMap["stream_id"].(string)
