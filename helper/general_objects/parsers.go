@@ -320,3 +320,168 @@ func (constraint *ArrayConstraint[T]) ToMap() map[string]any {
 	}
 	return constraintMap
 }
+
+func (attribute *PropertyAttribute[T]) ToMap() map[string]any {
+	attributeMap := make(map[string]any)
+	if attribute.AdditionalProperties != nil {
+		attributeMap["additional_properties"] = any(attribute.AdditionalProperties)
+	}
+	attributeMap["type"] = attribute.Type
+	switch attribute.Type {
+	case "NUMERIC":
+		if any(attribute.Value) != nil {
+			attributeMap["value"] = helper.ParseFloat(any(attribute.Value).(float64))
+		}
+		attributeMap["min"] = attribute.Min
+		attributeMap["max"] = attribute.Max
+		attributeMap["scale"] = attribute.Scale
+		attributeMap["precision"] = attribute.Precision
+		attributeMap["unit_id"] = attribute.UnitId
+	case "ENUM":
+		if any(attribute.Value) != nil {
+			attributeMap["value"] = helper.ParseFloat(any(attribute.Value).(float64))
+		}
+		if attribute.Options != nil {
+			attributeMap["options"] = *attribute.Options
+		}
+	case "TEXT":
+		if any(attribute.Value) != nil {
+			attributeMap["value"] = attribute.Value
+		}
+		attributeMap["min_length"] = attribute.MinLength
+		attributeMap["max_length"] = attribute.MaxLength
+		attributeMap["pattern"] = attribute.Pattern
+	case "TIMESTAMP", "DATE", "TIME":
+		if any(attribute.Value) != nil {
+			attributeMap["value"] = attribute.Value
+		}
+		attributeMap["before"] = attribute.Before
+		attributeMap["after"] = attribute.After
+	case "BOOLEAN":
+		if any(attribute.Value) != nil {
+			attributeMap["value"] = strconv.FormatBool(any(attribute.Value).(bool))
+		}
+	case "GEOPOINT":
+		if attribute.Fields != nil {
+			fieldList := make([]map[string]any, 1)
+			fieldMap := make(map[string]any)
+			elevationList := make([]map[string]any, 1)
+			elevationList[0] = (&attribute.Fields.Elevation).ToMap()
+			fieldMap["elevation"] = elevationList
+			latitudeList := make([]map[string]any, 1)
+			latitudeList[0] = (&attribute.Fields.Latitude).ToMap()
+			fieldMap["latitude"] = latitudeList
+			longitudeList := make([]map[string]any, 1)
+			longitudeList[0] = (&attribute.Fields.Longitude).ToMap()
+			fieldMap["longitude"] = longitudeList
+			fieldList[0] = fieldMap
+			attributeMap["fields"] = fieldList
+		}
+	case "TLE":
+		if any(attribute.Value) != nil {
+			var tleValue string
+			var tleValues []interface{} = any(attribute.Value).([]interface{})
+			for _, value := range tleValues {
+				tleValue = tleValue + "," + fmt.Sprint(value)
+			}
+			attributeMap["value"] = strings.TrimPrefix(tleValue, ",")
+		}
+	}
+	return attributeMap
+}
+
+func (attribute *PropertyAttribute[T]) FromMap(attributeMap map[string]any) error {
+	attribute.AdditionalProperties = attributeMap["additional_properties"].(map[string]any)
+	attribute.Type = attributeMap["type"].(string)
+	switch attribute.Type {
+	case "NUMERIC":
+		if attributeMap["value"] != nil {
+			attribute.Value = any(attributeMap["value"]).(T)
+		}
+		attribute.Min = attributeMap["min"].(float64)
+		attribute.Max = attributeMap["max"].(float64)
+		attribute.Scale = attributeMap["scale"].(int)
+		attribute.Precision = attributeMap["precision"].(int)
+		attribute.UnitId = attributeMap["unit_id"].(string)
+	case "ENUM":
+		if attributeMap["value"] != nil {
+			attribute.Value = any(attributeMap["value"]).(T)
+		}
+		if attributeMap["options"] != nil {
+			option := attributeMap["options"].(map[string]any)
+			attribute.Options = &option
+		}
+	case "TEXT":
+		if attributeMap["value"] != nil {
+			attribute.Value = any(attributeMap["value"]).(T)
+		}
+		attribute.MinLength = attributeMap["min_length"].(int)
+		attribute.MaxLength = attributeMap["max_length"].(int)
+		attribute.Pattern = attributeMap["pattern"].(string)
+	case "TIMESTAMP", "DATE", "TIME":
+		if attributeMap["value"] != nil {
+			attribute.Value = any(attributeMap["value"]).(T)
+		}
+		attribute.Before = attributeMap["before"].(string)
+		attribute.After = attributeMap["after"].(string)
+	case "BOOLEAN", "STRUCTURE":
+		if attributeMap["value"] != nil {
+			attribute.Value = any(attributeMap["value"]).(T)
+		}
+	case "GEOPOINT":
+		if attributeMap["value"] != nil && len(any(attributeMap["value"]).(string)) != 0 {
+			attribute.Value = any(attributeMap["value"]).(T)
+		}
+		if attributeMap["fields"] != nil {
+			fields := attributeMap["fields"].([]any)[0].(map[string]any)
+			attribute.Fields = &Fields{}
+			attribute.Fields.Elevation.FromMap(fields["elevation"].([]any)[0].(map[string]any))
+			attribute.Fields.Latitude.FromMap(fields["latitude"].([]any)[0].(map[string]any))
+			attribute.Fields.Longitude.FromMap(fields["longitude"].([]any)[0].(map[string]any))
+		}
+	case "TLE":
+		if tleValue, ok := attributeMap["value"]; ok {
+			var stringTleValues []string = strings.Split(tleValue.(string), ",")
+			var interfaceOfTleValues []interface{}
+			for _, str := range stringTleValues {
+				var stringValue = strings.TrimSpace(str)
+				interfaceOfTleValues = append(interfaceOfTleValues, stringValue)
+			}
+			attribute.Value = any(interfaceOfTleValues).(T)
+		}
+	}
+
+	return nil
+}
+
+func (field *Field[T]) ToMap() map[string]any {
+	fieldMap := make(map[string]any)
+	if field.AdditionalProperties != nil {
+		fieldMap["additional_properties"] = any(field.AdditionalProperties)
+	}
+	// This might be unsafe in the future - for now fields are only used for numbers
+	// in the geopoint type so it's alright.
+	if any(field.Value) != nil {
+		fieldMap["value"] = helper.ParseFloat(any(field.Value).(float64))
+	}
+	fieldMap["min"] = field.Min
+	fieldMap["max"] = field.Max
+	fieldMap["scale"] = field.Scale
+	fieldMap["precision"] = field.Precision
+	fieldMap["unit_id"] = field.UnitId
+	return fieldMap
+}
+
+func (field *Field[T]) FromMap(fieldMap map[string]any) error {
+	if fieldMap["additional_properties"] != nil {
+		//property := fieldMap["additional_properties"].(map[string]any)
+		field.AdditionalProperties = fieldMap["additional_properties"].(map[string]any)
+	}
+	field.Value = fieldMap["value"].(T)
+	field.Min = fieldMap["min"].(float64)
+	field.Max = fieldMap["max"].(float64)
+	field.Scale = fieldMap["scale"].(int)
+	field.Precision = fieldMap["precision"].(int)
+	field.UnitId = fieldMap["unit_id"].(string)
+	return nil
+}

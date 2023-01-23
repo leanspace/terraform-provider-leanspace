@@ -120,6 +120,7 @@ The available resources per service are:
 - asset:
   - nodes: it has 2 `leanspace_nodes` resources, one inside the other.
   - properties: it has as many `leanspace_properties` resources as available types (8)
+  - properties_v2: it has as many `leanspace_properties_v2` resources as available types
   - units: it generates 7 `leanspace_units` that are variants of a custom unit.
 - commands:
   - command definition: it has one `leanspace_command_definitions` resource which has all possible metadata types (6) and all possible argument types (7)

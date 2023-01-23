@@ -7,6 +7,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/analyses/analysis_definitions"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/nodes"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/properties"
+	"github.com/leanspace/terraform-provider-leanspace/services/asset/properties_v2"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/units"
 	"github.com/leanspace/terraform-provider-leanspace/services/commands/command_definitions"
 	"github.com/leanspace/terraform-provider-leanspace/services/commands/command_queues"
@@ -38,6 +39,7 @@ func AddDataTypes() {
 	nodes.NodeDataType.Subscribe()
 	plugins.PluginDataType.Subscribe()
 	properties.PropertyDataType.Subscribe()
+	properties_v2.PropertyDataType.Subscribe()
 	remote_agents.RemoteAgentDataType.Subscribe()
 	service_accounts.ServiceAccountDataType.Subscribe()
 	streams.StreamDataType.Subscribe()

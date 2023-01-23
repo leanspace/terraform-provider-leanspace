@@ -94,3 +94,48 @@ type ValueAttribute[T any] struct {
 	// Numeric
 	UnitId string `json:"unitId,omitempty"`
 }
+
+type PropertyAttribute[T any] struct {
+	// Common
+	AdditionalProperties any    `json:"additionalProperties,omitempty"`
+	Value                T      `json:"value,omitempty"`
+	Type                 string `json:"type"`
+
+	// Geopoint only
+	Fields *Fields `json:"fields,omitempty"`
+
+	// Numeric only
+	Min       float64 `json:"min,omitempty"`
+	Max       float64 `json:"max,omitempty"`
+	Scale     int     `json:"scale,omitempty"`
+	Precision int     `json:"precision,omitempty"`
+	UnitId    string  `json:"unitId,omitempty"`
+
+	// Text only
+	MinLength int    `json:"minLength,omitempty"`
+	MaxLength int    `json:"maxLength,omitempty"`
+	Pattern   string `json:"pattern,omitempty"`
+
+	// Enum only
+	Options *map[string]any `json:"options,omitempty"`
+
+	// Date, time, timestamp
+	Before string `json:"before,omitempty"`
+	After  string `json:"after,omitempty"`
+}
+
+type Fields struct {
+	Elevation Field[any] `json:"elevation"`
+	Latitude  Field[any] `json:"latitude"`
+	Longitude Field[any] `json:"longitude"`
+}
+
+type Field[T any] struct {
+	AdditionalProperties any     `json:"additionalProperties,omitempty"`
+	Value                T       `json:"value,omitempty"`
+	Min                  float64 `json:"min,omitempty"`
+	Max                  float64 `json:"max,omitempty"`
+	Scale                int     `json:"scale,omitempty"`
+	Precision            int     `json:"precision,omitempty"`
+	UnitId               string  `json:"unitId,omitempty"`
+}

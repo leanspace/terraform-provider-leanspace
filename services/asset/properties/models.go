@@ -26,6 +26,7 @@ type Property[T any] struct {
 	UnitId         string                `json:"unitId,omitempty"`
 	Value          T                     `json:"value,omitempty"`
 	Type           string                `json:"type"`
+	IsBuiltIn      bool                  `json:"builtIn,omitempty"`
 }
 
 func (property *Property[T]) GetID() string { return property.ID }

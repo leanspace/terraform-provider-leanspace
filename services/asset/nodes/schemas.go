@@ -75,12 +75,15 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validation.StringMatch(regexp.MustCompile(`^\d{5}$`), "It must be 5 digits"),
-			Description:  "It must be 5 digits",
+			Description:  "It must be 5 digits. **NOTE**: The attribute `norad_id` is deprecated and will be removed in a future version. Consider using the node `properties` instead.", // description visible in the documentation
+			Deprecated:   "The attribute norad_id is deprecated and will be removed in a future version. Consider using the node properties instead.",                                    // deprecation warning message on the terraform console
 		},
 		"international_designator": {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validation.StringMatch(regexp.MustCompile(`^(\d{4}-|\d{2})[0-9]{3}[A-Za-z]{0,3}$`), ""),
+			Description:  "**NOTE**: The attribute `international_designator` is deprecated and will be removed in a future version. Consider using the node `properties` instead.", // description visible in the documentation
+			Deprecated:   "The attribute international_designator is deprecated and will be removed in a future version. Consider using the node properties instead.",               // deprecation warning message on the terraform console
 		},
 		"tle": {
 			Type:     schema.TypeList,
@@ -90,7 +93,8 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 			Elem: &schema.Schema{
 				Type: schema.TypeString,
 			},
-			Description: "TLE composed of its 2 lines",
+			Description: "TLE composed of its 2 lines. **NOTE**: The attribute `tle` is deprecated and will be removed in a future version. Consider using the node `properties` instead.", // description visible in the documentation
+			Deprecated:  "The attribute tle is deprecated and will be removed in a future version. Consider using the node properties instead.",                                            // deprecation warning message on the terraform console
 		},
 		"number_of_children": {
 			Type:        schema.TypeInt,
@@ -102,16 +106,22 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 		// A solution would be creating a new "ground station" schema, if we want to ensure type safety
 		// For now this does the job!
 		"latitude": {
-			Type:     schema.TypeFloat,
-			Optional: true,
+			Type:        schema.TypeFloat,
+			Optional:    true,
+			Description: "**NOTE**: The attribute `latitude` is deprecated and will be removed in a future version. Consider using the node `properties` instead.", // description visible in the documentation
+			Deprecated:  "The attribute latitude is deprecated and will be removed in a future version. Consider using the node properties instead.",               // deprecation warning message on the terraform console
 		},
 		"longitude": {
-			Type:     schema.TypeFloat,
-			Optional: true,
+			Type:        schema.TypeFloat,
+			Optional:    true,
+			Description: "**NOTE**: The attribute `longitude` is deprecated and will be removed in a future version. Consider using the node `properties` instead.", // description visible in the documentation
+			Deprecated:  "The attribute longitude is deprecated and will be removed in a future version. Consider using the node properties instead.",               // deprecation warning message on the terraform console
 		},
 		"elevation": {
-			Type:     schema.TypeFloat,
-			Optional: true,
+			Type:        schema.TypeFloat,
+			Optional:    true,
+			Description: "**NOTE**: The attribute `elevation` is deprecated and will be removed in a future version. Consider using the node `properties` instead.", // description visible in the documentation
+			Deprecated:  "The attribute elevation is deprecated and will be removed in a future version. Consider using the node properties instead.",               // deprecation warning message on the terraform console
 		},
 	}
 

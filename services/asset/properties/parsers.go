@@ -40,6 +40,7 @@ func (property *Property[T]) ToMap() map[string]any {
 	propertyMap["last_modified_by"] = property.LastModifiedBy
 	propertyMap["type"] = property.Type
 	propertyMap["tags"] = helper.ParseToMaps(property.Tags)
+	propertyMap["built_in"] = property.IsBuiltIn
 	switch property.Type {
 	case "NUMERIC":
 		if any(property.Value) != nil {
@@ -115,6 +116,7 @@ func (property *Property[T]) FromMap(propertyMap map[string]any) error {
 	property.CreatedBy = propertyMap["created_by"].(string)
 	property.LastModifiedAt = propertyMap["last_modified_at"].(string)
 	property.LastModifiedBy = propertyMap["last_modified_by"].(string)
+	property.IsBuiltIn = propertyMap["built_in"].(bool)
 	if value, ok := propertyMap["value"]; ok {
 		property.Value = value.(T)
 	}

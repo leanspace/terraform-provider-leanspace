@@ -202,6 +202,11 @@ var propertySchema = map[string]*schema.Schema{
 		ValidateFunc: validation.StringInSlice(validPropertyTypes, false),
 		Description:  helper.AllowedValuesToDescription(validPropertyTypes),
 	},
+	"built_in": {
+		Type:        schema.TypeBool,
+		Computed:    true,
+		Description: "Indicates if it is a build-in property.",
+	},
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{
