@@ -82,6 +82,31 @@ var pluginSchema = map[string]*schema.Schema{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
+	"function_name": {
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Function name with the following format : plugins-UUID",
+	},
+	"source_code_file_id": {
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Uploaded file identifier with UUID format.",
+	},
+	"sdk_version": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "SDK version in the format 1.X.X or 2.X.X where X is a number.",
+	},
+	"sdk_version_family": {
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "SDK family that indicates the major version.",
+	},
+	"status": {
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Plugin status. Can be ACTIVE, PENDING or FAILED",
+	},
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{

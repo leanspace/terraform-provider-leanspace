@@ -32,6 +32,7 @@ resource "leanspace_plugins" "test" {
   name                                 = "Terraform Command Transformer Plugin"
   description                          = "This is a plugin created through terraform!"
   source_code_file_download_authorized = true
+  sdk_version                          = "2.1.2"
 }
 
 output "test_plugin" {
