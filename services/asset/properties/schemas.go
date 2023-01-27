@@ -8,81 +8,9 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var validPropertyTypes = []string{"NUMERIC", "ENUM", "TEXT", "TIMESTAMP", "DATE", "TIME", "BOOLEAN", "GEOPOINT"}
+var validPropertyTypes = []string{"NUMERIC", "ENUM", "TEXT", "TIMESTAMP", "DATE", "TIME", "BOOLEAN", "GEOPOINT", "TLE"}
 
-var propertyFieldSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
-		Computed: true,
-	},
-	"name": {
-		Type:     schema.TypeString,
-		Required: true,
-	},
-	"description": {
-		Type:     schema.TypeString,
-		Optional: true,
-	},
-	"created_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-	"value": {
-		Type:     schema.TypeString,
-		Optional: true,
-	},
-	"type": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validPropertyTypes, false),
-		Description:  helper.AllowedValuesToDescription(validPropertyTypes),
-	},
-}
-
-var geoPointFieldsSchema = map[string]*schema.Schema{
-	"elevation": {
-		Type:     schema.TypeList,
-		MaxItems: 1,
-		Required: true,
-		Elem: &schema.Resource{
-			Schema: propertyFieldSchema,
-		},
-	},
-	"latitude": {
-		Type:     schema.TypeList,
-		MaxItems: 1,
-		Required: true,
-		Elem: &schema.Resource{
-			Schema: propertyFieldSchema,
-		},
-	},
-	"longitude": {
-		Type:     schema.TypeList,
-		MaxItems: 1,
-		Required: true,
-		Elem: &schema.Resource{
-			Schema: propertyFieldSchema,
-		},
-	},
-}
-
-var propertySchema = map[string]*schema.Schema{
+var PropertySchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
 		Computed: true,
@@ -207,29 +135,84 @@ var propertySchema = map[string]*schema.Schema{
 		Computed:    true,
 		Description: "Indicates if it is a build-in property.",
 	},
+	"additional_properties": {
+		Type:     schema.TypeMap,
+		Optional: true,
+	},
+}
+
+var geoPointFieldsSchema = map[string]*schema.Schema{
+	"latitude": {
+		Type:     schema.TypeList,
+		MaxItems: 1,
+		Required: true,
+		Elem: &schema.Resource{
+			Schema: propertyFieldSchema,
+		},
+	},
+	"longitude": {
+		Type:     schema.TypeList,
+		MaxItems: 1,
+		Required: true,
+		Elem: &schema.Resource{
+			Schema: propertyFieldSchema,
+		},
+	},
+	"elevation": {
+		Type:     schema.TypeList,
+		MaxItems: 1,
+		Required: true,
+		Elem: &schema.Resource{
+			Schema: propertyFieldSchema,
+		},
+	},
+}
+
+var propertyFieldSchema = map[string]*schema.Schema{
+	"additional_properties": {
+		Type:     schema.TypeMap,
+		Optional: true,
+	},
+	"value": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+
+	// Numeric only
+	"scale": {
+		Type:        schema.TypeInt,
+		Optional:    true,
+		Description: "Property field with numeric type only: the scale required.",
+	},
+	"unit_id": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: validation.IsUUID,
+		Description:  "Property field with numeric type only",
+	},
+	"min": {
+		Type:        schema.TypeFloat,
+		Optional:    true,
+		Description: "Property field with numeric type only: the minimum value allowed.",
+	},
+	"precision": {
+		Type:        schema.TypeInt,
+		Optional:    true,
+		Description: "Property field with numeric type only: How many values after the comma should be accepted",
+	},
+	"max": {
+		Type:        schema.TypeFloat,
+		Optional:    true,
+		Description: "Property field with numeric type only: the maximum value allowed.",
+	},
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{
-	"node_ids": {
+	"built_in": {
 		Type:     schema.TypeList,
 		Optional: true,
 		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-	},
-	"node_types": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
-	},
-	"node_kinds": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
+			Type: schema.TypeBool,
 		},
 	},
 	"tags": {
@@ -237,6 +220,21 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 		Optional: true,
 		Elem: &schema.Schema{
 			Type: schema.TypeString,
+		},
+	},
+	"names": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
+		},
+	},
+	"node_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
 		},
 	},
 }

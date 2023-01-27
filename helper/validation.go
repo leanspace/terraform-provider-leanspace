@@ -3,6 +3,7 @@ package helper
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -364,4 +365,40 @@ func IsValidTimeDateOrTimestamp(i interface{}, k string) (warnings []string, err
 		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to be a valid date, time or timestamp, got %q: \n %+v \n %+v \n %+v", k, i, errTimestamp, errDate, errTime))
 	}
 	return warnings, errorsOnField
+}
+
+func IsValidSemVer(i interface{}, fieldName string) (warnings []string, errorsOnField []error) {
+	var semVerValues []string = strings.Split(i.(string), ".")
+
+	if len(semVerValues) != 3 {
+		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to be a valid semantic version MAJOR.MINOR.PATCH, got %q", fieldName, i.(string)))
+		return warnings, errorsOnField
+	}
+
+	if major, ok := isValidVersion(semVerValues[0]); !ok {
+		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to have minor version between 0 and 9, got %q", fieldName, strconv.FormatInt(major, 10)))
+	}
+
+	if minor, ok := isValidVersion(semVerValues[1]); !ok {
+		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to have minor version between 0 and 9, got %q", fieldName, strconv.FormatInt(minor, 10)))
+	}
+
+	if patch, ok := isValidVersion(semVerValues[2]); !ok {
+		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to have patch version between 0 and 9, got %q", fieldName, strconv.FormatInt(patch, 10)))
+	}
+
+	return warnings, errorsOnField
+}
+
+func isValidVersion(value string) (v int64, ok bool) {
+	ok = true
+	if version, err := strconv.ParseInt(value, 10, 64); err == nil {
+		if version < 0 || version > 9 {
+			ok = false
+		}
+		return version, ok
+	} else {
+		ok = false
+	}
+	return
 }

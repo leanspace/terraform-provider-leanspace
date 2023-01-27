@@ -267,12 +267,18 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string) ma
 		},
 
 		// Numeric only
-		"min": {
-			Type:        schema.TypeFloat,
-			Optional:    true,
-			Description: "Numeric only",
+		"unit_id": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: validation.IsUUID,
+			Description:  "Numeric only",
 		},
-		"max": {
+		"precision": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Numeric only: How many values after the comma should be accepted",
+		},
+		"min": {
 			Type:        schema.TypeFloat,
 			Optional:    true,
 			Description: "Numeric only",
@@ -282,16 +288,10 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string) ma
 			Optional:    true,
 			Description: "Numeric only",
 		},
-		"precision": {
-			Type:        schema.TypeInt,
+		"max": {
+			Type:        schema.TypeFloat,
 			Optional:    true,
-			Description: "Numeric only: How many values after the comma should be accepted",
-		},
-		"unit_id": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: validation.IsUUID,
-			Description:  "Numeric only",
+			Description: "Numeric only",
 		},
 
 		// Time, date, timestamp only
@@ -375,70 +375,71 @@ func DefinitionAttributeArrayConstraintSchema(excludeTypes []string, excludeFiel
 			Optional: true,
 		},
 		// Text only
-		"min_length": {
-			Type:         schema.TypeInt,
-			Optional:     true,
-			ValidateFunc: validation.IntAtLeast(1),
-			Description:  "Text only: Minimum length of this text (at least 1)",
-		},
 		"max_length": {
 			Type:         schema.TypeInt,
 			Optional:     true,
 			ValidateFunc: validation.IntAtLeast(1),
-			Description:  "Text only: Maximum length of this text (at least 1)",
+			Description:  "Only array elements with text type: Maximum length of this text (at least 1)",
 		},
 		"pattern": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			Description: "Text only: Regex defined the allowed pattern of this text",
+			Description: "Only array elements with text type: Regex defined the allowed pattern of this text",
+		},
+		"min_length": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			ValidateFunc: validation.IntAtLeast(1),
+			Description:  "Only array elements with text type: Minimum length of this text (at least 1)",
 		},
 
 		// Numeric only
-		"min": {
-			Type:        schema.TypeFloat,
-			Optional:    true,
-			Description: "Numeric only",
-		},
 		"max": {
 			Type:        schema.TypeFloat,
 			Optional:    true,
-			Description: "Numeric only",
-		},
-		"scale": {
-			Type:        schema.TypeInt,
-			Optional:    true,
-			Description: "Numeric only",
+			Description: "Only array elements with numeric type : maximum value allowed",
 		},
 		"precision": {
 			Type:        schema.TypeInt,
 			Optional:    true,
-			Description: "Numeric only: How many values after the comma should be accepted",
+			Description: "Only array elements with numeric type : how many values after the comma should be accepted",
+		},
+		"min": {
+			Type:        schema.TypeFloat,
+			Optional:    true,
+			Description: "Only array elements with numeric type : minimum value allowed",
 		},
 		"unit_id": {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validation.IsUUID,
-			Description:  "Numeric only",
+			Description:  "Only array elements with numeric type",
+		},
+		"scale": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Only array elements with numeric type",
 		},
 
-		// Time, date, timestamp only
-		"before": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-			Description:  "Time/date/timestamp only: Maximum date allowed",
-		},
-		"after": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-			Description:  "Time/date/timestamp only: Minimum date allowed",
-		},
 		// Enum only
 		"options": {
 			Type:        schema.TypeMap,
 			Optional:    true,
-			Description: "Enum only: The allowed values for the enum in the format 1 = \"value\"",
+			Description: "Only array elements with enum type : The allowed values for the enum in the format 1 = \"value\"",
+		},
+
+		// Time, date, timestamp only
+		"after": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+			Description:  "Only array elements with time/date/timestamp type : Minimum date allowed",
+		},
+		"before": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+			Description:  "Only array elements with time/date/timestamp type : Maximum date allowed",
 		},
 	}
 
@@ -469,173 +470,5 @@ var ValueAttributeSchema = map[string]*schema.Schema{
 		Type:         schema.TypeString,
 		Optional:     true,
 		ValidateFunc: validation.IsUUID,
-	},
-}
-
-var validPropertyTypes = []string{"NUMERIC", "ENUM", "TEXT", "TIMESTAMP", "DATE", "TIME", "BOOLEAN", "TLE", "GEOPOINT", "STRUCTURE"}
-
-func PropertyAttributeSchema() map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		// Common
-		"additional_properties": {
-			Type:     schema.TypeMap,
-			Optional: true,
-		},
-		"value": {
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"type": {
-			Type:         schema.TypeString,
-			Required:     true,
-			ForceNew:     true,
-			ValidateFunc: validation.StringInSlice(validPropertyTypes, false),
-			Description:  helper.AllowedValuesToDescription(validPropertyTypes),
-		},
-
-		// Geopoint only
-		"fields": {
-			Type:     schema.TypeList,
-			MaxItems: 1,
-			Optional: true,
-			Elem: &schema.Resource{
-				Schema: geoPointFieldsSchema,
-			},
-			Description: "Geopoint only",
-		},
-
-		// Numeric only
-		"min": {
-			Type:        schema.TypeFloat,
-			Optional:    true,
-			Description: "Numeric only",
-		},
-		"max": {
-			Type:        schema.TypeFloat,
-			Optional:    true,
-			Description: "Numeric only",
-		},
-		"scale": {
-			Type:        schema.TypeInt,
-			Optional:    true,
-			Description: "Numeric only",
-		},
-		"precision": {
-			Type:        schema.TypeInt,
-			Optional:    true,
-			Description: "Numeric only: How many values after the comma should be accepted",
-		},
-		"unit_id": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: validation.IsUUID,
-			Description:  "Numeric only",
-		},
-
-		// Text only
-		"min_length": {
-			Type:         schema.TypeInt,
-			Optional:     true,
-			ValidateFunc: validation.IntAtLeast(1),
-			Description:  "Text only: Minimum length of this text (at least 1)",
-		},
-		"max_length": {
-			Type:         schema.TypeInt,
-			Optional:     true,
-			ValidateFunc: validation.IntAtLeast(1),
-			Description:  "Text only: Maximum length of this text (at least 1)",
-		},
-		"pattern": {
-			Type:        schema.TypeString,
-			Optional:    true,
-			Description: "Text only: Regex defined the allowed pattern of this text",
-		},
-
-		// Enum only
-		"options": {
-			Type:        schema.TypeMap,
-			Optional:    true,
-			Description: "Enum only: The allowed values for the enum in the format 1 = \"value\"",
-		},
-
-		// Time, date, timestamp only
-		"before": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-			Description:  "Time/date/timestamp only: Maximum date allowed",
-		},
-		"after": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-			Description:  "Time/date/timestamp only: Minimum date allowed",
-		},
-	}
-}
-
-var geoPointFieldsSchema = map[string]*schema.Schema{
-	"elevation": {
-		Type:     schema.TypeList,
-		MaxItems: 1,
-		Required: true,
-		Elem: &schema.Resource{
-			Schema: propertyFieldSchema,
-		},
-	},
-	"latitude": {
-		Type:     schema.TypeList,
-		MaxItems: 1,
-		Required: true,
-		Elem: &schema.Resource{
-			Schema: propertyFieldSchema,
-		},
-	},
-	"longitude": {
-		Type:     schema.TypeList,
-		MaxItems: 1,
-		Required: true,
-		Elem: &schema.Resource{
-			Schema: propertyFieldSchema,
-		},
-	},
-}
-
-var propertyFieldSchema = map[string]*schema.Schema{
-	"additional_properties": {
-		Type:     schema.TypeMap,
-		Optional: true,
-	},
-	"value": {
-		Type:     schema.TypeString,
-		Optional: true,
-	},
-
-	// Numeric only
-	"min": {
-		Type:        schema.TypeFloat,
-		Optional:    true,
-		Description: "Numeric only",
-	},
-	"max": {
-		Type:        schema.TypeFloat,
-		Optional:    true,
-		Description: "Numeric only",
-	},
-	"scale": {
-		Type:        schema.TypeInt,
-		Optional:    true,
-		Description: "Numeric only",
-	},
-	"precision": {
-		Type:        schema.TypeInt,
-		Optional:    true,
-		Description: "Numeric only: How many values after the comma should be accepted",
-	},
-	"unit_id": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.IsUUID,
-		Description:  "Numeric only",
 	},
 }

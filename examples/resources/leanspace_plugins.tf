@@ -1,28 +1,6 @@
-terraform {
-  required_providers {
-    leanspace = {
-      source = "leanspace/leanspace"
-    }
-  }
-}
-
 variable "path" {
   type        = string
   description = "The path to the plugin's source code file (a .jar)."
-}
-
-data "leanspace_plugins" "all" {
-  filters {
-    types = [
-      "COMMANDS_COMMAND_TRANSFORMER_PLUGIN_TYPE",
-      "COMMANDS_PROTOCOL_TRANSFORMER_PLUGIN_TYPE",
-    ]
-    ids   = []
-    query = ""
-    page  = 0
-    size  = 10
-    sort  = ["name,asc"]
-  }
 }
 
 resource "leanspace_plugins" "test" {
@@ -33,8 +11,4 @@ resource "leanspace_plugins" "test" {
   description                          = "This is a plugin created through terraform!"
   source_code_file_download_authorized = true
   sdk_version                          = "2.1.2"
-}
-
-output "test_plugin" {
-  value = leanspace_plugins.test
 }

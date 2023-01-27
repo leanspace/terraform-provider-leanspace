@@ -8,6 +8,7 @@ import (
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+	"github.com/leanspace/terraform-provider-leanspace/services/asset/properties"
 )
 
 var nodeSchema = makeNodeSchema(nil)            // no sub nodes
@@ -71,19 +72,32 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 			Description:  helper.AllowedValuesToDescription(validNodeKinds),
 		},
 		"tags": general_objects.TagsSchema,
+		"number_of_children": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Numeric only",
+		},
+		"properties": {
+			Type:        schema.TypeSet,
+			Optional:    true,
+			Description: "Node properties",
+			Elem: &schema.Resource{
+				Schema: properties.PropertySchema,
+			},
+		},
+		// The following fields are part of V1 properties in the API that have been marked as deprecated.
+		// They have not been removed from terraform yet as they are necessary to create built-in properties with values (there is no other way yet).
+		// They will have to be removed once the API allows to create built-in properties with V2.
 		"norad_id": {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validation.StringMatch(regexp.MustCompile(`^\d{5}$`), "It must be 5 digits"),
-			Description:  "It must be 5 digits. **NOTE**: The attribute `norad_id` is deprecated and will be removed in a future version. Consider using the node `properties` instead.", // description visible in the documentation
-			Deprecated:   "The attribute norad_id is deprecated and will be removed in a future version. Consider using the node properties instead.",                                    // deprecation warning message on the terraform console
+			Description:  "It must be 5 digits.",
 		},
 		"international_designator": {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validation.StringMatch(regexp.MustCompile(`^(\d{4}-|\d{2})[0-9]{3}[A-Za-z]{0,3}$`), ""),
-			Description:  "**NOTE**: The attribute `international_designator` is deprecated and will be removed in a future version. Consider using the node `properties` instead.", // description visible in the documentation
-			Deprecated:   "The attribute international_designator is deprecated and will be removed in a future version. Consider using the node properties instead.",               // deprecation warning message on the terraform console
 		},
 		"tle": {
 			Type:     schema.TypeList,
@@ -93,35 +107,22 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 			Elem: &schema.Schema{
 				Type: schema.TypeString,
 			},
-			Description: "TLE composed of its 2 lines. **NOTE**: The attribute `tle` is deprecated and will be removed in a future version. Consider using the node `properties` instead.", // description visible in the documentation
-			Deprecated:  "The attribute tle is deprecated and will be removed in a future version. Consider using the node properties instead.",                                            // deprecation warning message on the terraform console
+			Description: "TLE composed of its 2 lines.",
 		},
-		"number_of_children": {
-			Type:        schema.TypeInt,
-			Computed:    true,
-			Description: "Numeric only",
-		},
-		// These fields are *required* when kind = GROUND_STATION
-		// However currently I don't think there is a way to have conditionally required fields
-		// A solution would be creating a new "ground station" schema, if we want to ensure type safety
-		// For now this does the job!
 		"latitude": {
 			Type:        schema.TypeFloat,
 			Optional:    true,
-			Description: "**NOTE**: The attribute `latitude` is deprecated and will be removed in a future version. Consider using the node `properties` instead.", // description visible in the documentation
-			Deprecated:  "The attribute latitude is deprecated and will be removed in a future version. Consider using the node properties instead.",               // deprecation warning message on the terraform console
+			Description: "Only for ground stations",
 		},
 		"longitude": {
 			Type:        schema.TypeFloat,
 			Optional:    true,
-			Description: "**NOTE**: The attribute `longitude` is deprecated and will be removed in a future version. Consider using the node `properties` instead.", // description visible in the documentation
-			Deprecated:  "The attribute longitude is deprecated and will be removed in a future version. Consider using the node properties instead.",               // deprecation warning message on the terraform console
+			Description: "Only for ground stations",
 		},
 		"elevation": {
 			Type:        schema.TypeFloat,
 			Optional:    true,
-			Description: "**NOTE**: The attribute `elevation` is deprecated and will be removed in a future version. Consider using the node `properties` instead.", // description visible in the documentation
-			Deprecated:  "The attribute elevation is deprecated and will be removed in a future version. Consider using the node properties instead.",               // deprecation warning message on the terraform console
+			Description: "Only for ground stations",
 		},
 	}
 

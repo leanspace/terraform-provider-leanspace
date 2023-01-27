@@ -65,27 +65,27 @@ var pluginSchema = map[string]*schema.Schema{
 	"created_at": {
 		Type:        schema.TypeString,
 		Computed:    true,
-		Description: "When it was created",
+		Description: "When the plugin was created",
 	},
 	"created_by": {
 		Type:        schema.TypeString,
 		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was last modified",
+		Description: "Who created the plugin",
 	},
 	"last_modified_by": {
 		Type:        schema.TypeString,
 		Computed:    true,
-		Description: "Who modified it the last",
+		Description: "Who modified the plugin the last",
+	},
+	"last_modified_at": {
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "When the plugin was last modified",
 	},
 	"function_name": {
 		Type:        schema.TypeString,
 		Computed:    true,
-		Description: "Function name with the following format : plugins-UUID",
+		Description: "Function name with the following format : plugins-random10characterString-UUID.",
 	},
 	"source_code_file_id": {
 		Type:        schema.TypeString,
@@ -93,9 +93,10 @@ var pluginSchema = map[string]*schema.Schema{
 		Description: "Uploaded file identifier with UUID format.",
 	},
 	"sdk_version": {
-		Type:        schema.TypeString,
-		Optional:    true,
-		Description: "SDK version in the format 1.X.X or 2.X.X where X is a number.",
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: isValidSemVerForPlugins,
+		Description:  "SDK version in the semantic version format with major versions 1 or 2.",
 	},
 	"sdk_version_family": {
 		Type:        schema.TypeString,
