@@ -25,8 +25,9 @@ var PropertySchema = map[string]*schema.Schema{
 	},
 	"node_id": {
 		Type:         schema.TypeString,
-		Required:     true,
+		Optional:     true,
 		ForceNew:     true,
+		Description:  "This field is required when creating the property but optional when creating a node with properties.",
 		ValidateFunc: validation.IsUUID,
 	},
 	"created_at": {

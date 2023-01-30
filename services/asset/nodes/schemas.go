@@ -85,9 +85,14 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 				Schema: properties.PropertySchema,
 			},
 		},
-		// The following fields are part of V1 properties in the API that have been marked as deprecated.
-		// They have not been removed from terraform yet as they are necessary to create built-in properties with values (there is no other way yet).
-		// They will have to be removed once the API allows to create built-in properties with V2.
+		// The following fields are part of V1 properties in the API that have been marked as deprecated for node updates.
+		// In terraform, an update occurs when using `terraform apply` multiple times on the same resource with different field values.
+		// When these fields are deleted in the API, we suggest to follow these steps :
+		// 1- Do not change this schema so that the user is not impacted by this deprecation
+		// 2- Update the built-in properties :
+		// 		- Call the endpoint https://api.develop.leanspace.io/asset-repository/properties/v2 to retrieve all the built-in properties.
+		//		- For each built-in property, call the endpoint https://api.develop.leanspace.io/asset-repository/properties/v2/{propertyId} to update the property
+		//		Hint: you can create a request.go file with a PostUpdateProcess function
 		"norad_id": {
 			Type:         schema.TypeString,
 			Optional:     true,

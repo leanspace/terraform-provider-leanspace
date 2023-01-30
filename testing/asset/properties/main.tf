@@ -14,8 +14,8 @@ variable "node_id" {
 data "leanspace_properties" "all" {
   filters {
     node_ids   = [var.node_id]
-    built_in   = true
-    names      = ["TLE"]
+    built_in   = []
+    names      = []
     tags       = []
     query      = ""
     page       = 0
@@ -181,12 +181,13 @@ resource "leanspace_properties" "geopoint_node_property" {
 }
 
 # Only works when you import the built-in property before "terraform apply"
+# Import command : `terraform import leanspace_properties.tle_node_property <property_id>`
 #resource "leanspace_properties" "tle_node_property" {
 #  name        = "TLE"
 #  description = "Built-in property for satellite TLE"
 #  node_id     = var.node_id
 #  type = "TLE"
-#  value = "1 25544U 98067A   20097.18686503  .00000920  00000-0  25115-4 0  9994,2 25544  51.6465 344.7546 0003971  92.6495  47.0504 15.48684294220855"
+#  value = "1 99944U 98067A   20097.18686503  .00000920  00000-0  25115-4 0  9994,2 99944  51.6465 344.7546 0003971  92.6495  47.0504 15.48684294220999"
 #  tags {
 #    key   = "Key1"
 #    value = "Value1"

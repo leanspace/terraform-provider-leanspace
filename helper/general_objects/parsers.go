@@ -156,7 +156,7 @@ func (attribute *DefinitionAttribute[T]) FromMap(attributeMap map[string]any) er
 		attribute.MinSize = attributeMap["min_size"].(int)
 		attribute.MaxSize = attributeMap["max_size"].(int)
 		attribute.Unique = attributeMap["unique"].(bool)
-		if len(attributeMap["constraint"].([]any)) > 1 {
+		if len(attributeMap["constraint"].([]any)) > 0 {
 			err := attribute.Constraint.FromMap(attributeMap["constraint"].([]any)[0].(map[string]any))
 			if err != nil {
 				return err
