@@ -27,9 +27,8 @@ var PropertySchema = map[string]*schema.Schema{
 	},
 	"node_id": {
 		Type:         schema.TypeString,
-		Optional:     true,
+		Required:     true,
 		ForceNew:     true,
-		Description:  "This field is required when creating the property but optional when creating a node with properties.",
 		ValidateFunc: validation.IsUUID,
 	},
 	"created_at": {
@@ -138,10 +137,6 @@ var PropertySchema = map[string]*schema.Schema{
 		Computed:    true,
 		Description: "Indicates if it is a build-in property.",
 	},
-	"additional_properties": {
-		Type:     schema.TypeMap,
-		Optional: true,
-	},
 }
 
 var geoPointFieldsSchema = map[string]*schema.Schema{
@@ -172,10 +167,6 @@ var geoPointFieldsSchema = map[string]*schema.Schema{
 }
 
 var propertyFieldSchema = map[string]*schema.Schema{
-	"additional_properties": {
-		Type:     schema.TypeMap,
-		Optional: true,
-	},
 	"value": {
 		Type:     schema.TypeString,
 		Optional: true,

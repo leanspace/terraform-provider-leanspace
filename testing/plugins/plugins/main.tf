@@ -13,11 +13,11 @@ variable "path" {
 
 data "leanspace_plugins" "all" {
   filters {
+    ids   = []
     types = [
       "COMMANDS_COMMAND_TRANSFORMER_PLUGIN_TYPE",
       "COMMANDS_PROTOCOL_TRANSFORMER_PLUGIN_TYPE",
     ]
-    ids   = []
     query = ""
     page  = 0
     size  = 10
@@ -32,7 +32,11 @@ resource "leanspace_plugins" "test" {
   name                                 = "Terraform Command Transformer Plugin"
   description                          = "This is a plugin created through terraform!"
   source_code_file_download_authorized = true
-  sdk_version                          = "1.1.2"
+  sdk_version                          = "2.1.2"
+}
+
+output "all_plugins" {
+  value = data.leanspace_plugins.all
 }
 
 output "test_plugin" {

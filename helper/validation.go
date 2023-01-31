@@ -391,14 +391,12 @@ func IsValidSemVer(i interface{}, fieldName string) (warnings []string, errorsOn
 }
 
 func isValidVersion(value string) (v int64, ok bool) {
-	ok = true
 	if version, err := strconv.ParseInt(value, 10, 64); err == nil {
+		ok = true
 		if version < 0 || version > 9 {
 			ok = false
 		}
 		return version, ok
-	} else {
-		ok = false
 	}
-	return
+	return 0, false
 }

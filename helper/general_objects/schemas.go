@@ -267,18 +267,12 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string) ma
 		},
 
 		// Numeric only
-		"unit_id": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: validation.IsUUID,
-			Description:  "Numeric only",
-		},
-		"precision": {
-			Type:        schema.TypeInt,
-			Optional:    true,
-			Description: "Numeric only: How many values after the comma should be accepted",
-		},
 		"min": {
+			Type:        schema.TypeFloat,
+			Optional:    true,
+			Description: "Numeric only",
+		},
+		"max": {
 			Type:        schema.TypeFloat,
 			Optional:    true,
 			Description: "Numeric only",
@@ -288,10 +282,16 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string) ma
 			Optional:    true,
 			Description: "Numeric only",
 		},
-		"max": {
-			Type:        schema.TypeFloat,
+		"precision": {
+			Type:        schema.TypeInt,
 			Optional:    true,
-			Description: "Numeric only",
+			Description: "Numeric only: How many values after the comma should be accepted",
+		},
+		"unit_id": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: validation.IsUUID,
+			Description:  "Numeric only",
 		},
 
 		// Time, date, timestamp only

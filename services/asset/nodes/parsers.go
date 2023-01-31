@@ -3,7 +3,6 @@ package nodes
 import (
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
-	"github.com/leanspace/terraform-provider-leanspace/services/asset/properties"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -49,12 +48,6 @@ func (node *Node) toMapRecursive(level int) map[string]any {
 		nodeMap["elevation"] = node.Elevation
 	}
 
-	properties := make([]map[string]any, len(node.Properties))
-	for i, property := range node.Properties {
-		properties[i] = property.ToMap()
-	}
-	nodeMap["properties"] = properties
-
 	return nodeMap
 }
 
@@ -97,16 +90,5 @@ func (node *Node) FromMap(nodeMap map[string]any) error {
 		node.Longitude = helper.Ptr(nodeMap["longitude"].(float64))
 		node.Elevation = helper.Ptr(nodeMap["elevation"].(float64))
 	}
-
-	if nodeMap["properties"] != nil {
-		node.Properties = make([]properties.Property[any], nodeMap["properties"].(*schema.Set).Len())
-		for i, property := range nodeMap["properties"].(*schema.Set).List() {
-			err := node.Properties[i].FromMap(any(property).(map[string]any))
-			if err != nil {
-				return err
-			}
-		}
-	}
-
 	return nil
 }

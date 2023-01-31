@@ -12,8 +12,6 @@ type Plugin struct {
 	CreatedBy                        string `json:"createdBy"`
 	LastModifiedAt                   string `json:"lastModifiedAt"`
 	LastModifiedBy                   string `json:"lastModifiedBy"`
-	FunctionName                     string `json:"functionName"`
-	SourceCodeFileId                 string `json:"sourceCodeFileId"`
 	SdkVersion                       string `json:"sdkVersion,omitempty"`
 	SdkVersionFamily                 string `json:"sdkVersionFamily"`
 	Status                           string `json:"status"`

@@ -20,9 +20,8 @@ func (property *Property[T]) GetID() string { return property.ID }
 
 type PropertyAttribute[T any] struct {
 	// Common
-	AdditionalProperties any    `json:"additionalProperties,omitempty"`
-	Value                T      `json:"value,omitempty"`
-	Type                 string `json:"type"`
+	Value T      `json:"value,omitempty"`
+	Type  string `json:"type"`
 
 	// Geopoint only
 	Fields *Fields `json:"fields,omitempty"`
@@ -54,11 +53,10 @@ type Fields struct {
 }
 
 type Field[T any] struct {
-	AdditionalProperties any     `json:"additionalProperties,omitempty"`
-	Value                T       `json:"value,omitempty"`
-	Min                  float64 `json:"min,omitempty"`
-	Max                  float64 `json:"max,omitempty"`
-	Scale                int     `json:"scale,omitempty"`
-	Precision            int     `json:"precision,omitempty"`
-	UnitId               string  `json:"unitId,omitempty"`
+	Value     T       `json:"value,omitempty"`
+	Min       float64 `json:"min,omitempty"`
+	Max       float64 `json:"max,omitempty"`
+	Scale     int     `json:"scale,omitempty"`
+	Precision int     `json:"precision,omitempty"`
+	UnitId    string  `json:"unitId,omitempty"`
 }

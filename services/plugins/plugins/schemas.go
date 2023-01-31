@@ -25,11 +25,20 @@ var pluginSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Computed: true,
 	},
-	"types": {
+	"type": {
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.StringInSlice(validPluginTypes, false),
 		Description:  helper.AllowedValuesToDescription(validPluginTypes),
+	},
+	"implementation_class_name": {
+		Type:     schema.TypeString,
+		Required: true,
+		ValidateFunc: validation.StringMatch(
+			classNameRegex,
+			"'implementation_class_name' must be a valid java class path",
+		),
+		Description: "It must be a valid java class path",
 	},
 	"name": {
 		Type:     schema.TypeString,
@@ -72,16 +81,6 @@ var pluginSchema = map[string]*schema.Schema{
 		Type:        schema.TypeString,
 		Computed:    true,
 		Description: "When the plugin was last modified",
-	},
-	"function_name": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Function name with the following format : plugins-random10characterString-UUID.",
-	},
-	"source_code_file_id": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Uploaded file identifier with UUID format.",
 	},
 	"sdk_version": {
 		Type:         schema.TypeString,

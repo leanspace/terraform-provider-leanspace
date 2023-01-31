@@ -8,7 +8,6 @@ import (
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
-	"github.com/leanspace/terraform-provider-leanspace/services/asset/properties"
 )
 
 var nodeSchema = makeNodeSchema(nil)            // no sub nodes
@@ -77,17 +76,9 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 			Computed:    true,
 			Description: "Numeric only",
 		},
-		"properties": {
-			Type:        schema.TypeSet,
-			Optional:    true,
-			Description: "Node properties",
-			Elem: &schema.Resource{
-				Schema: properties.PropertySchema,
-			},
-		},
 		// The following fields are part of V1 properties in the API that have been marked as deprecated for node updates.
 		// In terraform, an update occurs when using `terraform apply` multiple times on the same resource with different field values.
-		// When these fields are deleted in the API, we suggest to follow these steps :
+		// When these fields are deleted in the API, we suggest to follow these steps during node updates :
 		// 1- Do not change this schema so that the user is not impacted by this deprecation
 		// 2- Update the built-in properties :
 		// 		- Call the endpoint https://api.develop.leanspace.io/asset-repository/properties/v2 to retrieve all the built-in properties.

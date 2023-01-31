@@ -165,9 +165,6 @@ func (property *Property[T]) FromMap(propertyMap map[string]any) error {
 
 func (field *Field[T]) ToMap() map[string]any {
 	fieldMap := make(map[string]any)
-	if field.AdditionalProperties != nil {
-		fieldMap["additional_properties"] = any(field.AdditionalProperties)
-	}
 	// This might be unsafe in the future - for now fields are only used for numbers
 	// in the geopoint type so it's alright.
 	if any(field.Value) != nil {
@@ -182,10 +179,6 @@ func (field *Field[T]) ToMap() map[string]any {
 }
 
 func (field *Field[T]) FromMap(fieldMap map[string]any) error {
-	if fieldMap["additional_properties"] != nil {
-		//property := fieldMap["additional_properties"].(map[string]any)
-		field.AdditionalProperties = fieldMap["additional_properties"].(map[string]any)
-	}
 	field.Value = fieldMap["value"].(T)
 	field.Min = fieldMap["min"].(float64)
 	field.Max = fieldMap["max"].(float64)
