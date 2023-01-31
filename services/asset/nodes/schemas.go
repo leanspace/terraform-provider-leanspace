@@ -145,38 +145,49 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{
-	"parent_node_ids": {
+	"created_by": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Filter on the user who created the Node",
+	},
+	"from_created_at": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Filter on the Node creation date, using ISO-8601 format. Properties with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters)",
+	},
+	"from_last_modified_at": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Filter on the Node last modification date, using ISO-8601 format. Nodes with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters)",
+	},
+	"last_modified_by": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Filter on the user who modified last the Node",
+	},
+	"to_created_at": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Filter on the Node creation date, using ISO-8601 format. Nodes with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters)",
+	},
+	"to_last_modified_at": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Filter on the Node last modification date, using ISO-8601 format. Nodes with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters)",
+	},
+	"ids": {
 		Type:     schema.TypeList,
 		Optional: true,
 		Elem: &schema.Schema{
 			Type:         schema.TypeString,
 			ValidateFunc: validation.IsUUID,
 		},
+		Description: "Only returns node who's id matches one of the provided values.",
 	},
-	"property_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-	},
-	"metric_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-	},
-	"types": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.StringInSlice(validNodeTypes, false),
-			Description:  helper.AllowedValuesToDescription(validNodeTypes),
-		},
+	"is_root_node": {
+		Type:        schema.TypeBool,
+		Optional:    true,
+		Description: "Show only Root Nodes, or hide only Root Nodes. true: select Root Nodes only - false: select Nodes with Parent only",
 	},
 	"kinds": {
 		Type:     schema.TypeList,
@@ -185,6 +196,28 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 			Type:         schema.TypeString,
 			ValidateFunc: validation.StringInSlice(validNodeKinds, false),
 			Description:  helper.AllowedValuesToDescription(validNodeKinds),
+		},
+	},
+	"parent_node_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"query": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Search by name or description",
+	},
+	"types": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringInSlice(validNodeTypes, false),
+			Description:  helper.AllowedValuesToDescription(validNodeTypes),
 		},
 	},
 	"tags": {

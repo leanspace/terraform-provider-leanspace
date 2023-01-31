@@ -25,20 +25,11 @@ var pluginSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Computed: true,
 	},
-	"type": {
+	"types": {
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.StringInSlice(validPluginTypes, false),
 		Description:  helper.AllowedValuesToDescription(validPluginTypes),
-	},
-	"implementation_class_name": {
-		Type:     schema.TypeString,
-		Required: true,
-		ValidateFunc: validation.StringMatch(
-			classNameRegex,
-			"'implementation_class_name' must be a valid java class path",
-		),
-		Description: "It must be a valid java class path",
 	},
 	"name": {
 		Type:     schema.TypeString,
@@ -111,6 +102,15 @@ var pluginSchema = map[string]*schema.Schema{
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{
+	"ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+		Description: "Only returns plugin who's id matches one of the provided values.",
+	},
 	"types": {
 		Type:     schema.TypeList,
 		Optional: true,
@@ -119,5 +119,9 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 			ValidateFunc: validation.StringInSlice(validPluginTypes, false),
 			Description:  helper.AllowedValuesToDescription(validPluginTypes),
 		},
+	},
+	"query": {
+		Type:     schema.TypeString,
+		Optional: true,
 	},
 }

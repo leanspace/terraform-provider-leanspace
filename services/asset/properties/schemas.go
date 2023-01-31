@@ -9,6 +9,8 @@ import (
 )
 
 var validPropertyTypes = []string{"NUMERIC", "ENUM", "TEXT", "TIMESTAMP", "DATE", "TIME", "BOOLEAN", "GEOPOINT", "TLE"}
+var validNodeTypes = []string{"ASSET", "GROUP", "COMPONENT"}
+var validNodeKinds = []string{"GENERIC", "SATELLITE", "GROUND_STATION"}
 
 var PropertySchema = map[string]*schema.Schema{
 	"id": {
@@ -209,26 +211,59 @@ var propertyFieldSchema = map[string]*schema.Schema{
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{
-	"built_in": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeBool,
-		},
+	"category": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Allowed values : BUILT_IN_PROPERTIES_ONLY, USER_PROPERTIES_ONLY, ALL_PROPERTIES",
 	},
-	"tags": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
+	"created_by": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Filter on the user who created the Property",
 	},
-	"names": {
+	"from_created_at": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Filter on the Property creation date, using ISO-8601 format. Properties with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters)",
+	},
+	"from_last_modified_at": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Filter on the Property last modification date, using ISO-8601 format. Properties with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters)",
+	},
+	"last_modified_by": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Filter on the user who modified last the Property",
+	},
+	"to_created_at": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Filter on the Property creation date, using ISO-8601 format. Properties with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters)",
+	},
+	"to_last_modified_at": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Filter on the Property last modification date, using ISO-8601 format. Properties with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters)",
+	},
+	"ids": {
 		Type:     schema.TypeList,
 		Optional: true,
 		Elem: &schema.Schema{
-			Type: schema.TypeString,
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
 		},
+		Description: "Only returns property who's id matches one of the provided values.",
+	},
+	"kinds": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringInSlice(validNodeKinds, false),
+			Description:  helper.AllowedValuesToDescription(validNodeKinds),
+		},
+		Description: "Allowed values : GENERIC, SATELLITE, GROUND_STATION",
 	},
 	"node_ids": {
 		Type:     schema.TypeList,
@@ -236,6 +271,28 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 		Elem: &schema.Schema{
 			Type:         schema.TypeString,
 			ValidateFunc: validation.IsUUID,
+		},
+		Description: "Only returns node who's id matches one of the provided values",
+	},
+	"node_types": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringInSlice(validNodeTypes, false),
+			Description:  helper.AllowedValuesToDescription(validNodeTypes),
+		},
+	},
+	"query": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Search by name or description",
+	},
+	"tags": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
 		},
 	},
 }

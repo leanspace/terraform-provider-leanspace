@@ -122,6 +122,14 @@ var argumentSchema = map[string]*schema.Schema{
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{
+	"ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
 	"node_ids": {
 		Type:     schema.TypeList,
 		Optional: true,
@@ -136,6 +144,7 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 		Elem: &schema.Schema{
 			Type: schema.TypeString,
 		},
+		Description: "Filter on the Node type. Allowed values : GROUP, ASSET, COMPONENT",
 	},
 	"node_kinds": {
 		Type:     schema.TypeList,
@@ -143,9 +152,15 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 		Elem: &schema.Schema{
 			Type: schema.TypeString,
 		},
+		Description: "Filter on the Node kind. Allowed values : GENERIC, SATELLITE, GROUND_STATION",
 	},
 	"with_arguments_and_metadata": {
 		Type:     schema.TypeBool,
 		Optional: true,
+	},
+	"query": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Search by name or description",
 	},
 }
