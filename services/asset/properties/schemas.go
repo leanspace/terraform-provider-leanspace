@@ -12,7 +12,7 @@ var validPropertyTypes = []string{"NUMERIC", "ENUM", "TEXT", "TIMESTAMP", "DATE"
 var validNodeTypes = []string{"ASSET", "GROUP", "COMPONENT"}
 var validNodeKinds = []string{"GENERIC", "SATELLITE", "GROUND_STATION"}
 
-var PropertySchema = map[string]*schema.Schema{
+var propertySchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
 		Computed: true,
@@ -208,34 +208,40 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 		Description: "Allowed values : BUILT_IN_PROPERTIES_ONLY, USER_PROPERTIES_ONLY, ALL_PROPERTIES",
 	},
 	"created_by": {
-		Type:        schema.TypeString,
-		Optional:    true,
-		Description: "Filter on the user who created the Property",
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: validation.IsUUID,
+		Description:  "Filter on the user who created the Property. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
 	"from_created_at": {
-		Type:        schema.TypeString,
-		Optional:    true,
-		Description: "Filter on the Property creation date, using ISO-8601 format. Properties with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters)",
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+		Description:  "Filter on the Property creation date. Properties with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
 	"from_last_modified_at": {
-		Type:        schema.TypeString,
-		Optional:    true,
-		Description: "Filter on the Property last modification date, using ISO-8601 format. Properties with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters)",
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+		Description:  "Filter on the Property last modification date. Properties with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
 	"last_modified_by": {
-		Type:        schema.TypeString,
-		Optional:    true,
-		Description: "Filter on the user who modified last the Property",
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: validation.IsUUID,
+		Description:  "Filter on the user who modified last the Property. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
 	"to_created_at": {
-		Type:        schema.TypeString,
-		Optional:    true,
-		Description: "Filter on the Property creation date, using ISO-8601 format. Properties with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters)",
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+		Description:  "Filter on the Property creation date. Properties with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
 	"to_last_modified_at": {
-		Type:        schema.TypeString,
-		Optional:    true,
-		Description: "Filter on the Property last modification date, using ISO-8601 format. Properties with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters)",
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+		Description:  "Filter on the Property last modification date. Properties with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
 	"ids": {
 		Type:     schema.TypeList,
@@ -244,7 +250,7 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 			Type:         schema.TypeString,
 			ValidateFunc: validation.IsUUID,
 		},
-		Description: "Only returns property who's id matches one of the provided values.",
+		Description: "Only returns property whose id matches one of the provided values.",
 	},
 	"kinds": {
 		Type:     schema.TypeList,
@@ -263,7 +269,7 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 			Type:         schema.TypeString,
 			ValidateFunc: validation.IsUUID,
 		},
-		Description: "Only returns node who's id matches one of the provided values",
+		Description: "Only returns node whose id matches one of the provided values",
 	},
 	"node_types": {
 		Type:     schema.TypeList,

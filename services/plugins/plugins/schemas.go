@@ -108,7 +108,7 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 			Type:         schema.TypeString,
 			ValidateFunc: validation.IsUUID,
 		},
-		Description: "Only returns plugin who's id matches one of the provided values.",
+		Description: "Only returns plugin whose id matches one of the provided values.",
 	},
 	"types": {
 		Type:     schema.TypeList,

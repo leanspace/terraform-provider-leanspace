@@ -163,4 +163,10 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 		Optional:    true,
 		Description: "Search by name or description",
 	},
+	"created_by": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: validation.IsUUID,
+		Description:  "Filter on the user who created the Node. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	},
 }

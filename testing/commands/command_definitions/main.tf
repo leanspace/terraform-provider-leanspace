@@ -18,6 +18,7 @@ data "leanspace_command_definitions" "all" {
     node_kinds                  = ["SATELLITE"]
     with_arguments_and_metadata = true
     ids                         = []
+    created_by                  = null
     query                       = ""
     page                        = 0
     size                        = 10
@@ -277,4 +278,8 @@ resource "leanspace_command_definitions" "test" {
 
 output "test_command_definition" {
   value = leanspace_command_definitions.test
+}
+
+output "all_command_definitions" {
+  value = data.leanspace_command_definitions.all
 }
