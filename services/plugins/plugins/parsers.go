@@ -15,6 +15,9 @@ func (plugin *Plugin) ToMap() map[string]any {
 	pluginMap["created_by"] = plugin.CreatedBy
 	pluginMap["last_modified_at"] = plugin.LastModifiedAt
 	pluginMap["last_modified_by"] = plugin.LastModifiedBy
+	pluginMap["sdk_version"] = plugin.SdkVersion
+	pluginMap["sdk_version_family"] = plugin.SdkVersionFamily
+	pluginMap["status"] = plugin.Status
 	return pluginMap
 }
 
@@ -30,6 +33,9 @@ func (plugin *Plugin) FromMap(pluginMap map[string]any) error {
 	plugin.CreatedBy = pluginMap["created_by"].(string)
 	plugin.LastModifiedAt = pluginMap["last_modified_at"].(string)
 	plugin.LastModifiedBy = pluginMap["last_modified_by"].(string)
+	plugin.SdkVersion = pluginMap["sdk_version"].(string)
+	plugin.SdkVersionFamily = pluginMap["sdk_version_family"].(string)
+	plugin.Status = pluginMap["status"].(string)
 	return nil
 }
 

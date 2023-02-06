@@ -3,7 +3,9 @@ package helper
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -343,4 +345,58 @@ func LessThanEq[T Number](key string, value T) Condition {
 // Evaluates to true if the value at the given key is greater than or equal to the given value.
 func GreaterThanEq[T Number](key string, value T) Condition {
 	return compareCondition[T]{key, value, ">="}
+}
+
+func IsValidTimeDateOrTimestamp(i interface{}, k string) (warnings []string, errorsOnField []error) {
+	v, ok := i.(string)
+	if !ok {
+		errorsOnField = append(errorsOnField, fmt.Errorf("expected type of %q to be string", k))
+		return warnings, errorsOnField
+	}
+	const dateLayoutReference = "2006-01-02"
+	const timeLayoutReference = "15:04:05"
+	const timestampLayoutReference = time.RFC3339
+
+	_, errTimestamp := time.Parse(timestampLayoutReference, v)
+	_, errDate := time.Parse(dateLayoutReference, v)
+	_, errTime := time.Parse(timeLayoutReference, v)
+
+	if errTimestamp != nil && errDate != nil && errTime != nil {
+		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to be a valid date, time or timestamp, got %q: \n %+v \n %+v \n %+v", k, i, errTimestamp, errDate, errTime))
+	}
+	return warnings, errorsOnField
+}
+
+func IsValidSemVer(i interface{}, fieldName string) (warnings []string, errorsOnField []error) {
+	var semVerValues []string = strings.Split(i.(string), ".")
+
+	if len(semVerValues) != 3 {
+		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to be a valid semantic version MAJOR.MINOR.PATCH, got %q", fieldName, i.(string)))
+		return warnings, errorsOnField
+	}
+
+	if major, ok := isValidVersion(semVerValues[0]); !ok {
+		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to have minor version between 0 and 9, got %q", fieldName, strconv.FormatInt(major, 10)))
+	}
+
+	if minor, ok := isValidVersion(semVerValues[1]); !ok {
+		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to have minor version between 0 and 9, got %q", fieldName, strconv.FormatInt(minor, 10)))
+	}
+
+	if patch, ok := isValidVersion(semVerValues[2]); !ok {
+		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to have patch version between 0 and 9, got %q", fieldName, strconv.FormatInt(patch, 10)))
+	}
+
+	return warnings, errorsOnField
+}
+
+func isValidVersion(value string) (v int64, ok bool) {
+	if version, err := strconv.ParseInt(value, 10, 64); err == nil {
+		ok = true
+		if version < 0 || version > 9 {
+			ok = false
+		}
+		return version, ok
+	}
+	return 0, false
 }

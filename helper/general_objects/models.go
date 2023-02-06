@@ -38,8 +38,35 @@ type PaginatedList[T any, PT helper.ParseablePointer[T]] struct {
 	Empty            bool     `json:"empty"`
 	Pageable         Pageable `json:"pageable"`
 }
-
 type DefinitionAttribute[T any] struct {
+	// Common
+	Type         string `json:"type"`
+	Required     *bool  `json:"required,omitempty"`
+	DefaultValue T      `json:"defaultValue,omitempty"`
+	// Text & Binary
+	MinLength int `json:"minLength,omitempty"`
+	MaxLength int `json:"maxLength,omitempty"`
+	// Text
+	Pattern string `json:"pattern,omitempty"`
+	// Numeric
+	Min       float64 `json:"min,omitempty"`
+	Max       float64 `json:"max,omitempty"`
+	Scale     int     `json:"scale,omitempty"`
+	Precision int     `json:"precision,omitempty"`
+	UnitId    string  `json:"unitId,omitempty"`
+	// Date, time, timestamp
+	Before string `json:"before,omitempty"`
+	After  string `json:"after,omitempty"`
+	// Enum
+	Options *map[string]any `json:"options,omitempty"`
+	// Array
+	MinSize    int                  `json:"minSize,omitempty"`
+	MaxSize    int                  `json:"maxSize,omitempty"`
+	Unique     bool                 `json:"unique,omitempty"`
+	Constraint ArrayConstraint[any] `json:"elementConstraint,omitempty"`
+}
+
+type ArrayConstraint[T any] struct {
 	// Common
 	Type         string `json:"type"`
 	Required     *bool  `json:"required,omitempty"`

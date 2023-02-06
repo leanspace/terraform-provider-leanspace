@@ -11,6 +11,6 @@ description: |-
 
 ## Example Usage
 
-{{ printf "examples/minimal/resources/%s.tf" .Name | tffile }}
+{{ printf "examples/resources/%s.tf" .Name | tffile }}
 
 {{ .SchemaMarkdown | trimspace }}

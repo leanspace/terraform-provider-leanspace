@@ -29,11 +29,7 @@ These platforms are defined in `.goreleaser.yml`.
 ### Make modification
 
 - To set a specific version for the built binary, make sure you setup the environment variable `VERSION`.   
-For example, with linux: 
-
-```shell
-export VERSION=0.7.0
-```
+For example, `export VERSION=0.7.0` with linux or `set VERSION=0.7.0` with windows.
 
 - Run `make install` or `make install-windows` if you are on windows to apply the changes.
 
@@ -69,14 +65,14 @@ It will create a release in github and push this version to the Terraform Regist
 
 ### Run the plugin
 
-You can run the examples (navigate to `examples`, if so you can modify the master `main.tf` to point to the correct resource) or create custom files.
+You can run the examples (navigate to `testing`, if so you can modify the master `main.tf` to point to the correct resource) or create custom files.
 
 Then run `terraform init && terraform apply --auto-approve`: this will create the required resources.
 If you made some changes you can run it again to update the resources.
 
 You can use `terraform init && terraform destroy --auto-approve`: this will delete the created resources.
 
-You can also import existing resources (navigate to `examples/imports`):
+You can also import existing resources (navigate to `testing/imports`):
 You can use `terraform init && terraform import leanspace_nodes.sample_node 3563e0f6-03e3-416f-96f5-6c7102e37a11`: this will import the node with the id 3563e0f6-03e3-416f-96f5-6c7102e37a11 in the resource named sample_node
 
 ## Provider
@@ -107,11 +103,11 @@ To build the documentation locally, clone and build the [docs plugin](https://gi
 
 ## Examples
 
-You can find examples in the `/examples` folder.
+You can find examples in the `/examples` folder (visible to the users) and `/testing`.
 
 ### Structure
 
-The `main.tf` file imports all other modules. All modules are then organised per service, per resource: `examples/{service}/{resource}/main.tf`
+The `main.tf` file imports all other modules. All modules are then organised per service, per resource: `testing/{service}/{resource}/main.tf`
 
 The available resources per service are:
 - activities:
@@ -123,7 +119,7 @@ The available resources per service are:
   - analysis_definitions: it has one `leanspace_analysis_definitions` resource, with a basic analysis definition configuration.
 - asset:
   - nodes: it has 2 `leanspace_nodes` resources, one inside the other.
-  - properties: it has as many `leanspace_properties` resources as available types (8)
+  - properties: it has as many `leanspace_properties` resources as available types
   - units: it generates 7 `leanspace_units` that are variants of a custom unit.
 - commands:
   - command definition: it has one `leanspace_command_definitions` resource which has all possible metadata types (6) and all possible argument types (7)

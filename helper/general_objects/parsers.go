@@ -1,7 +1,9 @@
 package general_objects
 
 import (
+	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 )
@@ -129,9 +131,6 @@ func (attribute *DefinitionAttribute[T]) FromMap(attributeMap map[string]any) er
 		b := value.(bool)
 		attribute.Required = &b
 	}
-	if value, ok := attributeMap["default_value"]; ok {
-		attribute.DefaultValue = value.(T)
-	}
 	switch attribute.Type {
 	case "NUMERIC":
 		attribute.Min = attributeMap["min"].(float64)
@@ -151,6 +150,72 @@ func (attribute *DefinitionAttribute[T]) FromMap(attributeMap map[string]any) er
 	case "TIMESTAMP", "DATE", "TIME":
 		attribute.Before = attributeMap["before"].(string)
 		attribute.After = attributeMap["after"].(string)
+	case "BOOLEAN":
+		// no extra field
+	case "ARRAY":
+		attribute.MinSize = attributeMap["min_size"].(int)
+		attribute.MaxSize = attributeMap["max_size"].(int)
+		attribute.Unique = attributeMap["unique"].(bool)
+		if len(attributeMap["constraint"].([]any)) > 0 {
+			err := attribute.Constraint.FromMap(attributeMap["constraint"].([]any)[0].(map[string]any))
+			if err != nil {
+				return err
+			}
+		}
+
+	}
+	if defaultValue, ok := attributeMap["default_value"]; ok {
+		if attribute.Type == "ARRAY" {
+			var stringDefaultValues []string = strings.Split(defaultValue.(string), ",")
+			var interfaceOfDefaultValues []interface{}
+			for _, str := range stringDefaultValues {
+				var stringValue = strings.TrimSpace(str)
+				switch attribute.Constraint.Type {
+				case "NUMERIC":
+					if numericValue, err := strconv.ParseFloat(stringValue, 64); err == nil {
+						interfaceOfDefaultValues = append(interfaceOfDefaultValues, numericValue)
+					}
+				case "ENUM":
+					if enumValue, err := strconv.ParseInt(stringValue, 10, 16); err == nil {
+						interfaceOfDefaultValues = append(interfaceOfDefaultValues, enumValue)
+					}
+				case "BOOLEAN":
+					if booleanValue, err := strconv.ParseBool(stringValue); err == nil {
+						interfaceOfDefaultValues = append(interfaceOfDefaultValues, booleanValue)
+					}
+				case "TEXT", "TIMESTAMP", "DATE", "TIME":
+					interfaceOfDefaultValues = append(interfaceOfDefaultValues, stringValue)
+				}
+			}
+			attribute.DefaultValue = any(interfaceOfDefaultValues).(T)
+		} else {
+			attribute.DefaultValue = defaultValue.(T)
+		}
+	}
+	return nil
+}
+
+func (constraint *ArrayConstraint[T]) FromMap(constraintMap map[string]any) error {
+	constraint.Type = constraintMap["type"].(string)
+	switch constraint.Type {
+	case "NUMERIC":
+		constraint.Min = constraintMap["min"].(float64)
+		constraint.Max = constraintMap["max"].(float64)
+		constraint.Scale = constraintMap["scale"].(int)
+		constraint.Precision = constraintMap["precision"].(int)
+		constraint.UnitId = constraintMap["unit_id"].(string)
+	case "ENUM":
+		if constraintMap["options"] != nil {
+			option := constraintMap["options"].(map[string]any)
+			constraint.Options = &option
+		}
+	case "TEXT":
+		constraint.MinLength = constraintMap["min_length"].(int)
+		constraint.MaxLength = constraintMap["max_length"].(int)
+		constraint.Pattern = constraintMap["pattern"].(string)
+	case "TIMESTAMP", "DATE", "TIME":
+		constraint.Before = constraintMap["before"].(string)
+		constraint.After = constraintMap["after"].(string)
 	case "BOOLEAN":
 		// no extra field
 	}
@@ -209,6 +274,52 @@ func (attribute *DefinitionAttribute[T]) ToMap() map[string]any {
 		if attribute.Options != nil {
 			attributeMap["options"] = *attribute.Options
 		}
+	case "ARRAY":
+		attributeMap["min_size"] = attribute.MinSize
+		attributeMap["max_size"] = attribute.MaxSize
+		attributeMap["unique"] = attribute.Unique
+		attributeMap["constraint"] = []any{attribute.Constraint.ToMap()}
+		if any(attribute.DefaultValue) != nil {
+			var defaultValue string
+			var interfaceArrayDefaultValues []interface{} = any(attribute.DefaultValue).([]interface{})
+			for _, value := range interfaceArrayDefaultValues {
+				defaultValue = defaultValue + "," + fmt.Sprint(value)
+			}
+			attributeMap["default_value"] = strings.TrimPrefix(defaultValue, ",")
+		}
 	}
 	return attributeMap
+}
+
+func (constraint *ArrayConstraint[T]) ToMap() map[string]any {
+	constraintMap := make(map[string]any)
+
+	constraintMap["type"] = constraint.Type
+
+	if constraint.Required != nil {
+		constraintMap["required"] = constraint.Required
+	}
+
+	switch constraint.Type {
+	case "TEXT":
+		constraintMap["min_length"] = constraint.MinLength
+		constraintMap["max_length"] = constraint.MaxLength
+		constraintMap["pattern"] = constraint.Pattern
+	case "NUMERIC":
+		constraintMap["min"] = constraint.Min
+		constraintMap["max"] = constraint.Max
+		constraintMap["scale"] = constraint.Scale
+		constraintMap["precision"] = constraint.Precision
+		constraintMap["unit_id"] = constraint.UnitId
+	case "BOOLEAN":
+		//nothing
+	case "TIMESTAMP", "DATE", "TIME":
+		constraintMap["before"] = constraint.Before
+		constraintMap["after"] = constraint.After
+	case "ENUM":
+		if constraint.Options != nil {
+			constraintMap["options"] = *constraint.Options
+		}
+	}
+	return constraintMap
 }

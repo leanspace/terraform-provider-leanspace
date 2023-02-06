@@ -1,5 +1,5 @@
 TEST?=$$(go list ./... | grep -v 'vendor')
-HOSTNAME=app.terraform.io
+HOSTNAME=registry.terraform.io
 NAMESPACE=leanspace
 NAME=leanspace
 BINARY=terraform-provider-${NAME}
@@ -36,9 +36,10 @@ else
     endif
 endif
 
-ifeq ($(OS_ARCH),"")
+ifeq ($(OS_ARCH),)
     OS_ARCH=${PLATFORM}_${ARCHITECTURE}
 endif
+
 
 default: install
 

@@ -71,11 +71,24 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 			Description:  helper.AllowedValuesToDescription(validNodeKinds),
 		},
 		"tags": general_objects.TagsSchema,
+		"number_of_children": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Numeric only",
+		},
+		// The following fields are part of V1 properties in the API that have been marked as deprecated for node updates.
+		// In terraform, an update occurs when using `terraform apply` multiple times on the same resource with different field values.
+		// When these fields are deleted in the API, we suggest to follow these steps during node updates :
+		// 1- Do not change this schema so that the user is not impacted by this deprecation
+		// 2- Update the built-in properties :
+		// 		- Call the endpoint https://api.develop.leanspace.io/asset-repository/properties/v2 to retrieve all the built-in properties.
+		//		- For each built-in property, call the endpoint https://api.develop.leanspace.io/asset-repository/properties/v2/{propertyId} to update the property
+		//		Hint: you can create a request.go file with a PostUpdateProcess function
 		"norad_id": {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validation.StringMatch(regexp.MustCompile(`^\d{5}$`), "It must be 5 digits"),
-			Description:  "It must be 5 digits",
+			Description:  "It must be 5 digits.",
 		},
 		"international_designator": {
 			Type:         schema.TypeString,
@@ -90,23 +103,22 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 			Elem: &schema.Schema{
 				Type: schema.TypeString,
 			},
-			Description: "TLE composed of its 2 lines",
+			Description: "TLE composed of its 2 lines.",
 		},
-		// These fields are *required* when kind = GROUND_STATION
-		// However currently I don't think there is a way to have conditionally required fields
-		// A solution would be creating a new "ground station" schema, if we want to ensure type safety
-		// For now this does the job!
 		"latitude": {
-			Type:     schema.TypeFloat,
-			Optional: true,
+			Type:        schema.TypeFloat,
+			Optional:    true,
+			Description: "Only for ground stations",
 		},
 		"longitude": {
-			Type:     schema.TypeFloat,
-			Optional: true,
+			Type:        schema.TypeFloat,
+			Optional:    true,
+			Description: "Only for ground stations",
 		},
 		"elevation": {
-			Type:     schema.TypeFloat,
-			Optional: true,
+			Type:        schema.TypeFloat,
+			Optional:    true,
+			Description: "Only for ground stations",
 		},
 	}
 
@@ -124,38 +136,55 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{
-	"parent_node_ids": {
+	"created_by": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: validation.IsUUID,
+		Description:  "Filter on the user who created the Node. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	},
+	"from_created_at": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+		Description:  "Filter on the Node creation date. Properties with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	},
+	"from_last_modified_at": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+		Description:  "Filter on the Node last modification date. Nodes with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	},
+	"last_modified_by": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: validation.IsUUID,
+		Description:  "Filter on the user who modified last the Node. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	},
+	"to_created_at": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+		Description:  "Filter on the Node creation date. Nodes with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	},
+	"to_last_modified_at": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+		Description:  "Filter on the Node last modification date. Nodes with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	},
+	"ids": {
 		Type:     schema.TypeList,
 		Optional: true,
 		Elem: &schema.Schema{
 			Type:         schema.TypeString,
 			ValidateFunc: validation.IsUUID,
 		},
+		Description: "Only returns node whose id matches one of the provided values.",
 	},
-	"property_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-	},
-	"metric_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-	},
-	"types": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.StringInSlice(validNodeTypes, false),
-			Description:  helper.AllowedValuesToDescription(validNodeTypes),
-		},
+	"is_root_node": {
+		Type:        schema.TypeBool,
+		Optional:    true,
+		Description: "Show only Root Nodes, or hide only Root Nodes. true: select Root Nodes only - false: select Nodes with Parent only",
 	},
 	"kinds": {
 		Type:     schema.TypeList,
@@ -164,6 +193,28 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 			Type:         schema.TypeString,
 			ValidateFunc: validation.StringInSlice(validNodeKinds, false),
 			Description:  helper.AllowedValuesToDescription(validNodeKinds),
+		},
+	},
+	"parent_node_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"query": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Search by name or description",
+	},
+	"types": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringInSlice(validNodeTypes, false),
+			Description:  helper.AllowedValuesToDescription(validNodeTypes),
 		},
 	},
 	"tags": {
