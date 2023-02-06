@@ -15,16 +15,21 @@ description: |-
 data "leanspace_nodes" "all" {
   filters {
     parent_node_ids = []
-    property_ids    = []
-    metric_ids      = []
     types           = ["ASSET"]
-    kinds           = ["SATELLITE"]
-    tags            = []
-    ids             = []
-    query           = ""
-    page            = 0
-    size            = 10
-    sort            = ["name,asc"]
+    is_root_node    = true
+    created_by            = null
+    from_created_at       = null
+    last_modified_by      = null
+    to_created_at         = null
+    from_last_modified_at = null
+    to_last_modified_at   = null
+    ids                   = []
+    kinds                 = []
+    query                 = ""
+    tags                  = []
+    page                  = 0
+    size                  = 10
+    sort                  = ["name,asc"]
   }
 }
 ```
@@ -56,16 +61,21 @@ data "leanspace_nodes" "all" {
 
 Optional:
 
-- `ids` (List of String)
+- `created_by` (String) Filter on the user who created the Node. If you have no wish to use this field as a filter, either provide a null value or remove the field.
+- `from_created_at` (String) Filter on the Node creation date. Properties with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
+- `from_last_modified_at` (String) Filter on the Node last modification date. Nodes with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
+- `ids` (List of String) Only returns node whose id matches one of the provided values.
+- `is_root_node` (Boolean) Show only Root Nodes, or hide only Root Nodes. true: select Root Nodes only - false: select Nodes with Parent only
 - `kinds` (List of String)
-- `metric_ids` (List of String)
+- `last_modified_by` (String) Filter on the user who modified last the Node. If you have no wish to use this field as a filter, either provide a null value or remove the field.
 - `page` (Number)
 - `parent_node_ids` (List of String)
-- `property_ids` (List of String)
-- `query` (String)
+- `query` (String) Search by name or description
 - `size` (Number)
 - `sort` (List of String)
 - `tags` (List of String)
+- `to_created_at` (String) Filter on the Node creation date. Nodes with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
+- `to_last_modified_at` (String) Filter on the Node last modification date. Nodes with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
 - `types` (List of String)
 
 
@@ -88,6 +98,7 @@ Read-Only:
 - `name` (String)
 - `nodes` (Set of Object) (see [below for nested schema](#nestedobjatt--content--nodes))
 - `norad_id` (String)
+- `number_of_children` (Number)
 - `parent_node_id` (String)
 - `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
 - `tle` (List of String)
@@ -111,6 +122,7 @@ Read-Only:
 - `longitude` (Number)
 - `name` (String)
 - `norad_id` (String)
+- `number_of_children` (Number)
 - `parent_node_id` (String)
 - `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--nodes--tags))
 - `tle` (List of String)

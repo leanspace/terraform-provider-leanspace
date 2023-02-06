@@ -14,15 +14,22 @@ description: |-
 ```terraform
 data "leanspace_properties" "all" {
   filters {
-    node_ids   = [var.node_id]
-    node_types = ["ASSET"]
-    node_kinds = ["SATELLITE"]
-    tags       = []
-    ids        = []
-    query      = ""
-    page       = 0
-    size       = 10
-    sort       = ["name,asc"]
+    node_ids              = [var.node_id]
+    category              = ""
+    created_by            = null
+    from_created_at       = null
+    last_modified_by      = null
+    to_created_at         = null
+    from_last_modified_at = null
+    to_last_modified_at   = null
+    ids                   = []
+    kinds                 = []
+    node_types            = []
+    query                 = ""
+    tags                  = []
+    page                  = 0
+    size                  = 10
+    sort                  = ["name,asc"]
   }
 }
 ```
@@ -54,15 +61,22 @@ data "leanspace_properties" "all" {
 
 Optional:
 
-- `ids` (List of String)
-- `node_ids` (List of String)
-- `node_kinds` (List of String)
+- `category` (String) Allowed values : BUILT_IN_PROPERTIES_ONLY, USER_PROPERTIES_ONLY, ALL_PROPERTIES
+- `created_by` (String) Filter on the user who created the Property. If you have no wish to use this field as a filter, either provide a null value or remove the field.
+- `from_created_at` (String) Filter on the Property creation date. Properties with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
+- `from_last_modified_at` (String) Filter on the Property last modification date. Properties with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
+- `ids` (List of String) Only returns property whose id matches one of the provided values.
+- `kinds` (List of String) Allowed values : GENERIC, SATELLITE, GROUND_STATION
+- `last_modified_by` (String) Filter on the user who modified last the Property. If you have no wish to use this field as a filter, either provide a null value or remove the field.
+- `node_ids` (List of String) Only returns node whose id matches one of the provided values
 - `node_types` (List of String)
 - `page` (Number)
-- `query` (String)
+- `query` (String) Search by name or description
 - `size` (Number)
 - `sort` (List of String)
 - `tags` (List of String)
+- `to_created_at` (String) Filter on the Property creation date. Properties with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
+- `to_last_modified_at` (String) Filter on the Property last modification date. Properties with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
 
 
 <a id="nestedatt--content"></a>
@@ -72,6 +86,7 @@ Read-Only:
 
 - `after` (String)
 - `before` (String)
+- `built_in` (Boolean)
 - `created_at` (String)
 - `created_by` (String)
 - `description` (String)
@@ -108,14 +123,11 @@ Read-Only:
 
 Read-Only:
 
-- `created_at` (String)
-- `created_by` (String)
-- `description` (String)
-- `id` (String)
-- `last_modified_at` (String)
-- `last_modified_by` (String)
-- `name` (String)
-- `type` (String)
+- `max` (Number)
+- `min` (Number)
+- `precision` (Number)
+- `scale` (Number)
+- `unit_id` (String)
 - `value` (String)
 
 
@@ -124,14 +136,11 @@ Read-Only:
 
 Read-Only:
 
-- `created_at` (String)
-- `created_by` (String)
-- `description` (String)
-- `id` (String)
-- `last_modified_at` (String)
-- `last_modified_by` (String)
-- `name` (String)
-- `type` (String)
+- `max` (Number)
+- `min` (Number)
+- `precision` (Number)
+- `scale` (Number)
+- `unit_id` (String)
 - `value` (String)
 
 
@@ -140,14 +149,11 @@ Read-Only:
 
 Read-Only:
 
-- `created_at` (String)
-- `created_by` (String)
-- `description` (String)
-- `id` (String)
-- `last_modified_at` (String)
-- `last_modified_by` (String)
-- `name` (String)
-- `type` (String)
+- `max` (Number)
+- `min` (Number)
+- `precision` (Number)
+- `scale` (Number)
+- `unit_id` (String)
 - `value` (String)
 
 

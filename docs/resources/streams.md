@@ -12,6 +12,16 @@ description: |-
 ## Example Usage
 
 ```terraform
+variable "asset_id" {
+  type        = string
+  description = "The ID of the node to which the stream will be added."
+}
+
+variable "numeric_metric_id" {
+  type        = string
+  description = "The ID of a numeric metric to which the stream will be mapped."
+}
+
 resource "leanspace_streams" "stream" {
   name     = "Terraform Stream"
   asset_id = var.asset_id

@@ -12,13 +12,74 @@ description: |-
 ## Example Usage
 
 ```terraform
-resource "leanspace_metrics" "metric" {
-  name        = "Terra Metric"
-  description = "A numeric metric, created under terraform."
+variable "node_id" {
+  type        = string
+  description = "The ID of the node to which the metrics will be added."
+}
+
+resource "leanspace_metrics" "test_numeric" {
+  name        = "Terra Number Metric"
+  description = "A numeric metric, entirely created under terraform."
   node_id     = var.node_id
 
   attributes {
     type = "NUMERIC"
+  }
+}
+
+resource "leanspace_metrics" "test_text" {
+  name        = "Terra Text Metric"
+  description = "A text metric, entirely created under terraform."
+  node_id     = var.node_id
+  attributes {
+    type = "TEXT"
+  }
+}
+
+resource "leanspace_metrics" "test_bool" {
+  name        = "Terra Boolean Metric"
+  description = "A boolean metric, entirely created under terraform."
+  node_id     = var.node_id
+  attributes {
+    type = "BOOLEAN"
+  }
+}
+
+
+resource "leanspace_metrics" "test_timestamp" {
+  name        = "Terra Timestamp Metric"
+  description = "A timestamp metric, entirely created under terraform."
+  node_id     = var.node_id
+  attributes {
+    type = "TIMESTAMP"
+  }
+}
+
+resource "leanspace_metrics" "test_date" {
+  name        = "Terra Date Metric"
+  description = "A date metric, entirely created under terraform."
+  node_id     = var.node_id
+  attributes {
+    type = "DATE"
+  }
+}
+
+resource "leanspace_metrics" "test_enum" {
+  name        = "Terra Enum Metric"
+  description = "An enumeration metric, entirely created under terraform."
+  node_id     = var.node_id
+  attributes {
+    options = { 1 = "test" }
+    type    = "ENUM"
+  }
+}
+
+resource "leanspace_metrics" "test_binary" {
+  name        = "Terra Binary Metric"
+  description = "A binary metric, entirely created under terraform."
+  node_id     = var.node_id
+  attributes {
+    type = "BINARY"
   }
 }
 ```
@@ -50,21 +111,48 @@ resource "leanspace_metrics" "metric" {
 
 Required:
 
-- `type` (String) it must be one of these values: NUMERIC, BOOLEAN, TEXT, DATE, TIMESTAMP, ENUM, BINARY
+- `type` (String) it must be one of these values: NUMERIC, BOOLEAN, TEXT, DATE, TIMESTAMP, ENUM, BINARY, ARRAY
 
 Optional:
 
 - `after` (String) Time/date/timestamp only: Minimum date allowed
 - `before` (String) Time/date/timestamp only: Maximum date allowed
+- `constraint` (Block List, Max: 1) Array only: Constraint applied to all elements in the array (see [below for nested schema](#nestedblock--attributes--constraint))
 - `max` (Number) Numeric only
 - `max_length` (Number) Text only: Maximum length of this text (at least 1)
+- `max_size` (Number) Array only: The maximum number of elements allowed
 - `min` (Number) Numeric only
 - `min_length` (Number) Text only: Minimum length of this text (at least 1)
+- `min_size` (Number) Array only: The minimum number of elements allowed
 - `options` (Map of String) Enum only: The allowed values for the enum in the format 1 = "value"
 - `pattern` (String) Text only: Regex defined the allowed pattern of this text
 - `precision` (Number) Numeric only: How many values after the comma should be accepted
 - `scale` (Number) Numeric only
+- `unique` (Boolean) Array only: No duplicated elements are allowed
 - `unit_id` (String) Numeric only
+
+<a id="nestedblock--attributes--constraint"></a>
+### Nested Schema for `attributes.constraint`
+
+Required:
+
+- `type` (String) it must be one of these values: NUMERIC, BOOLEAN, TEXT, DATE, TIME, TIMESTAMP, ENUM
+
+Optional:
+
+- `after` (String) Only array elements with time/date/timestamp type : Minimum date allowed
+- `before` (String) Only array elements with time/date/timestamp type : Maximum date allowed
+- `max` (Number) Only array elements with numeric type : maximum value allowed
+- `max_length` (Number) Only array elements with text type: Maximum length of this text (at least 1)
+- `min` (Number) Only array elements with numeric type : minimum value allowed
+- `min_length` (Number) Only array elements with text type: Minimum length of this text (at least 1)
+- `options` (Map of String) Only array elements with enum type : The allowed values for the enum in the format 1 = "value"
+- `pattern` (String) Only array elements with text type: Regex defined the allowed pattern of this text
+- `precision` (Number) Only array elements with numeric type : how many values after the comma should be accepted
+- `required` (Boolean)
+- `scale` (Number) Only array elements with numeric type
+- `unit_id` (String) Only array elements with numeric type
+
 
 
 <a id="nestedblock--tags"></a>

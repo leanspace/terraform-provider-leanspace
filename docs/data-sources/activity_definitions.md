@@ -94,7 +94,30 @@ Read-Only:
 
 - `after` (String)
 - `before` (String)
+- `constraint` (List of Object) (see [below for nested schema](#nestedobjatt--content--argument_definitions--attributes--constraint))
 - `default_value` (String)
+- `max` (Number)
+- `max_length` (Number)
+- `max_size` (Number)
+- `min` (Number)
+- `min_length` (Number)
+- `min_size` (Number)
+- `options` (Map of String)
+- `pattern` (String)
+- `precision` (Number)
+- `required` (Boolean)
+- `scale` (Number)
+- `type` (String)
+- `unique` (Boolean)
+- `unit_id` (String)
+
+<a id="nestedobjatt--content--argument_definitions--attributes--constraint"></a>
+### Nested Schema for `content.argument_definitions.attributes.unit_id`
+
+Read-Only:
+
+- `after` (String)
+- `before` (String)
 - `max` (Number)
 - `max_length` (Number)
 - `min` (Number)
@@ -106,6 +129,7 @@ Read-Only:
 - `scale` (Number)
 - `type` (String)
 - `unit_id` (String)
+
 
 
 

@@ -12,11 +12,165 @@ description: |-
 ## Example Usage
 
 ```terraform
-resource "leanspace_properties" "property" {
-  name    = "Text Property"
-  node_id = var.node_id
-  type    = "TEXT"
-  value   = "Hello World!"
+variable "node_id" {
+  type        = string
+  description = "The ID of the node to which the properties will be added."
+}
+
+resource "leanspace_properties" "numeric_node_property" {
+  name        = "TestTerraformNumeric"
+  description = "TestTerraformNumericDescription"
+  node_id     = var.node_id
+  type = "NUMERIC"
+  value = 100
+  min = 50
+  max = 200
+  scale = 0
+  precision = 0
+  unit_id = null
+    tags {
+    key   = "Key1"
+    value = "Value1"
+  }
+  tags {
+    key   = "Key2"
+    value = "Value2"
+  }
+}
+
+resource "leanspace_properties" "text_node_property" {
+  name        = "TestTerraformText"
+  description = "TestTerraformTextDescription"
+  node_id     = var.node_id
+  type = "TEXT"
+  value = "leanspace"
+  min_length = 2
+  max_length = 15
+  tags {
+    key   = "Key1"
+    value = "Value1"
+  }
+  tags {
+    key   = "Key2"
+    value = "Value2"
+  }
+}
+
+resource "leanspace_properties" "enum_node_property" {
+  name        = "TestTerraformEnum"
+  description = "TestTerraformEnumDescription"
+  node_id     = var.node_id
+  type = "ENUM"
+  value = 2
+  options  = { 
+      1 = "value1"
+      2 = "value2"
+      3 = "value3"
+  }
+  tags {
+    key   = "Key1"
+    value = "Value1"
+  }
+  tags {
+    key   = "Key2"
+    value = "Value2"
+  }
+}
+
+resource "leanspace_properties" "timestamp_node_property" {
+  name        = "TestTerraformTimestamp"
+  description = "TestTerraformTimestampDescription"
+  node_id     = var.node_id
+  type = "TIMESTAMP"
+  value = "2023-01-30T00:00:00Z"
+  before  = "2023-01-31T20:00:00Z"
+  after = "2023-01-29T00:00:00Z"
+  tags {
+    key   = "Key1"
+    value = "Value1"
+  }
+  tags {
+    key   = "Key2"
+    value = "Value2"
+  }
+}
+
+resource "leanspace_properties" "date_node_property" {
+  name        = "TestTerraformDate"
+  description = "TestTerraformDateDescription"
+  node_id     = var.node_id
+  type = "DATE"
+  value = "2023-05-01"
+  before  = "2023-08-01"
+  after = "2023-01-01"
+  tags {
+    key   = "Key1"
+    value = "Value1"
+  }
+  tags {
+    key   = "Key2"
+    value = "Value2"
+  }
+}
+
+resource "leanspace_properties" "time_node_property" {
+  name        = "TestTerraformTime"
+  description = "TestTerraformTimeDescription"
+  node_id     = var.node_id
+  type = "TIME"
+  value = "10:00:00"
+  before  = "20:00:00"
+  after = "08:00:00"
+  tags {
+    key   = "Key1"
+    value = "Value1"
+  }
+  tags {
+    key   = "Key2"
+    value = "Value2"
+  }
+}
+
+resource "leanspace_properties" "boolean_node_property" {
+  name        = "TestTerraformBoolean"
+  description = "TestTerraformBooleanDescription"
+  node_id     = var.node_id
+  type = "BOOLEAN"
+  value = true
+  tags {
+    key   = "Key1"
+    value = "Value1"
+  }
+  tags {
+    key   = "Key2"
+    value = "Value2"
+  }
+}
+
+resource "leanspace_properties" "geopoint_node_property" {
+  name        = "TestTerraformGeopoint"
+  description = "TestTerraformGeopointDescription"
+  node_id     = var.node_id
+  type = "GEOPOINT"
+  fields {
+    elevation {
+      value = 141.0
+    } 
+    latitude {
+      value = 48.5
+    } 
+    longitude {
+      value = 7.7
+    }
+  }
+  tags {
+    key   = "Key1"
+    value = "Value1"
+  }
+  tags {
+    key   = "Key2"
+    value = "Value2"
+  }
 }
 ```
 
@@ -27,7 +181,7 @@ resource "leanspace_properties" "property" {
 
 - `name` (String)
 - `node_id` (String)
-- `type` (String) it must be one of these values: NUMERIC, ENUM, TEXT, TIMESTAMP, DATE, TIME, BOOLEAN, GEOPOINT
+- `type` (String) it must be one of these values: NUMERIC, ENUM, TEXT, TIMESTAMP, DATE, TIME, BOOLEAN, GEOPOINT, TLE
 
 ### Optional
 
@@ -49,6 +203,7 @@ resource "leanspace_properties" "property" {
 
 ### Read-Only
 
+- `built_in` (Boolean) Indicates if it is a build-in property.
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it
 - `id` (String) The ID of this resource.
@@ -67,67 +222,40 @@ Required:
 <a id="nestedblock--fields--elevation"></a>
 ### Nested Schema for `fields.elevation`
 
-Required:
-
-- `name` (String)
-- `type` (String) it must be one of these values: NUMERIC, ENUM, TEXT, TIMESTAMP, DATE, TIME, BOOLEAN, GEOPOINT
-
 Optional:
 
-- `description` (String)
+- `max` (Number) Property field with numeric type only: the maximum value allowed.
+- `min` (Number) Property field with numeric type only: the minimum value allowed.
+- `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
+- `scale` (Number) Property field with numeric type only: the scale required.
+- `unit_id` (String) Property field with numeric type only
 - `value` (String)
-
-Read-Only:
-
-- `created_at` (String) When it was created
-- `created_by` (String) Who created it
-- `id` (String) The ID of this resource.
-- `last_modified_at` (String) When it was last modified
-- `last_modified_by` (String) Who modified it the last
 
 
 <a id="nestedblock--fields--latitude"></a>
 ### Nested Schema for `fields.latitude`
 
-Required:
-
-- `name` (String)
-- `type` (String) it must be one of these values: NUMERIC, ENUM, TEXT, TIMESTAMP, DATE, TIME, BOOLEAN, GEOPOINT
-
 Optional:
 
-- `description` (String)
+- `max` (Number) Property field with numeric type only: the maximum value allowed.
+- `min` (Number) Property field with numeric type only: the minimum value allowed.
+- `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
+- `scale` (Number) Property field with numeric type only: the scale required.
+- `unit_id` (String) Property field with numeric type only
 - `value` (String)
-
-Read-Only:
-
-- `created_at` (String) When it was created
-- `created_by` (String) Who created it
-- `id` (String) The ID of this resource.
-- `last_modified_at` (String) When it was last modified
-- `last_modified_by` (String) Who modified it the last
 
 
 <a id="nestedblock--fields--longitude"></a>
 ### Nested Schema for `fields.longitude`
 
-Required:
-
-- `name` (String)
-- `type` (String) it must be one of these values: NUMERIC, ENUM, TEXT, TIMESTAMP, DATE, TIME, BOOLEAN, GEOPOINT
-
 Optional:
 
-- `description` (String)
+- `max` (Number) Property field with numeric type only: the maximum value allowed.
+- `min` (Number) Property field with numeric type only: the minimum value allowed.
+- `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
+- `scale` (Number) Property field with numeric type only: the scale required.
+- `unit_id` (String) Property field with numeric type only
 - `value` (String)
-
-Read-Only:
-
-- `created_at` (String) When it was created
-- `created_by` (String) Who created it
-- `id` (String) The ID of this resource.
-- `last_modified_at` (String) When it was last modified
-- `last_modified_by` (String) Who modified it the last
 
 
 

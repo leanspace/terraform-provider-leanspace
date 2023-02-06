@@ -12,13 +12,19 @@ description: |-
 ## Example Usage
 
 ```terraform
-resource "leanspace_plugins" "plugin" {
+variable "path" {
+  type        = string
+  description = "The path to the plugin's source code file (a .jar)."
+}
+
+resource "leanspace_plugins" "test" {
   file_path                            = var.path
   type                                 = "COMMANDS_COMMAND_TRANSFORMER_PLUGIN_TYPE"
   implementation_class_name            = "io.myplugin.SimpleCommandTransformer"
   name                                 = "Terraform Command Transformer Plugin"
   description                          = "This is a plugin created through terraform!"
   source_code_file_download_authorized = true
+  sdk_version                          = "2.1.2"
 }
 ```
 
@@ -35,12 +41,15 @@ resource "leanspace_plugins" "plugin" {
 ### Optional
 
 - `description` (String)
+- `sdk_version` (String) SDK version in the semantic version format with major versions 1 or 2.
 - `source_code_file_download_authorized` (Boolean)
 
 ### Read-Only
 
-- `created_at` (String) When it was created
-- `created_by` (String) Who created it
+- `created_at` (String) When the plugin was created
+- `created_by` (String) Who created the plugin
 - `id` (String) The ID of this resource.
-- `last_modified_at` (String) When it was last modified
-- `last_modified_by` (String) Who modified it the last
+- `last_modified_at` (String) When the plugin was last modified
+- `last_modified_by` (String) Who modified the plugin the last
+- `sdk_version_family` (String) SDK family that indicates the major version.
+- `status` (String) Plugin status. Can be ACTIVE, PENDING or FAILED

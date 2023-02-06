@@ -54,7 +54,7 @@ data "leanspace_plugins" "all" {
 
 Optional:
 
-- `ids` (List of String)
+- `ids` (List of String) Only returns plugin whose id matches one of the provided values.
 - `page` (Number)
 - `query` (String)
 - `size` (Number)
@@ -76,7 +76,10 @@ Read-Only:
 - `last_modified_at` (String)
 - `last_modified_by` (String)
 - `name` (String)
+- `sdk_version` (String)
+- `sdk_version_family` (String)
 - `source_code_file_download_authorized` (Boolean)
+- `status` (String)
 - `type` (String)
 
 

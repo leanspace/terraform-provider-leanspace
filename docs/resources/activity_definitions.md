@@ -26,25 +26,125 @@ resource "leanspace_activity_definitions" "activity_definition" {
       type  = "NUMERIC"
     }
   }
+  metadata {
+    name        = "ActivityMetadataText"
+    description = "A text metadata value"
+    attributes {
+      value = "test"
+      type  = "TEXT"
+    }
+  }
+  metadata {
+    name        = "ActivityMetadataBool"
+    description = "A boolean metadata value"
+    attributes {
+      value = true
+      type  = "BOOLEAN"
+    }
+  }
+  metadata {
+    name        = "ActivityMetadataTimestamp"
+    description = "A timestamp metadata value"
+    attributes {
+      value = "2022-06-30T13:57:23Z"
+      type  = "TIMESTAMP"
+    }
+  }
+  metadata {
+    name        = "ActivityMetadataDate"
+    description = "A date metadata value"
+    attributes {
+      value = "2022-06-30"
+      type  = "DATE"
+    }
+  }
+  metadata {
+    name        = "ActivityMetadataTime"
+    description = "A time metadata value"
+    attributes {
+      value = "10:37:19"
+      type  = "TIME"
+    }
+  }
 
+argument_definitions {
+    name        = "ActivityArgumentNumeric"
+    description = "A numeric input"
+    attributes {
+      default_value = 2
+      type          = "NUMERIC"
+      required      = true
+    }
+  }
   argument_definitions {
     name        = "ActivityArgumentText"
     description = "A text input"
     attributes {
-      type = "TEXT"
+      default_value = "test"
+      type          = "TEXT"
+    }
+  }
+  argument_definitions {
+    name        = "ActivityArgumentBool"
+    description = "A boolean input"
+    attributes {
+      default_value = true
+      type          = "BOOLEAN"
+      required      = true
+    }
+  }
+  argument_definitions {
+    name        = "ActivityArgumentTimestamp"
+    description = "A timestamp input"
+    attributes {
+      default_value = "2022-06-30T13:57:23Z"
+      type          = "TIMESTAMP"
+      required      = true
+    }
+  }
+  argument_definitions {
+    name        = "ActivityArgumentDate"
+    description = "A date input"
+    attributes {
+      default_value = "2022-06-30"
+      type          = "DATE"
+      required      = true
+    }
+  }
+  argument_definitions {
+    name        = "ActivityArgumentTime"
+    description = "A time input"
+    attributes {
+      default_value = "10:37:19"
+      type          = "TIME"
+      required      = true
+    }
+  }
+  argument_definitions {
+    name        = "ActivityArgumentEnum"
+    description = "An enum input"
+    attributes {
+      default_value = 1
+      options       = { 1 = "test" }
+      type          = "ENUM"
+      required      = true
     }
   }
 
   command_mappings {
-    command_definition_id = var.command_definition_id
+    command_definition_id = var.command_definition.id
     delay_in_milliseconds = 0
     metadata_mappings {
+      activity_definition_metadata_name = "ActivityMetadataText"
+      command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "TEXT")].name
+    }
+    metadata_mappings {
       activity_definition_metadata_name = "ActivityMetadataNumeric"
-      command_definition_argument_name  = "CommandArgumentNumeric"
+      command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "NUMERIC")].name
     }
     argument_mappings {
-      activity_definition_argument_name = "ActivityArgumentText"
-      command_definition_argument_name  = "CommandArgumentText"
+      activity_definition_argument_name = "ActivityArgumentEnum"
+      command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "ENUM")].name
     }
   }
 }
@@ -95,23 +195,50 @@ Read-Only:
 
 Required:
 
-- `type` (String) it must be one of these values: NUMERIC, BOOLEAN, TEXT, DATE, TIME, TIMESTAMP, ENUM
+- `type` (String) it must be one of these values: NUMERIC, BOOLEAN, TEXT, DATE, TIME, TIMESTAMP, ENUM, ARRAY
 
 Optional:
 
 - `after` (String) Time/date/timestamp only: Minimum date allowed
 - `before` (String) Time/date/timestamp only: Maximum date allowed
-- `default_value` (String)
+- `constraint` (Block List, Max: 1) Array only: Constraint applied to all elements in the array (see [below for nested schema](#nestedblock--argument_definitions--attributes--constraint))
+- `default_value` (String) The default value can be of any type. In case of an array type, please surround the list values with double quotes and use the comma separator.
 - `max` (Number) Numeric only
 - `max_length` (Number) Text only: Maximum length of this text (at least 1)
+- `max_size` (Number) Array only: The maximum number of elements allowed
 - `min` (Number) Numeric only
 - `min_length` (Number) Text only: Minimum length of this text (at least 1)
+- `min_size` (Number) Array only: The minimum number of elements allowed
 - `options` (Map of String) Enum only: The allowed values for the enum in the format 1 = "value"
 - `pattern` (String) Text only: Regex defined the allowed pattern of this text
 - `precision` (Number) Numeric only: How many values after the comma should be accepted
 - `required` (Boolean)
 - `scale` (Number) Numeric only
+- `unique` (Boolean) Array only: No duplicated elements are allowed
 - `unit_id` (String) Numeric only
+
+<a id="nestedblock--argument_definitions--attributes--constraint"></a>
+### Nested Schema for `argument_definitions.attributes.constraint`
+
+Required:
+
+- `type` (String) it must be one of these values: NUMERIC, BOOLEAN, TEXT, DATE, TIME, TIMESTAMP, ENUM
+
+Optional:
+
+- `after` (String) Only array elements with time/date/timestamp type : Minimum date allowed
+- `before` (String) Only array elements with time/date/timestamp type : Maximum date allowed
+- `max` (Number) Only array elements with numeric type : maximum value allowed
+- `max_length` (Number) Only array elements with text type: Maximum length of this text (at least 1)
+- `min` (Number) Only array elements with numeric type : minimum value allowed
+- `min_length` (Number) Only array elements with text type: Minimum length of this text (at least 1)
+- `options` (Map of String) Only array elements with enum type : The allowed values for the enum in the format 1 = "value"
+- `pattern` (String) Only array elements with text type: Regex defined the allowed pattern of this text
+- `precision` (Number) Only array elements with numeric type : how many values after the comma should be accepted
+- `required` (Boolean)
+- `scale` (Number) Only array elements with numeric type
+- `unit_id` (String) Only array elements with numeric type
+
 
 
 

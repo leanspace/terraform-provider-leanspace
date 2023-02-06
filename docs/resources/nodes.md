@@ -12,18 +12,30 @@ description: |-
 ## Example Usage
 
 ```terraform
-resource "leanspace_nodes" "group_node" {
-  name = "Group Node"
-  type = "GROUP"
+resource "leanspace_nodes" "test_nodes_root" {
+  name        = "TerraMission - 0.1"
+  description = "This is the root node for an entire mission made in terraform!"
+  type        = "GROUP"
+  tags {
+    key   = "key1"
+    value = "Value1"
+  }
+  tags {
+    key   = "key2"
+    value = "Value2"
+  }
 }
 
-resource "leanspace_nodes" "satellite_node" {
-  parent_node_id = leanspace_nodes.group_node.id
-  name           = "My Satellite"
-  description    = "A satellite made with Terraform."
+resource "leanspace_nodes" "test_nodes_satellite" {
+  parent_node_id = leanspace_nodes.test_nodes_root.id
+  name           = "TerraSatellite"
+  description    = "The satellite responsible for the terraform mission."
   type           = "ASSET"
   kind           = "SATELLITE"
-
+  tags {
+    key   = "key1"
+    value = "Value1"
+  }
   norad_id                 = "33462"
   international_designator = "33462A"
   tle = [
@@ -32,14 +44,19 @@ resource "leanspace_nodes" "satellite_node" {
   ]
 }
 
-resource "leanspace_nodes" "groundstation_node" {
-  parent_node_id = leanspace_nodes.group_node.id
-  name           = "My Ground Station"
+resource "leanspace_nodes" "test_nodes_groundstation" {
+  parent_node_id = leanspace_nodes.test_nodes_root.id
+  name           = "TerraGroundStation"
+  description    = "The satellite responsible for the terraform mission."
   type           = "ASSET"
   kind           = "GROUND_STATION"
   latitude       = 13.0344
   longitude      = 77.5116
   elevation      = 823
+  tags {
+    key   = "key1"
+    value = "Value1"
+  }
 }
 ```
 
@@ -54,15 +71,15 @@ resource "leanspace_nodes" "groundstation_node" {
 ### Optional
 
 - `description` (String)
-- `elevation` (Number)
+- `elevation` (Number) Only for ground stations
 - `international_designator` (String)
 - `kind` (String) it must be one of these values: GENERIC, SATELLITE, GROUND_STATION
-- `latitude` (Number)
-- `longitude` (Number)
-- `norad_id` (String) It must be 5 digits
+- `latitude` (Number) Only for ground stations
+- `longitude` (Number) Only for ground stations
+- `norad_id` (String) It must be 5 digits.
 - `parent_node_id` (String)
 - `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
-- `tle` (List of String) TLE composed of its 2 lines
+- `tle` (List of String) TLE composed of its 2 lines.
 
 ### Read-Only
 
@@ -72,6 +89,7 @@ resource "leanspace_nodes" "groundstation_node" {
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
 - `nodes` (Set of Object) (see [below for nested schema](#nestedatt--nodes))
+- `number_of_children` (Number) Numeric only
 
 <a id="nestedblock--tags"></a>
 ### Nested Schema for `tags`
@@ -103,6 +121,7 @@ Read-Only:
 - `longitude` (Number)
 - `name` (String)
 - `norad_id` (String)
+- `number_of_children` (Number)
 - `parent_node_id` (String)
 - `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--nodes--tags))
 - `tle` (List of String)

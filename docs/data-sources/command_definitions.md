@@ -19,6 +19,7 @@ data "leanspace_command_definitions" "all" {
     node_kinds                  = ["SATELLITE"]
     with_arguments_and_metadata = true
     ids                         = []
+    created_by                  = null
     query                       = ""
     page                        = 0
     size                        = 10
@@ -54,12 +55,13 @@ data "leanspace_command_definitions" "all" {
 
 Optional:
 
+- `created_by` (String) Filter on the user who created the Node. If you have no wish to use this field as a filter, either provide a null value or remove the field.
 - `ids` (List of String)
 - `node_ids` (List of String)
-- `node_kinds` (List of String)
-- `node_types` (List of String)
+- `node_kinds` (List of String) Filter on the Node kind. Allowed values : GENERIC, SATELLITE, GROUND_STATION
+- `node_types` (List of String) Filter on the Node type. Allowed values : GROUP, ASSET, COMPONENT
 - `page` (Number)
-- `query` (String)
+- `query` (String) Search by name or description
 - `size` (Number)
 - `sort` (List of String)
 - `with_arguments_and_metadata` (Boolean)
@@ -100,7 +102,30 @@ Read-Only:
 
 - `after` (String)
 - `before` (String)
+- `constraint` (List of Object) (see [below for nested schema](#nestedobjatt--content--arguments--attributes--constraint))
 - `default_value` (String)
+- `max` (Number)
+- `max_length` (Number)
+- `max_size` (Number)
+- `min` (Number)
+- `min_length` (Number)
+- `min_size` (Number)
+- `options` (Map of String)
+- `pattern` (String)
+- `precision` (Number)
+- `required` (Boolean)
+- `scale` (Number)
+- `type` (String)
+- `unique` (Boolean)
+- `unit_id` (String)
+
+<a id="nestedobjatt--content--arguments--attributes--constraint"></a>
+### Nested Schema for `content.arguments.attributes.unit_id`
+
+Read-Only:
+
+- `after` (String)
+- `before` (String)
 - `max` (Number)
 - `max_length` (Number)
 - `min` (Number)
@@ -112,6 +137,7 @@ Read-Only:
 - `scale` (Number)
 - `type` (String)
 - `unit_id` (String)
+
 
 
 
