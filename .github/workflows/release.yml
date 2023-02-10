@@ -1,11 +1,76 @@
-name: release
+name: Terraform Provider Release Deployer
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
+    inputs:
+      release-version:
+        description: 'Specify the release version to deploy : v{marjor}.{minor}.{patch}'
+        required: true
+        type: string
+      release-type:
+        description: 'Specify the release type major/minor/patch [patch]'
+        required: true
+        type: choice
+        options:
+          - "major"
+          - "minor"
+          - "patch"
+        default: "patch"
 
 jobs:
-  release:
+  version-validation:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout Repository
+        uses: actions/checkout@v3
+
+      -
+        name: Tag Validation
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          CURRENT_RELEASE_VERSION=$(gh api -H "Accept: application/vnd.github+json" /repos/leanspace/testing-workflows/actions/variables/RELEASE_VERSION | jq -r .value | awk -F 'v' '{ print $NF }')
+          NEW_RELEASE_VERSION=$( echo ${{ github.event.inputs.release-version }} | awk -F 'v' '{ print $NF }')
+          RELEASE_TYPE=$( echo ${{ github.event.inputs.release-type }} | awk -F 'v' '{ print $NF }')
+
+          ### Tag Validation Function ###
+          tag_validator_function()
+          {
+          if echo "${{ github.event.inputs.release-version }}" | grep 'v[0-9]*\.[0-9]*\.[0-9]*' > /dev/null
+            then
+              echo "[#] Version tag format is correct. Moving on....."
+            else
+              echo "[!] Version tag format ${{ github.event.inputs.release-version }} invalid!"
+              echo "[!] Expected format: v0.0.0"
+              exit 1
+            fi
+          if [[ ${NEW_RELEASE_VERSION} != ${EXPECTED_RELEASE_VERSION} ]]
+            then
+              echo "[!] Invalid ${1} release version v${NEW_RELEASE_VERSION} where it should be v${EXPECTED_RELEASE_VERSION}"
+              echo "[-] Current Release Version: v${CURRENT_RELEASE_VERSION}"
+              echo "[+] New Release Version: v${NEW_RELEASE_VERSION}"
+              exit 1
+            else
+              echo "[+] New ${1} release version v${NEW_RELEASE_VERSION} is valid."
+              echo "[-] Current Release Version: v${CURRENT_RELEASE_VERSION}"
+              echo "[+] New Release Version: v${NEW_RELEASE_VERSION}"
+          fi
+          }
+          ### Tag Validation Function ###
+
+          case ${RELEASE_TYPE} in
+            patch)
+              EXPECTED_RELEASE_VERSION=$(scripts/version-incrementer.sh -p ${CURRENT_RELEASE_VERSION})
+              tag_validator_function "patch";;
+            minor)
+              EXPECTED_RELEASE_VERSION=$(scripts/version-incrementer.sh -m ${CURRENT_RELEASE_VERSION})
+              tag_validator_function "minor";;
+            major)
+              EXPECTED_RELEASE_VERSION=$(scripts/version-incrementer.sh -M ${CURRENT_RELEASE_VERSION})
+              tag_validator_function "major";;
+          esac
+
+  release-deployer:
     runs-on: ubuntu-latest
     steps:
       -
@@ -40,6 +105,7 @@ jobs:
         run: |
           cd terraform-provider-leanspace
           go generate
+
       -
         name: Commit and push
         run: |
@@ -48,8 +114,15 @@ jobs:
           git config --global user.email 'leanspace-bot@users.noreply.github.com'
           git status
           git add -A
-          git diff-index --quiet HEAD || git commit -m "Update docs"
-          git push
+          git commit -m "Update docs"
+          if git diff-index --quiet HEAD
+            then
+              git tag ${{ github.event.inputs.release-version }} HEAD
+              git push --follow-tags
+            else
+              echo "[!] No changes detected. Exiting....."
+              exit 1
+          fi
 
       -
         name: Run GoReleaser
@@ -63,3 +136,13 @@ jobs:
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
           # GitHub sets this automatically
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      -
+        name: Updating RELEASE_VERSION variable
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          echo "[#] Updating the repository variable RELEASE_VERSION with the new version."
+          gh api --method PATCH -H "Accept: application/vnd.github+json" /repos/leanspace/testing-workflows/actions/variables/RELEASE_VERSION \
+          -f name='RELEASE_VERSION' \
+          -f value="${{ github.event.inputs.release-version }}"
