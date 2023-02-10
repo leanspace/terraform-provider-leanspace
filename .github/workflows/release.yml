@@ -107,7 +107,7 @@ jobs:
           go generate
 
       -
-        name: Commit and push
+        name: Commit tag and push
         run: |
           cd terraform-provider-leanspace
           git config --global user.name 'leanspace-bot'
@@ -115,14 +115,8 @@ jobs:
           git status
           git add -A
           git commit -m "Update docs"
-          if git diff-index --quiet HEAD
-            then
-              git tag ${{ github.event.inputs.release-version }} HEAD
-              git push --follow-tags
-            else
-              echo "[!] No changes detected. Exiting....."
-              exit 1
-          fi
+          git tag ${{ github.event.inputs.release-version }} HEAD
+          git push --follow-tags
 
       -
         name: Run GoReleaser
