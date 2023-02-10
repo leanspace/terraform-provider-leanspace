@@ -27,7 +27,7 @@ jobs:
       -
         name: Tag Validation
         env:
-          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GH_TOKEN: ${{ secrets.TERRAFORM_RELEASE_VAR_UPDATE_TOKEN }}
         run: |
           CURRENT_RELEASE_VERSION=$(gh api -H "Accept: application/vnd.github+json" /repos/leanspace/testing-workflows/actions/variables/RELEASE_VERSION | jq -r .value | awk -F 'v' '{ print $NF }')
           NEW_RELEASE_VERSION=$( echo ${{ github.event.inputs.release-version }} | awk -F 'v' '{ print $NF }')
@@ -140,7 +140,7 @@ jobs:
       -
         name: Updating RELEASE_VERSION variable
         env:
-          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GH_TOKEN: ${{ secrets.TERRAFORM_RELEASE_VAR_UPDATE_TOKEN }}
         run: |
           echo "[#] Updating the repository variable RELEASE_VERSION with the new version."
           gh api --method PATCH -H "Accept: application/vnd.github+json" /repos/leanspace/testing-workflows/actions/variables/RELEASE_VERSION \
