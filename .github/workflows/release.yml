@@ -29,7 +29,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.TERRAFORM_RELEASE_VAR_UPDATE_TOKEN }}
         run: |
-          CURRENT_RELEASE_VERSION=$(gh api -H "Accept: application/vnd.github+json" /repos/leanspace/testing-workflows/actions/variables/RELEASE_VERSION | jq -r .value | awk -F 'v' '{ print $NF }')
+          CURRENT_RELEASE_VERSION=$(gh api -H "Accept: application/vnd.github+json" /repos/leanspace/terraform-provider-leanspace/actions/variables/RELEASE_VERSION | jq -r .value | awk -F 'v' '{ print $NF }')
           NEW_RELEASE_VERSION=$( echo ${{ github.event.inputs.release-version }} | awk -F 'v' '{ print $NF }')
           RELEASE_TYPE=$( echo ${{ github.event.inputs.release-type }} | awk -F 'v' '{ print $NF }')
 
@@ -143,6 +143,6 @@ jobs:
           GH_TOKEN: ${{ secrets.TERRAFORM_RELEASE_VAR_UPDATE_TOKEN }}
         run: |
           echo "[#] Updating the repository variable RELEASE_VERSION with the new version."
-          gh api --method PATCH -H "Accept: application/vnd.github+json" /repos/leanspace/testing-workflows/actions/variables/RELEASE_VERSION \
+          gh api --method PATCH -H "Accept: application/vnd.github+json" /repos/leanspace/terraform-provider-leanspace/actions/variables/RELEASE_VERSION \
           -f name='RELEASE_VERSION' \
           -f value="${{ github.event.inputs.release-version }}"
