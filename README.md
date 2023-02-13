@@ -60,7 +60,13 @@ git config --global --add safe.directory [your dir here]
 
 ### Create a new version
 
-Create a tag on a commit with the following format `v{marjor}.{minor}.{patch}`; i.e.: v0.4.0; this will create a version accordingly.
+1. Go to the `Actions` tab of this repository.
+2. In the left side plane, click on `Terraform Provider Release Deployer` workflow.
+3. This will open the workflow window. Now click on the `Run workflow` dropdown.
+4. You'll now be presented with 2 selection boxes.
+5. The first box allows you to choose the `release version` you wish to deploy. Please make sure it is in the format `v{marjor}.{minor}.{patch}`; i.e.: v0.4.0
+6. The second box allows you to define `release version type` like what kind of version you are deploying i.e. is it a patch release, a minor one or a major one.
+
 It will create a release in github and push this version to the Terraform Registry (see [Terraform](https://registry.terraform.io/providers/leanspace/leanspace/latest)).
 
 ### Run the plugin
