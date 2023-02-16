@@ -11,7 +11,7 @@ type Metric[T any] struct {
 	CreatedBy      string                                 `json:"createdBy"`
 	LastModifiedAt string                                 `json:"lastModifiedAt"`
 	LastModifiedBy string                                 `json:"lastModifiedBy"`
-	Tags           []general_objects.Tag                  `json:"tags,omitempty"`
+	Tags           []general_objects.KeyValue             `json:"tags,omitempty"`
 	Attributes     general_objects.DefinitionAttribute[T] `json:"attributes"`
 }
 

@@ -46,7 +46,7 @@ var dashboardSchema = map[string]*schema.Schema{
 			Schema: dashboardWidgetSchema,
 		},
 	},
-	"tags": general_objects.TagsSchema,
+	"tags": general_objects.KeyValuesSchema,
 	"created_at": {
 		Type:        schema.TypeString,
 		Computed:    true,
@@ -162,7 +162,7 @@ var dashboardWidgetSchema = map[string]*schema.Schema{
 			Schema: dashboardInfoSchema,
 		},
 	},
-	"tags": general_objects.TagsSchema,
+	"tags": general_objects.KeyValuesSchema,
 	"created_at": {
 		Type:        schema.TypeString,
 		Computed:    true,

@@ -1,19 +1,16 @@
-package metrics
+package release_queues
 
 import (
-	"github.com/leanspace/terraform-provider-leanspace/helper"
-	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-var metricSchema = map[string]*schema.Schema{
+var releaseQueueSchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
 		Computed: true,
 	},
-	"node_id": {
+	"asset_id": {
 		Type:         schema.TypeString,
 		Required:     true,
 		ForceNew:     true,
@@ -24,22 +21,30 @@ var metricSchema = map[string]*schema.Schema{
 		Required: true,
 	},
 	"description": {
-		Type:     schema.TypeString,
-		Optional: true,
+    		Type:     schema.TypeString,
+    		Required: true,
+    },
+	"command_transformer_plugin_id": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: validation.IsUUID,
+		Description:  "The Id of the Command Transformer Plugin",
 	},
-	"attributes": {
-		Type:     schema.TypeList,
-		MinItems: 1,
-		MaxItems: 1,
-		Required: true,
-		Elem: &schema.Resource{
-			Schema: general_objects.DefinitionAttributeSchema(
-				[]string{"TIME"},                      // TIME type not allowed
-				[]string{"required", "default_value"}, // Fields unused
-			),
-		},
+	"command_transformation_strategy": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		Description:  "What transformation strategy shall be applied on created and updated Commands",
 	},
-	"tags": general_objects.KeyValuesSchema,
+	"command_transformer_plugin_configuration_data": {
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Configuration data used by the Command Transformer Plugin (coming soon)",
+	},
+	"global_transmission_metadata": general_objects.KeyValuesSchema,
+	"logical_lock": {
+        Type:     schema.TypeBool,
+        Computed: true,
+    },
 	"created_at": {
 		Type:        schema.TypeString,
 		Computed:    true,
@@ -63,7 +68,7 @@ var metricSchema = map[string]*schema.Schema{
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{
-	"node_ids": {
+	"asset_ids": {
 		Type:     schema.TypeList,
 		Optional: true,
 		Elem: &schema.Schema{
@@ -71,20 +76,28 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 			ValidateFunc: validation.IsUUID,
 		},
 	},
-	"attribute_types": {
+	"ground_station_ids": {
 		Type:     schema.TypeList,
 		Optional: true,
 		Elem: &schema.Schema{
 			Type:         schema.TypeString,
-			ValidateFunc: validation.StringInSlice(general_objects.ValidAttributeSchemaTypes, false),
-			Description:  helper.AllowedValuesToDescription(general_objects.ValidAttributeSchemaTypes),
+			ValidateFunc: validation.IsUUID,
 		},
 	},
-	"tags": {
+	"command_transformer_plugin_ids": {
 		Type:     schema.TypeList,
 		Optional: true,
 		Elem: &schema.Schema{
-			Type: schema.TypeString,
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"protocol_transformer_plugin_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
 		},
 	},
 }

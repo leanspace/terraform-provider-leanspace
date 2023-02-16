@@ -130,6 +130,8 @@ The available resources per service are:
 - commands:
   - command definition: it has one `leanspace_command_definitions` resource which has all possible metadata types (6) and all possible argument types (7)
   - command queue: it has one `leanspace_command_queues` resource which links the satellite and ground station nodes.
+  - release queue: it has one `leanspace_release_queues` resource which links the satellite and a transformation strategy
+  - command sequence state: it has one `leanspace_command_sequence_states` resource.
 - dashboard:
   - widgets: it has as many `leanspace_widgets` resources as available types (5)
   - dashboards: it has one `leanspace_dashboards` resource with three widgets and linked to a node

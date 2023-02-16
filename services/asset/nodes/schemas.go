@@ -70,7 +70,7 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 			ValidateFunc: validation.StringInSlice(validNodeKinds, false),
 			Description:  helper.AllowedValuesToDescription(validNodeKinds),
 		},
-		"tags": general_objects.TagsSchema,
+		"tags": general_objects.KeyValuesSchema,
 		"number_of_children": {
 			Type:        schema.TypeInt,
 			Computed:    true,

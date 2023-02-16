@@ -51,7 +51,7 @@ var propertySchema = map[string]*schema.Schema{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
-	"tags": general_objects.TagsSchema,
+	"tags": general_objects.KeyValuesSchema,
 	"min_length": {
 		Type:         schema.TypeInt,
 		Optional:     true,

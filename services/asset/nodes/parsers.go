@@ -62,7 +62,7 @@ func (node *Node) FromMap(nodeMap map[string]any) error {
 	node.Type = nodeMap["type"].(string)
 	node.Kind = nodeMap["kind"].(string)
 	node.NumberOfChildren = nodeMap["number_of_children"].(int)
-	if tags, err := helper.ParseFromMaps[general_objects.Tag](nodeMap["tags"].(*schema.Set).List()); err != nil {
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](nodeMap["tags"].(*schema.Set).List()); err != nil {
 		return err
 	} else {
 		node.Tags = tags

@@ -105,7 +105,7 @@ func (widget *Widget) FromMap(widgetMap map[string]any) error {
 	} else {
 		widget.Dashboards = dashboards
 	}
-	if tags, err := helper.ParseFromMaps[general_objects.Tag](widgetMap["tags"].(*schema.Set).List()); err != nil {
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](widgetMap["tags"].(*schema.Set).List()); err != nil {
 		return err
 	} else {
 		widget.Tags = tags
