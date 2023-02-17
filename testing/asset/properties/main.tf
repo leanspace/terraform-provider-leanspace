@@ -209,3 +209,7 @@ resource "leanspace_properties" "geopoint_node_property" {
 output "all_properties" {
   value = data.leanspace_properties.all
 }
+
+output "test_numeric_property" {
+  value = leanspace_properties.numeric_node_property
+}

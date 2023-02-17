@@ -24,7 +24,7 @@ var releaseQueueSchema = map[string]*schema.Schema{
 	},
 	"description": {
     		Type:     schema.TypeString,
-    		Required: true,
+    		Optional: true,
     },
 	"command_transformer_plugin_id": {
 		Type:         schema.TypeString,
@@ -78,14 +78,6 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 			ValidateFunc: validation.IsUUID,
 		},
 	},
-	"ground_station_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-	},
 	"command_transformer_plugin_ids": {
 		Type:     schema.TypeList,
 		Optional: true,
@@ -94,12 +86,22 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 			ValidateFunc: validation.IsUUID,
 		},
 	},
-	"protocol_transformer_plugin_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-	},
+	"ids": {
+        Type:     schema.TypeList,
+        Optional: true,
+        Elem: &schema.Schema{
+            Type:         schema.TypeString,
+            ValidateFunc: validation.IsUUID,
+        },
+        Description: "Only returns release queues whose id matches one of the provided values.",
+    },
+	"logical_lock": {
+        Type:        schema.TypeBool,
+        Optional:    true,
+    },
+	"query": {
+        Type:        schema.TypeString,
+        Optional:    true,
+        Description: "Search by name or description",
+    },
 }

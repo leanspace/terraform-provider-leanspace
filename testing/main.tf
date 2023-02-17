@@ -6,7 +6,6 @@ terraform {
   }
 }
 
-
 provider "leanspace" {
   tenant        = "yuri"
   env           = "develop"
@@ -60,7 +59,7 @@ module "release_queues" {
 }
 
 module "command_sequence_states" {
-  source             = "./activities/command_sequence_states"
+  source             = "./commands/command_sequence_states"
 }
 
 module "streams" {
