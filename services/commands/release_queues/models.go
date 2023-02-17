@@ -1,5 +1,9 @@
 package release_queues
 
+import (
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+)
+
 type ReleaseQueue struct {
 	ID                                          string                      `json:"id"`
 	AssetId                                     string                      `json:"assetId"`

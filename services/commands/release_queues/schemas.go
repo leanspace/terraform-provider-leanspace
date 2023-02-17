@@ -3,6 +3,8 @@ package release_queues
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 var releaseQueueSchema = map[string]*schema.Schema{
