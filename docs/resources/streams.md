@@ -95,7 +95,6 @@ resource "leanspace_streams" "stream" {
   }
   mappings {
     metric_id = var.numeric_metric_id
-    component = "x"
     expression = "$..x"
   }
 }
@@ -278,6 +277,7 @@ Optional:
 - `expression` (Block List, Max: 1) Only required for switches (see [below for nested schema](#nestedblock--configuration--structure--elements--expression))
 - `length_in_bits` (Number) Only required for fields
 - `processor` (String) Only required for fields
+- `repetitive` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--repetitive))
 
 Read-Only:
 
@@ -302,6 +302,7 @@ Optional:
 - `expression` (Block List, Max: 1) Only required for switches (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--expression))
 - `length_in_bits` (Number) Only required for fields
 - `processor` (String) Only required for fields
+- `repetitive` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--repetitive))
 
 Read-Only:
 
@@ -326,6 +327,7 @@ Optional:
 - `expression` (Block List, Max: 1) Only required for switches (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--expression))
 - `length_in_bits` (Number) Only required for fields
 - `processor` (String) Only required for fields
+- `repetitive` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--repetitive))
 
 Read-Only:
 
@@ -350,6 +352,7 @@ Optional:
 - `expression` (Block List, Max: 1) Only required for switches (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--expression))
 - `length_in_bits` (Number) Only required for fields
 - `processor` (String) Only required for fields
+- `repetitive` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--repetitive))
 
 Read-Only:
 
@@ -374,6 +377,7 @@ Optional:
 - `expression` (Block List, Max: 1) Only required for switches (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--expression))
 - `length_in_bits` (Number) Only required for fields
 - `processor` (String) Only required for fields
+- `repetitive` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--repetitive))
 
 Read-Only:
 
@@ -396,6 +400,7 @@ Optional:
 - `endianness` (String) Only required for fields, it must be one of these values: BE, LE
 - `length_in_bits` (Number) Only required for fields
 - `processor` (String) Only required for fields
+- `repetitive` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--repetitive))
 
 Read-Only:
 
@@ -403,6 +408,15 @@ Read-Only:
 - `order` (Number) Position of this component in the current context
 - `path` (String) Path of this component in the current context
 - `valid` (Boolean)
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--repetitive"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.repetitive`
+
+Optional:
+
+- `path` (String)
+- `value` (Number)
+
 
 <a id="nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--errors"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.errors`
@@ -439,6 +453,15 @@ Required:
 - `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
 
 
+
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--repetitive"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.repetitive`
+
+Optional:
+
+- `path` (String)
+- `value` (Number)
 
 
 <a id="nestedatt--configuration--structure--elements--elements--elements--elements--elements--errors"></a>
@@ -478,6 +501,15 @@ Required:
 
 
 
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--repetitive"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.repetitive`
+
+Optional:
+
+- `path` (String)
+- `value` (Number)
+
+
 <a id="nestedatt--configuration--structure--elements--elements--elements--elements--errors"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.errors`
 
@@ -513,6 +545,15 @@ Required:
 - `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
 
 
+
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--repetitive"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.repetitive`
+
+Optional:
+
+- `path` (String)
+- `value` (Number)
 
 
 <a id="nestedatt--configuration--structure--elements--elements--elements--errors"></a>
@@ -552,6 +593,15 @@ Required:
 
 
 
+<a id="nestedblock--configuration--structure--elements--elements--repetitive"></a>
+### Nested Schema for `configuration.structure.elements.elements.repetitive`
+
+Optional:
+
+- `path` (String)
+- `value` (Number)
+
+
 <a id="nestedatt--configuration--structure--elements--elements--errors"></a>
 ### Nested Schema for `configuration.structure.elements.elements.errors`
 
@@ -589,6 +639,15 @@ Required:
 
 
 
+<a id="nestedblock--configuration--structure--elements--repetitive"></a>
+### Nested Schema for `configuration.structure.elements.repetitive`
+
+Optional:
+
+- `path` (String)
+- `value` (Number)
+
+
 <a id="nestedatt--configuration--structure--elements--errors"></a>
 ### Nested Schema for `configuration.structure.elements.errors`
 
@@ -624,5 +683,9 @@ Read-Only:
 
 Required:
 
-- `expression` (String)
 - `metric_id` (String)
+
+Optional:
+
+- `component` (String)
+- `expression` (String)

@@ -220,6 +220,7 @@ Read-Only:
 - `order` (Number)
 - `path` (String)
 - `processor` (String)
+- `repetitive` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--repetitive))
 - `type` (String)
 - `valid` (Boolean)
 
@@ -238,6 +239,7 @@ Read-Only:
 - `order` (Number)
 - `path` (String)
 - `processor` (String)
+- `repetitive` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--repetitive))
 - `type` (String)
 - `valid` (Boolean)
 
@@ -256,6 +258,7 @@ Read-Only:
 - `order` (Number)
 - `path` (String)
 - `processor` (String)
+- `repetitive` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--repetitive))
 - `type` (String)
 - `valid` (Boolean)
 
@@ -274,6 +277,7 @@ Read-Only:
 - `order` (Number)
 - `path` (String)
 - `processor` (String)
+- `repetitive` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--repetitive))
 - `type` (String)
 - `valid` (Boolean)
 
@@ -292,6 +296,7 @@ Read-Only:
 - `order` (Number)
 - `path` (String)
 - `processor` (String)
+- `repetitive` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--repetitive))
 - `type` (String)
 - `valid` (Boolean)
 
@@ -308,6 +313,7 @@ Read-Only:
 - `order` (Number)
 - `path` (String)
 - `processor` (String)
+- `repetitive` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--repetitive))
 - `type` (String)
 - `valid` (Boolean)
 
@@ -318,6 +324,15 @@ Read-Only:
 
 - `code` (String)
 - `message` (String)
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--repetitive"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid`
+
+Read-Only:
+
+- `path` (String)
+- `value` (Number)
 
 
 
@@ -357,6 +372,15 @@ Read-Only:
 
 
 
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--repetitive"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.repetitive`
+
+Read-Only:
+
+- `path` (String)
+- `value` (Number)
+
+
 
 <a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--errors"></a>
 ### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid`
@@ -392,6 +416,15 @@ Read-Only:
 - `data_type` (String)
 
 
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--repetitive"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid`
+
+Read-Only:
+
+- `path` (String)
+- `value` (Number)
 
 
 
@@ -431,6 +464,15 @@ Read-Only:
 
 
 
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--repetitive"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid`
+
+Read-Only:
+
+- `path` (String)
+- `value` (Number)
+
+
 
 <a id="nestedobjatt--content--configuration--structure--valid--elements--errors"></a>
 ### Nested Schema for `content.configuration.structure.valid.elements.valid`
@@ -468,6 +510,15 @@ Read-Only:
 
 
 
+<a id="nestedobjatt--content--configuration--structure--valid--elements--repetitive"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid`
+
+Read-Only:
+
+- `path` (String)
+- `value` (Number)
+
+
 
 <a id="nestedobjatt--content--configuration--structure--valid--errors"></a>
 ### Nested Schema for `content.configuration.structure.valid.errors`
@@ -503,6 +554,15 @@ Read-Only:
 - `data_type` (String)
 
 
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--repetitive"></a>
+### Nested Schema for `content.configuration.structure.valid.repetitive`
+
+Read-Only:
+
+- `path` (String)
+- `value` (Number)
 
 
 
