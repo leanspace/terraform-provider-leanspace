@@ -147,6 +147,15 @@ func streamComponentSchema(depth int) map[string]*schema.Schema {
 			Required:     true,
 			ValidateFunc: validation.StringInSlice([]string{"CONTAINER", "FIELD", "SWITCH"}, false),
 		},
+		"repetitive": {
+			Type:     schema.TypeList,
+			Optional: true,
+			MinItems: 1,
+			MaxItems: 1,
+			Elem: &schema.Resource{
+				Schema: repetitiveSchema,
+			},
+		},
 		"valid": {
 			Type:     schema.TypeBool,
 			Computed: true,
@@ -209,6 +218,17 @@ func streamComponentSchema(depth int) map[string]*schema.Schema {
 	}
 
 	return baseSchema
+}
+
+var repetitiveSchema = map[string]*schema.Schema{
+	"value": {
+		Type:     schema.TypeInt,
+		Optional: true,
+	},
+	"path": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
 }
 
 var switchExpressionSchema = map[string]*schema.Schema{
@@ -387,7 +407,11 @@ var mappingSchema = map[string]*schema.Schema{
 	},
 	"component": {
 		Type:     schema.TypeString,
-		Required: true,
+		Optional: true,
+	},
+	"expression": {
+		Type:     schema.TypeString,
+		Optional: true,
 	},
 }
 
