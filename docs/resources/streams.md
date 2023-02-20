@@ -96,6 +96,7 @@ resource "leanspace_streams" "stream" {
   mappings {
     metric_id = var.numeric_metric_id
     component = "x"
+    expression = "$..x"
   }
 }
 ```
@@ -623,5 +624,5 @@ Read-Only:
 
 Required:
 
-- `component` (String)
+- `expression` (String)
 - `metric_id` (String)

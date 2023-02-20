@@ -34,6 +34,9 @@ else
     ifneq ($(filter aarch6%,$(UNAME_P)),)
         ARCHITECTURE=arm64
     endif
+    ifeq ($(UNAME_P),arm)
+        ARCHITECTURE=arm64
+    endif
 endif
 
 ifeq ($(OS_ARCH),)

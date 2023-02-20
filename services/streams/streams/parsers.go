@@ -45,6 +45,10 @@ func (streamComp *StreamComponent) ToMap() map[string]any {
 	streamCompMap["valid"] = streamComp.Valid
 	streamCompMap["errors"] = helper.ParseToMaps(streamComp.Errors)
 
+	if streamComp.Repetitive != nil {
+		streamCompMap["repetitive"] = []map[string]any{streamComp.Repetitive.ToMap()}
+	}
+
 	if streamComp.Type == "FIELD" {
 		streamCompMap["length_in_bits"] = streamComp.LengthInBits
 		streamCompMap["processor"] = streamComp.Processor
@@ -59,6 +63,17 @@ func (streamComp *StreamComponent) ToMap() map[string]any {
 	}
 
 	return streamCompMap
+}
+
+func (repetitive *Repetitive) ToMap() map[string]any {
+	repetitiveMap := make(map[string]any)
+	if repetitive != nil && repetitive.Value != 0 {
+		repetitiveMap["value"] = repetitive.Value
+	}
+	if repetitive != nil && repetitive.Path != "" {
+		repetitiveMap["path"] = repetitive.Path
+	}
+	return repetitiveMap
 }
 
 func (switchExp *SwitchExpression) ToMap() map[string]any {
@@ -130,6 +145,7 @@ func (mapping *Mapping) ToMap() map[string]any {
 	mappingMap := make(map[string]any)
 	mappingMap["metric_id"] = mapping.MetricId
 	mappingMap["component"] = mapping.Component
+	mappingMap["expression"] = mapping.Expression
 	return mappingMap
 }
 
@@ -203,6 +219,12 @@ func (streamComp *StreamComponent) FromMap(streamCompMap map[string]any) error {
 	streamComp.Path = streamCompMap["path"].(string)
 	streamComp.Type = streamCompMap["type"].(string)
 	streamComp.Valid = streamCompMap["valid"].(bool)
+	if len(streamCompMap["repetitive"].([]any)) > 0 && streamCompMap["repetitive"].([]any)[0] != nil {
+		streamComp.Repetitive = new(Repetitive)
+		if err := streamComp.Repetitive.FromMap(streamCompMap["repetitive"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
+	}
 	errors, err := helper.ParseFromMaps[Error](streamCompMap["errors"].(*schema.Set).List())
 	streamComp.Errors = errors
 	if err != nil {
@@ -231,6 +253,12 @@ func (streamComp *StreamComponent) FromMap(streamCompMap map[string]any) error {
 			}
 		}
 	}
+	return nil
+}
+
+func (repetitive *Repetitive) FromMap(repetitiveMap map[string]any) error {
+	repetitive.Value = repetitiveMap["value"].(int)
+	repetitive.Path = repetitiveMap["path"].(string)
 	return nil
 }
 
@@ -322,6 +350,7 @@ func (computation *Computation) FromMap(computationMap map[string]any) error {
 func (mapping *Mapping) FromMap(mappingMap map[string]any) error {
 	mapping.MetricId = mappingMap["metric_id"].(string)
 	mapping.Component = mappingMap["component"].(string)
+	mapping.Expression = mappingMap["expression"].(string)
 	return nil
 }
 

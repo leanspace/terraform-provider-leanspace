@@ -29,12 +29,13 @@ type Configuration struct {
 
 type StreamComponent struct {
 	// Common
-	Name   string  `json:"name"`
-	Order  int     `json:"order"`
-	Path   string  `json:"path"`
-	Type   string  `json:"type"` // CONTAINER / FIELD / SWITCH
-	Valid  bool    `json:"valid,omitempty"`
-	Errors []Error `json:"errors,omitempty"`
+	Name       string      `json:"name"`
+	Order      int         `json:"order"`
+	Path       string      `json:"path"`
+	Type       string      `json:"type"` // CONTAINER / FIELD / SWITCH
+	Repetitive *Repetitive `json:"repetitive,omitempty"`
+	Valid      bool        `json:"valid,omitempty"`
+	Errors     []Error     `json:"errors,omitempty"`
 
 	// Field only
 	LengthInBits int    `json:"lengthInBits,omitempty"`
@@ -94,8 +95,9 @@ type Computation struct {
 }
 
 type Mapping struct {
-	MetricId  string `json:"metricId"`
-	Component string `json:"component"`
+	MetricId   string `json:"metricId"`
+	Component  string `json:"component,omitempty"`
+	Expression string `json:"expression,omitempty"`
 }
 
 type ElementStatus struct {
@@ -106,4 +108,12 @@ type ElementStatus struct {
 type Error struct {
 	Code    string `json:"code"`
 	Message string `json:"message"`
+}
+
+type Repetitive struct {
+	// Fixed
+	Value int `json:"value,omitempty"`
+
+	// Dynamic
+	Path string `json:"path,omitempty"`
 }

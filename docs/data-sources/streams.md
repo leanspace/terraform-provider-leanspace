@@ -523,6 +523,7 @@ Read-Only:
 Read-Only:
 
 - `component` (String)
+- `expression` (String)
 - `metric_id` (String)
 
 
