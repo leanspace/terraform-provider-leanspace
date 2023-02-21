@@ -74,6 +74,13 @@ jobs:
     needs: version-validation
     runs-on: ubuntu-latest
     steps:
+      - 
+        name: Terraform Release Approval
+        uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: elodietinland,jerome-leanspace
+          minimum-approvals: 1
       -
         name: Checkout local repo
         uses: actions/checkout@v3
