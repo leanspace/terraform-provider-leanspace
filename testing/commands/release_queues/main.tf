@@ -28,6 +28,7 @@ resource "leanspace_release_queues" "test" {
   name                            = "Terraform Release Queue"
   asset_id                        = var.asset_id
   command_transformation_strategy = "TEST"
+  command_transformer_plugin_configuration_data = "{ \"key\" = \"value\" }"
 }
 
 output "test_release_queue" {
