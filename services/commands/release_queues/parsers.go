@@ -34,11 +34,11 @@ func (queue *ReleaseQueue) FromMap(queueMap map[string]any) error {
 	queue.CommandTransformerPluginId = queueMap["command_transformer_plugin_id"].(string)
 	queue.CommandTransformationStrategy = queueMap["command_transformation_strategy"].(string)
 	queue.CommandTransformerPluginConfigurationData = queueMap["command_transformer_plugin_configuration_data"].(string)
-    if globalTransmissionMetadata, err := helper.ParseFromMaps[general_objects.KeyValue](queueMap["global_transmission_metadata"].(*schema.Set).List()); err != nil {
-        return err
-    } else {
-        queue.GlobalTransmissionMetadata = globalTransmissionMetadata
-    }
+	if globalTransmissionMetadata, err := helper.ParseFromMaps[general_objects.KeyValue](queueMap["global_transmission_metadata"].(*schema.Set).List()); err != nil {
+		return err
+	} else {
+		queue.GlobalTransmissionMetadata = globalTransmissionMetadata
+	}
 	queue.LogicalLock = queueMap["logical_lock"].(bool)
 	queue.CreatedAt = queueMap["created_at"].(string)
 	queue.CreatedBy = queueMap["created_by"].(string)

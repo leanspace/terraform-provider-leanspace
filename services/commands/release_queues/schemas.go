@@ -23,9 +23,9 @@ var releaseQueueSchema = map[string]*schema.Schema{
 		Required: true,
 	},
 	"description": {
-    		Type:     schema.TypeString,
-    		Optional: true,
-    },
+		Type:     schema.TypeString,
+		Optional: true,
+	},
 	"command_transformer_plugin_id": {
 		Type:         schema.TypeString,
 		Optional:     true,
@@ -33,9 +33,9 @@ var releaseQueueSchema = map[string]*schema.Schema{
 		Description:  "The Id of the Command Transformer Plugin",
 	},
 	"command_transformation_strategy": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		Description:  "What transformation strategy shall be applied on created and updated Commands",
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "What transformation strategy shall be applied on created and updated Commands",
 	},
 	"command_transformer_plugin_configuration_data": {
 		Type:        schema.TypeString,
@@ -44,9 +44,9 @@ var releaseQueueSchema = map[string]*schema.Schema{
 	},
 	"global_transmission_metadata": general_objects.KeyValuesSchema,
 	"logical_lock": {
-        Type:     schema.TypeBool,
-        Computed: true,
-    },
+		Type:     schema.TypeBool,
+		Computed: true,
+	},
 	"created_at": {
 		Type:        schema.TypeString,
 		Computed:    true,
@@ -87,21 +87,21 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 		},
 	},
 	"ids": {
-        Type:     schema.TypeList,
-        Optional: true,
-        Elem: &schema.Schema{
-            Type:         schema.TypeString,
-            ValidateFunc: validation.IsUUID,
-        },
-        Description: "Only returns release queues whose id matches one of the provided values.",
-    },
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+		Description: "Only returns release queues whose id matches one of the provided values.",
+	},
 	"logical_lock": {
-        Type:        schema.TypeBool,
-        Optional:    true,
-    },
+		Type:     schema.TypeBool,
+		Optional: true,
+	},
 	"query": {
-        Type:        schema.TypeString,
-        Optional:    true,
-        Description: "Search by name or description",
-    },
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "Search by name or description",
+	},
 }
