@@ -7,6 +7,8 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
+var validCommandTransformationStrategies = []string{"TEST", "NO_TRANSFORMATION", "USE_PLUGIN"}
+
 var releaseQueueSchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
@@ -35,6 +37,7 @@ var releaseQueueSchema = map[string]*schema.Schema{
 	"command_transformation_strategy": {
 		Type:        schema.TypeString,
 		Optional:    true,
+		ValidateFunc: validation.StringInSlice(validCommandTransformationStrategies, false),
 		Description: "What transformation strategy shall be applied on created and updated Commands",
 	},
 	"command_transformer_plugin_configuration_data": {
