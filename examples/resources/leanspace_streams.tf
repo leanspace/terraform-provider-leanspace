@@ -19,7 +19,11 @@ resource "leanspace_streams" "stream" {
         type           = "FIELD"
         data_type      = "UINTEGER"
         name           = "version"
-        length_in_bits = 8
+        length {
+          unit = "BITS"
+          type = "FIXED"
+          value  =8
+        }
       }
       elements {
         type = "SWITCH"
@@ -48,7 +52,11 @@ resource "leanspace_streams" "stream" {
             type           = "FIELD"
             data_type      = "TEXT"
             name           = "name"
-            length_in_bits = 32
+            length {
+              unit = "BITS"
+              type = "FIXED"
+              value  =32
+            }
             processor      = "zlib"
           }
         }
@@ -59,7 +67,11 @@ resource "leanspace_streams" "stream" {
             type           = "FIELD"
             data_type      = "BOOLEAN"
             name           = "is_active"
-            length_in_bits = 8
+            length {
+              unit = "BITS"
+              type = "FIXED"
+              value  =8
+            }
           }
         }
       }

@@ -6,7 +6,7 @@ import (
 
 var streamComponentValidators = Validators{
 	If(
-		Or(IsSet("length_in_bits"), IsSet("processor"), IsSet("data_type"), IsSet("endianness"), IsSet("unit_id")),
+		Or(IsSet("length"), IsSet("processor"), IsSet("data_type"), IsSet("endianness"), IsSet("unit_id")),
 		Equals("type", "FIELD"),
 	),
 	If(
@@ -16,14 +16,6 @@ var streamComponentValidators = Validators{
 	If(
 		And(IsSet("expression"), Not(IsEmpty("expression"))),
 		Equals("type", "SWITCH"),
-	),
-	If(
-		Or(Equals("data_type", "INTEGER"), Equals("data_type", "UINTEGER")),
-		LessThanEq("length_in_bits", 32),
-	),
-	If(
-		Equals("data_type", "DECIMAL"),
-		Or(Equals("length_in_bits", 0), Equals("length_in_bits", 32), Equals("length_in_bits", 64)),
 	),
 }
 

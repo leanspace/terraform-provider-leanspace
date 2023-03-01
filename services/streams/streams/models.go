@@ -38,10 +38,10 @@ type StreamComponent struct {
 	Errors     []Error     `json:"errors,omitempty"`
 
 	// Field only
-	LengthInBits int    `json:"lengthInBits,omitempty"`
-	Processor    string `json:"processor,omitempty"`
-	DataType     string `json:"dataType,omitempty"`
-	Endianness   string `json:"endianness,omitempty"`
+	Length     *Length `json:"length,omitempty"`
+	Processor  string  `json:"processor,omitempty"`
+	DataType   string  `json:"dataType,omitempty"`
+	Endianness string  `json:"endianness,omitempty"`
 
 	// Switch only
 	Expression SwitchExpression `json:"expression,omitempty"`
@@ -111,6 +111,17 @@ type Error struct {
 }
 
 type Repetitive struct {
+	// Fixed
+	Value int `json:"value,omitempty"`
+
+	// Dynamic
+	Path string `json:"path,omitempty"`
+}
+
+type Length struct {
+	Type string `json:"type"` // [FIXED | DYNAMIC]
+	Unit string `json:"unit"` // [BITS | BYTES]
+
 	// Fixed
 	Value int `json:"value,omitempty"`
 
