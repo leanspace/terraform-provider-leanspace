@@ -15,6 +15,14 @@ var validEndianness = []string{
 	"BE", "LE",
 }
 
+var validLengthUnits = []string{
+	"BITS", "BYTES",
+}
+
+var validLengthTypes = []string{
+	"FIXED", "DYNAMIC",
+}
+
 var streamSchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
@@ -169,11 +177,14 @@ func streamComponentSchema(depth int) map[string]*schema.Schema {
 		},
 
 		// Field only
-		"length_in_bits": {
-			Type:         schema.TypeInt,
-			Optional:     true,
-			ValidateFunc: validation.IntAtLeast(1),
-			Description:  "Only required for fields",
+		"length": {
+			Type:     schema.TypeList,
+			Optional: true,
+			MinItems: 1,
+			MaxItems: 1,
+			Elem: &schema.Resource{
+				Schema: lengthSchema,
+			},
 		},
 		"processor": {
 			Type:        schema.TypeString,
@@ -221,6 +232,29 @@ func streamComponentSchema(depth int) map[string]*schema.Schema {
 }
 
 var repetitiveSchema = map[string]*schema.Schema{
+	"value": {
+		Type:     schema.TypeInt,
+		Optional: true,
+	},
+	"path": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+}
+
+var lengthSchema = map[string]*schema.Schema{
+	"type": {
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.StringInSlice(validLengthTypes, false),
+		Description:  "Type of the length, " + helper.AllowedValuesToDescription(validLengthTypes),
+	},
+	"unit": {
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.StringInSlice(validLengthUnits, false),
+		Description:  "Unit of the length, " + helper.AllowedValuesToDescription(validLengthUnits),
+	},
 	"value": {
 		Type:     schema.TypeInt,
 		Optional: true,

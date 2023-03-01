@@ -50,7 +50,7 @@ func (streamComp *StreamComponent) ToMap() map[string]any {
 	}
 
 	if streamComp.Type == "FIELD" {
-		streamCompMap["length_in_bits"] = streamComp.LengthInBits
+		streamCompMap["length"] = []map[string]any{streamComp.Length.ToMap()}
 		streamCompMap["processor"] = streamComp.Processor
 		streamCompMap["data_type"] = streamComp.DataType
 		streamCompMap["endianness"] = streamComp.Endianness
@@ -74,6 +74,17 @@ func (repetitive *Repetitive) ToMap() map[string]any {
 		repetitiveMap["path"] = repetitive.Path
 	}
 	return repetitiveMap
+}
+
+func (length *Length) ToMap() map[string]any {
+	lengthMap := make(map[string]any)
+	if length != nil {
+		lengthMap["type"] = length.Type
+		lengthMap["unit"] = length.Unit
+		lengthMap["value"] = length.Value
+		lengthMap["path"] = length.Path
+	}
+	return lengthMap
 }
 
 func (switchExp *SwitchExpression) ToMap() map[string]any {
@@ -232,7 +243,12 @@ func (streamComp *StreamComponent) FromMap(streamCompMap map[string]any) error {
 	}
 
 	if streamComp.Type == "FIELD" {
-		streamComp.LengthInBits = streamCompMap["length_in_bits"].(int)
+		if len(streamCompMap["length"].([]any)) > 0 && streamCompMap["length"].([]any)[0] != nil {
+			streamComp.Length = new(Length)
+			if err := streamComp.Length.FromMap(streamCompMap["length"].([]any)[0].(map[string]any)); err != nil {
+				return err
+			}
+		}
 		streamComp.Processor = streamCompMap["processor"].(string)
 		streamComp.DataType = streamCompMap["data_type"].(string)
 		streamComp.Endianness = streamCompMap["endianness"].(string)
@@ -259,6 +275,14 @@ func (streamComp *StreamComponent) FromMap(streamCompMap map[string]any) error {
 func (repetitive *Repetitive) FromMap(repetitiveMap map[string]any) error {
 	repetitive.Value = repetitiveMap["value"].(int)
 	repetitive.Path = repetitiveMap["path"].(string)
+	return nil
+}
+
+func (length *Length) FromMap(lengthMap map[string]any) error {
+	length.Type = lengthMap["type"].(string)
+	length.Unit = lengthMap["unit"].(string)
+	length.Value = lengthMap["value"].(int)
+	length.Path = lengthMap["path"].(string)
 	return nil
 }
 

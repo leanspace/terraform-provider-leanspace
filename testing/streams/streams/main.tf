@@ -28,45 +28,65 @@ data "leanspace_streams" "all" {
 }
 
 resource "leanspace_streams" "test" {
-  name        = "Terraform Stream"
+  name        = "Terraform Stream bla bla"
   description = "A complex stream, entirely created under terraform."
   asset_id    = var.asset_id
   configuration {
     endianness = "BE"
     structure {
       elements {
-        type           = "FIELD"
-        data_type      = "UINTEGER"
-        name           = "id_field"
-        length_in_bits = 8
+        type      = "FIELD"
+        data_type = "UINTEGER"
+        name      = "id_field"
+        length {
+          unit  = "BITS"
+          type  = "FIXED"
+          value = 8
+        }
       }
       elements {
         type = "CONTAINER"
         name = "properties"
         elements {
-          type           = "FIELD"
-          data_type      = "TEXT"
-          name           = "name"
-          length_in_bits = 32
-          processor      = "zlib"
+          type      = "FIELD"
+          data_type = "TEXT"
+          name      = "name"
+          length {
+            unit  = "BITS"
+            type  = "FIXED"
+            value = 32
+          }
+          processor = "zlib"
         }
         elements {
-          type           = "FIELD"
-          data_type      = "INTEGER"
-          name           = "version"
-          length_in_bits = 8
+          type      = "FIELD"
+          data_type = "INTEGER"
+          name      = "version"
+          length {
+            unit  = "BITS"
+            type  = "FIXED"
+            value = 8
+          }
         }
         elements {
-          type           = "FIELD"
-          data_type      = "BOOLEAN"
-          name           = "is_active"
-          length_in_bits = 8
+          type      = "FIELD"
+          data_type = "BOOLEAN"
+          name      = "is_active"
+          length {
+            unit  = "BITS"
+            type  = "FIXED"
+            value = 8
+          }
         }
         elements {
-          type           = "FIELD"
-          data_type      = "DECIMAL"
-          name           = "solar_w"
-          length_in_bits = 32
+          type      = "FIELD"
+          data_type = "DECIMAL"
+          name      = "solar_w"
+          length {
+            unit  = "BITS"
+            type  = "FIXED"
+            value = 32
+          }
         }
       }
       elements {
@@ -100,32 +120,48 @@ resource "leanspace_streams" "test" {
           type = "CONTAINER"
           name = "pos_data"
           elements {
-            type           = "FIELD"
-            data_type      = "INTEGER"
-            name           = "x"
-            length_in_bits = 8
+            type      = "FIELD"
+            data_type = "INTEGER"
+            name      = "x"
+            length {
+              unit  = "BITS"
+              type  = "FIXED"
+              value = 8
+            }
           }
           elements {
-            type           = "FIELD"
-            data_type      = "INTEGER"
-            name           = "y"
-            length_in_bits = 8
+            type      = "FIELD"
+            data_type = "INTEGER"
+            name      = "y"
+            length {
+              unit  = "BITS"
+              type  = "FIXED"
+              value = 8
+            }
           }
         }
         elements {
           type = "CONTAINER"
           name = "rot_data"
           elements {
-            type           = "FIELD"
-            data_type      = "INTEGER"
-            name           = "rx"
-            length_in_bits = 8
+            type      = "FIELD"
+            data_type = "INTEGER"
+            name      = "rx"
+            length {
+              unit  = "BITS"
+              type  = "FIXED"
+              value = 8
+            }
           }
           elements {
-            type           = "FIELD"
-            data_type      = "INTEGER"
-            name           = "ry"
-            length_in_bits = 8
+            type      = "FIELD"
+            data_type = "INTEGER"
+            name      = "ry"
+            length {
+              unit  = "BITS"
+              type  = "FIXED"
+              value = 8
+            }
           }
         }
       }
