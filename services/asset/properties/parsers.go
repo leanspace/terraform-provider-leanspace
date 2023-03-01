@@ -97,7 +97,7 @@ func (property *Property[T]) FromMap(propertyMap map[string]any) error {
 	property.CreatedAt = propertyMap["created_at"].(string)
 	property.CreatedBy = propertyMap["created_by"].(string)
 	property.Description = propertyMap["description"].(string)
-	if tags, err := helper.ParseFromMaps[general_objects.Tag](propertyMap["tags"].(*schema.Set).List()); err != nil {
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](propertyMap["tags"].(*schema.Set).List()); err != nil {
 		return err
 	} else {
 		property.Tags = tags

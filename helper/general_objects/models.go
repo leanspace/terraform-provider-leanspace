@@ -20,7 +20,7 @@ type Pageable struct {
 	Unpaged    bool   `json:"unpaged"`
 }
 
-type Tag struct {
+type KeyValue struct {
 	Key   string `json:"key"`
 	Value string `json:"value,omitempty"`
 }

@@ -6,7 +6,6 @@ terraform {
   }
 }
 
-
 provider "leanspace" {
   tenant        = "yuri"
   env           = "develop"
@@ -49,6 +48,18 @@ module "command_queues" {
   depends_on = [
     module.nodes
   ]
+}
+
+module "release_queues" {
+  source             = "./commands/release_queues"
+  asset_id           = module.nodes.satellite_node.id
+  depends_on = [
+    module.nodes
+  ]
+}
+
+module "command_sequence_states" {
+  source             = "./commands/command_sequence_states"
 }
 
 module "streams" {

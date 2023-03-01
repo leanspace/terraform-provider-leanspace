@@ -189,7 +189,7 @@ var PageableSchema = map[string]*schema.Schema{
 	},
 }
 
-var TagsSchema = &schema.Schema{
+var KeyValuesSchema = &schema.Schema{
 	Type:     schema.TypeSet,
 	Optional: true,
 	Elem: &schema.Resource{

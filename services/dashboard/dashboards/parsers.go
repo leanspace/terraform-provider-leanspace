@@ -95,7 +95,7 @@ func (dashboard *Dashboard) FromMap(dashboardMap map[string]any) error {
 	} else {
 		dashboard.Widgets = widgets
 	}
-	if tags, err := helper.ParseFromMaps[general_objects.Tag](dashboardMap["tags"].(*schema.Set).List()); err != nil {
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](dashboardMap["tags"].(*schema.Set).List()); err != nil {
 		return err
 	} else {
 		dashboard.Tags = tags
@@ -145,7 +145,7 @@ func (widget *DashboardWidget) FromMap(widgetMap map[string]any) error {
 			return err
 		}
 	}
-	if tags, err := helper.ParseFromMaps[general_objects.Tag](widgetMap["tags"].(*schema.Set).List()); err != nil {
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](widgetMap["tags"].(*schema.Set).List()); err != nil {
 		return err
 	} else {
 		widget.Tags = tags

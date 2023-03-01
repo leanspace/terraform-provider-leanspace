@@ -24,11 +24,11 @@ func (paginatedList *PaginatedList[T, PT]) ToMap() map[string]any {
 	return paginatedListMap
 }
 
-func (tag *Tag) ToMap() map[string]any {
-	tagMap := make(map[string]any)
-	tagMap["key"] = tag.Key
-	tagMap["value"] = tag.Value
-	return tagMap
+func (keyValue *KeyValue) ToMap() map[string]any {
+	keyValueMap := make(map[string]any)
+	keyValueMap["key"] = keyValue.Key
+	keyValueMap["value"] = keyValue.Value
+	return keyValueMap
 }
 
 func (sort *Sort) ToMap() map[string]any {
@@ -95,9 +95,9 @@ func (paginatedList *PaginatedList[T, PT]) FromMap(paginatedListMap map[string]a
 	return nil
 }
 
-func (tag *Tag) FromMap(tagMap map[string]any) error {
-	tag.Key = tagMap["key"].(string)
-	tag.Value = tagMap["value"].(string)
+func (keyValue *KeyValue) FromMap(keyValueMap map[string]any) error {
+	keyValue.Key = keyValueMap["key"].(string)
+	keyValue.Value = keyValueMap["value"].(string)
 	return nil
 }
 

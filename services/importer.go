@@ -10,6 +10,8 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/units"
 	"github.com/leanspace/terraform-provider-leanspace/services/commands/command_definitions"
 	"github.com/leanspace/terraform-provider-leanspace/services/commands/command_queues"
+	"github.com/leanspace/terraform-provider-leanspace/services/commands/command_sequence_states"
+	"github.com/leanspace/terraform-provider-leanspace/services/commands/release_queues"
 	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/dashboards"
 	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/widgets"
 	"github.com/leanspace/terraform-provider-leanspace/services/metrics/metrics"
@@ -31,6 +33,8 @@ func AddDataTypes() {
 	analysis_definitions.AnalysisDefinitionDataType.Subscribe()
 	command_definitions.CommandDataType.Subscribe()
 	command_queues.CommandQueueDataType.Subscribe()
+	release_queues.ReleaseQueueDataType.Subscribe()
+	command_sequence_states.CommandSequenceStateDataType.Subscribe()
 	dashboards.DashboardDataType.Subscribe()
 	members.MemberDataType.Subscribe()
 	metrics.MetricDataType.Subscribe()

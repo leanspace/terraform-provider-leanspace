@@ -36,7 +36,7 @@ func (metric *Metric[T]) FromMap(metricMap map[string]any) error {
 			return err
 		}
 	}
-	if tags, err := helper.ParseFromMaps[general_objects.Tag](metricMap["tags"].(*schema.Set).List()); err != nil {
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](metricMap["tags"].(*schema.Set).List()); err != nil {
 		return err
 	} else {
 		metric.Tags = tags

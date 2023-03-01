@@ -79,7 +79,7 @@ func (monitor *Monitor) FromMap(monitorMap map[string]any) error {
 	for i, value := range monitorMap["action_template_ids"].(*schema.Set).List() {
 		monitor.ActionTemplateIds[i] = value.(string)
 	}
-	if tags, err := helper.ParseFromMaps[general_objects.Tag](monitorMap["tags"].(*schema.Set).List()); err != nil {
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](monitorMap["tags"].(*schema.Set).List()); err != nil {
 		return err
 	} else {
 		monitor.Tags = tags

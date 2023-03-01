@@ -17,7 +17,7 @@ type Monitor struct {
 	Expression                Expression                        `json:"expression"`
 	ActionTemplates           []action_templates.ActionTemplate `json:"actionTemplates"`
 	ActionTemplateIds         []string                          `json:"actionTemplateIds"`
-	Tags                      []general_objects.Tag             `json:"tags"`
+	Tags                      []general_objects.KeyValue        `json:"tags"`
 	CreatedAt                 string                            `json:"createdAt"`
 	CreatedBy                 string                            `json:"createdBy"`
 	LastModifiedAt            string                            `json:"lastModifiedAt"`
