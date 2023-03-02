@@ -47,6 +47,16 @@ func (validators Validators) Check(obj map[string]any) error {
 	return nil
 }
 
+func GetValue(key string, v map[string]any) any {
+	keys := strings.Split(key, ".")
+	valueToCheck := v[keys[0]]
+	for i:= 1; i < len(keys); i++ {
+		valueToCheck = valueToCheck.([]interface{})[0].(map[string]any)[keys[i]]
+	}
+
+	return valueToCheck
+}
+
 // Conditions
 
 type ifCondition struct {
@@ -223,13 +233,13 @@ type isEqualsCondition struct {
 }
 
 func (c isEqualsCondition) eval(v map[string]any) bool {
-	return v[c.key] == c.value
+	return GetValue(c.key, v) == c.value
 }
 func (c isEqualsCondition) printExpected() string {
 	return fmt.Sprintf("%q = %v", c.key, c.value)
 }
 func (c isEqualsCondition) printActual(v map[string]any) string {
-	return fmt.Sprintf("%q = %v", c.key, v[c.key])
+	return fmt.Sprintf("%q = %v", c.key, GetValue(c.key, v))
 }
 
 // Will evaluate to true if the value at the given key equals the given value
@@ -308,13 +318,13 @@ type compareCondition[T Number] struct {
 func (c compareCondition[T]) eval(v map[string]any) bool {
 	switch c.op {
 	case "<":
-		return v[c.key].(T) < c.value
+		return GetValue(c.key, v).(T) < c.value
 	case ">":
-		return v[c.key].(T) > c.value
+		return GetValue(c.key, v).(T) > c.value
 	case "<=":
-		return v[c.key].(T) <= c.value
+		return GetValue(c.key, v).(T) <= c.value
 	case ">=":
-		return v[c.key].(T) >= c.value
+		return GetValue(c.key, v).(T) >= c.value
 	default:
 		panic(fmt.Sprintf("unrecognized operator %q", c.op))
 	}
@@ -324,7 +334,7 @@ func (c compareCondition[T]) printExpected() string {
 	return fmt.Sprintf("%q %v %v", c.key, c.op, c.value)
 }
 func (c compareCondition[T]) printActual(v map[string]any) string {
-	return fmt.Sprintf("%q = %v", c.key, v[c.key])
+	return fmt.Sprintf("%q = %v", c.key, GetValue(c.key, v))
 }
 
 // Evaluates to true if the value at the given key is less than the given value.

@@ -6,13 +6,6 @@ terraform {
   }
 }
 
-provider "leanspace" {
-  tenant        = "yuri"
-  env           = "develop"
-  client_id     = "nlbja2p65j8kj7of0tfs29rf4"
-  client_secret = "d762kk9862jn0j1qr4c2u3o8bjkv70o45pld3200ek89qtul6kg"
-}
-
 variable "asset_id" {
   type        = string
   description = "The ID of the node to which the stream will be added."
@@ -37,7 +30,7 @@ data "leanspace_streams" "all" {
 }
 
 resource "leanspace_streams" "test" {
-  name        = "Terraform Stream bla bla"
+  name        = "Terraform Stream"
   description = "A complex stream, entirely created under terraform."
   asset_id    = var.asset_id
   configuration {
@@ -74,7 +67,7 @@ resource "leanspace_streams" "test" {
           length {
             unit  = "BITS"
             type  = "FIXED"
-            value = 8
+            value = 32
           }
         }
         elements {
