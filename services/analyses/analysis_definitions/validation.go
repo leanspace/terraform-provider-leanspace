@@ -19,7 +19,7 @@ var fieldValidators = Validators{
 		Not(Or(Equals("type", "ARRAY"), Equals("type", "STRUCTURE"))),
 		IsSet("source"),
 	),
-	Equivalence(
+	If(
 		Equals("source", "STATIC"),
 		// value could be "unset" (eg. 0, "") and be valid
 		And( /* IsSet("value"), */ Not(IsSet("ref"))),
