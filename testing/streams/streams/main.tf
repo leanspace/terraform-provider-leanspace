@@ -9,13 +9,11 @@ terraform {
 variable "asset_id" {
   type        = string
   description = "The ID of the node to which the stream will be added."
-  default     = "082642bd-2385-46d6-bf58-26a3df467113"
 }
 
 variable "numeric_metric_id" {
   type        = string
   description = "The ID of a numeric metric to which the stream will be mapped."
-  default     = "53c0b787-7186-413e-b5d7-627c4382c558"
 }
 
 data "leanspace_streams" "all" {
@@ -67,7 +65,7 @@ resource "leanspace_streams" "test" {
           length {
             unit  = "BITS"
             type  = "FIXED"
-            value = 32
+            value = 8
           }
         }
         elements {
