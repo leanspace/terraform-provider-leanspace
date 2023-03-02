@@ -6,14 +6,23 @@ terraform {
   }
 }
 
+provider "leanspace" {
+  tenant        = "yuri"
+  env           = "develop"
+  client_id     = "nlbja2p65j8kj7of0tfs29rf4"
+  client_secret = "d762kk9862jn0j1qr4c2u3o8bjkv70o45pld3200ek89qtul6kg"
+}
+
 variable "asset_id" {
   type        = string
   description = "The ID of the node to which the stream will be added."
+  default     = "082642bd-2385-46d6-bf58-26a3df467113"
 }
 
 variable "numeric_metric_id" {
   type        = string
   description = "The ID of a numeric metric to which the stream will be mapped."
+  default     = "53c0b787-7186-413e-b5d7-627c4382c558"
 }
 
 data "leanspace_streams" "all" {

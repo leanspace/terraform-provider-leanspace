@@ -13,7 +13,7 @@ variable "path" {
 
 data "leanspace_plugins" "all" {
   filters {
-    ids   = []
+    ids = []
     types = [
       "COMMANDS_COMMAND_TRANSFORMER_PLUGIN_TYPE",
       "COMMANDS_PROTOCOL_TRANSFORMER_PLUGIN_TYPE",

@@ -6,7 +6,7 @@ import (
 
 var streamComponentValidators = Validators{
 	If(
-		Or(IsSet("length"), IsSet("processor"), IsSet("data_type"), IsSet("endianness"), IsSet("unit_id")),
+		Or(And(IsSet("length"), Not(IsEmpty("length"))), IsSet("processor"), IsSet("data_type"), IsSet("endianness"), IsSet("unit_id")),
 		Equals("type", "FIELD"),
 	),
 	If(
