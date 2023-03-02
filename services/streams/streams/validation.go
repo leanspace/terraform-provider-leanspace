@@ -17,6 +17,14 @@ var streamComponentValidators = Validators{
 		And(IsSet("expression"), Not(IsEmpty("expression"))),
 		Equals("type", "SWITCH"),
 	),
+	If(
+		Or(Equals("data_type", "INTEGER"), Equals("data_type", "UINTEGER")),
+		LessThanEq("length.value", 32),
+	),
+	If(
+		Equals("data_type", "DECIMAL"),
+		Or(Equals("length.value", 0), Equals("length.value", 32), Equals("length.value", 64)),
+	),
 }
 
 func (stream *Stream) Validate(obj map[string]any) error {
