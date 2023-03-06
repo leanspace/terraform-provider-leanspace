@@ -1,3 +1,3 @@
 resource "leanspace_plan_states" "state" {
-  name        = "TERRAFORM_STATE"
+  name = "TERRAFORM_STATE"
 }
