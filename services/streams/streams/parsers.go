@@ -78,12 +78,10 @@ func (repetitive *Repetitive) ToMap() map[string]any {
 
 func (length *Length) ToMap() map[string]any {
 	lengthMap := make(map[string]any)
-	if length != nil {
-		lengthMap["type"] = length.Type
-		lengthMap["unit"] = length.Unit
-		lengthMap["value"] = length.Value
-		lengthMap["path"] = length.Path
-	}
+	lengthMap["type"] = length.Type
+	lengthMap["unit"] = length.Unit
+	lengthMap["value"] = length.Value
+	lengthMap["path"] = length.Path
 	return lengthMap
 }
 
