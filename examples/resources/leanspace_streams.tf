@@ -16,13 +16,13 @@ resource "leanspace_streams" "stream" {
     endianness = "BE"
     structure {
       elements {
-        type           = "FIELD"
-        data_type      = "UINTEGER"
-        name           = "version"
+        type      = "FIELD"
+        data_type = "UINTEGER"
+        name      = "version"
         length {
-          unit = "BITS"
-          type = "FIXED"
-          value  =8
+          unit  = "BITS"
+          type  = "FIXED"
+          value = 8
         }
       }
       elements {
@@ -49,28 +49,28 @@ resource "leanspace_streams" "stream" {
           type = "CONTAINER"
           name = "data_0"
           elements {
-            type           = "FIELD"
-            data_type      = "TEXT"
-            name           = "name"
+            type      = "FIELD"
+            data_type = "TEXT"
+            name      = "name"
             length {
-              unit = "BITS"
-              type = "FIXED"
-              value  =32
+              unit  = "BITS"
+              type  = "FIXED"
+              value = 32
             }
-            processor      = "zlib"
+            processor = "zlib"
           }
         }
         elements {
           type = "CONTAINER"
           name = "data_1"
           elements {
-            type           = "FIELD"
-            data_type      = "BOOLEAN"
-            name           = "is_active"
+            type      = "FIELD"
+            data_type = "BOOLEAN"
+            name      = "is_active"
             length {
-              unit = "BITS"
-              type = "FIXED"
-              value  =8
+              unit  = "BITS"
+              type  = "FIXED"
+              value = 8
             }
           }
         }
@@ -92,7 +92,7 @@ resource "leanspace_streams" "stream" {
     }
   }
   mappings {
-    metric_id = var.numeric_metric_id
+    metric_id  = var.numeric_metric_id
     expression = "$..x"
   }
 }
