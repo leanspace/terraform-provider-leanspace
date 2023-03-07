@@ -30,10 +30,14 @@ resource "leanspace_streams" "stream" {
     endianness = "BE"
     structure {
       elements {
-        type           = "FIELD"
-        data_type      = "UINTEGER"
-        name           = "version"
-        length_in_bits = 8
+        type      = "FIELD"
+        data_type = "UINTEGER"
+        name      = "version"
+        length {
+          unit  = "BITS"
+          type  = "FIXED"
+          value = 8
+        }
       }
       elements {
         type = "SWITCH"
@@ -59,21 +63,29 @@ resource "leanspace_streams" "stream" {
           type = "CONTAINER"
           name = "data_0"
           elements {
-            type           = "FIELD"
-            data_type      = "TEXT"
-            name           = "name"
-            length_in_bits = 32
-            processor      = "zlib"
+            type      = "FIELD"
+            data_type = "TEXT"
+            name      = "name"
+            length {
+              unit  = "BITS"
+              type  = "FIXED"
+              value = 32
+            }
+            processor = "zlib"
           }
         }
         elements {
           type = "CONTAINER"
           name = "data_1"
           elements {
-            type           = "FIELD"
-            data_type      = "BOOLEAN"
-            name           = "is_active"
-            length_in_bits = 8
+            type      = "FIELD"
+            data_type = "BOOLEAN"
+            name      = "is_active"
+            length {
+              unit  = "BITS"
+              type  = "FIXED"
+              value = 8
+            }
           }
         }
       }
@@ -94,7 +106,7 @@ resource "leanspace_streams" "stream" {
     }
   }
   mappings {
-    metric_id = var.numeric_metric_id
+    metric_id  = var.numeric_metric_id
     expression = "$..x"
   }
 }
@@ -275,7 +287,7 @@ Optional:
 - `elements` (Block List) Only required for switches and containers (see [below for nested schema](#nestedblock--configuration--structure--elements--elements))
 - `endianness` (String) Only required for fields, it must be one of these values: BE, LE
 - `expression` (Block List, Max: 1) Only required for switches (see [below for nested schema](#nestedblock--configuration--structure--elements--expression))
-- `length_in_bits` (Number) Only required for fields
+- `length` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--length))
 - `processor` (String) Only required for fields
 - `repetitive` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--repetitive))
 
@@ -300,7 +312,7 @@ Optional:
 - `elements` (Block List) Only required for switches and containers (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements))
 - `endianness` (String) Only required for fields, it must be one of these values: BE, LE
 - `expression` (Block List, Max: 1) Only required for switches (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--expression))
-- `length_in_bits` (Number) Only required for fields
+- `length` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--length))
 - `processor` (String) Only required for fields
 - `repetitive` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--repetitive))
 
@@ -325,7 +337,7 @@ Optional:
 - `elements` (Block List) Only required for switches and containers (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements))
 - `endianness` (String) Only required for fields, it must be one of these values: BE, LE
 - `expression` (Block List, Max: 1) Only required for switches (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--expression))
-- `length_in_bits` (Number) Only required for fields
+- `length` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--length))
 - `processor` (String) Only required for fields
 - `repetitive` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--repetitive))
 
@@ -350,7 +362,7 @@ Optional:
 - `elements` (Block List) Only required for switches and containers (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements))
 - `endianness` (String) Only required for fields, it must be one of these values: BE, LE
 - `expression` (Block List, Max: 1) Only required for switches (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--expression))
-- `length_in_bits` (Number) Only required for fields
+- `length` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--length))
 - `processor` (String) Only required for fields
 - `repetitive` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--repetitive))
 
@@ -375,7 +387,7 @@ Optional:
 - `elements` (Block List) Only required for switches and containers (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements))
 - `endianness` (String) Only required for fields, it must be one of these values: BE, LE
 - `expression` (Block List, Max: 1) Only required for switches (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--expression))
-- `length_in_bits` (Number) Only required for fields
+- `length` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--length))
 - `processor` (String) Only required for fields
 - `repetitive` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--repetitive))
 
@@ -398,7 +410,7 @@ Optional:
 
 - `data_type` (String) Only required for fields, it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
 - `endianness` (String) Only required for fields, it must be one of these values: BE, LE
-- `length_in_bits` (Number) Only required for fields
+- `length` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--length))
 - `processor` (String) Only required for fields
 - `repetitive` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--repetitive))
 
@@ -408,6 +420,20 @@ Read-Only:
 - `order` (Number) Position of this component in the current context
 - `path` (String) Path of this component in the current context
 - `valid` (Boolean)
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--length"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.length`
+
+Required:
+
+- `type` (String) Type of the length, it must be one of these values: FIXED, DYNAMIC
+- `unit` (String) Unit of the length, it must be one of these values: BITS, BYTES
+
+Optional:
+
+- `path` (String)
+- `value` (Number)
+
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--repetitive"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.repetitive`
@@ -453,6 +479,20 @@ Required:
 - `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
 
 
+
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--length"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.length`
+
+Required:
+
+- `type` (String) Type of the length, it must be one of these values: FIXED, DYNAMIC
+- `unit` (String) Unit of the length, it must be one of these values: BITS, BYTES
+
+Optional:
+
+- `path` (String)
+- `value` (Number)
 
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--repetitive"></a>
@@ -501,6 +541,20 @@ Required:
 
 
 
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--length"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.length`
+
+Required:
+
+- `type` (String) Type of the length, it must be one of these values: FIXED, DYNAMIC
+- `unit` (String) Unit of the length, it must be one of these values: BITS, BYTES
+
+Optional:
+
+- `path` (String)
+- `value` (Number)
+
+
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--repetitive"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.repetitive`
 
@@ -545,6 +599,20 @@ Required:
 - `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
 
 
+
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--length"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.length`
+
+Required:
+
+- `type` (String) Type of the length, it must be one of these values: FIXED, DYNAMIC
+- `unit` (String) Unit of the length, it must be one of these values: BITS, BYTES
+
+Optional:
+
+- `path` (String)
+- `value` (Number)
 
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--repetitive"></a>
@@ -593,6 +661,20 @@ Required:
 
 
 
+<a id="nestedblock--configuration--structure--elements--elements--length"></a>
+### Nested Schema for `configuration.structure.elements.elements.length`
+
+Required:
+
+- `type` (String) Type of the length, it must be one of these values: FIXED, DYNAMIC
+- `unit` (String) Unit of the length, it must be one of these values: BITS, BYTES
+
+Optional:
+
+- `path` (String)
+- `value` (Number)
+
+
 <a id="nestedblock--configuration--structure--elements--elements--repetitive"></a>
 ### Nested Schema for `configuration.structure.elements.elements.repetitive`
 
@@ -637,6 +719,20 @@ Required:
 - `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
 
 
+
+
+<a id="nestedblock--configuration--structure--elements--length"></a>
+### Nested Schema for `configuration.structure.elements.length`
+
+Required:
+
+- `type` (String) Type of the length, it must be one of these values: FIXED, DYNAMIC
+- `unit` (String) Unit of the length, it must be one of these values: BITS, BYTES
+
+Optional:
+
+- `path` (String)
+- `value` (Number)
 
 
 <a id="nestedblock--configuration--structure--elements--repetitive"></a>

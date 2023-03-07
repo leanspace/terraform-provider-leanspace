@@ -67,7 +67,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
     }
   }
 
-argument_definitions {
+  argument_definitions {
     name        = "ActivityArgumentNumeric"
     description = "A numeric input"
     attributes {

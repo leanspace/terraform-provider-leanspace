@@ -215,7 +215,7 @@ Read-Only:
 - `endianness` (String)
 - `errors` (Set of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--errors))
 - `expression` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--expression))
-- `length_in_bits` (Number)
+- `length` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--length))
 - `name` (String)
 - `order` (Number)
 - `path` (String)
@@ -234,7 +234,7 @@ Read-Only:
 - `endianness` (String)
 - `errors` (Set of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--errors))
 - `expression` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--expression))
-- `length_in_bits` (Number)
+- `length` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--length))
 - `name` (String)
 - `order` (Number)
 - `path` (String)
@@ -253,7 +253,7 @@ Read-Only:
 - `endianness` (String)
 - `errors` (Set of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--errors))
 - `expression` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--expression))
-- `length_in_bits` (Number)
+- `length` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--length))
 - `name` (String)
 - `order` (Number)
 - `path` (String)
@@ -272,7 +272,7 @@ Read-Only:
 - `endianness` (String)
 - `errors` (Set of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--errors))
 - `expression` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--expression))
-- `length_in_bits` (Number)
+- `length` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--length))
 - `name` (String)
 - `order` (Number)
 - `path` (String)
@@ -291,7 +291,7 @@ Read-Only:
 - `endianness` (String)
 - `errors` (Set of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--errors))
 - `expression` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--expression))
-- `length_in_bits` (Number)
+- `length` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--length))
 - `name` (String)
 - `order` (Number)
 - `path` (String)
@@ -308,7 +308,7 @@ Read-Only:
 - `data_type` (String)
 - `endianness` (String)
 - `errors` (Set of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--errors))
-- `length_in_bits` (Number)
+- `length` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--length))
 - `name` (String)
 - `order` (Number)
 - `path` (String)
@@ -324,6 +324,17 @@ Read-Only:
 
 - `code` (String)
 - `message` (String)
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--length"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid`
+
+Read-Only:
+
+- `path` (String)
+- `type` (String)
+- `unit` (String)
+- `value` (Number)
 
 
 <a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--repetitive"></a>
@@ -372,6 +383,17 @@ Read-Only:
 
 
 
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--length"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.length`
+
+Read-Only:
+
+- `path` (String)
+- `type` (String)
+- `unit` (String)
+- `value` (Number)
+
+
 <a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--repetitive"></a>
 ### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.repetitive`
 
@@ -416,6 +438,17 @@ Read-Only:
 - `data_type` (String)
 
 
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--length"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid`
+
+Read-Only:
+
+- `path` (String)
+- `type` (String)
+- `unit` (String)
+- `value` (Number)
 
 
 <a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--repetitive"></a>
@@ -464,6 +497,17 @@ Read-Only:
 
 
 
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--length"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid`
+
+Read-Only:
+
+- `path` (String)
+- `type` (String)
+- `unit` (String)
+- `value` (Number)
+
+
 <a id="nestedobjatt--content--configuration--structure--valid--elements--valid--repetitive"></a>
 ### Nested Schema for `content.configuration.structure.valid.elements.valid.valid`
 
@@ -510,6 +554,17 @@ Read-Only:
 
 
 
+<a id="nestedobjatt--content--configuration--structure--valid--elements--length"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid`
+
+Read-Only:
+
+- `path` (String)
+- `type` (String)
+- `unit` (String)
+- `value` (Number)
+
+
 <a id="nestedobjatt--content--configuration--structure--valid--elements--repetitive"></a>
 ### Nested Schema for `content.configuration.structure.valid.elements.valid`
 
@@ -554,6 +609,17 @@ Read-Only:
 - `data_type` (String)
 
 
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--length"></a>
+### Nested Schema for `content.configuration.structure.valid.length`
+
+Read-Only:
+
+- `path` (String)
+- `type` (String)
+- `unit` (String)
+- `value` (Number)
 
 
 <a id="nestedobjatt--content--configuration--structure--valid--repetitive"></a>
