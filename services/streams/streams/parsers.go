@@ -105,7 +105,7 @@ func (switchValue *SwitchValue[T]) ToMap() map[string]any {
 	switch switchValue.DataType {
 	case "INTEGER", "UINTEGER", "DECIMAL":
 		switchValueMap["data"] = helper.ParseFloat(any(switchValue.Data).(float64))
-	case "TEXT":
+	case "TEXT", "BINARY", "TIMESTAMP", "DATE":
 		switchValueMap["data"] = any(switchValue.Data).(string)
 	case "BOOLEAN":
 		switchValueMap["data"] = strconv.FormatBool(any(switchValue.Data).(bool))

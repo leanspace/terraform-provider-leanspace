@@ -7,8 +7,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-var validDataTypes = []string{
-	"INTEGER", "UINTEGER", "DECIMAL", "TEXT", "BOOLEAN",
+var validFieldDataTypes = []string{
+	"INTEGER", "UINTEGER", "DECIMAL", "TEXT", "BOOLEAN", "BINARY",
+}
+
+var validComputationDataTypes = []string{
+	"INTEGER", "UINTEGER", "DECIMAL", "TEXT", "BOOLEAN", "BINARY", "TIMESTAMP", "DATE",
 }
 
 var validEndianness = []string{
@@ -194,8 +198,8 @@ func streamComponentSchema(depth int) map[string]*schema.Schema {
 		"data_type": {
 			Type:         schema.TypeString,
 			Optional:     true,
-			ValidateFunc: validation.StringInSlice(validDataTypes, false),
-			Description:  "Only required for fields, " + helper.AllowedValuesToDescription(validDataTypes),
+			ValidateFunc: validation.StringInSlice(validFieldDataTypes, false),
+			Description:  "Only required for fields, " + helper.AllowedValuesToDescription(validFieldDataTypes),
 		},
 		"endianness": {
 			Type:         schema.TypeString,
@@ -301,8 +305,8 @@ var switchValueSchema = map[string]*schema.Schema{
 	"data_type": {
 		Type:         schema.TypeString,
 		Required:     true,
-		ValidateFunc: validation.StringInSlice(validDataTypes, false),
-		Description:  helper.AllowedValuesToDescription(validDataTypes),
+		ValidateFunc: validation.StringInSlice(validFieldDataTypes, false),
+		Description:  helper.AllowedValuesToDescription(validFieldDataTypes),
 	},
 	"data": {
 		Type:     schema.TypeString,
@@ -412,8 +416,8 @@ var computationSchema = map[string]*schema.Schema{
 	"data_type": {
 		Type:         schema.TypeString,
 		Required:     true,
-		ValidateFunc: validation.StringInSlice(validDataTypes, false),
-		Description:  helper.AllowedValuesToDescription(validDataTypes),
+		ValidateFunc: validation.StringInSlice(validComputationDataTypes, false),
+		Description:  helper.AllowedValuesToDescription(validComputationDataTypes),
 	},
 	"expression": {
 		Type:        schema.TypeString,

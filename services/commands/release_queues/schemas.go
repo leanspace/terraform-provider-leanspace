@@ -35,10 +35,10 @@ var releaseQueueSchema = map[string]*schema.Schema{
 		Description:  "The Id of the Command Transformer Plugin",
 	},
 	"command_transformation_strategy": {
-		Type:        schema.TypeString,
-		Optional:    true,
+		Type:         schema.TypeString,
+		Optional:     true,
 		ValidateFunc: validation.StringInSlice(validCommandTransformationStrategies, false),
-		Description: "What transformation strategy shall be applied on created and updated Commands",
+		Description:  "What transformation strategy shall be applied on created and updated Commands",
 	},
 	"command_transformer_plugin_configuration_data": {
 		Type:        schema.TypeString,
