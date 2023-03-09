@@ -50,7 +50,7 @@ func (validators Validators) Check(obj map[string]any) error {
 func GetValue(key string, v map[string]any) any {
 	keys := strings.Split(key, ".")
 	valueToCheck := v[keys[0]]
-	for i:= 1; i < len(keys); i++ {
+	for i := 1; i < len(keys); i++ {
 		valueToCheck = valueToCheck.([]interface{})[0].(map[string]any)[keys[i]]
 	}
 

@@ -88,6 +88,16 @@ resource "leanspace_streams" "test" {
             value = 32
           }
         }
+        elements {
+          type      = "FIELD"
+          data_type = "BINARY"
+          name      = "binary_field"
+          length {
+            unit  = "BITS"
+            type  = "FIXED"
+            value = 32
+          }
+        }
       }
       elements {
         type = "SWITCH"
@@ -181,6 +191,27 @@ resource "leanspace_streams" "test" {
               var power = voltage * 15;
               return (power);
             }
+          EOT
+      }
+      elements {
+        data_type  = "BINARY"
+        name       = "binary_computation"
+        expression = <<-EOT
+            (ctx) => ctx.structure.properties.binary_field
+          EOT
+      }
+      elements {
+        data_type  = "TIMESTAMP"
+        name       = "timestamp_computation"
+        expression = <<-EOT
+            (ctx) => "2023-01-01T00:00:00.000Z"
+          EOT
+      }
+      elements {
+        data_type  = "DATE"
+        name       = "date_computation"
+        expression = <<-EOT
+            (ctx) => "2023-01-01"
           EOT
       }
     }
