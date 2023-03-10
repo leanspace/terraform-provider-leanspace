@@ -67,3 +67,9 @@ creating a resource that has the same name as an existing resource
 on your tenant, an error will be thrown (usually with code `409`).
 If this happens, either rename or delete (this can't be undone!) 
 one of the two resources.
+
+### Trimming
+
+We perform a trimming on all text, therefore is it recommanded to avoid 
+having spaces at the start and the end of your text. Otherwise terraform 
+will inform you that there is changes to be made even though there isn't any.

@@ -40,6 +40,16 @@ resource "leanspace_streams" "stream" {
         }
       }
       elements {
+        type      = "FIELD"
+        data_type = "BINARY"
+        name      = "binary_field"
+        length {
+          unit  = "BITS"
+          type  = "FIXED"
+          value = 32
+        }
+      }
+      elements {
         type = "SWITCH"
         name = "data"
         expression {
@@ -101,6 +111,27 @@ resource "leanspace_streams" "stream" {
         name       = "is_version_0"
         expression = <<-EOT
             (ctx) => ctx['structure.version'] === 0
+          EOT
+      }
+      elements {
+        data_type  = "BINARY"
+        name       = "binary_computation"
+        expression = <<-EOT
+            (ctx) => ctx.structure.properties.binary_field
+          EOT
+      }
+      elements {
+        data_type  = "TIMESTAMP"
+        name       = "timestamp_computation"
+        expression = <<-EOT
+            (ctx) => "2023-01-01T00:00:00.000Z"
+          EOT
+      }
+      elements {
+        data_type  = "DATE"
+        name       = "date_computation"
+        expression = <<-EOT
+            (ctx) => "2023-01-01"
           EOT
       }
     }
@@ -167,7 +198,7 @@ Read-Only:
 
 Required:
 
-- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
+- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY, TIMESTAMP, DATE
 - `expression` (String) i.e.: javascript function with 2 input parameters and a return value (ctx, raw) => ctx['metadata.received_at']
 - `name` (String)
 
@@ -283,7 +314,7 @@ Required:
 
 Optional:
 
-- `data_type` (String) Only required for fields, it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
+- `data_type` (String) Only required for fields, it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY
 - `elements` (Block List) Only required for switches and containers (see [below for nested schema](#nestedblock--configuration--structure--elements--elements))
 - `endianness` (String) Only required for fields, it must be one of these values: BE, LE
 - `expression` (Block List, Max: 1) Only required for switches (see [below for nested schema](#nestedblock--configuration--structure--elements--expression))
@@ -308,7 +339,7 @@ Required:
 
 Optional:
 
-- `data_type` (String) Only required for fields, it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
+- `data_type` (String) Only required for fields, it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY
 - `elements` (Block List) Only required for switches and containers (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements))
 - `endianness` (String) Only required for fields, it must be one of these values: BE, LE
 - `expression` (Block List, Max: 1) Only required for switches (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--expression))
@@ -333,7 +364,7 @@ Required:
 
 Optional:
 
-- `data_type` (String) Only required for fields, it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
+- `data_type` (String) Only required for fields, it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY
 - `elements` (Block List) Only required for switches and containers (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements))
 - `endianness` (String) Only required for fields, it must be one of these values: BE, LE
 - `expression` (Block List, Max: 1) Only required for switches (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--expression))
@@ -358,7 +389,7 @@ Required:
 
 Optional:
 
-- `data_type` (String) Only required for fields, it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
+- `data_type` (String) Only required for fields, it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY
 - `elements` (Block List) Only required for switches and containers (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements))
 - `endianness` (String) Only required for fields, it must be one of these values: BE, LE
 - `expression` (Block List, Max: 1) Only required for switches (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--expression))
@@ -383,7 +414,7 @@ Required:
 
 Optional:
 
-- `data_type` (String) Only required for fields, it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
+- `data_type` (String) Only required for fields, it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY
 - `elements` (Block List) Only required for switches and containers (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements))
 - `endianness` (String) Only required for fields, it must be one of these values: BE, LE
 - `expression` (Block List, Max: 1) Only required for switches (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--expression))
@@ -408,7 +439,7 @@ Required:
 
 Optional:
 
-- `data_type` (String) Only required for fields, it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
+- `data_type` (String) Only required for fields, it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY
 - `endianness` (String) Only required for fields, it must be one of these values: BE, LE
 - `length` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--length))
 - `processor` (String) Only required for fields
@@ -476,7 +507,7 @@ Required:
 Required:
 
 - `data` (String)
-- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
+- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY
 
 
 
@@ -536,7 +567,7 @@ Required:
 Required:
 
 - `data` (String)
-- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
+- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY
 
 
 
@@ -596,7 +627,7 @@ Required:
 Required:
 
 - `data` (String)
-- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
+- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY
 
 
 
@@ -656,7 +687,7 @@ Required:
 Required:
 
 - `data` (String)
-- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
+- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY
 
 
 
@@ -716,7 +747,7 @@ Required:
 Required:
 
 - `data` (String)
-- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN
+- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY
 
 
 
