@@ -218,7 +218,7 @@ resource "leanspace_streams" "test" {
   }
   mappings {
     metric_id = var.numeric_metric_id
-    component = "power"
+    expression = "computations.power"
   }
 }
 
