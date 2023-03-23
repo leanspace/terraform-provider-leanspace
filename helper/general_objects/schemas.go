@@ -219,7 +219,7 @@ func contains(slice []string, value string) bool {
 	return false
 }
 
-func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string) map[string]*schema.Schema {
+func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string, forceNew bool) map[string]*schema.Schema {
 	validTypes := []string{}
 	for _, value := range ValidAttributeSchemaTypes {
 		if contains(excludeTypes, value) {
@@ -344,6 +344,10 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string) ma
 				),
 			},
 		},
+	}
+
+	if forceNew {
+		schema["type"].ForceNew = true
 	}
 
 	for _, field := range excludeFields {
