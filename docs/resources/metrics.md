@@ -111,7 +111,7 @@ resource "leanspace_metrics" "test_binary" {
 
 Required:
 
-- `type` (String) it must be one of these values: NUMERIC, BOOLEAN, TEXT, DATE, TIMESTAMP, ENUM, BINARY, ARRAY
+- `type` (String) it must be one of these values: NUMERIC, BOOLEAN, TEXT, DATE, TIMESTAMP, ENUM, BINARY
 
 Optional:
 

@@ -361,7 +361,7 @@ Read-Only:
 
 Read-Only:
 
-- `options` (Set of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--expression--options))
+- `options` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--expression--options))
 - `switch_on` (String)
 
 <a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--expression--options"></a>
@@ -418,7 +418,7 @@ Read-Only:
 
 Read-Only:
 
-- `options` (Set of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--options))
+- `options` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--options))
 - `switch_on` (String)
 
 <a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--options"></a>
@@ -475,7 +475,7 @@ Read-Only:
 
 Read-Only:
 
-- `options` (Set of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--options))
+- `options` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--options))
 - `switch_on` (String)
 
 <a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--options"></a>
@@ -532,7 +532,7 @@ Read-Only:
 
 Read-Only:
 
-- `options` (Set of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--options))
+- `options` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--options))
 - `switch_on` (String)
 
 <a id="nestedobjatt--content--configuration--structure--valid--elements--valid--options"></a>
@@ -589,7 +589,7 @@ Read-Only:
 
 Read-Only:
 
-- `options` (Set of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--expression--options))
+- `options` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--expression--options))
 - `switch_on` (String)
 
 <a id="nestedobjatt--content--configuration--structure--valid--expression--options"></a>

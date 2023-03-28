@@ -490,7 +490,7 @@ Read-Only:
 
 Required:
 
-- `options` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--expression--options))
+- `options` (Block List, Min: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--expression--options))
 - `switch_on` (String) Path of the field that the switch will use
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--expression--options"></a>
@@ -550,7 +550,7 @@ Read-Only:
 
 Required:
 
-- `options` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--expression--options))
+- `options` (Block List, Min: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--expression--options))
 - `switch_on` (String) Path of the field that the switch will use
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--expression--options"></a>
@@ -610,7 +610,7 @@ Read-Only:
 
 Required:
 
-- `options` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--expression--options))
+- `options` (Block List, Min: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--expression--options))
 - `switch_on` (String) Path of the field that the switch will use
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--expression--options"></a>
@@ -670,7 +670,7 @@ Read-Only:
 
 Required:
 
-- `options` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--expression--options))
+- `options` (Block List, Min: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--expression--options))
 - `switch_on` (String) Path of the field that the switch will use
 
 <a id="nestedblock--configuration--structure--elements--elements--expression--options"></a>
@@ -730,7 +730,7 @@ Read-Only:
 
 Required:
 
-- `options` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--expression--options))
+- `options` (Block List, Min: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--expression--options))
 - `switch_on` (String) Path of the field that the switch will use
 
 <a id="nestedblock--configuration--structure--elements--expression--options"></a>
