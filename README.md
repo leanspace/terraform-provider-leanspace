@@ -4,8 +4,8 @@ This repository enables the use of Terraform for the different services of Leans
 
 ## Requirements
 
-- terraform (`choco install terraform` (windows) or `brew install terraform` (mac)): >=1.2.1
-- go (for plugin development): >=1.18
+- terraform (`choco install terraform` (windows) or `brew install terraform` (mac)): >=1.3.0
+- go (for plugin development): >=1.20
 
 ## Supported platform
 

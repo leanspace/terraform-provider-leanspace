@@ -276,7 +276,7 @@ var switchExpressionSchema = map[string]*schema.Schema{
 		Description: "Path of the field that the switch will use",
 	},
 	"options": {
-		Type:     schema.TypeSet,
+		Type:     schema.TypeList,
 		MinItems: 1,
 		Required: true,
 		Elem: &schema.Resource{

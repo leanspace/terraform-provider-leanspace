@@ -286,7 +286,7 @@ func (length *Length) FromMap(lengthMap map[string]any) error {
 
 func (switchExp *SwitchExpression) FromMap(switchExpMap map[string]any) error {
 	switchExp.SwitchOn = switchExpMap["switch_on"].(string)
-	if options, err := helper.ParseFromMaps[SwitchOption](switchExpMap["options"].(*schema.Set).List()); err != nil {
+	if options, err := helper.ParseFromMaps[SwitchOption](switchExpMap["options"].([]any)); err != nil {
 		return err
 	} else {
 		switchExp.Options = options
