@@ -20,6 +20,12 @@ func (dataType DataSourceType[T, PT]) Subscribe() {
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
+			"host": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("HOST", nil),
+				Description: "Only set this value if you are using a specific URL given by leanspace",
+			},
 			"env": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -53,6 +59,7 @@ func Provider() *schema.Provider {
 }
 
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (any, diag.Diagnostics) {
+	host := d.Get("host").(string)
 	env := d.Get("env").(string)
 	tenant := d.Get("tenant").(string)
 	clientId := d.Get("client_id").(string)
@@ -62,7 +69,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (any, diag.D
 	var diags diag.Diagnostics
 
 	if (clientId != "") && (clientSecret != "") && (tenant != "") {
-		c, err := NewClient(nil, &env, &tenant, &clientId, &clientSecret)
+		c, err := NewClient(&host, &env, &tenant, &clientId, &clientSecret)
 		if err != nil {
 			return nil, diag.FromErr(err)
 		}
