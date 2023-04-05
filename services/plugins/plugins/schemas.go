@@ -48,6 +48,10 @@ var pluginSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Optional: true,
 	},
+	"source_code_file_name": {
+    		Type:     schema.TypeString,
+    		Optional: true,
+    },
 	"source_code_file_download_authorized": {
 		Type:     schema.TypeBool,
 		Optional: true,
@@ -97,6 +101,16 @@ var pluginSchema = map[string]*schema.Schema{
 		Type:        schema.TypeString,
 		Computed:    true,
 		Description: "Plugin status. Can be ACTIVE, PENDING or FAILED",
+	},
+    "url": {
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Url to upload jar file",
+	},
+	"expires": {
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Time to upload jar file",
 	},
 }
 

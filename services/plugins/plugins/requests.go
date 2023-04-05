@@ -1,47 +1,58 @@
 package plugins
 
 import (
-	"bytes"
-	"fmt"
 	"io"
-	"mime/multipart"
 	"os"
-	"strings"
+	"net/http"
+
+	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
-func (plugin *Plugin) CustomEncoding(data []byte) (io.Reader, string, error) {
+func (plugin *Plugin) PostCreateProcess(client *provider.Client, created any) error {
+	createdPlugin := created.(*Plugin)
+
 	pluginFile, err := os.Open(plugin.FilePath)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return nil, "", fmt.Errorf("file '%s' was not found", plugin.FilePath)
-		}
-		return nil, "", err
-	}
+    if err != nil {
+        if os.IsNotExist(err) {
+            return nil
+        }
+        return nil
+    }
 
-	var b bytes.Buffer
-	formWriter := multipart.NewWriter(&b)
+    info, err := pluginFile.Stat()
+    if err != nil {
+        panic(err)
+    }
 
-	// Add file field
-	fileWriter, err := formWriter.CreateFormFile("file", pluginFile.Name())
-	if err != nil {
-		return nil, "", err
-	}
-	_, err = io.Copy(fileWriter, pluginFile)
-	if err != nil {
-		return nil, "", err
-	}
+    _, err = uploadFile(createdPlugin.Url, info.Size(), pluginFile)
+    if err != nil {
+        panic(err)
+    }
 
-	// Add data field
-	dataWriter, err := formWriter.CreateFormField("command")
-	if err != nil {
-		return nil, "", err
-	}
-	_, err = io.Copy(dataWriter, strings.NewReader(string(data)))
-	if err != nil {
-		return nil, "", err
-	}
+    return plugin.persistFilePath(created.(*Plugin))
+}
 
-	// Close the form and return
-	formWriter.Close()
-	return &b, formWriter.FormDataContentType(), nil
+func uploadFile(url string, contentLength int64, body io.Reader) (resp *http.Response, err error) {
+	putRequest, err := http.NewRequest("PUT", url, body)
+	if err != nil {
+		return nil, err
+	}
+	putRequest.ContentLength = contentLength
+	return http.DefaultClient.Do(putRequest)
+}
+
+// Persist the file path - this data is not returned from the backend, so when the resource
+// is loaded (from create/read/update) the path is empty, and so terraform thinks the field was
+// changed. This workaround prevents the value from changing - it's loaded by terraform
+// when reading the config and never changes again (except if the config changes).
+func (plugin *Plugin) persistFilePath(destPlugin *Plugin) error {
+	destPlugin.FilePath = plugin.FilePath
+	return nil
+}
+
+func (plugin *Plugin) PostUpdateProcess(_ *provider.Client, destPluginRaw any) error {
+	return plugin.persistFilePath(destPluginRaw.(*Plugin))
+}
+func (plugin *Plugin) PostReadProcess(_ *provider.Client, destPluginRaw any) error {
+	return plugin.persistFilePath(destPluginRaw.(*Plugin))
 }

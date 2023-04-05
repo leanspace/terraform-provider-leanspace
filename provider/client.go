@@ -39,11 +39,7 @@ func NewClient(host, env, tenant, clientId, clientSecret *string) (*Client, erro
 		environment := "prod"
 		env = &environment
 	}
-	hostUrl := "https://api.leanspace.io"
-	switch *env {
-	case "develop", "demo":
-		hostUrl = fmt.Sprintf("https://api.%s.leanspace.io", *env)
-	}
+	hostUrl := "http://localhost:8082"
 
 	c := Client{
 		HTTPClient: &http.Client{Timeout: 120 * time.Second},

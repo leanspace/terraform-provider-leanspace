@@ -6,6 +6,7 @@ type Plugin struct {
 	ImplementationClassName          string `json:"implementationClassName"`
 	Name                             string `json:"name"`
 	Description                      string `json:"description"`
+	SourceCodeFileName               string `json:"sourceCodeFileName"`
 	SourceCodeFileDownloadAuthorized bool   `json:"sourceCodeFileDownloadAuthorized,omitempty"`
 	FilePath                         string `json:"filePath"`
 	CreatedAt                        string `json:"createdAt"`
@@ -15,6 +16,8 @@ type Plugin struct {
 	SdkVersion                       string `json:"sdkVersion,omitempty"`
 	SdkVersionFamily                 string `json:"sdkVersionFamily"`
 	Status                           string `json:"status"`
+	Url                              string `json:"url"`
+	Expires                          string `json:"expires"`
 }
 
 func (plugin *Plugin) GetID() string { return plugin.ID }
