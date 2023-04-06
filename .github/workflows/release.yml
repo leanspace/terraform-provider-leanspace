@@ -20,12 +20,9 @@ jobs:
   version-validation:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout Repository
+      - name: Checkout Repository
         uses: actions/checkout@v3
-
-      -
-        name: Tag Validation
+      - name: Tag Validation
         env:
           GH_TOKEN: ${{ secrets.TERRAFORM_RELEASE_VAR_UPDATE_TOKEN }}
         run: |
@@ -74,48 +71,39 @@ jobs:
     needs: version-validation
     runs-on: ubuntu-latest
     steps:
-      - 
-        name: Terraform Release Approval
+      - name: Terraform Release Approval
         uses: trstringer/manual-approval@v1
         with:
           secret: ${{ github.TOKEN }}
-          approvers: elodietinland,jerome-leanspace
+          approvers: elodietinland,jerome-leanspace,coutinol,kbudkaLeanspace
           minimum-approvals: 1
-      -
-        name: Checkout local repo
+      - name: Checkout local repo
         uses: actions/checkout@v3
         with:
           ref: main
           token: ${{ secrets.LEANSPACE_BOT_TOKEN }}
           path: terraform-provider-leanspace
-      -
-        name: Unshallow
+      - name: Unshallow
         run: |
           cd terraform-provider-leanspace
           git fetch --prune --unshallow
-      -
-        name: Set up Go
-        uses: actions/setup-go@v3
+      - name: Set up Go
+        uses: actions/setup-go@v4
         with:
           go-version-file: 'terraform-provider-leanspace/go.mod'
           cache-dependency-path: terraform-provider-leanspace/go.sum
           cache: true
-      -
-        name: Import GPG key
+      - name: Import GPG key
         id: import_gpg
         uses: crazy-max/ghaction-import-gpg@v5
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
-      
-      - 
-        name: Generate Documentation
+      - name: Generate Documentation
         run: |
           cd terraform-provider-leanspace
           go generate
-
-      -
-        name: Commit tag and push
+      - name: Commit tag and push
         run: |
           cd terraform-provider-leanspace
           git config --global user.name 'leanspace-bot'
@@ -125,22 +113,17 @@ jobs:
           git commit --allow-empty -m "Update docs"
           git tag ${{ github.event.inputs.release-version }} HEAD
           git push --follow-tags
-
-      -
-        name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v3.0.0
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v4
         id: release
         with:
           version: latest
-          args: release --rm-dist
+          args: release --clean
           workdir: terraform-provider-leanspace
         env:
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
-          # GitHub sets this automatically
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      -
-        name: Updating RELEASE_VERSION variable
+      - name: Updating RELEASE_VERSION variable
         env:
           GH_TOKEN: ${{ secrets.TERRAFORM_RELEASE_VAR_UPDATE_TOKEN }}
         run: |
