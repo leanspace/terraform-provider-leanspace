@@ -85,7 +85,8 @@ You can use `terraform init && terraform import leanspace_nodes.sample_node 3563
 
 The attributes are as follows:
 - tenant: mandatory
-- environment: optional
+- env: optional
+- host: optional
 - client_id: mandatory, refers to the client id of a service account
 - client_secret: mandatory, refers to the client secret of a service account
 
@@ -94,6 +95,7 @@ This service account needs to have enough permissions (CRUD).
 It is also possible to avoid passing this information in the provider by using environment variables as follows:
 - TENANT
 - ENV
+- HOST
 - CLIENT_ID
 - CLIENT_SECRET
 

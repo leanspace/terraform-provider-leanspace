@@ -50,7 +50,7 @@ func NewClient(host, env, tenant, clientId, clientSecret *string) (*Client, erro
 		HostURL:    hostUrl,
 	}
 
-	if host != nil {
+	if host != nil && *host != "" {
 		c.HostURL = *host
 	}
 
