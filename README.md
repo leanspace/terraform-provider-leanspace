@@ -153,5 +153,9 @@ The available resources per service are:
   - members: it has three `leanspace_members` resources, created recursively.
   - service accounts: it has three `leanspace_service_accounts` resources, created recursively.  
   - teams: it has one `leanspace_teams` resource, created with the given members and policies.
+- routes:
+  - routes: it has one `leanspace_routes` resource, with basic filler data.
+- processors:
+  - processors: it has one `leanspace_processors` resource, with basic filler data.
 
 There is also an `imports/main.tf` file, to test importing resources for the Topology & Assets service.
