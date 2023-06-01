@@ -180,3 +180,12 @@ module "analysis_definition" {
 module "plans" {
   source = "./plans/states"
 }
+
+module "routes" {
+  source            = "./routes/routes"
+}
+
+module "processors" {
+  source            = "./routes/processors"
+  path   = abspath("./routes/processors/processor.jar")
+}
