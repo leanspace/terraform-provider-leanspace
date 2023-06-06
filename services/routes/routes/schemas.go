@@ -91,6 +91,7 @@ var definitionSchema = map[string]*schema.Schema{
 	},
 	"service_account_id": {
 		Type:         schema.TypeString,
+		Computed:     true,
 		Optional:     true,
 		ValidateFunc: validation.IsUUID,
 	},

@@ -64,8 +64,13 @@ func (route *Route) FromMap(routeMap map[string]any) error {
 	} else {
 		route.Tags = tags
 	}
-	route.Definition.FromMap(routeMap["definition"].([]any)[0].(map[string]any))
-
+	if err := route.Definition.FromMap(routeMap["definition"].([]any)[0].(map[string]any)); err != nil {
+		return err
+	}
+	route.ProcessorIds = make([]string, len(routeMap["processor_ids"].([]any)))
+	for i, processorId := range routeMap["processor_ids"].([]any) {
+		route.ProcessorIds[i] = processorId.(string)
+	}
 	route.CreatedAt = routeMap["created_at"].(string)
 	route.CreatedBy = routeMap["created_by"].(string)
 	route.LastModifiedAt = routeMap["last_modified_at"].(string)

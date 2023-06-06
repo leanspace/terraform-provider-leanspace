@@ -22,7 +22,7 @@ type Definition struct {
 	Configuration    string  `json:"configuration"`
 	LogLevel         string  `json:"logLevel"`
 	Valid            bool    `json:"valid,omitempty"`
-	ServiceAccountId string  `json:"serviceAccountId"`
+	ServiceAccountId string  `json:"serviceAccountId,omitempty"`
 	Errors           []Error `json:"errors,omitempty"`
 }
 

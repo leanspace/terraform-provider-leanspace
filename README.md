@@ -28,7 +28,7 @@ These platforms are defined in `.goreleaser.yml`.
 
 ### Make modification
 
-- To set a specific version for the built binary, make sure you setup the environment variable `VERSION`.   
+- To set a specific version for the built binary, make sure you setup the environment variable `VERSION`.
 For example, `export VERSION=0.7.0` with linux or `set VERSION=0.7.0` with windows.
 
 - Run `make install` or `make install-windows` if you are on windows to apply the changes.
@@ -151,7 +151,7 @@ The available resources per service are:
 - teams:
   - access policies: it has one `leanspace_access_policies` resource, with two statements, one containing a global (`*`) action and one with specific actions.
   - members: it has three `leanspace_members` resources, created recursively.
-  - service accounts: it has three `leanspace_service_accounts` resources, created recursively.  
+  - service accounts: it has three `leanspace_service_accounts` resources, created recursively.
   - teams: it has one `leanspace_teams` resource, created with the given members and policies.
 - routes:
   - routes: it has one `leanspace_routes` resource.

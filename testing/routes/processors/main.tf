@@ -13,7 +13,7 @@ variable "path" {
 
 data "leanspace_processors" "all" {
   filters {
-    ids = []
+    ids   = []
     query = ""
     page  = 0
     size  = 10
@@ -22,10 +22,10 @@ data "leanspace_processors" "all" {
 }
 
 resource "leanspace_processors" "test_create_processor" {
-  file_path                            = var.path
-  version                              = "1.0"
-  name                                 = "Terraform Processor"
-  description                          = "This is a processor created through terraform!"
+  file_path   = var.path
+  version     = "1.0"
+  name        = "Terraform Processor"
+  description = "This is a processor created through terraform!"
 }
 
 output "all_processors" {
