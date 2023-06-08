@@ -23,6 +23,7 @@ var processorSchema = map[string]*schema.Schema{
 	},
 	"version": {
 		Type:     schema.TypeString,
+		ForceNew: true,
 		Required: true,
 	},
 	"type": {
@@ -31,6 +32,7 @@ var processorSchema = map[string]*schema.Schema{
 	},
 	"file_path": {
 		Type:     schema.TypeString,
+		ForceNew: true,
 		Required: true,
 		ValidateFunc: validation.StringMatch(
 			pathToJarFileRegex,
