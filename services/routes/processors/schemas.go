@@ -3,10 +3,8 @@ package processors
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"regexp"
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 )
-
-var pathToJarFileRegex = regexp.MustCompile(`^.*\.jar$`)
 
 var processorSchema = map[string]*schema.Schema{
 	"id": {
@@ -35,7 +33,7 @@ var processorSchema = map[string]*schema.Schema{
 		ForceNew: true,
 		Required: true,
 		ValidateFunc: validation.StringMatch(
-			pathToJarFileRegex,
+			helper.PathToJarFileRegex,
 			"'file_path' must be a valid path to a .jar file",
 		),
 		Description: "It must be a valid path to a .jar file",

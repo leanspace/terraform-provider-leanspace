@@ -18,7 +18,6 @@ var validPluginTypes = []string{
 }
 
 var classNameRegex = regexp.MustCompile(`^([a-z]+\.)+([A-Z][a-zA-Z0-9]+)$`)
-var pathToJarFileRegex = regexp.MustCompile(`^.*\.jar$`)
 
 var pluginSchema = map[string]*schema.Schema{
 	"id": {
@@ -57,7 +56,7 @@ var pluginSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Required: true,
 		ValidateFunc: validation.StringMatch(
-			pathToJarFileRegex,
+			helper.PathToJarFileRegex,
 			"'file_path' must be a valid path to a .jar file",
 		),
 		Description: "It must be a valid path to a .jar file",

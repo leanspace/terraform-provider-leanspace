@@ -1,10 +1,15 @@
 package processors
 
 import (
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"io"
+	"strings"
+
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 )
 
-func (processor *Processor) CustomEncoding(data []byte) (io.Reader, string, error) {
-	return helper.CustomEncoding(processor.FilePath, data)
+func (processor *Processor) CustomEncoding(data []byte, isUpdating bool) (io.Reader, string, error) {
+	if isUpdating {
+		return strings.NewReader(string(data)), "application/json", nil
+	}
+	return helper.FileAndDataToMultipart(processor.FilePath, data)
 }

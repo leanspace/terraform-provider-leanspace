@@ -1,10 +1,11 @@
 package plugins
 
 import (
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"io"
+
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 )
 
-func (plugin *Plugin) CustomEncoding(data []byte) (io.Reader, string, error) {
-	return helper.CustomEncoding(plugin.FilePath, data)
+func (plugin *Plugin) CustomEncoding(data []byte, isUpdating bool) (io.Reader, string, error) {
+	return helper.FileAndDataToMultipart(plugin.FilePath, data)
 }

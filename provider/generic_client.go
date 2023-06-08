@@ -35,13 +35,13 @@ func (client GenericClient[T, PT]) unmarshalElement(data []byte) (PT, error) {
 	return element, nil
 }
 
-func (client GenericClient[T, PT]) encodeElement(element PT) (io.Reader, string, error) {
+func (client GenericClient[T, PT]) encodeElement(element PT, isUpdating bool) (io.Reader, string, error) {
 	data, err := client.marshalElement(element)
 	if err != nil {
 		return nil, "", err
 	}
 	if customEncoding, ok := any(element).(CustomEncodingModel); ok {
-		return customEncoding.CustomEncoding(data)
+		return customEncoding.CustomEncoding(data, isUpdating)
 	} else {
 		return strings.NewReader(string(data)), "application/json", nil
 	}
@@ -141,7 +141,7 @@ func (client GenericClient[T, PT]) Create(createElement PT) (PT, error) {
 		path = client.CreatePath(createElement)
 	}
 
-	requestContent, contentType, err := client.encodeElement(createElement)
+	requestContent, contentType, err := client.encodeElement(createElement, false)
 	if err != nil {
 		return nil, err
 	}
@@ -175,7 +175,7 @@ func (client GenericClient[T, PT]) Create(createElement PT) (PT, error) {
 }
 
 func (client GenericClient[T, PT]) Update(elementId string, updateElement PT) (PT, error) {
-	requestContent, contentType, err := client.encodeElement(updateElement)
+	requestContent, contentType, err := client.encodeElement(updateElement, true)
 	if err != nil {
 		return nil, err
 	}

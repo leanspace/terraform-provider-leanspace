@@ -43,8 +43,8 @@ func (route *Route) detachProcessors(processors []string, client *provider.Clien
 
 func (route *Route) PostCreateProcess(client *provider.Client, created any) error {
 	createdRoute := created.(*Route)
-	if len(createdRoute.ProcessorIds) > 0 {
-		err := route.attachProcessors(createdRoute.ProcessorIds, client)
+	if len(route.ProcessorIds) > 0 {
+		err := createdRoute.attachProcessors(route.ProcessorIds, client)
 		if err != nil {
 			return err
 		}

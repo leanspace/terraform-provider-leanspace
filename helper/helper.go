@@ -8,6 +8,7 @@ import (
 	"log"
 	"mime/multipart"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -70,7 +71,7 @@ func Ptr[T any](value T) *T {
 	return &value
 }
 
-func CustomEncoding(filePath string, data []byte) (io.Reader, string, error) {
+func FileAndDataToMultipart(filePath string, data []byte) (io.Reader, string, error) {
 	processorFile, err := os.Open(filePath)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -133,3 +134,5 @@ var Logger = func() *log.Logger {
 	log.SetOutput(ioutil.Discard)
 	return log.Default()
 }()
+
+var PathToJarFileRegex *regexp.Regexp = regexp.MustCompile(`^.*\.jar$`)

@@ -183,6 +183,7 @@ module "plans" {
 
 module "routes" {
   source            = "./routes/routes"
+  processor_ids = [ module.processors.test_create_processor.id ]
 }
 
 module "processors" {
