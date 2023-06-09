@@ -19,6 +19,8 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/monitors"
 	"github.com/leanspace/terraform-provider-leanspace/services/plans/plan_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/plugins/plugins"
+	"github.com/leanspace/terraform-provider-leanspace/services/routes/processors"
+	"github.com/leanspace/terraform-provider-leanspace/services/routes/routes"
 	"github.com/leanspace/terraform-provider-leanspace/services/streams/streams"
 	"github.com/leanspace/terraform-provider-leanspace/services/teams/access_policies"
 	"github.com/leanspace/terraform-provider-leanspace/services/teams/members"
@@ -50,4 +52,6 @@ func AddDataTypes() {
 	widgets.WidgetDataType.Subscribe()
 	plan_states.PlanStateDataType.Subscribe()
 	activity_states.ActivityStateDataType.Subscribe()
+	routes.RouteDataType.Subscribe()
+	processors.ProcessorDataType.Subscribe()
 }

@@ -70,7 +70,7 @@ type CustomEncodingModel interface {
 	// This can be useful to properly encode multipart data, for instance.
 	// The parameters are the JSON encoded representation of the model, and the client used.
 	// It must return a reader to the body, the content type, and possibly an error.
-	CustomEncoding([]byte) (io.Reader, string, error)
+	CustomEncoding([]byte, bool) (io.Reader, string, error)
 }
 
 type ValidationModel interface {

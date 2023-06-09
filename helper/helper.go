@@ -1,10 +1,14 @@
 package helper
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
+	"mime/multipart"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -67,6 +71,43 @@ func Ptr[T any](value T) *T {
 	return &value
 }
 
+func FileAndDataToMultipart(filePath string, data []byte) (io.Reader, string, error) {
+	processorFile, err := os.Open(filePath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil, "", fmt.Errorf("file '%s' was not found", filePath)
+		}
+		return nil, "", err
+	}
+
+	var b bytes.Buffer
+	formWriter := multipart.NewWriter(&b)
+
+	// Add file field
+	fileWriter, err := formWriter.CreateFormFile("file", processorFile.Name())
+	if err != nil {
+		return nil, "", err
+	}
+	_, err = io.Copy(fileWriter, processorFile)
+	if err != nil {
+		return nil, "", err
+	}
+
+	// Add data field
+	dataWriter, err := formWriter.CreateFormField("command")
+	if err != nil {
+		return nil, "", err
+	}
+	_, err = io.Copy(dataWriter, strings.NewReader(string(data)))
+	if err != nil {
+		return nil, "", err
+	}
+
+	// Close the form and return
+	formWriter.Close()
+	return &b, formWriter.FormDataContentType(), nil
+}
+
 func SnakeToCamelCase(str string) string {
 	parts := strings.Split(str, "_")
 	base := strings.ToLower(parts[0])
@@ -93,3 +134,5 @@ var Logger = func() *log.Logger {
 	log.SetOutput(ioutil.Discard)
 	return log.Default()
 }()
+
+var PathToJarFileRegex *regexp.Regexp = regexp.MustCompile(`^.*\.jar$`)

@@ -31,6 +31,9 @@ else
     ifeq ($(UNAME_P),x86_64)
         ARCHITECTURE=amd64
     endif
+    ifeq ($(UNAME_P),i386)
+        ARCHITECTURE=amd64
+    endif
     ifneq ($(filter aarch6%,$(UNAME_P)),)
         ARCHITECTURE=arm64
     endif
@@ -63,9 +66,9 @@ install-windows: build-windows
 	if not exist %APPDATA%\terraform.d\plugins\${HOSTNAME}\${NAMESPACE}\${NAME}\${VERSION}\${OS_ARCH} mkdir %APPDATA%\terraform.d\plugins\${HOSTNAME}\${NAMESPACE}\${NAME}\${VERSION}\${OS_ARCH}
 	move ${BINARY}.exe %APPDATA%\terraform.d\plugins\${HOSTNAME}\${NAMESPACE}\${NAME}\${VERSION}\${OS_ARCH}
 
-test: 
-	go test -i $(TEST) || exit 1                                                   
-	echo $(TEST) | xargs -t -n4 go test $(TESTARGS) -timeout=30s -parallel=4                    
+test:
+	go test -i $(TEST) || exit 1
+	echo $(TEST) | xargs -t -n4 go test $(TESTARGS) -timeout=30s -parallel=4
 
-testacc: 
-	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m   
+testacc:
+	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m

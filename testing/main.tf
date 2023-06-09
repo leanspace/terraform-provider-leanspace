@@ -180,3 +180,13 @@ module "analysis_definition" {
 module "plans" {
   source = "./plans/states"
 }
+
+module "routes" {
+  source            = "./routes/routes"
+  processor_ids = [ module.processors.test_create_processor.id ]
+}
+
+module "processors" {
+  source            = "./routes/processors"
+  path   = abspath("./routes/processors/processor.jar")
+}
