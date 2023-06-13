@@ -170,13 +170,6 @@ module "units" {
   source = "./asset/units"
 }
 
-module "analysis_definition" {
-  source            = "./analyses/analysis_definition"
-  node_id           = module.nodes.satellite_node.id
-  ground_station_id = module.nodes.groundstation_node.id
-  mass_property_id  = module.properties.test_numeric_property.id
-}
-
 module "plans" {
   source = "./plans/states"
 }
