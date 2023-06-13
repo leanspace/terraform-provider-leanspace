@@ -4,7 +4,6 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/activities/activity_definitions"
 	"github.com/leanspace/terraform-provider-leanspace/services/activities/activity_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/agents/remote_agents"
-	"github.com/leanspace/terraform-provider-leanspace/services/analyses/analysis_definitions"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/nodes"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/properties"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/units"
@@ -32,7 +31,6 @@ func AddDataTypes() {
 	access_policies.AccessPolicyDataType.Subscribe()
 	action_templates.ActionTemplateDataType.Subscribe()
 	activity_definitions.ActivityDefinitionDataType.Subscribe()
-	analysis_definitions.AnalysisDefinitionDataType.Subscribe()
 	command_definitions.CommandDataType.Subscribe()
 	command_queues.CommandQueueDataType.Subscribe()
 	release_queues.ReleaseQueueDataType.Subscribe()
