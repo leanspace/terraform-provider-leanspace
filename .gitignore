@@ -7,3 +7,4 @@ terraform-provider-leanspace
 **/.DS_Store
 
 .idea
+*.iml
