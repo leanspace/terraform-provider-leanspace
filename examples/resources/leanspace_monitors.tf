@@ -11,9 +11,8 @@ variable "action_template_ids" {
 resource "leanspace_monitors" "test_greater_than_monitor" {
   name                         = "Terraform Monitor 1"
   description                  = "A monitor created throug terraform."
-  polling_frequency_in_minutes = 60
   metric_id                    = var.metric_id
-  expression {
+  rule {
     comparison_operator  = "GREATER_THAN"
     comparison_value     = 200
     aggregation_function = "HIGHEST_VALUE"
@@ -29,9 +28,8 @@ resource "leanspace_monitors" "test_greater_than_monitor" {
 resource "leanspace_monitors" "test_equals_monitor" {
   name                         = "Terraform Monitor 2"
   description                  = "Another monitor created throug terraform."
-  polling_frequency_in_minutes = 60
   metric_id                    = var.metric_id
-  expression {
+  rule {
     comparison_operator  = "NOT_EQUAL_TO"
     comparison_value     = 120
     aggregation_function = "COUNT_VALUE"

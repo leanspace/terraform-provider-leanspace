@@ -19,16 +19,6 @@ var validComparisonOperators = []string{
 	"NOT_EQUAL_TO",
 }
 
-var validAggregationFunctions = []string{
-	"AVERAGE_VALUE",
-	"HIGHEST_VALUE",
-	"LOWEST_VALUE",
-	"SUM_VALUE",
-	"COUNT_VALUE",
-}
-
-var validPollingFrequencies = []int{1, 60, 1440}
-
 var monitorSchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
@@ -46,12 +36,6 @@ var monitorSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Computed: true,
 	},
-	"polling_frequency_in_minutes": {
-		Type:         schema.TypeInt,
-		Required:     true,
-		ValidateFunc: validation.IntInSlice(validPollingFrequencies),
-		Description:  helper.AllowedIntValuesToDescription(validPollingFrequencies),
-	},
 	"metric_id": {
 		Type:         schema.TypeString,
 		Required:     true,
@@ -61,20 +45,13 @@ var monitorSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Computed: true,
 	},
-	"statistics": {
-		Type:     schema.TypeList,
-		Computed: true,
-		Elem: &schema.Resource{
-			Schema: statisticsSchema,
-		},
-	},
-	"expression": {
+	"rule": {
 		Type:     schema.TypeList,
 		Required: true,
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: expressionSchema,
+			Schema: ruleSchema,
 		},
 	},
 	"action_templates": {
@@ -113,34 +90,14 @@ var monitorSchema = map[string]*schema.Schema{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
-}
-
-var statisticsSchema = map[string]*schema.Schema{
-	"last_evaluation": {
-		Type:     schema.TypeList,
-		Computed: true,
-		Elem: &schema.Resource{
-			Schema: evaluationSchema,
-		},
+	"type": {
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Represent the type of the monitor. This field is deprecated and it will be removed soon. Please use only this type: REALTIME.",
 	},
 }
 
-var evaluationSchema = map[string]*schema.Schema{
-	"timestamp": {
-		Type:     schema.TypeString,
-		Computed: true,
-	},
-	"value": {
-		Type:     schema.TypeFloat,
-		Computed: true,
-	},
-	"status": {
-		Type:     schema.TypeString,
-		Computed: true,
-	},
-}
-
-var expressionSchema = map[string]*schema.Schema{
+var ruleSchema = map[string]*schema.Schema{ // ruleSchema
 	"comparison_operator": {
 		Type:         schema.TypeString,
 		Required:     true,
@@ -150,12 +107,6 @@ var expressionSchema = map[string]*schema.Schema{
 	"comparison_value": {
 		Type:     schema.TypeFloat,
 		Required: true,
-	},
-	"aggregation_function": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validAggregationFunctions, false),
-		Description:  helper.AllowedValuesToDescription(validAggregationFunctions),
 	},
 	"tolerance": {
 		Type:         schema.TypeFloat,

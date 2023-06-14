@@ -4,7 +4,7 @@ import (
 	. "github.com/leanspace/terraform-provider-leanspace/helper"
 )
 
-var monitorExpressionValidators = Validators{
+var monitorRuleValidators = Validators{
 	If(
 		IsSet("tolerance"),
 		Or(Equals("comparison_operator", "EQUAL_TO"), Equals("comparison_operator", "NOT_EQUAL_TO")),
@@ -12,5 +12,5 @@ var monitorExpressionValidators = Validators{
 }
 
 func (monitor *Monitor) Validate(obj map[string]any) error {
-	return monitorExpressionValidators.Check(obj["expression"].([]any)[0].(map[string]any))
+	return monitorRuleValidators.Check(obj["rule"].([]any)[0].(map[string]any))
 }

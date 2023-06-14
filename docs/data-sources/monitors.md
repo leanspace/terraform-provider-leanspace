@@ -79,15 +79,13 @@ Read-Only:
 - `created_at` (String)
 - `created_by` (String)
 - `description` (String)
-- `expression` (List of Object) (see [below for nested schema](#nestedobjatt--content--expression))
+- `rule` (List of Object) (see [below for nested schema](#nestedobjatt--content--expression))
 - `id` (String)
 - `last_modified_at` (String)
 - `last_modified_by` (String)
 - `metric_id` (String)
 - `name` (String)
 - `node_id` (String)
-- `polling_frequency_in_minutes` (Number)
-- `statistics` (List of Object) (see [below for nested schema](#nestedobjatt--content--statistics))
 - `status` (String)
 - `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
 
@@ -109,35 +107,16 @@ Read-Only:
 
 
 <a id="nestedobjatt--content--expression"></a>
-### Nested Schema for `content.expression`
+### Nested Schema for `content.rule`
 
 Read-Only:
 
-- `aggregation_function` (String)
 - `comparison_operator` (String)
 - `comparison_value` (Number)
 - `tolerance` (Number)
 
 
 <a id="nestedobjatt--content--statistics"></a>
-### Nested Schema for `content.statistics`
-
-Read-Only:
-
-- `last_evaluation` (List of Object) (see [below for nested schema](#nestedobjatt--content--statistics--last_evaluation))
-
-<a id="nestedobjatt--content--statistics--last_evaluation"></a>
-### Nested Schema for `content.statistics.last_evaluation`
-
-Read-Only:
-
-- `status` (String)
-- `timestamp` (String)
-- `value` (Number)
-
-
-
-<a id="nestedobjatt--content--tags"></a>
 ### Nested Schema for `content.tags`
 
 Read-Only:
