@@ -17,6 +17,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/action_templates"
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/monitors"
 	"github.com/leanspace/terraform-provider-leanspace/services/plans/plan_states"
+	"github.com/leanspace/terraform-provider-leanspace/services/orbits/orbit_resources"
 	"github.com/leanspace/terraform-provider-leanspace/services/plugins/plugins"
 	"github.com/leanspace/terraform-provider-leanspace/services/routes/processors"
 	"github.com/leanspace/terraform-provider-leanspace/services/routes/routes"
@@ -52,4 +53,5 @@ func AddDataTypes() {
 	activity_states.ActivityStateDataType.Subscribe()
 	routes.RouteDataType.Subscribe()
 	processors.ProcessorDataType.Subscribe()
+	orbit_resources.OrbitResourceDataType.Subscribe()
 }
