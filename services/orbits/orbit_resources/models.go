@@ -26,6 +26,7 @@ type GpsMetricIds struct {
 }
 
 // ComplexOrbitResource && SimpleOrbitResource needed as workaround to "implement" the json marshalling of optional embedded object (GpsMetricIds)
+// see parsers file for explanation
 type ComplexOrbitResource struct {
 	ID                                        string                     `json:"id"`
 	SatelliteId                               string                     `json:"satelliteId"`

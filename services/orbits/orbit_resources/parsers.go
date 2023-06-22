@@ -63,6 +63,11 @@ func (gpsMetricIds *GpsMetricIds) FromMap(gpsMetricIdsMap map[string]any) error 
 }
 
 // will be automatically called by json.Marshal (see generic_client.go)
+//
+// technical note: In Terraform, when using the optional flag for a list variable,
+// it will still be represented as an empty list ([]) in the resulting JSON output
+// if it is not provided in the configuration.
+// Omitting it entirely from the JSON output is not directly supported.
 func (orbitResource OrbitResource) MarshalJSON() ([]byte, error) {
 
     if orbitResource.DataSource == "GPS_METRIC" {
