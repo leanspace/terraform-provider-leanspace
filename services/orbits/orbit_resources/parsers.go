@@ -1,5 +1,9 @@
 package orbit_resources
 
+import (
+	"encoding/json"
+)
+
 func (orbitResource *OrbitResource) ToMap() map[string]any {
 	orbitResourceMap := make(map[string]any)
 	orbitResourceMap["id"] = orbitResource.ID
@@ -33,10 +37,10 @@ func (orbitResource *OrbitResource) FromMap(orbitResourceMap map[string]any) err
 	orbitResource.SatelliteId = orbitResourceMap["satellite_id"].(string)
 	orbitResource.Name = orbitResourceMap["name"].(string)
 	orbitResource.DataSource = orbitResourceMap["data_source"].(string)
-	orbitResource.AutomaticTleUpdate = orbitResourceMap["automatic_tle_update"].(string)
-	orbitResource.AutomaticPropagation = orbitResourceMap["automatic_propagation"].(string)
-	if orbitResourceMap["gps_metric_ids"] != nil {
-	    if err := orbitResource.GpsMetricIds.FromMap(orbitResourceMap["gps_metric_ids"].([]any)[0].(map[string]any)); err != nil {
+	orbitResource.AutomaticTleUpdate = orbitResourceMap["automatic_tle_update"].(bool)
+	orbitResource.AutomaticPropagation = orbitResourceMap["automatic_propagation"].(bool)
+	if len(orbitResourceMap["gps_metric_ids"].([]any)) > 0 {
+        if err := orbitResource.GpsMetricIds.FromMap(orbitResourceMap["gps_metric_ids"].([]any)[0].(map[string]any)); err != nil {
             return err
         }
     }
@@ -56,4 +60,44 @@ func (gpsMetricIds *GpsMetricIds) FromMap(gpsMetricIdsMap map[string]any) error 
 	gpsMetricIds.MetricIdForVelocityY = gpsMetricIdsMap["metric_id_for_velocity_y"].(string)
 	gpsMetricIds.MetricIdForVelocityZ = gpsMetricIdsMap["metric_id_for_velocity_z"].(string)
 	return nil
+}
+
+// will be automatically called by json.Marshal (see generic_client.go)
+func (orbitResource OrbitResource) MarshalJSON() ([]byte, error) {
+
+    if orbitResource.DataSource == "GPS_METRIC" {
+
+        var complexOrbitResource ComplexOrbitResource
+
+        complexOrbitResource.ID = orbitResource.ID
+        complexOrbitResource.SatelliteId = orbitResource.SatelliteId
+        complexOrbitResource.Name = orbitResource.Name
+        complexOrbitResource.DataSource = orbitResource.DataSource
+        complexOrbitResource.GpsMetricIds = orbitResource.GpsMetricIds
+        complexOrbitResource.AutomaticTleUpdate = orbitResource.AutomaticTleUpdate
+        complexOrbitResource.AutomaticPropagation = orbitResource.AutomaticPropagation
+        complexOrbitResource.CreatedAt = orbitResource.CreatedAt
+        complexOrbitResource.CreatedBy = orbitResource.CreatedBy
+        complexOrbitResource.LastModifiedAt = orbitResource.LastModifiedAt
+        complexOrbitResource.LastModifiedBy = orbitResource.LastModifiedBy
+
+        return json.Marshal(complexOrbitResource)
+
+    } else {
+
+        var simpleOrbitResource SimpleOrbitResource
+
+        simpleOrbitResource.ID = orbitResource.ID
+        simpleOrbitResource.SatelliteId = orbitResource.SatelliteId
+        simpleOrbitResource.Name = orbitResource.Name
+        simpleOrbitResource.DataSource = orbitResource.DataSource
+        simpleOrbitResource.AutomaticTleUpdate = orbitResource.AutomaticTleUpdate
+        simpleOrbitResource.AutomaticPropagation = orbitResource.AutomaticPropagation
+        simpleOrbitResource.CreatedAt = orbitResource.CreatedAt
+        simpleOrbitResource.CreatedBy = orbitResource.CreatedBy
+        simpleOrbitResource.LastModifiedAt = orbitResource.LastModifiedAt
+        simpleOrbitResource.LastModifiedBy = orbitResource.LastModifiedBy
+
+        return json.Marshal(simpleOrbitResource)
+    }
 }

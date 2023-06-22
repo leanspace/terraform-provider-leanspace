@@ -37,7 +37,7 @@ var orbitResourceSchema = map[string]*schema.Schema{
     "gps_metric_ids": {
         Type:     schema.TypeList,
         Optional:    true,
-        MinItems: 1,
+        MinItems: 0,
         MaxItems: 1,
         Elem: &schema.Resource{
             Schema: gpsMetricIdsSchema,
@@ -68,27 +68,27 @@ var orbitResourceSchema = map[string]*schema.Schema{
 var gpsMetricIdsSchema = map[string]*schema.Schema{
 	"metric_id_for_position_x": {
 		Type:     schema.TypeString,
-		Computed: true,
+		Optional: true,
 	},
     "metric_id_for_position_y": {
         Type:     schema.TypeString,
-        Computed: true,
+        Optional: true,
     },
     "metric_id_for_position_z": {
         Type:     schema.TypeString,
-        Computed: true,
+        Optional: true,
     },
     "metric_id_for_velocity_x": {
         Type:     schema.TypeString,
-        Computed: true,
+        Optional: true,
     },
     "metric_id_for_velocity_y": {
         Type:     schema.TypeString,
-        Computed: true,
+        Optional: true,
     },
     "metric_id_for_velocity_z": {
         Type:     schema.TypeString,
-        Computed: true,
+        Optional: true,
     },
 }
 
