@@ -25,9 +25,8 @@ variable "action_template_ids" {
 resource "leanspace_monitors" "test_greater_than_monitor" {
   name                         = "Terraform Monitor 1"
   description                  = "A monitor created throug terraform."
-  polling_frequency_in_minutes = 60
   metric_id                    = var.metric_id
-  expression {
+  rule {
     comparison_operator  = "GREATER_THAN"
     comparison_value     = 200
     aggregation_function = "HIGHEST_VALUE"
@@ -43,9 +42,8 @@ resource "leanspace_monitors" "test_greater_than_monitor" {
 resource "leanspace_monitors" "test_equals_monitor" {
   name                         = "Terraform Monitor 2"
   description                  = "Another monitor created throug terraform."
-  polling_frequency_in_minutes = 60
   metric_id                    = var.metric_id
-  expression {
+  rule {
     comparison_operator  = "NOT_EQUAL_TO"
     comparison_value     = 120
     aggregation_function = "COUNT_VALUE"
@@ -64,10 +62,9 @@ resource "leanspace_monitors" "test_equals_monitor" {
 
 ### Required
 
-- `expression` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--expression))
 - `metric_id` (String)
 - `name` (String)
-- `polling_frequency_in_minutes` (Number) it must be one of these values: 1, 60, 1440
+- `rule` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--rule))
 
 ### Optional
 
@@ -84,15 +81,14 @@ resource "leanspace_monitors" "test_equals_monitor" {
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
 - `node_id` (String)
-- `statistics` (List of Object) (see [below for nested schema](#nestedatt--statistics))
 - `status` (String)
+- `type` (String) Represent the type of the monitor. This field is deprecated and it will be removed soon. Please use only this type: REALTIME.
 
-<a id="nestedblock--expression"></a>
-### Nested Schema for `expression`
+<a id="nestedblock--rule"></a>
+### Nested Schema for `rule`
 
 Required:
 
-- `aggregation_function` (String) it must be one of these values: AVERAGE_VALUE, HIGHEST_VALUE, LOWEST_VALUE, SUM_VALUE, COUNT_VALUE
 - `comparison_operator` (String) it must be one of these values: GREATER_THAN, LESSER_THAN, GREATER_THAN_OR_EQUAL_TO, LESSER_THAN_OR_EQUAL_TO, EQUAL_TO, NOT_EQUAL_TO
 - `comparison_value` (Number)
 
@@ -128,20 +124,3 @@ Read-Only:
 - `payload` (String)
 - `type` (String)
 - `url` (String)
-
-
-<a id="nestedatt--statistics"></a>
-### Nested Schema for `statistics`
-
-Read-Only:
-
-- `last_evaluation` (List of Object) (see [below for nested schema](#nestedobjatt--statistics--last_evaluation))
-
-<a id="nestedobjatt--statistics--last_evaluation"></a>
-### Nested Schema for `statistics.last_evaluation`
-
-Read-Only:
-
-- `status` (String)
-- `timestamp` (String)
-- `value` (Number)

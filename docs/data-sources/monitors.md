@@ -79,15 +79,16 @@ Read-Only:
 - `created_at` (String)
 - `created_by` (String)
 - `description` (String)
-- `rule` (List of Object) (see [below for nested schema](#nestedobjatt--content--expression))
 - `id` (String)
 - `last_modified_at` (String)
 - `last_modified_by` (String)
 - `metric_id` (String)
 - `name` (String)
 - `node_id` (String)
+- `rule` (List of Object) (see [below for nested schema](#nestedobjatt--content--rule))
 - `status` (String)
 - `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
+- `type` (String)
 
 <a id="nestedobjatt--content--action_templates"></a>
 ### Nested Schema for `content.action_templates`
@@ -106,7 +107,7 @@ Read-Only:
 - `url` (String)
 
 
-<a id="nestedobjatt--content--expression"></a>
+<a id="nestedobjatt--content--rule"></a>
 ### Nested Schema for `content.rule`
 
 Read-Only:
@@ -116,7 +117,7 @@ Read-Only:
 - `tolerance` (Number)
 
 
-<a id="nestedobjatt--content--statistics"></a>
+<a id="nestedobjatt--content--tags"></a>
 ### Nested Schema for `content.tags`
 
 Read-Only:
