@@ -68,27 +68,27 @@ var orbitResourceSchema = map[string]*schema.Schema{
 var gpsMetricIdsSchema = map[string]*schema.Schema{
 	"metric_id_for_position_x": {
 		Type:     schema.TypeString,
-		Optional: true,
+		Required: true,
 	},
 	"metric_id_for_position_y": {
 		Type:     schema.TypeString,
-		Optional: true,
+		Required: true,
 	},
 	"metric_id_for_position_z": {
 		Type:     schema.TypeString,
-		Optional: true,
+		Required: true,
 	},
 	"metric_id_for_velocity_x": {
 		Type:     schema.TypeString,
-		Optional: true,
+		Required: true,
 	},
 	"metric_id_for_velocity_y": {
 		Type:     schema.TypeString,
-		Optional: true,
+		Required: true,
 	},
 	"metric_id_for_velocity_z": {
 		Type:     schema.TypeString,
-		Optional: true,
+		Required: true,
 	},
 }
 
