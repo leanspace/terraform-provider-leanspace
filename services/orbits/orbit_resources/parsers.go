@@ -12,7 +12,7 @@ func (orbitResource *OrbitResource) ToMap() map[string]any {
 	orbitResourceMap["data_source"] = orbitResource.DataSource
 	orbitResourceMap["automatic_tle_update"] = orbitResource.AutomaticTleUpdate
 	orbitResourceMap["automatic_propagation"] = orbitResource.AutomaticPropagation
-    orbitResourceMap["gps_metric_ids"] = []any{orbitResource.GpsMetricIds.ToMap()}
+	orbitResourceMap["gps_metric_ids"] = []any{orbitResource.GpsMetricIds.ToMap()}
 	orbitResourceMap["created_at"] = orbitResource.CreatedAt
 	orbitResourceMap["created_by"] = orbitResource.CreatedBy
 	orbitResourceMap["last_modified_at"] = orbitResource.LastModifiedAt
@@ -40,10 +40,10 @@ func (orbitResource *OrbitResource) FromMap(orbitResourceMap map[string]any) err
 	orbitResource.AutomaticTleUpdate = orbitResourceMap["automatic_tle_update"].(bool)
 	orbitResource.AutomaticPropagation = orbitResourceMap["automatic_propagation"].(bool)
 	if len(orbitResourceMap["gps_metric_ids"].([]any)) > 0 {
-        if err := orbitResource.GpsMetricIds.FromMap(orbitResourceMap["gps_metric_ids"].([]any)[0].(map[string]any)); err != nil {
-            return err
-        }
-    }
+		if err := orbitResource.GpsMetricIds.FromMap(orbitResourceMap["gps_metric_ids"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
+	}
 	orbitResource.CreatedAt = orbitResourceMap["created_at"].(string)
 	orbitResource.CreatedBy = orbitResourceMap["created_by"].(string)
 	orbitResource.LastModifiedAt = orbitResourceMap["last_modified_at"].(string)
@@ -70,39 +70,39 @@ func (gpsMetricIds *GpsMetricIds) FromMap(gpsMetricIdsMap map[string]any) error 
 // Omitting it entirely from the JSON output is not directly supported.
 func (orbitResource OrbitResource) MarshalJSON() ([]byte, error) {
 
-    if orbitResource.DataSource == "GPS_METRIC" {
+	if orbitResource.DataSource == "GPS_METRIC" {
 
-        var complexOrbitResource ComplexOrbitResource
+		var complexOrbitResource ComplexOrbitResource
 
-        complexOrbitResource.ID = orbitResource.ID
-        complexOrbitResource.SatelliteId = orbitResource.SatelliteId
-        complexOrbitResource.Name = orbitResource.Name
-        complexOrbitResource.DataSource = orbitResource.DataSource
-        complexOrbitResource.GpsMetricIds = orbitResource.GpsMetricIds
-        complexOrbitResource.AutomaticTleUpdate = orbitResource.AutomaticTleUpdate
-        complexOrbitResource.AutomaticPropagation = orbitResource.AutomaticPropagation
-        complexOrbitResource.CreatedAt = orbitResource.CreatedAt
-        complexOrbitResource.CreatedBy = orbitResource.CreatedBy
-        complexOrbitResource.LastModifiedAt = orbitResource.LastModifiedAt
-        complexOrbitResource.LastModifiedBy = orbitResource.LastModifiedBy
+		complexOrbitResource.ID = orbitResource.ID
+		complexOrbitResource.SatelliteId = orbitResource.SatelliteId
+		complexOrbitResource.Name = orbitResource.Name
+		complexOrbitResource.DataSource = orbitResource.DataSource
+		complexOrbitResource.GpsMetricIds = orbitResource.GpsMetricIds
+		complexOrbitResource.AutomaticTleUpdate = orbitResource.AutomaticTleUpdate
+		complexOrbitResource.AutomaticPropagation = orbitResource.AutomaticPropagation
+		complexOrbitResource.CreatedAt = orbitResource.CreatedAt
+		complexOrbitResource.CreatedBy = orbitResource.CreatedBy
+		complexOrbitResource.LastModifiedAt = orbitResource.LastModifiedAt
+		complexOrbitResource.LastModifiedBy = orbitResource.LastModifiedBy
 
-        return json.Marshal(complexOrbitResource)
+		return json.Marshal(complexOrbitResource)
 
-    } else {
+	} else {
 
-        var simpleOrbitResource SimpleOrbitResource
+		var simpleOrbitResource SimpleOrbitResource
 
-        simpleOrbitResource.ID = orbitResource.ID
-        simpleOrbitResource.SatelliteId = orbitResource.SatelliteId
-        simpleOrbitResource.Name = orbitResource.Name
-        simpleOrbitResource.DataSource = orbitResource.DataSource
-        simpleOrbitResource.AutomaticTleUpdate = orbitResource.AutomaticTleUpdate
-        simpleOrbitResource.AutomaticPropagation = orbitResource.AutomaticPropagation
-        simpleOrbitResource.CreatedAt = orbitResource.CreatedAt
-        simpleOrbitResource.CreatedBy = orbitResource.CreatedBy
-        simpleOrbitResource.LastModifiedAt = orbitResource.LastModifiedAt
-        simpleOrbitResource.LastModifiedBy = orbitResource.LastModifiedBy
+		simpleOrbitResource.ID = orbitResource.ID
+		simpleOrbitResource.SatelliteId = orbitResource.SatelliteId
+		simpleOrbitResource.Name = orbitResource.Name
+		simpleOrbitResource.DataSource = orbitResource.DataSource
+		simpleOrbitResource.AutomaticTleUpdate = orbitResource.AutomaticTleUpdate
+		simpleOrbitResource.AutomaticPropagation = orbitResource.AutomaticPropagation
+		simpleOrbitResource.CreatedAt = orbitResource.CreatedAt
+		simpleOrbitResource.CreatedBy = orbitResource.CreatedBy
+		simpleOrbitResource.LastModifiedAt = orbitResource.LastModifiedAt
+		simpleOrbitResource.LastModifiedBy = orbitResource.LastModifiedBy
 
-        return json.Marshal(simpleOrbitResource)
-    }
+		return json.Marshal(simpleOrbitResource)
+	}
 }

@@ -3,7 +3,7 @@ HOSTNAME=registry.terraform.io
 NAMESPACE=leanspace
 NAME=leanspace
 BINARY=terraform-provider-${NAME}
-VERSION?=3.1.0
+VERSION?=0.0.4
 PLATFORM=""
 ARCHITECTURE=""
 

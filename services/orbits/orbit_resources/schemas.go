@@ -22,27 +22,27 @@ var orbitResourceSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Required: true,
 	},
-    "data_source": {
+	"data_source": {
 		Type:     schema.TypeString,
 		Required: true,
 	},
 	"automatic_tle_update": {
-        Type:     schema.TypeBool,
-        Optional:    true,
-    },
-    "automatic_propagation": {
-        Type:     schema.TypeBool,
-        Optional:    true,
-    },
-    "gps_metric_ids": {
-        Type:     schema.TypeList,
-        Optional:    true,
-        MinItems: 0,
-        MaxItems: 1,
-        Elem: &schema.Resource{
-            Schema: gpsMetricIdsSchema,
-        },
-    },
+		Type:     schema.TypeBool,
+		Optional: true,
+	},
+	"automatic_propagation": {
+		Type:     schema.TypeBool,
+		Optional: true,
+	},
+	"gps_metric_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		MinItems: 0,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: gpsMetricIdsSchema,
+		},
+	},
 	"created_at": {
 		Type:        schema.TypeString,
 		Computed:    true,
@@ -70,26 +70,26 @@ var gpsMetricIdsSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Optional: true,
 	},
-    "metric_id_for_position_y": {
-        Type:     schema.TypeString,
-        Optional: true,
-    },
-    "metric_id_for_position_z": {
-        Type:     schema.TypeString,
-        Optional: true,
-    },
-    "metric_id_for_velocity_x": {
-        Type:     schema.TypeString,
-        Optional: true,
-    },
-    "metric_id_for_velocity_y": {
-        Type:     schema.TypeString,
-        Optional: true,
-    },
-    "metric_id_for_velocity_z": {
-        Type:     schema.TypeString,
-        Optional: true,
-    },
+	"metric_id_for_position_y": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"metric_id_for_position_z": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"metric_id_for_velocity_x": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"metric_id_for_velocity_y": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"metric_id_for_velocity_z": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{
@@ -110,21 +110,21 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 		},
 	},
 	"data_sources": {
-        Type:     schema.TypeList,
-        Optional: true,
-        Elem: &schema.Schema{
-            Type:         schema.TypeString,
-            ValidateFunc: validation.StringInSlice(validDataSources, false),
-        },
-    },
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringInSlice(validDataSources, false),
+		},
+	},
 	"automatic_tle_update": {
 		Type:     schema.TypeBool,
 		Optional: true,
 	},
 	"automatic_propagation": {
-        Type:     schema.TypeBool,
-        Optional: true,
-    },
+		Type:     schema.TypeBool,
+		Optional: true,
+	},
 	"query": {
 		Type:        schema.TypeString,
 		Optional:    true,
