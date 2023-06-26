@@ -26,10 +26,6 @@ var orbitResourceSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Required: true,
 	},
-	"automatic_tle_update": {
-		Type:     schema.TypeBool,
-		Optional: true,
-	},
 	"automatic_propagation": {
 		Type:     schema.TypeBool,
 		Optional: true,
@@ -116,10 +112,6 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 			Type:         schema.TypeString,
 			ValidateFunc: validation.StringInSlice(validDataSources, false),
 		},
-	},
-	"automatic_tle_update": {
-		Type:     schema.TypeBool,
-		Optional: true,
 	},
 	"automatic_propagation": {
 		Type:     schema.TypeBool,

@@ -5,7 +5,6 @@ type OrbitResource struct {
 	SatelliteId          string        `json:"satelliteId"`
 	Name                 string        `json:"name"`
 	DataSource           string        `json:"dataSource"`
-	AutomaticTleUpdate   bool          `json:"automaticTleUpdate"`
 	AutomaticPropagation bool          `json:"automaticPropagation"`
 	GpsMetricIds         *GpsMetricIds `json:"gpsMetricIds,omitempty"`
 	CreatedAt            string        `json:"createdAt"`

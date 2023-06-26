@@ -13,7 +13,6 @@ resource "leanspace_orbit_resources" "test_tle_celestrak" {
   name         = "Terraform Orbit Resource TLE celestrak"
   satellite_id = var.satellite_id
   data_source  = "TLE_CELESTRAK"
-  automatic_tle_update = true
   automatic_propagation = true
 }
 

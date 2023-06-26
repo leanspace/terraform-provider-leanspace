@@ -6,7 +6,6 @@ func (orbitResource *OrbitResource) ToMap() map[string]any {
 	orbitResourceMap["satellite_id"] = orbitResource.SatelliteId
 	orbitResourceMap["name"] = orbitResource.Name
 	orbitResourceMap["data_source"] = orbitResource.DataSource
-	orbitResourceMap["automatic_tle_update"] = orbitResource.AutomaticTleUpdate
 	orbitResourceMap["automatic_propagation"] = orbitResource.AutomaticPropagation
 	if orbitResource.GpsMetricIds != nil {
 		orbitResourceMap["gps_metric_ids"] = []map[string]any{orbitResource.GpsMetricIds.ToMap()}
@@ -35,7 +34,6 @@ func (orbitResource *OrbitResource) FromMap(orbitResourceMap map[string]any) err
 	orbitResource.SatelliteId = orbitResourceMap["satellite_id"].(string)
 	orbitResource.Name = orbitResourceMap["name"].(string)
 	orbitResource.DataSource = orbitResourceMap["data_source"].(string)
-	orbitResource.AutomaticTleUpdate = orbitResourceMap["automatic_tle_update"].(bool)
 	orbitResource.AutomaticPropagation = orbitResourceMap["automatic_propagation"].(bool)
 	if len(orbitResourceMap["gps_metric_ids"].([]any)) > 0 && orbitResourceMap["gps_metric_ids"].([]any)[0] != nil {
 		orbitResource.GpsMetricIds = new(GpsMetricIds)

@@ -33,7 +33,6 @@ resource "leanspace_orbit_resources" "test_tle_celestrak" {
   name         = "Terraform Orbit Resource TLE celestrak"
   satellite_id = var.satellite_id
   data_source  = "TLE_CELESTRAK"
-  automatic_tle_update = true
   automatic_propagation = true
 }
 
@@ -56,7 +55,7 @@ output "tle_manual_orbit_resource" {
 }
 
 output "tle_celestrak_orbit_resource" {
-  value = leanspace_orbit_resources.test_tle_manual
+  value = leanspace_orbit_resources.test_tle_celestrak
 }
 
 output "gps_metric_orbit_resource" {
