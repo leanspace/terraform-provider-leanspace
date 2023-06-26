@@ -37,7 +37,7 @@ var orbitResourceSchema = map[string]*schema.Schema{
 	"gps_metric_ids": {
 		Type:     schema.TypeList,
 		Optional: true,
-		MinItems: 0,
+		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
 			Schema: gpsMetricIdsSchema,
