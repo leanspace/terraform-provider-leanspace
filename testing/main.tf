@@ -183,3 +183,11 @@ module "processors" {
   source            = "./routes/processors"
   path   = abspath("./routes/processors/processor.jar")
 }
+
+module "orbit_resources" {
+  source            = "./orbits/orbit_resources"
+  satellite_id      = module.nodes.satellite_node.id
+  depends_on = [
+    module.nodes
+  ]
+}
