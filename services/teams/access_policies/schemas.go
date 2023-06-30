@@ -26,7 +26,7 @@ var accessPolicySchema = map[string]*schema.Schema{
 	},
 	"statements": {
 		Type:     schema.TypeList,
-		Required: true,
+		Optional: true,
 		Elem: &schema.Resource{
 			Schema: statementSchema,
 		},
@@ -53,7 +53,7 @@ var accessPolicySchema = map[string]*schema.Schema{
 	},
 }
 
-var actionRegex = regexp.MustCompile(`^([a-z]*):(\*|[a-zA-Z0-9]+)$`)
+var actionRegex = regexp.MustCompile(`^(\*|[a-z]*):(\*|[a-zA-Z0-9]+)$`)
 
 var statementSchema = map[string]*schema.Schema{
 	"name": {
@@ -65,7 +65,7 @@ var statementSchema = map[string]*schema.Schema{
 		Required: true,
 		Elem: &schema.Schema{
 			Type:         schema.TypeString,
-			ValidateFunc: validation.StringMatch(actionRegex, "Actions must match the pattern 'service:rule' or 'service:*'"),
+			ValidateFunc: validation.StringMatch(actionRegex, "Actions must match the pattern 'service:rule', 'service:*' or '*:*'"),
 		},
 	},
 }
