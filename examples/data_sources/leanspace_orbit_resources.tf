@@ -3,6 +3,7 @@ data "leanspace_orbit_resources" "all" {
     satellite_ids                  = [var.satellite_id]
     ids                            = []
     data_sources                   = []
+    tags                           = []
     query                          = ""
     page                           = 0
     size                           = 10
