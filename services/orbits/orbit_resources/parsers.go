@@ -1,5 +1,12 @@
 package orbit_resources
 
+import (
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
+
 func (orbitResource *OrbitResource) ToMap() map[string]any {
 	orbitResourceMap := make(map[string]any)
 	orbitResourceMap["id"] = orbitResource.ID
@@ -10,6 +17,7 @@ func (orbitResource *OrbitResource) ToMap() map[string]any {
 	if orbitResource.GpsMetricIds != nil {
 		orbitResourceMap["gps_metric_ids"] = []map[string]any{orbitResource.GpsMetricIds.ToMap()}
 	}
+	orbitResourceMap["tags"] = helper.ParseToMaps(orbitResource.Tags)
 	orbitResourceMap["created_at"] = orbitResource.CreatedAt
 	orbitResourceMap["created_by"] = orbitResource.CreatedBy
 	orbitResourceMap["last_modified_at"] = orbitResource.LastModifiedAt
@@ -40,6 +48,11 @@ func (orbitResource *OrbitResource) FromMap(orbitResourceMap map[string]any) err
 		if err := orbitResource.GpsMetricIds.FromMap(orbitResourceMap["gps_metric_ids"].([]any)[0].(map[string]any)); err != nil {
 			return err
 		}
+	}
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](orbitResourceMap["tags"].(*schema.Set).List()); err != nil {
+		return err
+	} else {
+		orbitResource.Tags = tags
 	}
 	orbitResource.CreatedAt = orbitResourceMap["created_at"].(string)
 	orbitResource.CreatedBy = orbitResourceMap["created_by"].(string)

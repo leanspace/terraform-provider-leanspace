@@ -3,6 +3,8 @@ package orbit_resources
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 var validDataSources = []string{"TLE_CELESTRAK", "TLE_MANUAL", "GPS_METRIC", "PROVIDED_PREDICTED", "PROVIDED_MEASURED"}
@@ -39,6 +41,7 @@ var orbitResourceSchema = map[string]*schema.Schema{
 			Schema: gpsMetricIdsSchema,
 		},
 	},
+	"tags": general_objects.KeyValuesSchema,
 	"created_at": {
 		Type:        schema.TypeString,
 		Computed:    true,
@@ -121,5 +124,12 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 		Type:        schema.TypeString,
 		Optional:    true,
 		Description: "Search by name",
+	},
+	"tags": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
+		},
 	},
 }
