@@ -17,6 +17,7 @@ data "leanspace_orbit_resources" "all" {
     satellite_ids                  = [var.satellite_id]
     ids                            = []
     data_sources                   = []
+    tags                           = []
     query                          = ""
     page                           = 0
     size                           = 10
@@ -60,6 +61,7 @@ Optional:
 - `satellite_ids` (List of String)
 - `size` (Number)
 - `sort` (List of String)
+- `tags` (List of String)
 
 
 <a id="nestedatt--content"></a>
@@ -77,6 +79,7 @@ Read-Only:
 - `last_modified_by` (String)
 - `name` (String)
 - `satellite_id` (String)
+- `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
 
 <a id="nestedobjatt--content--gps_metric_ids"></a>
 ### Nested Schema for `content.gps_metric_ids`
@@ -89,6 +92,15 @@ Read-Only:
 - `metric_id_for_velocity_x` (String)
 - `metric_id_for_velocity_y` (String)
 - `metric_id_for_velocity_z` (String)
+
+
+<a id="nestedobjatt--content--tags"></a>
+### Nested Schema for `content.tags`
+
+Read-Only:
+
+- `key` (String)
+- `value` (String)
 
 
 

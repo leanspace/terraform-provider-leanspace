@@ -21,6 +21,10 @@ resource "leanspace_orbit_resources" "test_tle_manual" {
   name         = "Terraform Orbit Resource TLE manual"
   satellite_id = var.satellite_id
   data_source  = "TLE_MANUAL"
+  tags {
+    key   = "Mission"
+    value = "Terraform"
+  }
 }
 
 resource "leanspace_orbit_resources" "test_tle_celestrak" {
@@ -28,6 +32,10 @@ resource "leanspace_orbit_resources" "test_tle_celestrak" {
   satellite_id = var.satellite_id
   data_source  = "TLE_CELESTRAK"
   automatic_propagation = true
+  tags {
+    key   = "Mission"
+    value = "Terraform"
+  }
 }
 
 resource "leanspace_orbit_resources" "test_gps_metric" {
@@ -41,6 +49,10 @@ resource "leanspace_orbit_resources" "test_gps_metric" {
     metric_id_for_velocity_x = "04da8b40-367c-49b2-ac5f-3f7b1b6ec5f6"
     metric_id_for_velocity_y = "cb456620-52a2-426a-a424-4bd18fbb02bf"
     metric_id_for_velocity_z = "738fbd53-9777-4562-aad9-888048344827"
+  }
+  tags {
+    key   = "Mission"
+    value = "Terraform"
   }
 }
 ```
@@ -58,6 +70,7 @@ resource "leanspace_orbit_resources" "test_gps_metric" {
 
 - `automatic_propagation` (Boolean)
 - `gps_metric_ids` (Block List, Max: 1) (see [below for nested schema](#nestedblock--gps_metric_ids))
+- `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
 
 ### Read-Only
 
@@ -78,3 +91,15 @@ Required:
 - `metric_id_for_velocity_x` (String)
 - `metric_id_for_velocity_y` (String)
 - `metric_id_for_velocity_z` (String)
+
+
+<a id="nestedblock--tags"></a>
+### Nested Schema for `tags`
+
+Required:
+
+- `key` (String)
+
+Optional:
+
+- `value` (String)
