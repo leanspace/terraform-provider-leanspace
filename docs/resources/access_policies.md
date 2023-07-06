@@ -38,11 +38,11 @@ resource "leanspace_access_policies" "access_policy" {
 ### Required
 
 - `name` (String)
-- `statements` (Block List, Min: 1) (see [below for nested schema](#nestedblock--statements))
 
 ### Optional
 
 - `description` (String)
+- `statements` (Block List) (see [below for nested schema](#nestedblock--statements))
 
 ### Read-Only
 
