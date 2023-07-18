@@ -16,10 +16,10 @@ type apiCreateOrUpdateGlobalTransmissionMetatadata struct {
 }
 
 func (queue *ReleaseQueue) toAPIFormat() ([]byte, error) {
-	shiftNode := apiCreateOrUpdateGlobalTransmissionMetatadata{
+	createOrUpdateGlobalTransmissionMetadata := apiCreateOrUpdateGlobalTransmissionMetatadata{
 		GlobalTransmissionMetadata: queue.GlobalTransmissionMetadata,
 	}
-	return json.Marshal(shiftNode)
+	return json.Marshal(createOrUpdateGlobalTransmissionMetadata)
 }
 
 func createOrUpdateGlobalTransmissionMetadata(queue *ReleaseQueue, releaseQueueId string, client *provider.Client) error {
