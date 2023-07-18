@@ -16,7 +16,7 @@ func (queue *ReleaseQueue) ToMap() map[string]any {
 	queueMap["command_transformer_plugin_id"] = queue.CommandTransformerPluginId
 	queueMap["command_transformation_strategy"] = queue.CommandTransformationStrategy
 	queueMap["command_transformer_plugin_configuration_data"] = queue.CommandTransformerPluginConfigurationData
-	queueMap["global_transmission_metadata"] = queue.GlobalTransmissionMetadata
+	queueMap["global_transmission_metadata"] = helper.ParseToMaps(queue.GlobalTransmissionMetadata)
 	queueMap["logical_lock"] = queue.LogicalLock
 	queueMap["created_at"] = queue.CreatedAt
 	queueMap["created_by"] = queue.CreatedBy
