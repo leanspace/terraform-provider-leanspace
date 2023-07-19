@@ -12,7 +12,7 @@ import (
 )
 
 type apiCreateOrUpdateGlobalTransmissionMetatadata struct {
-	GlobalTransmissionMetadata []general_objects.KeyValue `json:"globalTransmissionMetadata,"`
+	GlobalTransmissionMetadata []general_objects.KeyValue `json:"globalTransmissionMetadata"`
 }
 
 func (queue *ReleaseQueue) toAPIFormat() ([]byte, error) {
