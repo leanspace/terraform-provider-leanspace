@@ -12,7 +12,7 @@ type ReleaseQueue struct {
 	CommandTransformerPluginId                string                     `json:"commandTransformerPluginId"`
 	CommandTransformationStrategy             string                     `json:"commandTransformationStrategy"`
 	CommandTransformerPluginConfigurationData string                     `json:"commandTransformerPluginConfigurationData"`
-	GlobalTransmissionMetadata                []general_objects.KeyValue `json:"globalTransmissionMetadata,"`
+	GlobalTransmissionMetadata                []general_objects.KeyValue `json:"globalTransmissionMetadata"`
 	LogicalLock                               bool                       `json:"logicalLock"`
 	CreatedAt                                 string                     `json:"createdAt"`
 	CreatedBy                                 string                     `json:"createdBy"`

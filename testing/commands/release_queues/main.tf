@@ -29,6 +29,10 @@ resource "leanspace_release_queues" "test" {
   asset_id                        = var.asset_id
   command_transformation_strategy = "TEST"
   command_transformer_plugin_configuration_data = "{ \"key\" = \"value\" }"
+  global_transmission_metadata {
+    key = "mykey"
+    value = "myvalue"
+  }
 }
 
 output "test_release_queue" {
