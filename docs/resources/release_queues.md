@@ -21,6 +21,10 @@ resource "leanspace_release_queues" "test" {
   name                            = "Terraform Release Queue"
   asset_id                        = var.asset_id
   command_transformation_strategy = "TEST"
+  global_transmission_metadata {
+    key = "mykey"
+    value = "myvalue"
+  }
 }
 ```
 
