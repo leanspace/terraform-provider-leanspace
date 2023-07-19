@@ -66,12 +66,12 @@ func (queue *ReleaseQueue) PostCreateProcess(client *provider.Client, created an
 
 func (queue *ReleaseQueue) PostUpdateProcess(client *provider.Client, updated any) error {
 	updatedQueue := updated.(*ReleaseQueue)
-	for _, globalTransmissionMetadata := range updatedQueue.GlobalTransmissionMetadata { // Remove extra nodes
+	for _, globalTransmissionMetadata := range updatedQueue.GlobalTransmissionMetadata { // Remove extra global transmission metadata
 		if !helper.Contains(queue.GlobalTransmissionMetadata, globalTransmissionMetadata) {
 			if err := deleteGlobalTransmissionMetadata(queue, updatedQueue.ID, globalTransmissionMetadata.Key, client); err != nil {
 				return err
 			}
 		}
 	}
-	return queue.PostCreateProcess(client, updated)
+	return queue.PostCreateProcess(client, updated) // Add needed global transmission metadata
 }
