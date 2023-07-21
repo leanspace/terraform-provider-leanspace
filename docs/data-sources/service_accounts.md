@@ -64,11 +64,21 @@ Read-Only:
 
 - `created_at` (String)
 - `created_by` (String)
+- `credentials` (List of Object) (see [below for nested schema](#nestedobjatt--content--credentials))
 - `id` (String)
 - `last_modified_at` (String)
 - `last_modified_by` (String)
 - `name` (String)
 - `policy_ids` (Set of String)
+
+<a id="nestedobjatt--content--credentials"></a>
+### Nested Schema for `content.credentials`
+
+Read-Only:
+
+- `client_id` (String)
+- `client_secret` (String)
+
 
 
 <a id="nestedatt--pageable"></a>

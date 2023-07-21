@@ -30,6 +30,15 @@ resource "leanspace_service_accounts" "service_account" {
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it
+- `credentials` (List of Object) (see [below for nested schema](#nestedatt--credentials))
 - `id` (String) The ID of this resource.
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
+
+<a id="nestedatt--credentials"></a>
+### Nested Schema for `credentials`
+
+Read-Only:
+
+- `client_id` (String)
+- `client_secret` (String)
