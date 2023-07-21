@@ -22,6 +22,13 @@ var serviceAccountSchema = map[string]*schema.Schema{
 			ValidateFunc: validation.IsUUID,
 		},
 	},
+	"credentials": {
+		Type:     schema.TypeList,
+		Computed: true,
+		Elem: &schema.Resource{
+			Schema: credentialSchema,
+		},
+	},
 	"created_at": {
 		Type:        schema.TypeString,
 		Computed:    true,
@@ -41,5 +48,16 @@ var serviceAccountSchema = map[string]*schema.Schema{
 		Type:        schema.TypeString,
 		Computed:    true,
 		Description: "Who modified it the last",
+	},
+}
+
+var credentialSchema = map[string]*schema.Schema{
+	"client_id": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"client_secret": {
+		Type:     schema.TypeString,
+		Computed: true,
 	},
 }
