@@ -13,6 +13,10 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/commands/release_queues"
 	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/dashboards"
 	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/widgets"
+	"github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/contact_reservations"
+	"github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/leaf_space_connections"
+	"github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/link/groundstation"
+	"github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/link/satellite"
 	"github.com/leanspace/terraform-provider-leanspace/services/metrics/metrics"
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/action_templates"
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/monitors"
@@ -56,4 +60,8 @@ func AddDataTypes() {
 	routes.RouteDataType.Subscribe()
 	processors.ProcessorDataType.Subscribe()
 	orbit_resources.OrbitResourceDataType.Subscribe()
+	leaf_space_connections.LeafSpaceIntegrationDataType.Subscribe()
+	leafSpaceGroundstation.LeafSpaceGroundStationLink.Subscribe()
+	leafSpaceSatellite.LeafSpaceSatellitesLink.Subscribe()
+	contact_reservations.LeafSpaceContactReservation.Subscribe()
 }

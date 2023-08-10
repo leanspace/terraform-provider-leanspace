@@ -30,6 +30,14 @@ func (dataSource DataSourceType[T, PT]) getSchemaKeys() []string {
 	return keys
 }
 
+func (dataSource DataSourceType[T, PT]) getFilterSchemaKeys() []string {
+	keys := []string{}
+	for key := range dataSource.FilterSchema {
+		keys = append(keys, key)
+	}
+	return keys
+}
+
 func (dataSource DataSourceType[T, PT]) getData(d *schema.ResourceData, checkValidity bool) (string, PT, error) {
 	valueId := d.Id()
 	onlyNil := true
