@@ -98,6 +98,26 @@ func (client GenericClient[T, PT]) GetAll(filters map[string]any) (*general_obje
 	return &values, nil
 }
 
+func (client GenericClient[T, PT]) GetUnique() (PT, error) {
+	path := fmt.Sprintf("%s/%s", client.Client.HostURL, client.Path)
+	req, err := http.NewRequest("GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	body, err, _ := client.Client.DoRequest(req, &(client.Client).Token)
+	if err != nil {
+		return nil, err
+	}
+
+	value, err := client.unmarshalElement(body)
+	if err != nil {
+		return nil, err
+	}
+
+	return value, nil
+}
+
 // Retrieve a resource of this type with the given ID.
 // Can return:
 // - PT, nil, if the resource was fetched
@@ -176,12 +196,14 @@ func (client GenericClient[T, PT]) Create(createElement PT) (PT, error) {
 
 func (client GenericClient[T, PT]) Update(elementId string, updateElement PT) (PT, error) {
 	requestContent, contentType, err := client.encodeElement(updateElement, true)
+	path := fmt.Sprintf("%s/%s", client.Path, elementId)
+	if client.UpdatePath != nil {
+		path = client.UpdatePath(elementId)
+	}
 	if err != nil {
 		return nil, err
 	}
-
-	path := fmt.Sprintf("%s/%s/%s", client.Client.HostURL, client.Path, elementId)
-	req, err := http.NewRequest("PUT", path, requestContent)
+	req, err := http.NewRequest("PUT", fmt.Sprintf("%s/%s", client.Client.HostURL, path), requestContent)
 	req.Header.Set("Content-Type", contentType)
 	if err != nil {
 		return nil, err
@@ -207,7 +229,11 @@ func (client GenericClient[T, PT]) Update(elementId string, updateElement PT) (P
 }
 
 func (client GenericClient[T, PT]) Delete(elementId string, element PT) error {
-	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/%s/%s", client.Client.HostURL, client.Path, elementId), nil)
+	path := fmt.Sprintf("%s/%s", client.Path, elementId)
+	if client.DeletePath != nil {
+		path = client.DeletePath(elementId)
+	}
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/%s", client.Client.HostURL, path), nil)
 	if err != nil {
 		return err
 	}

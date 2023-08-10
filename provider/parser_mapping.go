@@ -89,6 +89,9 @@ type GenericClient[T any, PT ParseableModel[T]] struct {
 	Path       string
 	CreatePath func(PT) string
 	ReadPath   func(string) string
+	DeletePath func(string) string
+	UpdatePath func(string) string
+	IsUnique   bool `default:"false"`
 }
 
 type DataSourceType[T any, PT ParseableModel[T]] struct {
@@ -103,12 +106,20 @@ type DataSourceType[T any, PT ParseableModel[T]] struct {
 	// Optional. A function that returns the path to which API reading requests are sent.
 	// This can be useful when the path to read from has extra subpaths (e.g. "plugins/PLUGIN_ID/metadata")
 	ReadPath func(string) string
+	// Optional. A function that returns the path to which API delete requests are sent.
+	// This can be useful when the path to delete from has extra subpaths (e.g. "LEAFSPACE/delete")
+	DeletePath func(string) string
+	// Optional. A function that returns the path to which API update requests are sent.
+	// This can be useful when the path to update from has extra subpaths (e.g. "LEAFSPACE/update")
+	UpdatePath func(string) string
 	// The schema to represent the data
 	Schema map[string]*schema.Schema
 	// The filters used for this resource's data source. The only allowed fields are primitives and lists of
 	// strings. Note that some fields are already declared and don't need to be redefined: ids, query, page, size, sort.
 	// A value of nil is treated as an empty map, and only the fields specified previously will be usable.
 	FilterSchema map[string]*schema.Schema
+	// If the filet endpoint is paginated or not. Defaults to true.
+	IsUnique bool `default:"false"`
 }
 
 func (dataSource DataSourceType[T, PT]) convert(client *Client) GenericClient[T, PT] {
@@ -117,5 +128,8 @@ func (dataSource DataSourceType[T, PT]) convert(client *Client) GenericClient[T,
 		Path:       dataSource.Path,
 		CreatePath: dataSource.CreatePath,
 		ReadPath:   dataSource.ReadPath,
+		DeletePath: dataSource.DeletePath,
+		UpdatePath: dataSource.UpdatePath,
+		IsUnique:   dataSource.IsUnique,
 	}
 }
