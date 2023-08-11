@@ -9,7 +9,7 @@ func (serviceAccount *ServiceAccount) ToMap() map[string]any {
 	serviceAccountMap["id"] = serviceAccount.ID
 	serviceAccountMap["name"] = serviceAccount.Name
 	serviceAccountMap["policy_ids"] = serviceAccount.PolicyIds
-	serviceAccountMap["credentials"] = []any{serviceAccount.Credendials.ToMap()}
+	serviceAccountMap["credentials"] = []any{serviceAccount.Credentials.ToMap()}
 	serviceAccountMap["created_at"] = serviceAccount.CreatedAt
 	serviceAccountMap["created_by"] = serviceAccount.CreatedBy
 	serviceAccountMap["last_modified_at"] = serviceAccount.LastModifiedAt
@@ -39,7 +39,7 @@ func (serviceAccount *ServiceAccount) FromMap(serviceAccountMap map[string]any) 
 	}
 
 	if len(serviceAccountMap["credentials"].([]any)) > 0 {
-		if err := serviceAccount.Credendials.FromMap(serviceAccountMap["credentials"].([]any)[0].(map[string]any)); err != nil {
+		if err := serviceAccount.Credentials.FromMap(serviceAccountMap["credentials"].([]any)[0].(map[string]any)); err != nil {
 			return err
 		}
 	}

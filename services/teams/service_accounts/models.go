@@ -4,7 +4,7 @@ type ServiceAccount struct {
 	ID             string      `json:"id"`
 	Name           string      `json:"name"`
 	PolicyIds      []string    `json:"policyIds"`
-	Credendials    Credentials `json:"credentials"`
+	Credentials    Credentials `json:"credentials"`
 	CreatedAt      string      `json:"createdAt"`
 	CreatedBy      string      `json:"createdBy"`
 	LastModifiedAt string      `json:"lastModifiedAt"`
