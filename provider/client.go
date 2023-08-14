@@ -25,6 +25,7 @@ type AuthStruct struct {
 	Tenant       string `json:"tenant"`
 	ClientId     string `json:"client_id"`
 	ClientSecret string `json:"client_secret"`
+	Region       string `json:"region"`
 }
 
 // AuthResponse -
@@ -34,14 +35,16 @@ type AuthResponse struct {
 	Token     string `json:"access_token"`
 }
 
-func NewClient(host, env, tenant, clientId, clientSecret *string) (*Client, error) {
+func NewClient(host, env, tenant, clientId, clientSecret, region *string) (*Client, error) {
 	if env == nil || *env == "" {
 		environment := "prod"
 		env = &environment
 	}
 	hostUrl := "https://api.leanspace.io"
 	switch *env {
-	case "develop", "demo":
+	case "", "prod":
+		hostUrl = "https://api.leanspace.io"
+	default:
 		hostUrl = fmt.Sprintf("https://api.%s.leanspace.io", *env)
 	}
 
@@ -54,6 +57,11 @@ func NewClient(host, env, tenant, clientId, clientSecret *string) (*Client, erro
 		c.HostURL = *host
 	}
 
+	if region == nil || *region == "" {
+		currentRegion := "eu-central-1"
+		region = &currentRegion
+	}
+
 	// If tenant, clientId or clientSecret not provided, return empty client
 	if tenant == nil || clientId == nil || clientSecret == nil {
 		return &c, nil
@@ -64,6 +72,7 @@ func NewClient(host, env, tenant, clientId, clientSecret *string) (*Client, erro
 		Tenant:       *tenant,
 		ClientId:     *clientId,
 		ClientSecret: *clientSecret,
+		Region:       *region,
 	}
 
 	ar, err := c.SignIn()
@@ -82,7 +91,7 @@ func (c *Client) SignIn() (*AuthResponse, error) {
 		return nil, fmt.Errorf("define client id and client secret")
 	}
 
-	req, err := http.NewRequest("POST", fmt.Sprintf("https://%s-%s.auth.eu-central-1.amazoncognito.com/oauth2/token?scope=https://api.leanspace.io/READ&grant_type=client_credentials", c.Auth.Tenant, c.Auth.Env), strings.NewReader("Content-Type=application%2Fx-www-form-urlencoded"))
+	req, err := http.NewRequest("POST", fmt.Sprintf("https://%s-%s.auth.%s.amazoncognito.com/oauth2/token?scope=https://api.leanspace.io/READ&grant_type=client_credentials", c.Auth.Tenant, c.Auth.Env, c.Auth.Region), strings.NewReader("Content-Type=application%2Fx-www-form-urlencoded"))
 	if err != nil {
 		return nil, err
 	}

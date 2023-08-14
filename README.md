@@ -87,6 +87,7 @@ The attributes are as follows:
 - tenant: mandatory
 - env: optional
 - host: optional
+- region: optional
 - client_id: mandatory, refers to the client id of a service account
 - client_secret: mandatory, refers to the client secret of a service account
 
@@ -95,6 +96,7 @@ This service account needs to have enough permissions (CRUD).
 It is also possible to avoid passing this information in the provider by using environment variables as follows:
 - TENANT
 - ENV
+- REGION
 - HOST
 - CLIENT_ID
 - CLIENT_SECRET
@@ -140,10 +142,17 @@ The available resources per service are:
 - monitors:
   - action_templates: it has one simple `leanspace_action_template` with a body and headers
   - monitors: it has two `leanspace_monitors`, one with and one without a tolerance set.
+- orbits:
+  - orbit_resources: it has one simple `leanspace_orbit_resources` with a body and headers
+- pass:
+  - pass_states: it has one `leanspace_pass_states` resource.
 - plans:
   - plan_states: it has one `leanspace_plan_states` resource.
 - plugins:
   - plugins: it has one `leanspace_plugins` resource, with basic filler data.
+- routes:
+  - processors: it has one `leanspace_processors` resource, with basic filler data.
+  - routes: it has one `leanspace_routes` resource, with basic filler data.
 - streams:
   - streams: it has one `leanspace_streams` resource, with all available element types (3), all possible field types (5), a computed field and a mapping.
 - teams:
