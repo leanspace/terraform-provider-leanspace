@@ -26,10 +26,16 @@ func Provider() *schema.Provider {
 				DefaultFunc: schema.EnvDefaultFunc("HOST", nil),
 				Description: "Only set this value if you are using a specific URL given by leanspace",
 			},
+			"region": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("REGION", "eu-central-1"),
+				Description: "Only set this value if you are using a specific region given by leanspace",
+			},
 			"env": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("ENV", nil),
+				DefaultFunc: schema.EnvDefaultFunc("ENV", "prod"),
 				Description: "Only set this value if you are using a specific environment given by leanspace",
 			},
 			"tenant": {
@@ -64,12 +70,13 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (any, diag.D
 	tenant := d.Get("tenant").(string)
 	clientId := d.Get("client_id").(string)
 	clientSecret := d.Get("client_secret").(string)
+	region := d.Get("region").(string)
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
 	if (clientId != "") && (clientSecret != "") && (tenant != "") {
-		c, err := NewClient(&host, &env, &tenant, &clientId, &clientSecret)
+		c, err := NewClient(&host, &env, &tenant, &clientId, &clientSecret, &region)
 		if err != nil {
 			return nil, diag.FromErr(err)
 		}
@@ -77,7 +84,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (any, diag.D
 		return c, diags
 	}
 
-	c, err := NewClient(nil, nil, nil, nil, nil)
+	c, err := NewClient(nil, nil, nil, nil, nil, nil)
 	if err != nil {
 		return nil, diag.FromErr(err)
 	}
