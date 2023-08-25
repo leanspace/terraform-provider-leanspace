@@ -55,6 +55,7 @@ resource "leanspace_properties" "mass_property" {
 - `client_secret` (String, Sensitive) Client secret of your Service Account
 - `env` (String) Only set this value if you are using a specific environment given by leanspace
 - `host` (String) Only set this value if you are using a specific URL given by leanspace
+- `region` (String) Only set this value if you are using a specific region given by leanspace
 - `tenant` (String) The name given to your organization
 
 ## Limitations
