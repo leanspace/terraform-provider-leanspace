@@ -87,7 +87,7 @@ The attributes are as follows:
 - tenant: mandatory
 - env: optional
 - host: optional
-- region: optional
+- region: optional (defaults to `eu-central-1`)
 - client_id: mandatory, refers to the client id of a service account
 - client_secret: mandatory, refers to the client secret of a service account
 

@@ -36,13 +36,9 @@ type AuthResponse struct {
 }
 
 func NewClient(host, env, tenant, clientId, clientSecret, region *string) (*Client, error) {
-	if env == nil || *env == "" {
-		environment := "prod"
-		env = &environment
-	}
 	hostUrl := "https://api.leanspace.io"
 	switch *env {
-	case "", "prod":
+	case "prod":
 		hostUrl = "https://api.leanspace.io"
 	default:
 		hostUrl = fmt.Sprintf("https://api.%s.leanspace.io", *env)
@@ -55,11 +51,6 @@ func NewClient(host, env, tenant, clientId, clientSecret, region *string) (*Clie
 
 	if host != nil && *host != "" {
 		c.HostURL = *host
-	}
-
-	if region == nil || *region == "" {
-		currentRegion := "eu-central-1"
-		region = &currentRegion
 	}
 
 	// If tenant, clientId or clientSecret not provided, return empty client

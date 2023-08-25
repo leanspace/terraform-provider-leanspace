@@ -29,13 +29,13 @@ func Provider() *schema.Provider {
 			"region": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("REGION", nil),
+				DefaultFunc: schema.EnvDefaultFunc("REGION", "eu-central-1"),
 				Description: "Only set this value if you are using a specific region given by leanspace",
 			},
 			"env": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("ENV", nil),
+				DefaultFunc: schema.EnvDefaultFunc("ENV", "prod"),
 				Description: "Only set this value if you are using a specific environment given by leanspace",
 			},
 			"tenant": {
