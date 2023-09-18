@@ -1,4 +1,4 @@
-package leafSpaceSatellite
+package leafSpaceSatelliteLink
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -13,10 +13,12 @@ var leafSpaceSatelliteLink = map[string]*schema.Schema{
 	"leafspace_satellite_id": {
 		Type:     schema.TypeString,
 		Required: true,
+		ForceNew: true,
 	},
 	"leanspace_satellite_id": {
 		Type:     schema.TypeString,
 		Required: true,
+		ForceNew: true,
 	},
 	"leafspace_satellite_name": {
 		Type:     schema.TypeString,

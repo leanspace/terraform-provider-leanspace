@@ -1,6 +1,6 @@
-package leafSpaceGroundstation
+package leafSpaceGroundstationLink
 
-type LeafSpaceGroundStationConnection struct {
+type LeafSpaceGroundStationLink struct {
 	ID                         string `json:"id"`
 	LeafspaceGroundStationId   string `json:"leafspaceGroundStationId"`
 	LeafspaceGroundStationName string `json:"leafspaceGroundStationName"`
@@ -8,6 +8,6 @@ type LeafSpaceGroundStationConnection struct {
 	LeanspaceGroundStationName string `json:"leanspaceGroundStationName"`
 }
 
-func (leafSpaceGroundStationConnection *LeafSpaceGroundStationConnection) GetID() string {
-	return leafSpaceGroundStationConnection.ID
+func (leafSpaceGroundStationLink *LeafSpaceGroundStationLink) GetID() string {
+	return leafSpaceGroundStationLink.ID
 }

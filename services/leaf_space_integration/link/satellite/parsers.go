@@ -1,22 +1,22 @@
-package leafSpaceSatellite
+package leafSpaceSatelliteLink
 
-func (leafSpaceSatellite *LeafSpaceSatellite) ToMap() map[string]any {
+func (leafSpaceSatelliteLink *LeafSpaceSatelliteLink) ToMap() map[string]any {
 	leafSpaceSatelliteStateMap := make(map[string]any)
-	leafSpaceSatelliteStateMap["id"] = leafSpaceSatellite.ID
-	leafSpaceSatelliteStateMap["leafspace_satellite_id"] = leafSpaceSatellite.LeafspaceSatelliteId
-	leafSpaceSatelliteStateMap["leafspace_satellite_name"] = leafSpaceSatellite.LeafspaceSatelliteName
-	leafSpaceSatelliteStateMap["leanspace_satellite_id"] = leafSpaceSatellite.LeanspaceSatelliteId
-	leafSpaceSatelliteStateMap["leanspace_satellite_name"] = leafSpaceSatellite.LeanspaceSatelliteName
+	leafSpaceSatelliteStateMap["id"] = leafSpaceSatelliteLink.ID
+	leafSpaceSatelliteStateMap["leafspace_satellite_id"] = leafSpaceSatelliteLink.LeafspaceSatelliteId
+	leafSpaceSatelliteStateMap["leafspace_satellite_name"] = leafSpaceSatelliteLink.LeafspaceSatelliteName
+	leafSpaceSatelliteStateMap["leanspace_satellite_id"] = leafSpaceSatelliteLink.LeanspaceSatelliteId
+	leafSpaceSatelliteStateMap["leanspace_satellite_name"] = leafSpaceSatelliteLink.LeanspaceSatelliteName
 
 	return leafSpaceSatelliteStateMap
 }
 
-func (leafSpaceSatellite *LeafSpaceSatellite) FromMap(leafSpaceIntegrationMap map[string]any) error {
-	leafSpaceSatellite.ID = leafSpaceIntegrationMap["id"].(string)
-	leafSpaceSatellite.LeafspaceSatelliteId = leafSpaceIntegrationMap["leafspace_satellite_id"].(string)
-	leafSpaceSatellite.LeafspaceSatelliteName = leafSpaceIntegrationMap["leafspace_satellite_name"].(string)
-	leafSpaceSatellite.LeanspaceSatelliteId = leafSpaceIntegrationMap["leanspace_satellite_id"].(string)
-	leafSpaceSatellite.LeanspaceSatelliteName = leafSpaceIntegrationMap["leanspace_satellite_name"].(string)
+func (leafSpaceSatelliteLink *LeafSpaceSatelliteLink) FromMap(leafSpaceIntegrationMap map[string]any) error {
+	leafSpaceSatelliteLink.ID = leafSpaceIntegrationMap["id"].(string)
+	leafSpaceSatelliteLink.LeafspaceSatelliteId = leafSpaceIntegrationMap["leafspace_satellite_id"].(string)
+	leafSpaceSatelliteLink.LeafspaceSatelliteName = leafSpaceIntegrationMap["leafspace_satellite_name"].(string)
+	leafSpaceSatelliteLink.LeanspaceSatelliteId = leafSpaceIntegrationMap["leanspace_satellite_id"].(string)
+	leafSpaceSatelliteLink.LeanspaceSatelliteName = leafSpaceIntegrationMap["leanspace_satellite_name"].(string)
 
 	return nil
 }

@@ -1,4 +1,4 @@
-package leafSpaceGroundstation
+package leafSpaceGroundstationLink
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -13,6 +13,7 @@ var leafSpaceGroundStationLink = map[string]*schema.Schema{
 	"leafspace_ground_station_id": {
 		Type:     schema.TypeString,
 		Required: true,
+		ForceNew: true,
 	},
 	"leafspace_ground_station_name": {
 		Type:     schema.TypeString,
@@ -22,6 +23,7 @@ var leafSpaceGroundStationLink = map[string]*schema.Schema{
 	"leanspace_ground_station_id": {
 		Type:     schema.TypeString,
 		Required: true,
+		ForceNew: true,
 	},
 	"leanspace_ground_station_name": {
 		Type:     schema.TypeString,
