@@ -1,4 +1,4 @@
-package contact_reservations
+package leaf_space_contact_reservations
 
 import (
 	"github.com/leanspace/terraform-provider-leanspace/provider"

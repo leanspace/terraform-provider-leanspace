@@ -1,4 +1,4 @@
-package leafSpaceGroundstationLink
+package leaf_space_groundstation_link
 
 type LeafSpaceGroundStationLink struct {
 	ID                         string `json:"id"`

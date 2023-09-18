@@ -1,4 +1,4 @@
-package leafSpaceGroundstationLink
+package leaf_space_groundstation_link
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"

@@ -1,4 +1,4 @@
-package contact_reservations
+package leaf_space_contact_reservations
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"

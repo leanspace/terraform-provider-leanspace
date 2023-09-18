@@ -1,4 +1,4 @@
-package contact_reservations
+package leaf_space_contact_reservations
 
 func (contactReservation *ContactReservation) ToMap() map[string]any {
 	contactReservatrionStateMap := make(map[string]any)

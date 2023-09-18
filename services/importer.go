@@ -61,7 +61,7 @@ func AddDataTypes() {
 	processors.ProcessorDataType.Subscribe()
 	orbit_resources.OrbitResourceDataType.Subscribe()
 	leaf_space_connections.LeafSpaceConnectionDataType.Subscribe()
-	leafSpaceGroundstationLink.LeafSpaceGroundStationLinkDataType.Subscribe()
-	leafSpaceSatelliteLink.LeafSpaceSatellitesLinkDataType.Subscribe()
-	contact_reservations.LeafSpaceContactReservationDataType.Subscribe()
+	leaf_space_groundstation_link.LeafSpaceGroundStationLinkDataType.Subscribe()
+	leaf_space_satellite_link.LeafSpaceSatellitesLinkDataType.Subscribe()
+	leaf_space_contact_reservations.LeafSpaceContactReservationDataType.Subscribe()
 }

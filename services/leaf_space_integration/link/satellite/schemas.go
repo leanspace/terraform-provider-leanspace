@@ -1,4 +1,4 @@
-package leafSpaceSatelliteLink
+package leaf_space_satellite_link
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
