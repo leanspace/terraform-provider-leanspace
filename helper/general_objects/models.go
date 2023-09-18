@@ -93,4 +93,6 @@ type ValueAttribute[T any] struct {
 	Type  string `json:"type"`
 	// Numeric
 	UnitId string `json:"unitId,omitempty"`
+	// Array
+	DataType string `json:"dataType,omitempty"`
 }

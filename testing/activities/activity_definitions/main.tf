@@ -93,6 +93,24 @@ resource "leanspace_activity_definitions" "test" {
       type  = "TIME"
     }
   }
+  metadata {
+    name        = "ActivityMetadataArrayNumeric"
+    description = "A Numeric Array metadata value"
+    attributes {
+      value = "1,2"
+      type  = "ARRAY"
+      data_type = "NUMERIC"
+    }
+  }
+  metadata {
+    name        = "ActivityMetadataArrayBinary"
+    description = "A Binary Array metadata value"
+    attributes {
+      value = "62696e617279,62696e617279"
+      type  = "ARRAY"
+      data_type = "BINARY"
+    }
+  }
 
   argument_definitions {
     name        = "ActivityArgumentNumeric"
@@ -155,6 +173,21 @@ resource "leanspace_activity_definitions" "test" {
       options       = { 1 = "test" }
       type          = "ENUM"
       required      = true
+    }
+  }
+  argument_definitions {
+    name        = "ActivityArgumentBinaryArray"
+    description = "A binary array"
+    attributes {
+      type          = "ARRAY"
+      min_size      = 1
+      max_size      = 40
+      default_value = "62696e617279,62696e617279"
+      constraint {
+        type = "BINARY"
+        min_length  = 1
+        max_length  = 10
+      }
     }
   }
 

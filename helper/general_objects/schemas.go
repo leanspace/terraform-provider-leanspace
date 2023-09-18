@@ -339,8 +339,8 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string, fo
 			MinItems:    1,
 			Elem: &schema.Resource{
 				Schema: DefinitionAttributeArrayConstraintSchema(
-					[]string{"BINARY", "ARRAY", "STRUCTURE", "GEOPOINT", "TLE"}, // element types not allowed in array
-					[]string{"default_value"},                                   // Field unused as only the default value of the array is taken into account
+					[]string{"ARRAY", "STRUCTURE", "GEOPOINT", "TLE"}, // element types not allowed in array
+					[]string{"default_value"},                         // Field unused as only the default value of the array is taken into account
 				),
 			},
 		},
@@ -455,7 +455,11 @@ func DefinitionAttributeArrayConstraintSchema(excludeTypes []string, excludeFiel
 }
 
 var validMetadataTypes = []string{
-	"NUMERIC", "BOOLEAN", "TEXT", "DATE", "TIME", "TIMESTAMP", "ENUM",
+	"NUMERIC", "BOOLEAN", "TEXT", "DATE", "TIME", "TIMESTAMP", "ENUM", "BINARY", "ARRAY",
+}
+
+var validArraydataTypes = []string{
+	"NUMERIC", "BOOLEAN", "TEXT", "DATE", "TIME", "TIMESTAMP", "ENUM", "BINARY",
 }
 
 var ValueAttributeSchema = map[string]*schema.Schema{
@@ -468,6 +472,12 @@ var ValueAttributeSchema = map[string]*schema.Schema{
 		Required:     true,
 		ValidateFunc: validation.StringInSlice(validMetadataTypes, false),
 		Description:  helper.AllowedValuesToDescription(validMetadataTypes),
+	},
+	"data_type": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: validation.StringInSlice(validArraydataTypes, false),
+		Description:  helper.AllowedValuesToDescription(validArraydataTypes),
 	},
 	// Numeric only
 	"unit_id": {

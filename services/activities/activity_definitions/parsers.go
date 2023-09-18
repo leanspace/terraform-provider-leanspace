@@ -34,7 +34,7 @@ func (metadata *Metadata[T]) ToMap() map[string]any {
 	metadataMap["id"] = metadata.ID
 	metadataMap["name"] = metadata.Name
 	metadataMap["description"] = metadata.Description
-	metadataMap["attributes"] = []map[string]any{metadata.Attributes.ToMap()}
+	metadataMap["attributes"] = []any{metadata.Attributes.ToMap()}
 	return metadataMap
 }
 
@@ -108,7 +108,6 @@ func (activityDefinition *ActivityDefinition) FromMap(actDefinitionMap map[strin
 			activityDefinition.CommandMappings = commandMappings
 		}
 	}
-
 	return nil
 }
 

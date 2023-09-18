@@ -274,6 +274,24 @@ resource "leanspace_command_definitions" "test" {
       }
     }
   }
+  arguments {
+    name        = "TestArgumentBinaryArray"
+    identifier  = "Binary ARRAY"
+    description = "A binary array"
+    attributes {
+      type          = "ARRAY"
+      required      = true
+      min_size      = 1
+      max_size      = 4
+      unique        = true
+      default_value = "62696e617279"
+      constraint {
+        type = "BINARY"
+        min_length  = 1
+        max_length  = 10
+      }
+    }
+  }
 }
 
 output "test_command_definition" {
