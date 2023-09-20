@@ -1,10 +1,10 @@
-package leafSpaceSatellite
+package leaf_space_satellite_link
 
 import (
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
-var LeafSpaceSatellitesLink = provider.DataSourceType[LeafSpaceSatellite, *LeafSpaceSatellite]{
+var LeafSpaceSatellitesLinkDataType = provider.DataSourceType[LeafSpaceSatelliteLink, *LeafSpaceSatelliteLink]{
 	ResourceIdentifier: "leanspace_leaf_space_satellites_link",
 	Path:               "integration-leafspace/satellites/links",
 	Schema:             leafSpaceSatelliteLink,

@@ -1,6 +1,6 @@
-package leafSpaceSatellite
+package leaf_space_satellite_link
 
-type LeafSpaceSatellite struct {
+type LeafSpaceSatelliteLink struct {
 	ID                     string `json:"id"`
 	LeafspaceSatelliteId   string `json:"leafspaceSatelliteId"`
 	LeafspaceSatelliteName string `json:"leafspaceSatelliteName"`
@@ -8,6 +8,6 @@ type LeafSpaceSatellite struct {
 	LeanspaceSatelliteName string `json:"leanspaceSatelliteName"`
 }
 
-func (leafSpaceSatellite *LeafSpaceSatellite) GetID() string {
-	return leafSpaceSatellite.ID
+func (leafSpaceSatelliteLink *LeafSpaceSatelliteLink) GetID() string {
+	return leafSpaceSatelliteLink.ID
 }

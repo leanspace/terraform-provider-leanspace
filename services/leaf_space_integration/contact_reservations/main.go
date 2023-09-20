@@ -1,10 +1,10 @@
-package contact_reservations
+package leaf_space_contact_reservations
 
 import (
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
-var LeafSpaceContactReservation = provider.DataSourceType[contactReservation, *contactReservation]{
+var LeafSpaceContactReservationDataType = provider.DataSourceType[ContactReservation, *ContactReservation]{
 	ResourceIdentifier: "leanspace_leaf_space_contact_reservations",
 	Path:               "integration-leafspace/contact-reservations/status/mappings",
 	Schema:             contactReservationSchema,

@@ -5,7 +5,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
-var LeafSpaceIntegrationDataType = provider.DataSourceType[LeafSpaceConnection, *LeafSpaceConnection]{
+var LeafSpaceConnectionDataType = provider.DataSourceType[LeafSpaceConnection, *LeafSpaceConnection]{
 	ResourceIdentifier: "leanspace_leaf_space_integrations",
 	Path:               "integration-leafspace/connections",
 	Schema:             leafSpaceConnectionSchema,

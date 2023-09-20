@@ -14,6 +14,6 @@ type LeafSpaceConnection struct {
 	LastModifiedBy      string `json:"lastModifiedBy"`
 }
 
-func (leafSpaceConnectionIntegration *LeafSpaceConnection) GetID() string {
-	return leafSpaceConnectionIntegration.ID
+func (leafSpaceConnection *LeafSpaceConnection) GetID() string {
+	return leafSpaceConnection.ID
 }

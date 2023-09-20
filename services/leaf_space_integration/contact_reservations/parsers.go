@@ -1,6 +1,6 @@
-package contact_reservations
+package leaf_space_contact_reservations
 
-func (contactReservation *contactReservation) ToMap() map[string]any {
+func (contactReservation *ContactReservation) ToMap() map[string]any {
 	contactReservatrionStateMap := make(map[string]any)
 	contactReservatrionStateMap["id"] = contactReservation.ID
 	contactReservatrionStateMap["contact_state_id"] = contactReservation.ContactStateId
@@ -13,7 +13,7 @@ func (contactReservation *contactReservation) ToMap() map[string]any {
 	return contactReservatrionStateMap
 }
 
-func (contactReservation *contactReservation) FromMap(leafSpaceIntegrationMap map[string]any) error {
+func (contactReservation *ContactReservation) FromMap(leafSpaceIntegrationMap map[string]any) error {
 	contactReservation.ID = leafSpaceIntegrationMap["id"].(string)
 	contactReservation.ContactStateId = leafSpaceIntegrationMap["contact_state_id"].(string)
 	contactReservation.LeafspaceStatus = leafSpaceIntegrationMap["leafspace_status"].(string)
