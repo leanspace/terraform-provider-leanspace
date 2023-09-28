@@ -156,6 +156,7 @@ Read-Only:
 
 Read-Only:
 
+- `data_type` (String)
 - `type` (String)
 - `unit_id` (String)
 - `value` (String)
