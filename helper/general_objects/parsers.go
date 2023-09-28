@@ -56,6 +56,7 @@ func (pageable *Pageable) ToMap() map[string]any {
 func (attribute *ValueAttribute[T]) ToMap() map[string]any {
 	attributeMap := make(map[string]any)
 	attributeMap["type"] = attribute.Type
+	attributeMap["data_type"] = attribute.DataType
 	switch attribute.Type {
 	case "NUMERIC":
 		attributeMap["value"] = helper.ParseFloat(any(attribute.Value).(float64))
@@ -64,6 +65,16 @@ func (attribute *ValueAttribute[T]) ToMap() map[string]any {
 		attributeMap["value"] = attribute.Value
 	case "BOOLEAN":
 		attributeMap["value"] = strconv.FormatBool(any(attribute.Value).(bool))
+	case "ARRAY":
+		if any(attribute.Value) != nil {
+			var defaultValue string
+			var interfaceArrayValues []interface{} = any(attribute.Value).([]interface{})
+			for _, value := range interfaceArrayValues {
+				defaultValue = defaultValue + "," + fmt.Sprint(value)
+			}
+			attributeMap["value"] = strings.TrimPrefix(defaultValue, ",")
+		}
+
 	}
 	return attributeMap
 }
@@ -183,7 +194,7 @@ func (attribute *DefinitionAttribute[T]) FromMap(attributeMap map[string]any) er
 					if booleanValue, err := strconv.ParseBool(stringValue); err == nil {
 						interfaceOfDefaultValues = append(interfaceOfDefaultValues, booleanValue)
 					}
-				case "TEXT", "TIMESTAMP", "DATE", "TIME":
+				case "TEXT", "TIMESTAMP", "DATE", "TIME", "BINARY":
 					interfaceOfDefaultValues = append(interfaceOfDefaultValues, stringValue)
 				}
 			}
@@ -218,15 +229,30 @@ func (constraint *ArrayConstraint[T]) FromMap(constraintMap map[string]any) erro
 		constraint.After = constraintMap["after"].(string)
 	case "BOOLEAN":
 		// no extra field
+	case "BINARY":
+		constraint.MinLength = constraintMap["min_length"].(int)
+		constraint.MaxLength = constraintMap["max_length"].(int)
 	}
 	return nil
 }
 
 func (attribute *ValueAttribute[T]) FromMap(attributeMap map[string]any) error {
+
 	attribute.Value = attributeMap["value"].(T)
 	attribute.Type = attributeMap["type"].(string)
+	attribute.DataType = attributeMap["data_type"].(string)
 	if attributeMap["type"] == "NUMERIC" {
 		attribute.UnitId = attributeMap["unit_id"].(string)
+	}
+	if attributeMap["type"] == "ARRAY" {
+		var stringValues []string = strings.Split(attributeMap["value"].(string), ",")
+		var interfaceOfValues []interface{}
+		for _, str := range stringValues {
+			var stringValue = strings.TrimSpace(str)
+			interfaceOfValues = append(interfaceOfValues, stringValue)
+
+		}
+		attribute.Value = any(interfaceOfValues).(T)
 	}
 	return nil
 }

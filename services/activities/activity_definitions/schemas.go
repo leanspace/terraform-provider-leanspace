@@ -117,7 +117,7 @@ var argumentDefinitionSchema = map[string]*schema.Schema{
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: general_objects.DefinitionAttributeSchema([]string{"BINARY"}, nil, false),
+			Schema: general_objects.DefinitionAttributeSchema([]string{}, nil, false),
 		},
 	},
 }
