@@ -34,9 +34,9 @@ var metricSchema = map[string]*schema.Schema{
 		Required: true,
 		Elem: &schema.Resource{
 			Schema: general_objects.DefinitionAttributeSchema(
-				[]string{"TIME", "ARRAY"},                      // TIME and ARRAY type not allowed
+				[]string{"TIME", "ARRAY"},             // TIME and ARRAY type not allowed
 				[]string{"required", "default_value"}, // Fields unused
-				true, // Force recreation if the type changes
+				true,                                  // Force recreation if the type changes
 			),
 		},
 	},

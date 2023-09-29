@@ -17,10 +17,6 @@ var contactReservationSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Required: true,
 	},
-	"status": {
-		Type:     schema.TypeString,
-		Computed: true,
-	},
 	"created_at": {
 		Type:        schema.TypeString,
 		Computed:    true,
