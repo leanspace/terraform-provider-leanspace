@@ -64,8 +64,10 @@ func (route *Route) FromMap(routeMap map[string]any) error {
 	} else {
 		route.Tags = tags
 	}
-	if err := route.Definition.FromMap(routeMap["definition"].([]any)[0].(map[string]any)); err != nil {
-		return err
+	if len(routeMap["definition"].([]any)) > 0 {
+		if err := route.Definition.FromMap(routeMap["definition"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
 	}
 	route.ProcessorIds = make([]string, len(routeMap["processor_ids"].([]any)))
 	for i, processorId := range routeMap["processor_ids"].([]any) {
