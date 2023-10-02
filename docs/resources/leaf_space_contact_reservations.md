@@ -34,4 +34,3 @@ resource "leanspace_leaf_space_contact_reservations" "contact_reservation" {
 - `id` (String) The ID of this resource.
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
-- `status` (String)

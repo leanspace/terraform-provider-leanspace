@@ -71,7 +71,6 @@ Read-Only:
 - `last_modified_at` (String)
 - `last_modified_by` (String)
 - `leafspace_status` (String)
-- `status` (String)
 
 
 <a id="nestedatt--pageable"></a>
