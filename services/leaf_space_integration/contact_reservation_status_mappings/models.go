@@ -1,6 +1,6 @@
-package leaf_space_contact_reservations
+package leaf_space_contact_reservation_status_mappings
 
-type ContactReservation struct {
+type ContactReservationStatusMapping struct {
 	ID              string `json:"id"`
 	ContactStateId  string `json:"contactStateId"`
 	LeafspaceStatus string `json:"leafspaceStatus"`
@@ -10,6 +10,6 @@ type ContactReservation struct {
 	LastModifiedBy  string `json:"lastModifiedBy"`
 }
 
-func (contactReservation *ContactReservation) GetID() string {
-	return contactReservation.ID
+func (contactReservationStatusMapping *ContactReservationStatusMapping) GetID() string {
+	return contactReservationStatusMapping.ID
 }

@@ -1,4 +1,4 @@
-package leaf_space_groundstation_link
+package leaf_space_groundstation_links
 
 import (
 	"github.com/leanspace/terraform-provider-leanspace/provider"
