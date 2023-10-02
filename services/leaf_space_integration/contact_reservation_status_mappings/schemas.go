@@ -1,10 +1,10 @@
-package leaf_space_contact_reservations
+package leaf_space_contact_reservation_status_mappings
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-var contactReservationSchema = map[string]*schema.Schema{
+var contactReservationStatusMappingSchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
 		Computed: true,

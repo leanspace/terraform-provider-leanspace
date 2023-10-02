@@ -1,4 +1,4 @@
-package leaf_space_groundstation_link
+package leaf_space_groundstation_links
 
 func (leafSpaceGroundStationLink *LeafSpaceGroundStationLink) ToMap() map[string]any {
 	leafSpaceGroundStationConnectionStateMap := make(map[string]any)
