@@ -54,6 +54,9 @@ func (plugin *Plugin) FromMap(pluginMap map[string]any) error {
 // changed. This workaround prevents the value from changing - it's processed by terraform
 // when reading the config and never changes again (except if the file changes).
 func (plugin *Plugin) SetFileSha() error {
+	if plugin.FilePath == "" {
+		return nil
+	}
 	fileData, err := os.ReadFile(plugin.FilePath)
 	if err != nil {
 		return err
@@ -104,7 +107,7 @@ func (plugin *Plugin) PostReadProcess(client *provider.Client, destPluginRaw any
 	hasher := sha256.New()
 	hasher.Write(body)
 	createdPlugin.FileSha = base64.URLEncoding.EncodeToString(hasher.Sum(nil))
-	if createdPlugin.FileSha != plugin.FileSha {
+	if createdPlugin.FileSha != plugin.FileSha && plugin.FilePath != "" {
 		createdPlugin.FilePath = "file_changed" // this will cause the resource to be considered as changed
 	}
 

@@ -117,7 +117,7 @@ func (processor *Processor) PostReadProcess(client *provider.Client, destProcess
 	hasher := sha256.New()
 	hasher.Write(body)
 	createdProcessor.FileSha = base64.URLEncoding.EncodeToString(hasher.Sum(nil))
-	if createdProcessor.FileSha != processor.FileSha {
+	if createdProcessor.FileSha != processor.FileSha && processor.FileSha != "" {
 		createdProcessor.FilePath = "file_changed" // this will cause the resource to be considered as changed
 	}
 
