@@ -1,18 +1,18 @@
 ---
-page_title: "leanspace_leaf_space_contact_reservations Data Source - terraform-provider-leanspace"
+page_title: "leanspace_leaf_space_contact_reservation_status_mappings Data Source - terraform-provider-leanspace"
 subcategory: ""
 description: |-
   
 ---
 
-# leanspace_leaf_space_contact_reservations (Data Source)
+# leanspace_leaf_space_contact_reservation_status_mappings (Data Source)
 
 
 
 ## Example Usage
 
 ```terraform
-data "leanspace_leaf_space_contact_reservations" "all" {
+data "leanspace_leaf_space_contact_reservation_status_mappings" "all" {
   filters {
     leafspace_statuses = ["Scheduled"]
     ids      = []
