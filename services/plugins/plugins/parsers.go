@@ -1,6 +1,14 @@
 package plugins
 
-import "github.com/leanspace/terraform-provider-leanspace/provider"
+import (
+	"crypto/sha256"
+	"encoding/base64"
+	"fmt"
+	"net/http"
+	"os"
+
+	"github.com/leanspace/terraform-provider-leanspace/provider"
+)
 
 func (plugin *Plugin) ToMap() map[string]any {
 	pluginMap := make(map[string]any)
@@ -11,6 +19,7 @@ func (plugin *Plugin) ToMap() map[string]any {
 	pluginMap["description"] = plugin.Description
 	pluginMap["source_code_file_download_authorized"] = plugin.SourceCodeFileDownloadAuthorized
 	pluginMap["file_path"] = plugin.FilePath
+	pluginMap["file_sha"] = plugin.FileSha
 	pluginMap["created_at"] = plugin.CreatedAt
 	pluginMap["created_by"] = plugin.CreatedBy
 	pluginMap["last_modified_at"] = plugin.LastModifiedAt
@@ -29,6 +38,7 @@ func (plugin *Plugin) FromMap(pluginMap map[string]any) error {
 	plugin.Description = pluginMap["description"].(string)
 	plugin.SourceCodeFileDownloadAuthorized = pluginMap["source_code_file_download_authorized"].(bool)
 	plugin.FilePath = pluginMap["file_path"].(string)
+	plugin.FileSha = pluginMap["file_sha"].(string)
 	plugin.CreatedAt = pluginMap["created_at"].(string)
 	plugin.CreatedBy = pluginMap["created_by"].(string)
 	plugin.LastModifiedAt = pluginMap["last_modified_at"].(string)
@@ -36,6 +46,21 @@ func (plugin *Plugin) FromMap(pluginMap map[string]any) error {
 	plugin.SdkVersion = pluginMap["sdk_version"].(string)
 	plugin.SdkVersionFamily = pluginMap["sdk_version_family"].(string)
 	plugin.Status = pluginMap["status"].(string)
+	return nil
+}
+
+// Persist the file sha - this data is not returned from the backend, so when the resource
+// is loaded (from create/read/update) the path is empty, and so terraform thinks the field was
+// changed. This workaround prevents the value from changing - it's processed by terraform
+// when reading the config and never changes again (except if the file changes).
+func (plugin *Plugin) SetFileSha() error {
+	fileData, err := os.ReadFile(plugin.FilePath)
+	if err != nil {
+		return err
+	}
+	hasher := sha256.New()
+	hasher.Write(fileData)
+	plugin.FileSha = base64.URLEncoding.EncodeToString(hasher.Sum(nil))
 	return nil
 }
 
@@ -47,13 +72,41 @@ func (plugin *Plugin) persistFilePath(destPlugin *Plugin) error {
 	destPlugin.FilePath = plugin.FilePath
 	return nil
 }
+func (plugin *Plugin) persistFileSha(destPlugin *Plugin) error {
+	plugin.SetFileSha()
+	destPlugin.FileSha = plugin.FileSha
+	return nil
+}
 
 func (plugin *Plugin) PostCreateProcess(_ *provider.Client, destPluginRaw any) error {
-	return plugin.persistFilePath(destPluginRaw.(*Plugin))
+	createdPlugin := destPluginRaw.(*Plugin)
+	plugin.persistFilePath(createdPlugin)
+	return plugin.persistFileSha(createdPlugin)
 }
+
 func (plugin *Plugin) PostUpdateProcess(_ *provider.Client, destPluginRaw any) error {
-	return plugin.persistFilePath(destPluginRaw.(*Plugin))
+	return plugin.PostCreateProcess(nil, destPluginRaw)
 }
-func (plugin *Plugin) PostReadProcess(_ *provider.Client, destPluginRaw any) error {
-	return plugin.persistFilePath(destPluginRaw.(*Plugin))
+func (plugin *Plugin) PostReadProcess(client *provider.Client, destPluginRaw any) error {
+	createdPlugin := destPluginRaw.(*Plugin)
+	plugin.persistFilePath(createdPlugin)
+	plugin.SetFileSha()
+
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/plugins-repository/plugins/%s/source-code-file", client.HostURL, createdPlugin.ID), nil)
+	if err != nil {
+		return err
+	}
+
+	body, err, _ := client.DoRequest(req, &(client).Token)
+	if err != nil {
+		return err
+	}
+	hasher := sha256.New()
+	hasher.Write(body)
+	createdPlugin.FileSha = base64.URLEncoding.EncodeToString(hasher.Sum(nil))
+	if createdPlugin.FileSha != plugin.FileSha {
+		createdPlugin.FilePath = "file_changed" // this will cause the resource to be considered as changed
+	}
+
+	return nil
 }

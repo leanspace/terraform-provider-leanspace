@@ -15,6 +15,7 @@ type Plugin struct {
 	SdkVersion                       string `json:"sdkVersion,omitempty"`
 	SdkVersionFamily                 string `json:"sdkVersionFamily"`
 	Status                           string `json:"status"`
+	FileSha                          string `json:"fileSha"`
 }
 
 func (plugin *Plugin) GetID() string { return plugin.ID }

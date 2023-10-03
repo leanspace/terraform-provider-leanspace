@@ -1,6 +1,15 @@
 package processors
 
-import "github.com/leanspace/terraform-provider-leanspace/provider"
+import (
+	"crypto/sha256"
+	"encoding/base64"
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"os"
+
+	"github.com/leanspace/terraform-provider-leanspace/provider"
+)
 
 func (processor *Processor) ToMap() map[string]any {
 	processorMap := make(map[string]any)
@@ -10,6 +19,7 @@ func (processor *Processor) ToMap() map[string]any {
 	processorMap["version"] = processor.Version
 	processorMap["type"] = processor.Type
 	processorMap["file_path"] = processor.FilePath
+	processorMap["file_sha"] = processor.FileSha
 
 	processorMap["created_at"] = processor.CreatedAt
 	processorMap["created_by"] = processor.CreatedBy
@@ -26,12 +36,28 @@ func (processor *Processor) FromMap(processorMap map[string]any) error {
 	processor.Version = processorMap["version"].(string)
 	processor.Type = processorMap["type"].(string)
 	processor.FilePath = processorMap["file_path"].(string)
+	processor.FileSha = processorMap["file_sha"].(string)
 
 	processor.CreatedAt = processorMap["created_at"].(string)
 	processor.CreatedBy = processorMap["created_by"].(string)
 	processor.LastModifiedAt = processorMap["last_modified_at"].(string)
 	processor.LastModifiedBy = processorMap["last_modified_by"].(string)
 
+	return nil
+}
+
+// Persist the file sha - this data is not returned from the backend, so when the resource
+// is loaded (from create/read/update) the path is empty, and so terraform thinks the field was
+// changed. This workaround prevents the value from changing - it's processed by terraform
+// when reading the config and never changes again (except if the file changes).
+func (processor *Processor) SetFileSha() error {
+	fileData, err := os.ReadFile(processor.FilePath)
+	if err != nil {
+		return err
+	}
+	hasher := sha256.New()
+	hasher.Write(fileData)
+	processor.FileSha = base64.URLEncoding.EncodeToString(hasher.Sum(nil))
 	return nil
 }
 
@@ -44,12 +70,56 @@ func (processor *Processor) persistFilePath(destProcessor *Processor) error {
 	return nil
 }
 
+func (processor *Processor) persistFileSha(destProcessor *Processor) error {
+	processor.SetFileSha()
+	destProcessor.FileSha = processor.FileSha
+	return nil
+}
+
 func (processor *Processor) PostCreateProcess(_ *provider.Client, destProcessorRaw any) error {
-	return processor.persistFilePath(destProcessorRaw.(*Processor))
+	createdProcessor := destProcessorRaw.(*Processor)
+	processor.persistFilePath(createdProcessor)
+	return processor.persistFileSha(createdProcessor)
 }
 func (processor *Processor) PostUpdateProcess(_ *provider.Client, destProcessorRaw any) error {
-	return processor.persistFilePath(destProcessorRaw.(*Processor))
+	return processor.PostCreateProcess(nil, destProcessorRaw)
 }
-func (processor *Processor) PostReadProcess(_ *provider.Client, destProcessorRaw any) error {
-	return processor.persistFilePath(destProcessorRaw.(*Processor))
+func (processor *Processor) PostReadProcess(client *provider.Client, destProcessorRaw any) error {
+	createdProcessor := destProcessorRaw.(*Processor)
+	processor.persistFilePath(createdProcessor)
+	processor.persistFileSha(createdProcessor)
+
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/routes-repository/processors/%s/generate-download-link", client.HostURL, createdProcessor.ID), nil)
+	if err != nil {
+		return err
+	}
+
+	body, err, _ := client.DoRequest(req, &(client).Token)
+	if err != nil {
+		return err
+	}
+	var element ProcessorUrl
+	err = json.Unmarshal(body, &element)
+	if err != nil {
+		return err
+	}
+
+	req, err = http.NewRequest("GET", element.Url, nil)
+	if err != nil {
+		return err
+	}
+
+	body, err, _ = client.DoRequest(req, nil)
+	if err != nil {
+		return err
+	}
+
+	hasher := sha256.New()
+	hasher.Write(body)
+	createdProcessor.FileSha = base64.URLEncoding.EncodeToString(hasher.Sum(nil))
+	if createdProcessor.FileSha != processor.FileSha {
+		createdProcessor.FilePath = "file_changed" // this will cause the resource to be considered as changed
+	}
+
+	return nil
 }
