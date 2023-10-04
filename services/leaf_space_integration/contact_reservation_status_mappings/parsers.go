@@ -4,6 +4,7 @@ func (contactReservationStatusMapping *ContactReservationStatusMapping) ToMap() 
 	contactReservatrionStatusMappingMap := make(map[string]any)
 	contactReservatrionStatusMappingMap["id"] = contactReservationStatusMapping.ID
 	contactReservatrionStatusMappingMap["contact_state_id"] = contactReservationStatusMapping.ContactStateId
+	contactReservatrionStatusMappingMap["leafspace_status"] = contactReservationStatusMapping.LeafspaceStatus
 	contactReservatrionStatusMappingMap["created_at"] = contactReservationStatusMapping.CreatedAt
 	contactReservatrionStatusMappingMap["created_by"] = contactReservationStatusMapping.CreatedBy
 	contactReservatrionStatusMappingMap["last_modified_at"] = contactReservationStatusMapping.LastModifiedAt
