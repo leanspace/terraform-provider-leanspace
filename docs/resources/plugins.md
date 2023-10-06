@@ -48,6 +48,7 @@ resource "leanspace_plugins" "test" {
 
 - `created_at` (String) When the plugin was created
 - `created_by` (String) Who created the plugin
+- `file_sha` (String) Unique identifier of the plugin file
 - `id` (String) The ID of this resource.
 - `last_modified_at` (String) When the plugin was last modified
 - `last_modified_by` (String) Who modified the plugin the last

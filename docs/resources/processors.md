@@ -42,6 +42,7 @@ resource "leanspace_processors" "test_create_processor" {
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it
+- `file_sha` (String) Unique identifier of the processor file
 - `id` (String) The ID of this resource.
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last

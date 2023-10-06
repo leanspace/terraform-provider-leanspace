@@ -71,6 +71,7 @@ Read-Only:
 - `created_by` (String)
 - `description` (String)
 - `file_path` (String)
+- `file_sha` (String)
 - `id` (String)
 - `implementation_class_name` (String)
 - `last_modified_at` (String)
