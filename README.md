@@ -28,6 +28,27 @@ These platforms are defined in `.goreleaser.yml`.
 
 ### Debugging
 
+- If using VSCode, you can create a file in `./.vscode/launch.json` with the following input
+
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Terraform Provider",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceFolder}",
+            "env": {},
+            "args": [
+                "-debug",
+            ]
+        }
+    ]
+}
+```
+
 - Compile your code by doing `make install -e DEBUG=true`
 - In VSCode, start "Debug Terraform Provider"
 - It will output something like `TF_REATTACH_PROVIDERS='{"registry.terraform.io/my-org/my-provider":{"Protocol":"grpc","Pid":3382870,"Test":true,"Addr":{"Network":"unix","String":"/tmp/plugin713096927"}}}'` in the Debug Console Tab

@@ -8,5 +8,6 @@ terraform-provider-leanspace
 
 .idea
 *.iml
+.vscode
 
 __debug*
