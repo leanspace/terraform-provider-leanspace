@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"mime/multipart"
 	"os"
@@ -131,7 +130,7 @@ var Logger = func() *log.Logger {
 		var logger = log.New(logFile, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
 		return logger
 	}
-	log.SetOutput(ioutil.Discard)
+	log.SetOutput(io.Discard)
 	return log.Default()
 }()
 

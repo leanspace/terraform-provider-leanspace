@@ -4,7 +4,7 @@ This repository enables the use of Terraform for the different services of Leans
 
 ## Requirements
 
-- terraform (`choco install terraform` (windows) or `brew install terraform` (mac)): >=1.3.0
+- terraform (`choco install terraform` (windows) or `brew install terraform` (mac)): >=1.5.0
 - go (for plugin development): >=1.20
 
 ## Supported platform
@@ -25,6 +25,36 @@ This repository enables the use of Terraform for the different services of Leans
 These platforms are defined in `.goreleaser.yml`.
 
 ## How to use
+
+### Debugging
+
+- If using VSCode, you can create a file in `./.vscode/launch.json` with the following input
+
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Terraform Provider",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceFolder}",
+            "env": {},
+            "args": [
+                "-debug",
+            ]
+        }
+    ]
+}
+```
+
+- Compile your code by doing `make install -e DEBUG=true`
+- In VSCode, start "Debug Terraform Provider"
+- It will output something like `TF_REATTACH_PROVIDERS='{"registry.terraform.io/my-org/my-provider":{"Protocol":"grpc","Pid":3382870,"Test":true,"Addr":{"Network":"unix","String":"/tmp/plugin713096927"}}}'` in the Debug Console Tab
+- Export this variable by doing `export TF_REATTACH_PROVIDERS=[...]`
+- No need to initialize with `terraform init`, you can directly do `terraform plan` or `terraform apply`
+- Like any other tool, once you do a modification you will have to restart the debugger (which means re-exporting the environment variable)
 
 ### Make modification
 
@@ -84,6 +114,7 @@ You can use `terraform init && terraform import leanspace_nodes.sample_node 3563
 ## Provider
 
 The attributes are as follows:
+
 - tenant: mandatory
 - env: optional
 - host: optional
@@ -94,6 +125,7 @@ The attributes are as follows:
 This service account needs to have enough permissions (CRUD).
 
 It is also possible to avoid passing this information in the provider by using environment variables as follows:
+
 - TENANT
 - ENV
 - REGION
@@ -120,6 +152,7 @@ You can find examples in the `/examples` folder (visible to the users) and `/tes
 The `main.tf` file imports all other modules. All modules are then organised per service, per resource: `testing/{service}/{resource}/main.tf`
 
 The available resources per service are:
+
 - activities:
   - activity definitions: it has one `leanspace_activity_definitions` resource, whth all possible metadata types (6) and all possible argument types (7), as well as two mappings
   - activity_states: it has one `leanspace_activity_states` resource.

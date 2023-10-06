@@ -96,6 +96,11 @@ var pluginSchema = map[string]*schema.Schema{
 		Computed:    true,
 		Description: "Plugin status. Can be ACTIVE, PENDING or FAILED",
 	},
+	"file_sha": {
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Unique identifier of the plugin file",
+	},
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{

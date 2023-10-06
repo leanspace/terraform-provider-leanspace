@@ -58,6 +58,11 @@ var processorSchema = map[string]*schema.Schema{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
+	"file_sha": {
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Unique identifier of the processor file",
+	},
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{

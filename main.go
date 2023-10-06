@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 
 	"github.com/leanspace/terraform-provider-leanspace/provider"
@@ -11,8 +13,15 @@ import (
 //go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
 
 func main() {
+	var debug bool
+
+	flag.BoolVar(&debug, "debug", false, "set to true to run the provider with support for debuggers like delve")
+	flag.Parse()
+
 	services.AddDataTypes()
 	plugin.Serve(&plugin.ServeOpts{
+		Debug:        debug,
+		ProviderAddr: "registry.terraform.io/leanspace/leanspace",
 		ProviderFunc: provider.Provider,
 	})
 }

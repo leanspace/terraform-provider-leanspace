@@ -11,6 +11,12 @@ type Processor struct {
 	CreatedBy      string `json:"createdBy"`
 	LastModifiedAt string `json:"lastModifiedAt"`
 	LastModifiedBy string `json:"lastModifiedBy"`
+	FileSha        string `json:"fileSha"`
+}
+
+type ProcessorUrl struct {
+	Url     string `json:"url"`
+	Expires string `json:"expires"`
 }
 
 func (processor *Processor) GetID() string { return processor.ID }

@@ -12,6 +12,9 @@ import (
 // with each remote agent and aren't remove automatically.
 func (agent *RemoteAgent) PostDeleteProcess(client *provider.Client) error {
 	// Fetch matching acess policies
+	if agent.ServiceAccountId == "" {
+		return nil
+	}
 	path := fmt.Sprintf("%s/teams-repository/service-accounts/%s/access-policies", client.HostURL, agent.ServiceAccountId)
 	req, err := http.NewRequest("GET", path, nil)
 	if err != nil {
