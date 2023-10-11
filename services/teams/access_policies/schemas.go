@@ -61,7 +61,7 @@ var statementSchema = map[string]*schema.Schema{
 		Required: true,
 	},
 	"actions": {
-		Type:     schema.TypeList,
+		Type:     schema.TypeSet,
 		Required: true,
 		Elem: &schema.Schema{
 			Type:         schema.TypeString,
