@@ -10,6 +10,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/commands/command_definitions"
 	"github.com/leanspace/terraform-provider-leanspace/services/commands/command_queues"
 	"github.com/leanspace/terraform-provider-leanspace/services/commands/command_sequence_states"
+	"github.com/leanspace/terraform-provider-leanspace/services/commands/command_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/commands/release_queues"
 	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/dashboards"
 	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/widgets"
@@ -21,6 +22,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/action_templates"
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/monitors"
 	"github.com/leanspace/terraform-provider-leanspace/services/orbits/orbit_resources"
+	"github.com/leanspace/terraform-provider-leanspace/services/pass/contact_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/pass/pass_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/plans/plan_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/plugins/plugins"
@@ -41,6 +43,7 @@ func AddDataTypes() {
 	command_queues.CommandQueueDataType.Subscribe()
 	release_queues.ReleaseQueueDataType.Subscribe()
 	command_sequence_states.CommandSequenceStateDataType.Subscribe()
+	command_states.CommandStateDataType.Subscribe()
 	dashboards.DashboardDataType.Subscribe()
 	members.MemberDataType.Subscribe()
 	metrics.MetricDataType.Subscribe()
@@ -56,6 +59,7 @@ func AddDataTypes() {
 	widgets.WidgetDataType.Subscribe()
 	plan_states.PlanStateDataType.Subscribe()
 	pass_states.PassStateDataType.Subscribe()
+	contact_states.ContactStateDataType.Subscribe()
 	activity_states.ActivityStateDataType.Subscribe()
 	routes.RouteDataType.Subscribe()
 	processors.ProcessorDataType.Subscribe()
