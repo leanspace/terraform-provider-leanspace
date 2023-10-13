@@ -25,7 +25,7 @@ var accessPolicySchema = map[string]*schema.Schema{
 		Computed: true,
 	},
 	"statements": {
-		Type:     schema.TypeList,
+		Type:     schema.TypeSet,
 		Optional: true,
 		Elem: &schema.Resource{
 			Schema: statementSchema,

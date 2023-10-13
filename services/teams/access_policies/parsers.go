@@ -32,7 +32,7 @@ func (policy *AccessPolicy) FromMap(policyMap map[string]any) error {
 	policy.Name = policyMap["name"].(string)
 	policy.Description = policyMap["description"].(string)
 	policy.ReadOnly = policyMap["read_only"].(bool)
-	if statements, err := helper.ParseFromMaps[Statement](policyMap["statements"].([]any)); err != nil {
+	if statements, err := helper.ParseFromMaps[Statement](policyMap["statements"].(*schema.Set).List()); err != nil {
 		return err
 	} else {
 		policy.Statements = statements
