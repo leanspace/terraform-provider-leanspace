@@ -1,6 +1,9 @@
 package access_policies
 
-import "github.com/leanspace/terraform-provider-leanspace/helper"
+import (
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+)
 
 func (policy *AccessPolicy) ToMap() map[string]any {
 	policyMap := make(map[string]any)
@@ -29,7 +32,7 @@ func (policy *AccessPolicy) FromMap(policyMap map[string]any) error {
 	policy.Name = policyMap["name"].(string)
 	policy.Description = policyMap["description"].(string)
 	policy.ReadOnly = policyMap["read_only"].(bool)
-	if statements, err := helper.ParseFromMaps[Statement](policyMap["statements"].([]any)); err != nil {
+	if statements, err := helper.ParseFromMaps[Statement](policyMap["statements"].(*schema.Set).List()); err != nil {
 		return err
 	} else {
 		policy.Statements = statements
@@ -44,8 +47,8 @@ func (policy *AccessPolicy) FromMap(policyMap map[string]any) error {
 
 func (statement *Statement) FromMap(statementMap map[string]any) error {
 	statement.Name = statementMap["name"].(string)
-	statement.Actions = make([]string, len(statementMap["actions"].([]any)))
-	for i, action := range statementMap["actions"].([]any) {
+	statement.Actions = make([]string, len(statementMap["actions"].(*schema.Set).List()))
+	for i, action := range statementMap["actions"].(*schema.Set).List() {
 		statement.Actions[i] = action.(string)
 	}
 	return nil
