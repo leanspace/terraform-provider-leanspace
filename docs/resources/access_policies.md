@@ -42,7 +42,7 @@ resource "leanspace_access_policies" "access_policy" {
 ### Optional
 
 - `description` (String)
-- `statements` (Block List) (see [below for nested schema](#nestedblock--statements))
+- `statements` (Block Set) (see [below for nested schema](#nestedblock--statements))
 
 ### Read-Only
 
@@ -58,5 +58,5 @@ resource "leanspace_access_policies" "access_policy" {
 
 Required:
 
-- `actions` (List of String)
+- `actions` (Set of String)
 - `name` (String)

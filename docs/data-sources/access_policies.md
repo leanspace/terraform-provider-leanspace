@@ -74,14 +74,14 @@ Read-Only:
 - `last_modified_by` (String)
 - `name` (String)
 - `read_only` (Boolean)
-- `statements` (List of Object) (see [below for nested schema](#nestedobjatt--content--statements))
+- `statements` (Set of Object) (see [below for nested schema](#nestedobjatt--content--statements))
 
 <a id="nestedobjatt--content--statements"></a>
 ### Nested Schema for `content.statements`
 
 Read-Only:
 
-- `actions` (List of String)
+- `actions` (Set of String)
 - `name` (String)
 
 
