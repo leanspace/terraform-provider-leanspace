@@ -16,6 +16,9 @@ var rootNodeSchema = makeNodeSchema(nodeSchema) // max depth 1
 var validNodeTypes = []string{"ASSET", "GROUP", "COMPONENT"}
 var validNodeKinds = []string{"GENERIC", "SATELLITE", "GROUND_STATION"}
 
+var tle1stLineRegex = regexp.MustCompile(`^1 (?P<noradId>[ 0-9]{5})[A-Z] [ 0-9]{5}[ A-Z]{3} [ 0-9]{5}[.][ 0-9]{8} (?:(?:[ 0+-][.][ 0-9]{8})|(?: [ +-][.][ 0-9]{7})) [ +-][ 0-9]{5}[+-][ 0-9] [ +-][ 0-9]{5}[+-][ 0-9] [ 0-9] [ 0-9]{4}[ 0-9]$`)
+var tle2ndLineRegex = regexp.MustCompile(`^2 (?P<noradId>[ 0-9]{5}) [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{7} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{2}[.][ 0-9]{13}[ 0-9]$`)
+
 func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema.Schema {
 	baseSchema := map[string]*schema.Schema{
 		"id": {
