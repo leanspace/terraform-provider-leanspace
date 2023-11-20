@@ -310,7 +310,10 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string, fo
 
 		// Enum only
 		"options": {
-			Type:        schema.TypeMap,
+			Type: schema.TypeMap,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
 			Optional:    true,
 			Description: "Enum only: The allowed values for the enum in the format 1 = \"value\"",
 		},
@@ -427,7 +430,10 @@ func DefinitionAttributeArrayConstraintSchema(excludeTypes []string, excludeFiel
 
 		// Enum only
 		"options": {
-			Type:        schema.TypeMap,
+			Type: schema.TypeMap,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
 			Optional:    true,
 			Description: "Only array elements with enum type : The allowed values for the enum in the format 1 = \"value\"",
 		},
