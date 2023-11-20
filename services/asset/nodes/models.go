@@ -2,6 +2,7 @@ package nodes
 
 import (
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+	"github.com/leanspace/terraform-provider-leanspace/services/asset/properties"
 )
 
 // Adding a properties attribute would require an optional "node_id" attribute in services/asset/properties/schemas.go whereas "node_id" is required during property creation.
@@ -20,13 +21,14 @@ type Node struct {
 	Nodes                   []Node                     `json:"nodes,omitempty"`
 	Type                    string                     `json:"type"`
 	Kind                    string                     `json:"kind,omitempty"`
+	Latitude                float64                    `json:"latitude,omitempty"`
 	NoradId                 string                     `json:"noradId,omitempty"`
-	InternationalDesignator string                     `json:"internationalDesignator,omitempty"`
 	Tle                     []string                   `json:"tle,omitempty"`
-	Latitude                *float64                   `json:"latitude,omitempty"`
-	Longitude               *float64                   `json:"longitude,omitempty"`
-	Elevation               *float64                   `json:"elevation,omitempty"`
+	InternationalDesignator string                     `json:"internationalDesignator,omitempty"`
+	Longitude               float64                    `json:"longitude,omitempty"`
+	Elevation               float64                    `json:"elevation,omitempty"`
 	NumberOfChildren        int                        `json:"numberOfChildren"`
+	PropertyList            []properties.Property[any] `json:"propertiesV2,omitempty"`
 }
 
 func (node *Node) GetID() string { return node.ID }

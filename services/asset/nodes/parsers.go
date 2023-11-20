@@ -1,17 +1,21 @@
 package nodes
 
 import (
+	"encoding/json"
+	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/leanspace/terraform-provider-leanspace/provider"
+	"github.com/leanspace/terraform-provider-leanspace/services/asset/properties"
+	"net/http"
 )
 
-func (node *Node) ToMap() map[string]any {
-	return node.toMapRecursive(0)
-}
+var NORAD_ID = "NORAD ID"
+var INTERNATIONAL_DESIGNATOR = "International Designator"
+var LOCATION_COORDINATES = "Location Coordinates"
 
-func (node *Node) toMapRecursive(level int) map[string]any {
+func (node *Node) ToMap() map[string]any {
 	nodeMap := make(map[string]any)
 
 	nodeMap["id"] = node.ID
@@ -26,20 +30,10 @@ func (node *Node) toMapRecursive(level int) map[string]any {
 	nodeMap["kind"] = node.Kind
 	nodeMap["number_of_children"] = node.NumberOfChildren
 	nodeMap["tags"] = helper.ParseToMaps(node.Tags)
-	if node.Nodes != nil && level == 0 {
-		nodes := make([]any, len(node.Nodes))
-		for i, subNode := range node.Nodes {
-			nodes[i] = (&subNode).toMapRecursive(level + 1)
-		}
-		nodeMap["nodes"] = nodes
-	}
-	if len(node.NoradId) != 0 {
+
+	if node.Kind == "SATELLITE" {
 		nodeMap["norad_id"] = node.NoradId
-	}
-	if len(node.InternationalDesignator) != 0 {
 		nodeMap["international_designator"] = node.InternationalDesignator
-	}
-	if len(node.Tle) == 2 {
 		nodeMap["tle"] = node.Tle
 	}
 	if node.Kind == "GROUND_STATION" {
@@ -76,19 +70,104 @@ func (node *Node) FromMap(nodeMap map[string]any) error {
 			}
 		}
 	}
-	node.NoradId = nodeMap["norad_id"].(string)
-	node.InternationalDesignator = nodeMap["international_designator"].(string)
-	if nodeMap["tle"] != nil {
-		node.Tle = make([]string, len(nodeMap["tle"].([]any)))
-		for i, tle := range nodeMap["tle"].([]any) {
-			node.Tle[i] = tle.(string)
-		}
-
+	var propertylist []properties.Property[any]
+	if nodeMap["norad_id"] != nil {
+		noradInfo := properties.Property[any]{}
+		noradInfo.Attributes.Type = "TEXT"
+		noradInfo.Attributes.Value = nodeMap["norad_id"].(string)
+		noradInfo.Name = NORAD_ID
+		propertylist = append(propertylist, noradInfo)
 	}
+	if nodeMap["international_designator"] != nil {
+		internationalDesignatorInfo := properties.Property[any]{}
+		internationalDesignatorInfo.Attributes.Type = "TEXT"
+		internationalDesignatorInfo.Attributes.Value = nodeMap["international_designator"].(string)
+		internationalDesignatorInfo.Name = INTERNATIONAL_DESIGNATOR
+		propertylist = append(propertylist, internationalDesignatorInfo)
+	}
+	if nodeMap["tle"] != nil {
+		tleInfo := properties.Property[any]{}
+		tleInfo.Attributes.Type = "TLE"
+		tleInfo.Name = "TLE"
+		var stringTleValues = nodeMap["tle"].([]interface{})
+		if len(stringTleValues) == 2 {
+			var interfaceOfTleValues []interface{}
+			for _, str := range stringTleValues {
+				interfaceOfTleValues = append(interfaceOfTleValues, str)
+			}
+			tleInfo.Attributes.Value = interfaceOfTleValues
+
+			propertylist = append(propertylist, tleInfo)
+		}
+	}
+
 	if nodeMap["kind"] == "GROUND_STATION" {
-		node.Latitude = helper.Ptr(nodeMap["latitude"].(float64))
-		node.Longitude = helper.Ptr(nodeMap["longitude"].(float64))
-		node.Elevation = helper.Ptr(nodeMap["elevation"].(float64))
+		groundStationInfo := properties.Property[any]{}
+		groundStationInfo.Attributes.Type = "GEOPOINT"
+		groundStationInfo.Name = LOCATION_COORDINATES
+		groundStationInfo.Attributes.Fields = &properties.Fields{}
+		groundStationInfo.Attributes.Fields.Latitude.Value = nodeMap["latitude"]
+		groundStationInfo.Attributes.Fields.Longitude.Value = nodeMap["longitude"]
+		groundStationInfo.Attributes.Fields.Elevation.Value = nodeMap["elevation"]
+		propertylist = append(propertylist, groundStationInfo)
+	}
+	node.PropertyList = propertylist
+
+	return nil
+}
+
+func (node *Node) PostReadProcess(client *provider.Client, destNodeRaw any) error {
+	createdNode := destNodeRaw.(*Node)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/asset-repository/properties/v2?category=BUILT_IN_PROPERTIES_ONLY&nodeIds=%s", client.HostURL, createdNode.ID), nil)
+	if err != nil {
+		return err
+	}
+	body, err, _ := client.DoRequest(req, &(client).Token)
+	if err != nil {
+		return err
+	}
+
+	dataMap := make(map[string]any)
+	err = json.Unmarshal(body, &dataMap)
+	if err != nil {
+		return err
+	}
+	builtInProperties := dataMap["content"].([]any)
+	for _, property := range builtInProperties {
+		if property.(map[string]any)["name"] == NORAD_ID {
+			attributeProperites := property.(map[string]any)["attributes"].(map[string]any)
+			if attributeProperites["value"] != nil {
+				createdNode.NoradId = attributeProperites["value"].(string)
+			}
+		}
+		if property.(map[string]any)["name"] == "TLE" {
+			attributeProperites := property.(map[string]any)["attributes"].(map[string]any)
+			var strList []string
+			for _, v := range attributeProperites["value"].([]interface{}) {
+				str, ok := v.(string)
+				if !ok {
+					fmt.Println("Failed to convert interface{} to string")
+					return nil
+				}
+				strList = append(strList, str)
+			}
+			createdNode.Tle = strList
+
+		}
+		if property.(map[string]any)["name"] == INTERNATIONAL_DESIGNATOR {
+			attributeProperites := property.(map[string]any)["attributes"].(map[string]any)
+			if attributeProperites["value"] != nil {
+				createdNode.InternationalDesignator = attributeProperites["value"].(string)
+			}
+		}
+		if property.(map[string]any)["name"] == LOCATION_COORDINATES {
+			attributeProperites := property.(map[string]any)["attributes"].(map[string]any)
+			field := attributeProperites["fields"].(map[string]any)
+			createdNode.Latitude = field["latitude"].(map[string]any)["value"].(float64)
+			createdNode.Longitude = field["longitude"].(map[string]any)["value"].(float64)
+			createdNode.Elevation = field["elevation"].(map[string]any)["value"].(float64)
+		}
 	}
 	return nil
+
 }
