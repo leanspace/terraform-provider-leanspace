@@ -101,7 +101,7 @@ var argumentSchema = map[string]*schema.Schema{
 	},
 	"identifier": {
 		Type:     schema.TypeString,
-		Required: true,
+		Optional: true,
 	},
 	"description": {
 		Type:     schema.TypeString,
