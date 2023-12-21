@@ -155,7 +155,6 @@ resource "leanspace_widgets" "test_value" {
 - `id` (String) The ID of this resource.
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
-- `metrics` (List of Object) (see [below for nested schema](#nestedatt--metrics))
 
 <a id="nestedblock--series"></a>
 ### Nested Schema for `series`
@@ -213,12 +212,3 @@ Read-Only:
 
 - `id` (String)
 - `name` (String)
-
-
-<a id="nestedatt--metrics"></a>
-### Nested Schema for `metrics`
-
-Read-Only:
-
-- `aggregation` (String)
-- `id` (String)

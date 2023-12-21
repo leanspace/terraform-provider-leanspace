@@ -9,7 +9,6 @@ type Widget struct {
 	Type           string                     `json:"type"`
 	Granularity    string                     `json:"granularity"`
 	Series         []Series                   `json:"series"`
-	Metrics        []MetricInfo               `json:"metrics"`
 	Metadata       Metadata                   `json:"metadata"`
 	Dashboards     []DashboardInfo            `json:"dashboards"`
 	Tags           []general_objects.KeyValue `json:"tags,omitempty"`
@@ -32,11 +31,6 @@ type Filter struct {
 	FilterBy string `json:"filterBy"`
 	Operator string `json:"operator"`
 	Value    string `json:"value"`
-}
-
-type MetricInfo struct {
-	ID          string `json:"id"`
-	Aggregation string `json:"aggregation"`
 }
 
 type Metadata struct {

@@ -81,7 +81,6 @@ Read-Only:
 - `last_modified_at` (String)
 - `last_modified_by` (String)
 - `metadata` (List of Object) (see [below for nested schema](#nestedobjatt--content--metadata))
-- `metrics` (List of Object) (see [below for nested schema](#nestedobjatt--content--metrics))
 - `name` (String)
 - `series` (Set of Object) (see [below for nested schema](#nestedobjatt--content--series))
 - `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
@@ -104,15 +103,6 @@ Read-Only:
 - `y_axis_label` (String)
 - `y_axis_range_max` (List of Number)
 - `y_axis_range_min` (List of Number)
-
-
-<a id="nestedobjatt--content--metrics"></a>
-### Nested Schema for `content.metrics`
-
-Read-Only:
-
-- `aggregation` (String)
-- `id` (String)
 
 
 <a id="nestedobjatt--content--series"></a>
