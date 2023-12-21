@@ -47,13 +47,6 @@ var widgetSchema = map[string]*schema.Schema{
 			Schema: seriesSchema,
 		},
 	},
-	"metrics": {
-		Type:     schema.TypeList,
-		Computed: true,
-		Elem: &schema.Resource{
-			Schema: metricInfoSchema,
-		},
-	},
 	"metadata": {
 		Type:     schema.TypeList,
 		Optional: true,
@@ -134,17 +127,6 @@ var filterSchema = map[string]*schema.Schema{
 	"value": {
 		Type:     schema.TypeString,
 		Required: true,
-	},
-}
-
-var metricInfoSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
-		Computed: true,
-	},
-	"aggregation": {
-		Type:     schema.TypeString,
-		Computed: true,
 	},
 }
 

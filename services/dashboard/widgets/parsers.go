@@ -15,7 +15,6 @@ func (widget *Widget) ToMap() map[string]any {
 	widgetMap["type"] = widget.Type
 	widgetMap["granularity"] = widget.Granularity
 	widgetMap["series"] = helper.ParseToMaps(widget.Series)
-	widgetMap["metrics"] = helper.ParseToMaps(widget.Metrics)
 	if metadataMap := widget.Metadata.ToMap(); metadataMap != nil {
 		widgetMap["metadata"] = []any{metadataMap}
 	}
@@ -43,13 +42,6 @@ func (filter *Filter) ToMap() map[string]any {
 	filterMap["operator"] = filter.Operator
 	filterMap["value"] = filter.Value
 	return filterMap
-}
-
-func (metricInfo *MetricInfo) ToMap() map[string]any {
-	metricInfoMap := make(map[string]any)
-	metricInfoMap["id"] = metricInfo.ID
-	metricInfoMap["aggregation"] = metricInfo.Aggregation
-	return metricInfoMap
 }
 
 func (metadata *Metadata) ToMap() map[string]any {
@@ -90,11 +82,6 @@ func (widget *Widget) FromMap(widgetMap map[string]any) error {
 	} else {
 		widget.Series = series
 	}
-	if metrics, err := helper.ParseFromMaps[MetricInfo](widgetMap["metrics"].([]any)); err != nil {
-		return err
-	} else {
-		widget.Metrics = metrics
-	}
 	if len(widgetMap["metadata"].([]any)) > 0 && widgetMap["metadata"].([]any)[0] != nil {
 		if err := widget.Metadata.FromMap(widgetMap["metadata"].([]any)[0].(map[string]any)); err != nil {
 			return err
@@ -133,12 +120,6 @@ func (filter *Filter) FromMap(filterMap map[string]any) error {
 	filter.FilterBy = filterMap["filter_by"].(string)
 	filter.Operator = filterMap["operator"].(string)
 	filter.Value = filterMap["value"].(string)
-	return nil
-}
-
-func (metricInfo *MetricInfo) FromMap(metricInfoMap map[string]any) error {
-	metricInfo.ID = metricInfoMap["id"].(string)
-	metricInfo.Aggregation = metricInfoMap["aggregation"].(string)
 	return nil
 }
 
