@@ -39,7 +39,6 @@ type DashboardWidget struct {
 	Type           string                     `json:"type"`
 	Granularity    string                     `json:"granularity"`
 	Series         []widgets.Series           `json:"series"`
-	Metrics        []widgets.MetricInfo       `json:"metrics"`
 	Metadata       widgets.Metadata           `json:"metadata"`
 	View           WidgetView                 `json:"view"`
 	Tags           []general_objects.KeyValue `json:"tags,omitempty"`

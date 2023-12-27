@@ -143,16 +143,17 @@ func (node *Node) PostReadProcess(client *provider.Client, destNodeRaw any) erro
 		if property.(map[string]any)["name"] == "TLE" {
 			attributeProperites := property.(map[string]any)["attributes"].(map[string]any)
 			var strList []string
-			for _, v := range attributeProperites["value"].([]interface{}) {
-				str, ok := v.(string)
-				if !ok {
-					fmt.Println("Failed to convert interface{} to string")
-					return nil
+			if attributeProperites["value"] != nil {
+				for _, v := range attributeProperites["value"].([]interface{}) {
+					str, ok := v.(string)
+					if !ok {
+						fmt.Println("Failed to convert interface{} to string")
+						return nil
+					}
+					strList = append(strList, str)
 				}
-				strList = append(strList, str)
+				createdNode.Tle = strList
 			}
-			createdNode.Tle = strList
-
 		}
 		if property.(map[string]any)["name"] == INTERNATIONAL_DESIGNATOR {
 			attributeProperites := property.(map[string]any)["attributes"].(map[string]any)
