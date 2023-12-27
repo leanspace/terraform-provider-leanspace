@@ -45,7 +45,6 @@ func (widget *DashboardWidget) ToMap() map[string]any {
 	widgetMap["type"] = widget.Type
 	widgetMap["granularity"] = widget.Granularity
 	widgetMap["series"] = helper.ParseToMaps(widget.Series)
-	widgetMap["metrics"] = helper.ParseToMaps(widget.Metrics)
 	if metadataMap := widget.Metadata.ToMap(); metadataMap != nil {
 		widgetMap["metadata"] = []any{metadataMap}
 	}
@@ -129,11 +128,6 @@ func (widget *DashboardWidget) FromMap(widgetMap map[string]any) error {
 		return err
 	} else {
 		widget.Series = series
-	}
-	if metrics, err := helper.ParseFromMaps[widgets.MetricInfo](widgetMap["metrics"].([]any)); err != nil {
-		return err
-	} else {
-		widget.Metrics = metrics
 	}
 	if len(widgetMap["metadata"].([]any)) > 0 {
 		if err := widget.Metadata.FromMap(widgetMap["metadata"].([]any)[0].(map[string]any)); err != nil {
