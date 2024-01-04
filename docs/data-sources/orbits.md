@@ -1,18 +1,18 @@
 ---
-page_title: "leanspace_orbit_resources Data Source - terraform-provider-leanspace"
+page_title: "leanspace_orbits Data Source - terraform-provider-leanspace"
 subcategory: ""
 description: |-
   
 ---
 
-# leanspace_orbit_resources (Data Source)
+# leanspace_orbits (Data Source)
 
 
 
 ## Example Usage
 
 ```terraform
-data "leanspace_orbit_resources" "all" {
+data "leanspace_orbits" "all" {
   filters {
     satellite_ids                  = [var.satellite_id]
     ids                            = []
@@ -53,15 +53,19 @@ data "leanspace_orbit_resources" "all" {
 
 Optional:
 
-- `automatic_propagation` (Boolean)
-- `data_sources` (List of String)
+- `created_bys` (List of String) Filter on the user who created the Orbit. If you have no wish to use this field as a filter, either provide a null value or remove the field.
+- `from_created_at` (String) Filter on the Orbit creation date. Orbits with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
+- `from_last_modified_at` (String) Filter on the Orbit last modification date. Orbits with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
 - `ids` (List of String)
+- `last_modified_bys` (List of String) Filter on the user who last modified the Orbit. If you have no wish to use this field as a filter, either provide a null value or remove the field.
 - `page` (Number)
 - `query` (String) Search by name
 - `satellite_ids` (List of String)
 - `size` (Number)
 - `sort` (List of String)
 - `tags` (List of String)
+- `to_created_at` (String) Filter on the Orbit creation date. Orbits with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
+- `to_last_modified_at` (String) Filter on the Orbit last modification date. Orbits with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
 
 
 <a id="nestedatt--content"></a>
@@ -69,29 +73,30 @@ Optional:
 
 Read-Only:
 
-- `automatic_propagation` (Boolean)
 - `created_at` (String)
 - `created_by` (String)
-- `data_source` (String)
-- `gps_metric_ids` (List of Object) (see [below for nested schema](#nestedobjatt--content--gps_metric_ids))
 - `id` (String)
+- `ideal_orbit` (List of Object) (see [below for nested schema](#nestedobjatt--content--ideal_orbit))
 - `last_modified_at` (String)
 - `last_modified_by` (String)
 - `name` (String)
 - `satellite_id` (String)
 - `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
 
-<a id="nestedobjatt--content--gps_metric_ids"></a>
-### Nested Schema for `content.gps_metric_ids`
+<a id="nestedobjatt--content--ideal_orbit"></a>
+### Nested Schema for `content.ideal_orbit`
 
 Read-Only:
 
-- `metric_id_for_position_x` (String)
-- `metric_id_for_position_y` (String)
-- `metric_id_for_position_z` (String)
-- `metric_id_for_velocity_x` (String)
-- `metric_id_for_velocity_y` (String)
-- `metric_id_for_velocity_z` (String)
+- `altitude_in_meters` (Number)
+- `apogee_altitude_in_meters` (Number)
+- `argument_of_perigee` (Number)
+- `eccentricity` (Number)
+- `inclination` (Number)
+- `perigee_altitude_in_meters` (Number)
+- `right_ascension_of_ascending_node` (Number)
+- `semi_major_axis` (Number)
+- `type` (String)
 
 
 <a id="nestedobjatt--content--tags"></a>

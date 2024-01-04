@@ -1,4 +1,4 @@
-data "leanspace_orbit_resources" "all" {
+data "leanspace_orbits" "all" {
   filters {
     satellite_ids                  = [var.satellite_id]
     ids                            = []
