@@ -19,7 +19,7 @@ data "leanspace_command_definitions" "all" {
     node_kinds                  = ["SATELLITE"]
     with_arguments_and_metadata = true
     ids                         = []
-    created_by                  = null
+    created_bys                 = []
     query                       = ""
     page                        = 0
     size                        = 10
@@ -55,7 +55,7 @@ data "leanspace_command_definitions" "all" {
 
 Optional:
 
-- `created_by` (String) Filter on the user who created the Node. If you have no wish to use this field as a filter, either provide a null value or remove the field.
+- `created_bys` (List of String) Filter on the user who created the Node. If you have no wish to use this field as a filter, either provide a null value or remove the field.
 - `ids` (List of String)
 - `node_ids` (List of String)
 - `node_kinds` (List of String) Filter on the Node kind. Allowed values : GENERIC, SATELLITE, GROUND_STATION

@@ -297,12 +297,12 @@ resource "leanspace_command_definitions" "test" {
 Required:
 
 - `attributes` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--arguments--attributes))
-- `identifier` (String)
 - `name` (String)
 
 Optional:
 
 - `description` (String)
+- `identifier` (String)
 
 Read-Only:
 
