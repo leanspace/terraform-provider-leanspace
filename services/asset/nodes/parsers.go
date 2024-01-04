@@ -164,9 +164,15 @@ func (node *Node) PostReadProcess(client *provider.Client, destNodeRaw any) erro
 		if property.(map[string]any)["name"] == LOCATION_COORDINATES {
 			attributeProperites := property.(map[string]any)["attributes"].(map[string]any)
 			field := attributeProperites["fields"].(map[string]any)
-			createdNode.Latitude = field["latitude"].(map[string]any)["value"].(float64)
-			createdNode.Longitude = field["longitude"].(map[string]any)["value"].(float64)
-			createdNode.Elevation = field["elevation"].(map[string]any)["value"].(float64)
+			if field["latitude"].(map[string]any)["value"] != nil {
+				createdNode.Latitude = field["latitude"].(map[string]any)["value"].(float64)
+			}
+			if field["longitude"].(map[string]any)["value"] != nil {
+				createdNode.Longitude = field["longitude"].(map[string]any)["value"].(float64)
+			}
+			if field["elevation"].(map[string]any)["value"] != nil {
+				createdNode.Elevation = field["elevation"].(map[string]any)["value"].(float64)
+			}
 		}
 	}
 	return nil
