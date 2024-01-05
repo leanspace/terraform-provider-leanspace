@@ -59,7 +59,7 @@ Optional:
 - `ids` (List of String)
 - `last_modified_bys` (List of String) Filter on the user who last modified the Orbit. If you have no wish to use this field as a filter, either provide a null value or remove the field.
 - `page` (Number)
-- `query` (String) Search by name
+- `query` (String)
 - `satellite_ids` (List of String)
 - `size` (Number)
 - `sort` (List of String)

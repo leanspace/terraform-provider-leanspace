@@ -27,9 +27,6 @@ resource "leanspace_orbits" "an_orbit" {
     argument_of_perigee = 0.8
     altitude_in_meters = 150.0
     eccentricity = 0.7
-    perigee_altitude_in_meters = 500000.0
-    apogee_altitude_in_meters = 2.5
-    semi_major_axis = 15.0
   }
   tags {
     key   = "Mission"
@@ -65,14 +62,17 @@ resource "leanspace_orbits" "an_orbit" {
 Required:
 
 - `altitude_in_meters` (Number)
-- `apogee_altitude_in_meters` (Number)
 - `argument_of_perigee` (Number)
 - `eccentricity` (Number)
 - `inclination` (Number)
-- `perigee_altitude_in_meters` (Number)
 - `right_ascension_of_ascending_node` (Number)
-- `semi_major_axis` (Number)
 - `type` (String)
+
+Read-Only:
+
+- `apogee_altitude_in_meters` (Number)
+- `perigee_altitude_in_meters` (Number)
+- `semi_major_axis` (Number)
 
 
 <a id="nestedblock--tags"></a>

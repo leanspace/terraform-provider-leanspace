@@ -84,15 +84,15 @@ var idealOrbitSchema = map[string]*schema.Schema{
     },
     "perigee_altitude_in_meters": {
         Type:     schema.TypeFloat,
-        Required: true,
+        Computed: true,
     },
     "apogee_altitude_in_meters": {
         Type:     schema.TypeFloat,
-        Required: true,
+        Computed: true,
     },
     "semi_major_axis": {
         Type:     schema.TypeFloat,
-        Required: true,
+        Computed: true,
     },
 }
 
