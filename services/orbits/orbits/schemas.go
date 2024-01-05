@@ -105,19 +105,6 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 			ValidateFunc: validation.IsUUID,
 		},
 	},
-	"ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-	},
-	"query": {
-		Type:        schema.TypeString,
-		Optional:    true,
-		Description: "Search by name",
-	},
 	"tags": {
 		Type:     schema.TypeList,
 		Optional: true,
