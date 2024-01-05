@@ -21,7 +21,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/metrics/metrics"
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/action_templates"
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/monitors"
-	"github.com/leanspace/terraform-provider-leanspace/services/orbits/orbit_resources"
+	"github.com/leanspace/terraform-provider-leanspace/services/orbits/orbits"
 	"github.com/leanspace/terraform-provider-leanspace/services/pass/contact_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/pass/pass_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/plans/plan_states"
@@ -63,7 +63,7 @@ func AddDataTypes() {
 	activity_states.ActivityStateDataType.Subscribe()
 	routes.RouteDataType.Subscribe()
 	processors.ProcessorDataType.Subscribe()
-	orbit_resources.OrbitResourceDataType.Subscribe()
+	orbits.OrbitDataType.Subscribe()
 	leaf_space_connections.LeafSpaceConnectionDataType.Subscribe()
 	leaf_space_groundstation_links.LeafSpaceGroundStationLinkDataType.Subscribe()
 	leaf_space_satellite_links.LeafSpaceSatellitesLinkDataType.Subscribe()

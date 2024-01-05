@@ -176,7 +176,7 @@ The available resources per service are:
   - action_templates: it has one simple `leanspace_action_template` with a body and headers
   - monitors: it has two `leanspace_monitors`, one with and one without a tolerance set.
 - orbits:
-  - orbit_resources: it has one simple `leanspace_orbit_resources` with a body and headers
+  - orbits: it has one simple `leanspace_orbits` with a body and headers
 - pass:
   - pass_states: it has one `leanspace_pass_states` resource.
 - plans:
