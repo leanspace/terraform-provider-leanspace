@@ -61,6 +61,8 @@ var idealOrbitSchema = map[string]*schema.Schema{
 	"type": {
 		Type:     schema.TypeString,
 		Required: true,
+		ValidateFunc: validation.StringInSlice(validIdealOrbitTypes, false),
+        Description:  helper.AllowedValuesToDescription(validIdealOrbitTypes),
 	},
 	"inclination": {
 		Type:     schema.TypeFloat,
