@@ -66,7 +66,7 @@ Required:
 - `eccentricity` (Number)
 - `inclination` (Number)
 - `right_ascension_of_ascending_node` (Number)
-- `type` (String)
+- `type` (String) it must be one of these values: SSO, POLAR, LEO, GEO, MEO, OTHER
 
 Read-Only:
 
