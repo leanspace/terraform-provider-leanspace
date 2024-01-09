@@ -103,7 +103,7 @@ var configurationSchema = map[string]*schema.Schema{
 		MinItems: 1,
 		Elem: &schema.Resource{
 			// Arbitrary depth
-			Schema: elementListSchema(streamComponentSchema(5)),
+			Schema: elementListSchema(streamComponentSchema(11)),
 		},
 	},
 	"metadata": {
