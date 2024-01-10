@@ -45,7 +45,7 @@ func NewClient(host, env, tenant, clientId, clientSecret, region *string) (*Clie
 	}
 
 	c := Client{
-		HTTPClient: &http.Client{Timeout: 120 * time.Second},
+		HTTPClient: &http.Client{Timeout: 300 * time.Second},
 		HostURL:    hostUrl,
 	}
 
