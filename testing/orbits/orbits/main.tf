@@ -32,7 +32,7 @@ resource "leanspace_orbits" "an_orbit" {
     right_ascension_of_ascending_node = 50.0
     argument_of_perigee               = 0.8
     altitude_in_meters                = 150.0
-    eccentricity                      = 0.7
+    eccentricity                      = 0.999
   }
   tags {
     key   = "Mission"

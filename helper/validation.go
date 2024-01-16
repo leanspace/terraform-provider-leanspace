@@ -410,3 +410,20 @@ func isValidVersion(value string) (v int64, ok bool) {
 	}
 	return 0, false
 }
+
+func FloatAtLeastAndLessThan(min, maxExclusive float64) schema.SchemaValidateFunc {
+	return func(i interface{}, k string) (s []string, es []error) {
+		v, ok := i.(float64)
+		if !ok {
+			es = append(es, fmt.Errorf("expected type of %s to be float64", k))
+			return
+		}
+
+		if v < min || v >= maxExclusive {
+			es = append(es, fmt.Errorf("expected %s to be at equal or greater than %f and strictly less than %f, got %f", k, min, maxExclusive, v))
+			return
+		}
+
+		return
+	}
+}
