@@ -67,22 +67,27 @@ var idealOrbitSchema = map[string]*schema.Schema{
 	"inclination": {
 		Type:     schema.TypeFloat,
 		Required: true,
+		ValidateFunc: validation.FloatBetween(0.0, 180.0),
 	},
 	"right_ascension_of_ascending_node": {
 		Type:     schema.TypeFloat,
 		Required: true,
+		ValidateFunc: validation.FloatBetween(0.0, 360.0),
 	},
 	"argument_of_perigee": {
 		Type:     schema.TypeFloat,
 		Required: true,
+		ValidateFunc: validation.FloatBetween(0.0, 360.0),
 	},
 	"altitude_in_meters": {
 		Type:     schema.TypeFloat,
 		Required: true,
+		ValidateFunc: validation.FloatAtLeast(0.0),
 	},
 	"eccentricity": {
 		Type:     schema.TypeFloat,
 		Required: true,
+		ValidateFunc: helper.FloatAtLeastAndLessThan(0.0, 1.0),
 	},
 	"perigee_altitude_in_meters": {
 		Type:     schema.TypeFloat,
