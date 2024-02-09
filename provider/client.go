@@ -82,7 +82,12 @@ func (c *Client) SignIn() (*AuthResponse, error) {
 		return nil, fmt.Errorf("define client id and client secret")
 	}
 
-	req, err := http.NewRequest("POST", fmt.Sprintf("https://%s-%s.auth.%s.amazoncognito.com/oauth2/token?scope=https://api.leanspace.io/READ&grant_type=client_credentials", c.Auth.Tenant, c.Auth.Env, c.Auth.Region), strings.NewReader("Content-Type=application%2Fx-www-form-urlencoded"))
+	cognitoURL := fmt.Sprintf("https://%s-%s.auth.%s.amazoncognito.com/oauth2/token?scope=https://api.leanspace.io/READ&grant_type=client_credentials", c.Auth.Tenant, c.Auth.Env, c.Auth.Region)
+	if strings.HasPrefix(c.Auth.Region, "us-gov") {
+		cognitoURL = fmt.Sprintf("https://%s-%s.auth-fips.%s.amazoncognito.com/oauth2/token?scope=https://api.leanspace.io/READ&grant_type=client_credentials", c.Auth.Tenant, c.Auth.Env, c.Auth.Region)
+	}
+
+	req, err := http.NewRequest("POST", cognitoURL, strings.NewReader("Content-Type=application%2Fx-www-form-urlencoded"))
 	if err != nil {
 		return nil, err
 	}
