@@ -72,7 +72,7 @@ Read-Only:
 - `last_modified_at` (String)
 - `last_modified_by` (String)
 - `name` (String)
-- `processor_ids` (List of String)
+- `processor_ids` (Set of String)
 - `route_instances` (List of Object) (see [below for nested schema](#nestedobjatt--content--route_instances))
 - `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
 

@@ -44,7 +44,7 @@ resource "leanspace_routes" "test_create_route" {
 ### Optional
 
 - `description` (String)
-- `processor_ids` (List of String)
+- `processor_ids` (Set of String)
 - `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
 
 ### Read-Only
