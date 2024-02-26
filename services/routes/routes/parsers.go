@@ -69,8 +69,8 @@ func (route *Route) FromMap(routeMap map[string]any) error {
 			return err
 		}
 	}
-	route.ProcessorIds = make([]string, len(routeMap["processor_ids"].([]any)))
-	for i, processorId := range routeMap["processor_ids"].([]any) {
+	route.ProcessorIds = make([]string, len(routeMap["processor_ids"].(*schema.Set).List()))
+	for i, processorId := range routeMap["processor_ids"].(*schema.Set).List() {
 		route.ProcessorIds[i] = processorId.(string)
 	}
 	route.CreatedAt = routeMap["created_at"].(string)

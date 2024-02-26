@@ -44,7 +44,7 @@ var routeSchema = map[string]*schema.Schema{
 	},
 
 	"processor_ids": {
-		Type:     schema.TypeList,
+		Type:     schema.TypeSet,
 		Optional: true,
 		Elem: &schema.Schema{
 			Type:         schema.TypeString,
