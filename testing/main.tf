@@ -185,7 +185,7 @@ module "processors" {
 }
 
 module "orbits" {
-  source            = "orbits/orbits"
+  source            = "./orbits/orbits"
   satellite_id      = module.nodes.satellite_node.id
   depends_on = [
     module.nodes
