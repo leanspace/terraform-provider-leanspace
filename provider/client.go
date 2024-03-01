@@ -13,10 +13,11 @@ import (
 
 // Client -
 type Client struct {
-	HostURL    string
-	HTTPClient *http.Client
-	Token      string
-	Auth       AuthStruct
+	HostURL      string
+	HTTPClient   *http.Client
+	Token        string
+	Auth         AuthStruct
+	RetryTimeout time.Duration
 }
 
 // AuthStruct -
@@ -43,10 +44,12 @@ func NewClient(host, env, tenant, clientId, clientSecret, region *string) (*Clie
 	default:
 		hostUrl = fmt.Sprintf("https://api.%s.leanspace.io", *env)
 	}
+	timeout := 300 * time.Second
 
 	c := Client{
-		HTTPClient: &http.Client{Timeout: 300 * time.Second},
-		HostURL:    hostUrl,
+		HTTPClient:   &http.Client{Timeout: timeout},
+		HostURL:      hostUrl,
+		RetryTimeout: timeout,
 	}
 
 	if host != nil && *host != "" {

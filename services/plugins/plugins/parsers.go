@@ -3,9 +3,11 @@ package plugins
 import (
 	"crypto/sha256"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
@@ -81,10 +83,27 @@ func (plugin *Plugin) persistFileSha(destPlugin *Plugin) error {
 	return nil
 }
 
-func (plugin *Plugin) PostCreateProcess(_ *provider.Client, destPluginRaw any) error {
+func (plugin *Plugin) PostCreateProcess(client *provider.Client, destPluginRaw any) error {
 	createdPlugin := destPluginRaw.(*Plugin)
+
+	metadata, err := GetPluginMetadata(createdPlugin.ID, client)
+	plugin.persistFileSha(createdPlugin)
 	plugin.persistFilePath(createdPlugin)
-	return plugin.persistFileSha(createdPlugin)
+	if err != nil {
+		return nil
+	}
+
+	startTime := time.Now()
+	for metadata.Status != "ACTIVE" && metadata.Status != "FAILED" && time.Since(startTime).Seconds() < client.RetryTimeout.Seconds() {
+		metadata, err = GetPluginMetadata(createdPlugin.ID, client)
+		if err != nil {
+			break
+		}
+		time.Sleep(1 * time.Second)
+	}
+
+	plugin.Status = metadata.Status
+	return nil
 }
 
 func (plugin *Plugin) PostUpdateProcess(_ *provider.Client, destPluginRaw any) error {
@@ -112,4 +131,25 @@ func (plugin *Plugin) PostReadProcess(client *provider.Client, destPluginRaw any
 	}
 
 	return nil
+}
+
+func GetPluginMetadata(pluginId string, client *provider.Client) (*Plugin, error) {
+	path := fmt.Sprintf("%s/%s/%s/metadata", client.HostURL, PluginDataType.Path, pluginId)
+	req, err := http.NewRequest("GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+	data, err, code := client.DoRequest(req, &(client).Token)
+	if code == http.StatusNotFound {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	var element Plugin
+	err = json.Unmarshal(data, &element)
+	if err != nil {
+		return nil, err
+	}
+	return &element, nil
 }
