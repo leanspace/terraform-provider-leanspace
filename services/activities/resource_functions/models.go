@@ -5,7 +5,7 @@ type ResourceFunction struct {
 	ActivityDefinitionId    string                    `json:"activityDefinitionId"`
 	ResourceId              string                    `json:"resourceId"`
 	Name                    string                    `json:"name"`
-	TimeUnit                int                       `json:"timeUnit"`
+	TimeUnit                string                     `json:"timeUnit"`
 	Formula                 *ResourceFunctionFormula  `json:"formula"`
 	CreatedAt               string                    `json:"createdAt"`
 	CreatedBy               string                    `json:"createdBy"`

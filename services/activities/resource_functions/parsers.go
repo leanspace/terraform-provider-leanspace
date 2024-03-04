@@ -28,7 +28,7 @@ func (resourceFunction *ResourceFunction) FromMap(resourceFunctionMap map[string
 	resourceFunction.ActivityDefinitionId = resourceFunctionMap["activity_definition_id"].(string)
 	resourceFunction.ResourceId = resourceFunctionMap["resource_id"].(string)
 	resourceFunction.Name = resourceFunctionMap["name"].(string)
-	resourceFunction.TimeUnit = resourceFunctionMap["time_unit"].(int)
+	resourceFunction.TimeUnit = resourceFunctionMap["time_unit"].(string)
 	if len(resourceFunctionMap["formula"].([]any)) > 0 && resourceFunctionMap["formula"].([]any)[0] != nil {
         resourceFunction.Formula = new(ResourceFunctionFormula)
         if err := resourceFunction.Formula.FromMap(resourceFunctionMap["formula"].([]any)[0].(map[string]any)); err != nil {

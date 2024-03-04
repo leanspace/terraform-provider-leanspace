@@ -19,8 +19,8 @@ variable "activity_definition_id" {
 data "leanspace_resource_functions" "all" {
   filters {
     ids                     = []
-    activity_definition_ids = []
-    resource_ids            = []
+    activity_definition_ids = [var.activity_definition_id]
+    resource_ids            = [var.resource_id]
     page                    = 0
     size                    = 10
     sort                    = ["name,asc"]
