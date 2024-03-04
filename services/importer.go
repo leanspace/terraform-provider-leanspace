@@ -26,6 +26,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/pass/pass_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/plans/plan_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/plugins/plugins"
+	"github.com/leanspace/terraform-provider-leanspace/services/resources/resources"
 	"github.com/leanspace/terraform-provider-leanspace/services/routes/processors"
 	"github.com/leanspace/terraform-provider-leanspace/services/routes/routes"
 	"github.com/leanspace/terraform-provider-leanspace/services/streams/streams"
@@ -68,4 +69,5 @@ func AddDataTypes() {
 	leaf_space_groundstation_links.LeafSpaceGroundStationLinkDataType.Subscribe()
 	leaf_space_satellite_links.LeafSpaceSatellitesLinkDataType.Subscribe()
 	leaf_space_contact_reservation_status_mappings.LeafSpaceContactReservationStatusMappingDataType.Subscribe()
+	resources.ResourceDataType.Subscribe()
 }
