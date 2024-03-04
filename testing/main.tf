@@ -201,3 +201,13 @@ module "resources" {
     module.metrics
   ]
 }
+
+module "resource_functions" {
+  source                 = "./activities/resource_functions"
+  resource_id            = module.resources.a_resource.id
+  activity_definition_id = module.activity_definitions.test_activity_definition.id
+  depends_on             = [
+    module.activity_definitions,
+    module.resources
+  ]
+}

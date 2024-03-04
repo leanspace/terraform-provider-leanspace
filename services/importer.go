@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/leanspace/terraform-provider-leanspace/services/activities/activity_definitions"
+	"github.com/leanspace/terraform-provider-leanspace/services/activities/resource_functions"
 	"github.com/leanspace/terraform-provider-leanspace/services/activities/activity_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/agents/remote_agents"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/nodes"
@@ -40,6 +41,7 @@ func AddDataTypes() {
 	access_policies.AccessPolicyDataType.Subscribe()
 	action_templates.ActionTemplateDataType.Subscribe()
 	activity_definitions.ActivityDefinitionDataType.Subscribe()
+	resource_functions.ResourceFunctionDataType.Subscribe()
 	command_definitions.CommandDataType.Subscribe()
 	command_queues.CommandQueueDataType.Subscribe()
 	release_queues.ReleaseQueueDataType.Subscribe()
