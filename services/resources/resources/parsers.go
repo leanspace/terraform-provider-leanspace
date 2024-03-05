@@ -45,14 +45,14 @@ func (resource *Resource) FromMap(resourceMap map[string]any) error {
 	resource.Description = resourceMap["description"].(string)
 	resource.DefaultLevel = resourceMap["default_level"].(float64)
 	if resourceMap["constraints"] != nil {
-        if constraints, err := helper.ParseFromMaps[ResourceConstraints](
-            resourceMap["constraints"].(*schema.Set).List(),
-        ); err != nil {
-            return err
-        } else {
-            resource.Constraints = constraints
-        }
-    }
+		if constraints, err := helper.ParseFromMaps[ResourceConstraints](
+			resourceMap["constraints"].(*schema.Set).List(),
+		); err != nil {
+			return err
+		} else {
+			resource.Constraints = constraints
+		}
+	}
 	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](resourceMap["tags"].(*schema.Set).List()); err != nil {
 		return err
 	} else {

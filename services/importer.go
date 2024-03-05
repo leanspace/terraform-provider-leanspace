@@ -2,8 +2,8 @@ package services
 
 import (
 	"github.com/leanspace/terraform-provider-leanspace/services/activities/activity_definitions"
-	"github.com/leanspace/terraform-provider-leanspace/services/activities/resource_functions"
 	"github.com/leanspace/terraform-provider-leanspace/services/activities/activity_states"
+	"github.com/leanspace/terraform-provider-leanspace/services/activities/resource_functions"
 	"github.com/leanspace/terraform-provider-leanspace/services/agents/remote_agents"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/nodes"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/properties"

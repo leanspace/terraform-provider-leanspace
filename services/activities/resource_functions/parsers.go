@@ -30,11 +30,11 @@ func (resourceFunction *ResourceFunction) FromMap(resourceFunctionMap map[string
 	resourceFunction.Name = resourceFunctionMap["name"].(string)
 	resourceFunction.TimeUnit = resourceFunctionMap["time_unit"].(string)
 	if len(resourceFunctionMap["formula"].([]any)) > 0 && resourceFunctionMap["formula"].([]any)[0] != nil {
-        resourceFunction.Formula = new(ResourceFunctionFormula)
-        if err := resourceFunction.Formula.FromMap(resourceFunctionMap["formula"].([]any)[0].(map[string]any)); err != nil {
-            return err
-        }
-    }
+		resourceFunction.Formula = new(ResourceFunctionFormula)
+		if err := resourceFunction.Formula.FromMap(resourceFunctionMap["formula"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
+	}
 	resourceFunction.CreatedAt = resourceFunctionMap["created_at"].(string)
 	resourceFunction.CreatedBy = resourceFunctionMap["created_by"].(string)
 	resourceFunction.LastModifiedAt = resourceFunctionMap["last_modified_at"].(string)

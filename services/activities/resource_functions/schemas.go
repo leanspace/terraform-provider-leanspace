@@ -1,7 +1,7 @@
 package resource_functions
 
 import (
-    "github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -32,19 +32,19 @@ var resourceFunctionSchema = map[string]*schema.Schema{
 		Optional: true,
 	},
 	"time_unit": {
-		Type:     schema.TypeString,
-		Required: true,
-		ValidateFunc:   validation.StringInSlice(validResourceFunctionTimeUnits, false),
-        Description:    helper.AllowedValuesToDescription(validResourceFunctionTimeUnits),
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.StringInSlice(validResourceFunctionTimeUnits, false),
+		Description:  helper.AllowedValuesToDescription(validResourceFunctionTimeUnits),
 	},
 	"formula": {
 		Type:     schema.TypeList,
 		Required: true,
 		MinItems: 1,
-        MaxItems: 1,
+		MaxItems: 1,
 		Elem: &schema.Resource{
-            Schema: formulaSchema,
-        },
+			Schema: formulaSchema,
+		},
 	},
 	"created_at": {
 		Type:        schema.TypeString,
@@ -70,93 +70,93 @@ var resourceFunctionSchema = map[string]*schema.Schema{
 
 var formulaSchema = map[string]*schema.Schema{
 	"constant": {
-		Type:           schema.TypeFloat,
-		Required:       true,
+		Type:     schema.TypeFloat,
+		Required: true,
 	},
 	"rate": {
-		Type:           schema.TypeFloat,
-		Required:       true,
+		Type:     schema.TypeFloat,
+		Required: true,
 	},
-    "type": {
-        Type:           schema.TypeString,
-        Required:       true,
-        ValidateFunc:   validation.StringInSlice(validFormulaTypes, false),
-        Description:    helper.AllowedValuesToDescription(validFormulaTypes),
-    },
+	"type": {
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.StringInSlice(validFormulaTypes, false),
+		Description:  helper.AllowedValuesToDescription(validFormulaTypes),
+	},
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{
 	"ids": {
-    		Type:     schema.TypeList,
-    		Optional: true,
-    		Elem: &schema.Schema{
-    			Type:         schema.TypeString,
-    			ValidateFunc: validation.IsUUID,
-    		},
-    	},
-    "activity_definition_ids": {
-        Type:     schema.TypeList,
-        Optional: true,
-        Elem: &schema.Schema{
-            Type:         schema.TypeString,
-            ValidateFunc: validation.IsUUID,
-        },
-    },
-    "resource_ids": {
-        Type:     schema.TypeList,
-        Optional: true,
-        Elem: &schema.Schema{
-            Type:         schema.TypeString,
-            ValidateFunc: validation.IsUUID,
-        },
-    },
-    "tags": {
-        Type:     schema.TypeList,
-        Optional: true,
-        Elem: &schema.Schema{
-            Type: schema.TypeString,
-        },
-    },
-    "created_bys": {
-        Type:     schema.TypeList,
-        Optional: true,
-        Elem: &schema.Schema{
-            Type:         schema.TypeString,
-            ValidateFunc: validation.IsUUID,
-        },
-        Description: "Filter on the user who created the Resource Function. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-    },
-    "last_modified_bys": {
-        Type:     schema.TypeList,
-        Optional: true,
-        Elem: &schema.Schema{
-            Type:         schema.TypeString,
-            ValidateFunc: validation.IsUUID,
-        },
-        Description: "Filter on the user who last modified the Resource Function. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-    },
-    "from_created_at": {
-        Type:         schema.TypeString,
-        Optional:     true,
-        ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-        Description:  "Filter on the Resource Function creation date. Resource Functions with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-    },
-    "from_last_modified_at": {
-        Type:         schema.TypeString,
-        Optional:     true,
-        ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-        Description:  "Filter on the Resource Function last modification date. Resource Functions with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-    },
-    "to_created_at": {
-        Type:         schema.TypeString,
-        Optional:     true,
-        ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-        Description:  "Filter on the Resource Function creation date. Resource Functions with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-    },
-    "to_last_modified_at": {
-        Type:         schema.TypeString,
-        Optional:     true,
-        ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-        Description:  "Filter on the Resource Function last modification date. Resource Functions with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-    },
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"activity_definition_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"resource_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"tags": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
+		},
+	},
+	"created_bys": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+		Description: "Filter on the user who created the Resource Function. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	},
+	"last_modified_bys": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+		Description: "Filter on the user who last modified the Resource Function. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	},
+	"from_created_at": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+		Description:  "Filter on the Resource Function creation date. Resource Functions with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	},
+	"from_last_modified_at": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+		Description:  "Filter on the Resource Function last modification date. Resource Functions with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	},
+	"to_created_at": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+		Description:  "Filter on the Resource Function creation date. Resource Functions with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	},
+	"to_last_modified_at": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+		Description:  "Filter on the Resource Function last modification date. Resource Functions with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	},
 }

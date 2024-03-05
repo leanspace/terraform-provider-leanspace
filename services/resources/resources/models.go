@@ -23,7 +23,7 @@ type Resource struct {
 func (resource *Resource) GetID() string { return resource.ID }
 
 type ResourceConstraints struct {
-	Type        string  `json:"type"`
-	Kind        string  `json:"kind"`
-	Value       float64 `json:"value"`
+	Type  string  `json:"type"`
+	Kind  string  `json:"kind"`
+	Value float64 `json:"value"`
 }

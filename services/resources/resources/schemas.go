@@ -48,10 +48,10 @@ var resourceSchema = map[string]*schema.Schema{
 	},
 	"constraints": {
 		Type:     schema.TypeSet,
-        Optional: true,
-        Elem: &schema.Resource{
-            Schema: resourceConstraintsSchema,
-        },
+		Optional: true,
+		Elem: &schema.Resource{
+			Schema: resourceConstraintsSchema,
+		},
 	},
 	"tags": general_objects.KeyValuesSchema,
 	"created_at": {
@@ -78,21 +78,21 @@ var resourceSchema = map[string]*schema.Schema{
 
 var resourceConstraintsSchema = map[string]*schema.Schema{
 	"type": {
-		Type:           schema.TypeString,
-		Required:       true,
-		ValidateFunc:   validation.StringInSlice(validIdealResourceConstraintTypes, false),
-		Description:    helper.AllowedValuesToDescription(validIdealResourceConstraintTypes),
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.StringInSlice(validIdealResourceConstraintTypes, false),
+		Description:  helper.AllowedValuesToDescription(validIdealResourceConstraintTypes),
 	},
 	"kind": {
-		Type:           schema.TypeString,
-		Required:       true,
-		ValidateFunc:   validation.StringInSlice(validIdealResourceConstraintKinds, false),
-        Description:    helper.AllowedValuesToDescription(validIdealResourceConstraintKinds),
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.StringInSlice(validIdealResourceConstraintKinds, false),
+		Description:  helper.AllowedValuesToDescription(validIdealResourceConstraintKinds),
 	},
 	"value": {
-		Type:           schema.TypeFloat,
-		Required:       true,
-		ValidateFunc:   validation.FloatBetween(0.0, 360.0),
+		Type:         schema.TypeFloat,
+		Required:     true,
+		ValidateFunc: validation.FloatBetween(0.0, 360.0),
 	},
 }
 

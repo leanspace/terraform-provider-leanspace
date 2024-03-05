@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     leanspace = {
-      source  = "leanspace/leanspace"
+      source = "leanspace/leanspace"
     }
   }
 }
