@@ -3,6 +3,7 @@ package services
 import (
 	"github.com/leanspace/terraform-provider-leanspace/services/activities/activity_definitions"
 	"github.com/leanspace/terraform-provider-leanspace/services/activities/activity_states"
+	"github.com/leanspace/terraform-provider-leanspace/services/activities/resource_functions"
 	"github.com/leanspace/terraform-provider-leanspace/services/agents/remote_agents"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/nodes"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/properties"
@@ -26,6 +27,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/pass/pass_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/plans/plan_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/plugins/plugins"
+	"github.com/leanspace/terraform-provider-leanspace/services/resources/resources"
 	"github.com/leanspace/terraform-provider-leanspace/services/routes/processors"
 	"github.com/leanspace/terraform-provider-leanspace/services/routes/routes"
 	"github.com/leanspace/terraform-provider-leanspace/services/streams/streams"
@@ -39,6 +41,7 @@ func AddDataTypes() {
 	access_policies.AccessPolicyDataType.Subscribe()
 	action_templates.ActionTemplateDataType.Subscribe()
 	activity_definitions.ActivityDefinitionDataType.Subscribe()
+	resource_functions.ResourceFunctionDataType.Subscribe()
 	command_definitions.CommandDataType.Subscribe()
 	command_queues.CommandQueueDataType.Subscribe()
 	release_queues.ReleaseQueueDataType.Subscribe()
@@ -68,4 +71,5 @@ func AddDataTypes() {
 	leaf_space_groundstation_links.LeafSpaceGroundStationLinkDataType.Subscribe()
 	leaf_space_satellite_links.LeafSpaceSatellitesLinkDataType.Subscribe()
 	leaf_space_contact_reservation_status_mappings.LeafSpaceContactReservationStatusMappingDataType.Subscribe()
+	resources.ResourceDataType.Subscribe()
 }

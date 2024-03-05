@@ -51,15 +51,15 @@ module "command_queues" {
 }
 
 module "release_queues" {
-  source             = "./commands/release_queues"
-  asset_id           = module.nodes.satellite_node.id
+  source   = "./commands/release_queues"
+  asset_id = module.nodes.satellite_node.id
   depends_on = [
     module.nodes
   ]
 }
 
 module "command_sequence_states" {
-  source             = "./commands/command_sequence_states"
+  source = "./commands/command_sequence_states"
 }
 
 module "streams" {
@@ -175,19 +175,39 @@ module "plans" {
 }
 
 module "routes" {
-  source            = "./routes/routes"
-  processor_ids = [ module.processors.test_create_processor.id ]
+  source        = "./routes/routes"
+  processor_ids = [module.processors.test_create_processor.id]
 }
 
 module "processors" {
-  source            = "./routes/processors"
+  source = "./routes/processors"
   path   = abspath("./routes/processors/processor.jar")
 }
 
 module "orbits" {
-  source            = "./orbits/orbits"
-  satellite_id      = module.nodes.satellite_node.id
+  source       = "./orbits/orbits"
+  satellite_id = module.nodes.satellite_node.id
   depends_on = [
     module.nodes
+  ]
+}
+
+module "resources" {
+  source    = "./resources/resources"
+  asset_id  = module.nodes.satellite_node.id
+  metric_id = module.metrics.test_numeric_metric.id
+  depends_on = [
+    module.nodes,
+    module.metrics
+  ]
+}
+
+module "resource_functions" {
+  source                 = "./activities/resource_functions"
+  resource_id            = module.resources.a_resource.id
+  activity_definition_id = module.activity_definitions.test_activity_definition.id
+  depends_on = [
+    module.activity_definitions,
+    module.resources
   ]
 }
