@@ -70,9 +70,9 @@ resource "leanspace_activity_definitions" "activity_definition" {
     name        = "ActivityMetadataTime"
     description = "A time metadata value"
     attributes {
-      value = "62696e617279"
+      value     = "62696e617279"
       data_type = "BINARY"
-      type  = "ARRAY"
+      type      = "ARRAY"
     }
   }
 
@@ -151,9 +151,9 @@ resource "leanspace_activity_definitions" "activity_definition" {
       unique        = true
       default_value = "62696e617279,62696e617279"
       constraint {
-        type = "BINARY"
-        min_length  = 1
-        max_length  = 10
+        type       = "BINARY"
+        min_length = 1
+        max_length = 10
       }
     }
   }
