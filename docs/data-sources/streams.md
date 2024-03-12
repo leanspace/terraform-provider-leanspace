@@ -306,8 +306,10 @@ Read-Only:
 Read-Only:
 
 - `data_type` (String)
+- `elements` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--elements))
 - `endianness` (String)
 - `errors` (Set of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--errors))
+- `expression` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--expression))
 - `length` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--length))
 - `name` (String)
 - `order` (Number)
@@ -317,6 +319,433 @@ Read-Only:
 - `type` (String)
 - `valid` (Boolean)
 
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--elements"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid`
+
+Read-Only:
+
+- `data_type` (String)
+- `elements` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--elements))
+- `endianness` (String)
+- `errors` (Set of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--errors))
+- `expression` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--expression))
+- `length` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--length))
+- `name` (String)
+- `order` (Number)
+- `path` (String)
+- `processor` (String)
+- `repetitive` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--repetitive))
+- `type` (String)
+- `valid` (Boolean)
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--elements"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid`
+
+Read-Only:
+
+- `data_type` (String)
+- `elements` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--elements))
+- `endianness` (String)
+- `errors` (Set of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--errors))
+- `expression` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--expression))
+- `length` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--length))
+- `name` (String)
+- `order` (Number)
+- `path` (String)
+- `processor` (String)
+- `repetitive` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--repetitive))
+- `type` (String)
+- `valid` (Boolean)
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--elements"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid`
+
+Read-Only:
+
+- `data_type` (String)
+- `elements` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--elements))
+- `endianness` (String)
+- `errors` (Set of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--errors))
+- `expression` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--expression))
+- `length` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--length))
+- `name` (String)
+- `order` (Number)
+- `path` (String)
+- `processor` (String)
+- `repetitive` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--repetitive))
+- `type` (String)
+- `valid` (Boolean)
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--elements"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid`
+
+Read-Only:
+
+- `data_type` (String)
+- `elements` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--elements))
+- `endianness` (String)
+- `errors` (Set of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--errors))
+- `expression` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--expression))
+- `length` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--length))
+- `name` (String)
+- `order` (Number)
+- `path` (String)
+- `processor` (String)
+- `repetitive` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--repetitive))
+- `type` (String)
+- `valid` (Boolean)
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--elements"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid.valid`
+
+Read-Only:
+
+- `data_type` (String)
+- `elements` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--elements))
+- `endianness` (String)
+- `errors` (Set of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--errors))
+- `expression` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--expression))
+- `length` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--length))
+- `name` (String)
+- `order` (Number)
+- `path` (String)
+- `processor` (String)
+- `repetitive` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--repetitive))
+- `type` (String)
+- `valid` (Boolean)
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--elements"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid.valid.valid`
+
+Read-Only:
+
+- `data_type` (String)
+- `endianness` (String)
+- `errors` (Set of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--valid--errors))
+- `length` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--valid--length))
+- `name` (String)
+- `order` (Number)
+- `path` (String)
+- `processor` (String)
+- `repetitive` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--valid--repetitive))
+- `type` (String)
+- `valid` (Boolean)
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--valid--errors"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid.valid.valid.valid`
+
+Read-Only:
+
+- `code` (String)
+- `message` (String)
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--valid--length"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid.valid.valid.valid`
+
+Read-Only:
+
+- `path` (String)
+- `type` (String)
+- `unit` (String)
+- `value` (Number)
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--valid--repetitive"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid.valid.valid.valid`
+
+Read-Only:
+
+- `path` (String)
+- `value` (Number)
+
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--errors"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid.valid.valid`
+
+Read-Only:
+
+- `code` (String)
+- `message` (String)
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--expression"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid.valid.valid`
+
+Read-Only:
+
+- `options` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--valid--options))
+- `switch_on` (String)
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--valid--options"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid.valid.valid.switch_on`
+
+Read-Only:
+
+- `component` (String)
+- `value` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--valid--switch_on--value))
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--valid--switch_on--value"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid.valid.valid.switch_on.value`
+
+Read-Only:
+
+- `data` (String)
+- `data_type` (String)
+
+
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--length"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid.valid.valid`
+
+Read-Only:
+
+- `path` (String)
+- `type` (String)
+- `unit` (String)
+- `value` (Number)
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--repetitive"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid.valid.valid`
+
+Read-Only:
+
+- `path` (String)
+- `value` (Number)
+
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--errors"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid.valid`
+
+Read-Only:
+
+- `code` (String)
+- `message` (String)
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--expression"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid.valid`
+
+Read-Only:
+
+- `options` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--options))
+- `switch_on` (String)
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--options"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid.valid.switch_on`
+
+Read-Only:
+
+- `component` (String)
+- `value` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--switch_on--value))
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--valid--switch_on--value"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid.valid.switch_on.value`
+
+Read-Only:
+
+- `data` (String)
+- `data_type` (String)
+
+
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--length"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid.valid`
+
+Read-Only:
+
+- `path` (String)
+- `type` (String)
+- `unit` (String)
+- `value` (Number)
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--repetitive"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid.valid`
+
+Read-Only:
+
+- `path` (String)
+- `value` (Number)
+
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--errors"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid`
+
+Read-Only:
+
+- `code` (String)
+- `message` (String)
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--expression"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid`
+
+Read-Only:
+
+- `options` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--options))
+- `switch_on` (String)
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--options"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid.switch_on`
+
+Read-Only:
+
+- `component` (String)
+- `value` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--switch_on--value))
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--valid--switch_on--value"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid.switch_on.value`
+
+Read-Only:
+
+- `data` (String)
+- `data_type` (String)
+
+
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--length"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid`
+
+Read-Only:
+
+- `path` (String)
+- `type` (String)
+- `unit` (String)
+- `value` (Number)
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--repetitive"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.valid`
+
+Read-Only:
+
+- `path` (String)
+- `value` (Number)
+
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--errors"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid`
+
+Read-Only:
+
+- `code` (String)
+- `message` (String)
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--expression"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid`
+
+Read-Only:
+
+- `options` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--options))
+- `switch_on` (String)
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--options"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.switch_on`
+
+Read-Only:
+
+- `component` (String)
+- `value` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--switch_on--value))
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--valid--switch_on--value"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid.switch_on.value`
+
+Read-Only:
+
+- `data` (String)
+- `data_type` (String)
+
+
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--length"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid`
+
+Read-Only:
+
+- `path` (String)
+- `type` (String)
+- `unit` (String)
+- `value` (Number)
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--repetitive"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.valid`
+
+Read-Only:
+
+- `path` (String)
+- `value` (Number)
+
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--errors"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid`
+
+Read-Only:
+
+- `code` (String)
+- `message` (String)
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--expression"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid`
+
+Read-Only:
+
+- `options` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--options))
+- `switch_on` (String)
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--options"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.switch_on`
+
+Read-Only:
+
+- `component` (String)
+- `value` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--switch_on--value))
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--valid--switch_on--value"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid.switch_on.value`
+
+Read-Only:
+
+- `data` (String)
+- `data_type` (String)
+
+
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--length"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid`
+
+Read-Only:
+
+- `path` (String)
+- `type` (String)
+- `unit` (String)
+- `value` (Number)
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--repetitive"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.valid`
+
+Read-Only:
+
+- `path` (String)
+- `value` (Number)
+
+
+
 <a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--errors"></a>
 ### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid`
 
@@ -324,6 +753,33 @@ Read-Only:
 
 - `code` (String)
 - `message` (String)
+
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--expression"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid`
+
+Read-Only:
+
+- `options` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--options))
+- `switch_on` (String)
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--options"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.switch_on`
+
+Read-Only:
+
+- `component` (String)
+- `value` (List of Object) (see [below for nested schema](#nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--switch_on--value))
+
+<a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--valid--switch_on--value"></a>
+### Nested Schema for `content.configuration.structure.valid.elements.valid.valid.valid.elements.valid.switch_on.value`
+
+Read-Only:
+
+- `data` (String)
+- `data_type` (String)
+
+
 
 
 <a id="nestedobjatt--content--configuration--structure--valid--elements--valid--valid--valid--elements--length"></a>
