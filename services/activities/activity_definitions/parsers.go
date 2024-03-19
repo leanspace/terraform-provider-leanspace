@@ -13,6 +13,7 @@ func (activityDefinition *ActivityDefinition) ToMap() map[string]any {
 	actDefinitionMap["name"] = activityDefinition.Name
 	actDefinitionMap["description"] = activityDefinition.Description
 	actDefinitionMap["estimated_duration"] = activityDefinition.EstimatedDuration
+	actDefinitionMap["mapping_status"] = activityDefinition.MappingStatus
 	actDefinitionMap["created_at"] = activityDefinition.CreatedAt
 	actDefinitionMap["created_by"] = activityDefinition.CreatedBy
 	actDefinitionMap["last_modified_at"] = activityDefinition.LastModifiedAt
@@ -77,6 +78,7 @@ func (activityDefinition *ActivityDefinition) FromMap(actDefinitionMap map[strin
 	activityDefinition.Name = actDefinitionMap["name"].(string)
 	activityDefinition.EstimatedDuration = actDefinitionMap["estimated_duration"].(int)
 	activityDefinition.Description = actDefinitionMap["description"].(string)
+	activityDefinition.MappingStatus = actDefinitionMap["mapping_status"].(string)
 	activityDefinition.CreatedAt = actDefinitionMap["created_at"].(string)
 	activityDefinition.CreatedBy = actDefinitionMap["created_by"].(string)
 	activityDefinition.LastModifiedAt = actDefinitionMap["last_modified_at"].(string)
