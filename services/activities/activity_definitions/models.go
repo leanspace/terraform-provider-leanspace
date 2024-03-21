@@ -11,6 +11,7 @@ type ActivityDefinition struct {
 	Metadata            []Metadata[any]           `json:"metadata,omitempty"`
 	ArgumentDefinitions []ArgumentDefinition[any] `json:"argumentDefinitions,omitempty"`
 	CommandMappings     []CommandMapping          `json:"commandMappings"`
+	MappingStatus       string                    `json:"mappingStatus,omitempty"`
 	CreatedAt           string                    `json:"createdAt"`
 	CreatedBy           string                    `json:"createdBy"`
 	LastModifiedAt      string                    `json:"lastModifiedAt"`

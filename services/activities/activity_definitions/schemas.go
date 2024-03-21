@@ -26,6 +26,11 @@ var activityDefinitionSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Optional: true,
 	},
+	"mapping_status": {
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Mapping status with Command definition arguments. Can be IN_SYNC or OUT_OF_SYNC",
+	},
 	"estimated_duration": {
 		Type:         schema.TypeInt,
 		Optional:     true,
