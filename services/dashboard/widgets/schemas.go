@@ -9,9 +9,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-var validWidgetTypes = []string{"TABLE", "LINE", "BAR", "AREA", "VALUE"}
+var validWidgetTypes = []string{"TABLE", "LINE", "BAR", "AREA", "VALUE", "RESOURCES"}
 var validGranularities = []string{"second", "minute", "hour", "day", "week", "month", "raw"}
-var validDatasources = []string{"metric", "raw_stream"}
+var validDatasources = []string{"metric", "raw_stream", "resources"}
 var validAggregations = []string{"avg", "count", "sum", "min", "max", "none"}
 var validFilterOperators = []string{"gt", "lt", "equals", "notEquals"}
 

@@ -16,6 +16,11 @@ variable "numeric_metric_id" {
   description = "The ID of the numeric metric to create widgets for."
 }
 
+variable "text_resource_id" {
+  type        = string
+  description = "The ID of the text resource to create widgets for."
+}
+
 data "leanspace_widgets" "all" {
   filters {
     types          = ["LINE"]
@@ -139,6 +144,22 @@ resource "leanspace_widgets" "test_value" {
   }
 }
 
+resource "leanspace_widgets" "test_resources" {
+  name        = "Terraform Resources Widget"
+  description = "A resources widget created with Terraform"
+  type        = "RESOURCES"
+  granularity = "raw"
+  series {
+    id          = var.text_resource_id
+    datasource  = "resources"
+    aggregation = "none"
+  }
+  tags {
+    key   = "Mission"
+    value = "Terraform"
+  }
+}
+
 output "test_table_widget" {
   value = leanspace_widgets.test_table
 }
@@ -158,3 +179,8 @@ output "test_area_widget" {
 output "test_value_widget" {
   value = leanspace_widgets.test_value
 }
+
+output "test_resources_widget" {
+  value = leanspace_widgets.test_resources
+}
+
