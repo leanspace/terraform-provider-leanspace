@@ -9,7 +9,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 )
 
-var validWidgetTypes = []string{"TABLE", "LINE", "BAR", "AREA", "VALUE"}
+var validWidgetTypes = []string{"TABLE", "LINE", "BAR", "AREA", "VALUE", "RESOURCES"}
 
 var dashboardSchema = map[string]*schema.Schema{
 	"id": {
