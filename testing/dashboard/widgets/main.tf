@@ -16,9 +16,9 @@ variable "numeric_metric_id" {
   description = "The ID of the numeric metric to create widgets for."
 }
 
-variable "text_resource_id" {
+variable "resource_id" {
   type        = string
-  description = "The ID of the text resource to create widgets for."
+  description = "The ID of the text resources to create widgets for."
 }
 
 data "leanspace_widgets" "all" {
@@ -150,7 +150,7 @@ resource "leanspace_widgets" "test_resources" {
   type        = "RESOURCES"
   granularity = "raw"
   series {
-    id          = var.text_resource_id
+    id          = var.resource_id
     datasource  = "resources"
     aggregation = "none"
   }
