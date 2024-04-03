@@ -213,12 +213,21 @@ module "resource_functions" {
 }
 
 module "record_templates" {
-  source                 = "./record_templates/record_templates"
-  record_template_id     = module.record_templates.a_record_template.id
-  asset_id = module.nodes.satellite_node.id
-  metric_id = module.metrics.test_numeric_metric.id
-  depends_on             = [
+  source             = "records/record_templates"
+  record_template_id = module.record_templates.a_record_template.id
+  asset_id           = module.nodes.satellite_node.id
+  metric_id          = module.metrics.test_numeric_metric.id
+  depends_on         = [
     module.nodes,
     module.metrics
+  ]
+}
+
+module "records" {
+  source             = "./records/records"
+  record_id          = module.records.a_record.id
+  record_template_id = module.record_templates.a_record_template.id
+  depends_on         = [
+    module.record_templates,
   ]
 }

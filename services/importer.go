@@ -28,6 +28,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/plans/plan_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/plugins/plugins"
 	"github.com/leanspace/terraform-provider-leanspace/services/records/record_templates"
+	"github.com/leanspace/terraform-provider-leanspace/services/records/records"
 	"github.com/leanspace/terraform-provider-leanspace/services/resources/resources"
 	"github.com/leanspace/terraform-provider-leanspace/services/routes/processors"
 	"github.com/leanspace/terraform-provider-leanspace/services/routes/routes"
@@ -57,6 +58,7 @@ func AddDataTypes() {
 	properties.PropertyDataType.Subscribe()
 	remote_agents.RemoteAgentDataType.Subscribe()
 	record_templates.RecordTemplateDataType.Subscribe()
+	records.RecordDataType.Subscribe()
 	service_accounts.ServiceAccountDataType.Subscribe()
 	streams.StreamDataType.Subscribe()
 	teams.TeamDataType.Subscribe()
