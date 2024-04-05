@@ -11,6 +11,11 @@ variable "node_id" {
   description = "The ID of the node to which the metrics will be added."
 }
 
+variable "unit_id" {
+  type        = string
+  description = "The ID of the unit to create numeric metrics for."
+}
+
 data "leanspace_metrics" "all" {
   filters {
     node_ids        = []
@@ -31,6 +36,7 @@ resource "leanspace_metrics" "test_numeric" {
 
   attributes {
     type = "NUMERIC"
+    unit_id     = var.unit_id
   }
 }
 

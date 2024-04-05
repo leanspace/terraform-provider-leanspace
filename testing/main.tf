@@ -36,8 +36,10 @@ module "command_definitions" {
 module "metrics" {
   source  = "./metrics/metrics"
   node_id = module.nodes.satellite_node.id
+  unit_id = module.units.test_units["k"].id
   depends_on = [
-    module.nodes
+    module.nodes,
+    module.units
   ]
 }
 
