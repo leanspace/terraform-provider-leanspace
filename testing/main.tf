@@ -76,6 +76,7 @@ module "widgets" {
   source            = "./dashboard/widgets"
   text_metric_id    = module.metrics.test_text_metric.id
   numeric_metric_id = module.metrics.test_numeric_metric.id
+  resource_id       = module.resources.a_resource.id
   depends_on = [
     module.metrics
   ]
