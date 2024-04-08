@@ -200,6 +200,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
 - `id` (String) The ID of this resource.
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
+- `mapping_status` (String) Mapping status with Command definition arguments. Can be IN_SYNC or OUT_OF_SYNC
 
 <a id="nestedblock--argument_definitions"></a>
 ### Nested Schema for `argument_definitions`
