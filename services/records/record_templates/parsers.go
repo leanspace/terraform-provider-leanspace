@@ -35,7 +35,8 @@ func (recordTemplate *RecordTemplate) ToMap() map[string]any {
 
 func (defaultParser *DefaultParser) ToMap() map[string]any {
 	defaultParserMap := make(map[string]any)
-	// TODO
+	defaultParserMap["id"] = defaultParser.ID
+	defaultParserMap["file_type"] = []any{defaultParser.FileType}
 	return defaultParserMap
 }
 
@@ -45,9 +46,10 @@ func (node *Node) ToMap() map[string]any {
 	return nodeMap
 }
 
-func (property *Property) ToMap() map[string]any {
+func (property *Property[T]) ToMap() map[string]any {
 	propertyMap := make(map[string]any)
-	// TODO
+	propertyMap["name"] = property.Name
+	propertyMap["attributes"] = []any{property.Attributes.ToMap()}
 	return propertyMap
 }
 
@@ -77,7 +79,7 @@ func (recordTemplate *RecordTemplate) FromMap(resourceMap map[string]any) error 
 		}
 	}
 	if resourceMap["properties"] != nil {
-		if properties, err := helper.ParseFromMaps[Property](
+		if properties, err := helper.ParseFromMaps[Property[any]](
 			resourceMap["properties"].(*schema.Set).List(),
 		); err != nil {
 			return err
@@ -99,7 +101,8 @@ func (recordTemplate *RecordTemplate) FromMap(resourceMap map[string]any) error 
 }
 
 func (defaultParser *DefaultParser) FromMap(defaultParserMap map[string]any) error {
-	// TODO
+	defaultParser.ID = defaultParserMap["id"].(string)
+	defaultParser.FileType = defaultParserMap["file_type"].(string)
 	return nil
 }
 
@@ -108,7 +111,12 @@ func (node *Node) FromMap(nodeMap map[string]any) error {
 	return nil
 }
 
-func (property *Property) FromMap(propertyMap map[string]any) error {
-	// TODO
+func (property *Property[T]) FromMap(propertyMap map[string]any) error {
+	property.Name = propertyMap["name"].(string)
+	if len(propertyMap["attributes"].([]any)) > 0 {
+		if err := property.Attributes.FromMap(propertyMap["attributes"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
+	}
 	return nil
 }

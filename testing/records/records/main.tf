@@ -41,6 +41,13 @@ resource "leanspace_records" "a_record" {
   name      = "Terraform Record"
   record_template_id = var.record_template_id
   start_date_time = var.start_date_time
+  properties {
+    name        = "TestPropertyNumeric"
+    attributes {
+      type = "NUMERIC"
+      value = 3
+    }
+  }
 }
 
 output "a_records" {

@@ -11,7 +11,7 @@ type Record struct {
 	RecordState      string                     `json:"state"`
 	StartDateTime    string                     `json:"startDateTime"`
 	StopDateTime     string                     `json:"stopDateTime"`
-	Properties       []Property                 `json:"properties"`
+	Properties       []Property[any]            `json:"properties"`
 	Tags             []general_objects.KeyValue `json:"tags,omitempty"`
 	Comment          string                     `json:"comment"`
 	CreatedAt        string                     `json:"createdAt"`
@@ -22,6 +22,7 @@ type Record struct {
 
 func (record *Record) GetID() string { return record.ID }
 
-type Property struct {
-	// TODO
+type Property[T any] struct {
+	Name       string                            `json:"name"`
+	Attributes general_objects.ValueAttribute[T] `json:"attributes"`
 }

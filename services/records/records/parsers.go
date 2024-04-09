@@ -27,9 +27,10 @@ func (record *Record) ToMap() map[string]any {
 	return resourceMap
 }
 
-func (property *Property) ToMap() map[string]any {
+func (property *Property[T]) ToMap() map[string]any {
 	propertyMap := make(map[string]any)
-	// TODO
+	propertyMap["name"] = property.Name
+	propertyMap["attributes"] = []any{property.Attributes.ToMap()}
 	return propertyMap
 }
 
@@ -41,7 +42,7 @@ func (record *Record) FromMap(resourceMap map[string]any) error {
 	record.StartDateTime = resourceMap["start_date_time"].(string)
 	record.StopDateTime = resourceMap["stop_date_time"].(string)
 	if resourceMap["properties"] != nil {
-		if properties, err := helper.ParseFromMaps[Property](
+		if properties, err := helper.ParseFromMaps[Property[any]](
 			resourceMap["properties"].(*schema.Set).List(),
 		); err != nil {
 			return err
@@ -63,7 +64,12 @@ func (record *Record) FromMap(resourceMap map[string]any) error {
 	return nil
 }
 
-func (property *Property) FromMap(propertyMap map[string]any) error {
-	// TODO
+func (property *Property[T]) FromMap(propertyMap map[string]any) error {
+	property.Name = propertyMap["name"].(string)
+	if len(propertyMap["attributes"].([]any)) > 0 {
+		if err := property.Attributes.FromMap(propertyMap["attributes"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
+	}
 	return nil
 }

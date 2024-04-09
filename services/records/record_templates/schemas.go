@@ -16,14 +16,17 @@ var recordTemplateSchema = map[string]*schema.Schema{
 	"name": {
 		Type:     schema.TypeString,
 		Required: true,
+		ForceNew: true,
 	},
 	"description": {
 		Type:     schema.TypeString,
 		Optional: true,
+		ForceNew: true,
 	},
 	"record_state": {
 		Type:         schema.TypeString,
 		Optional:     true,
+		ForceNew:     true,
 		ValidateFunc: validation.StringInSlice(validRecordTemplatesConstraintTypes, false),
 	},
 	"start_date_time": {
@@ -36,7 +39,7 @@ var recordTemplateSchema = map[string]*schema.Schema{
 	},
 	"default_parsers": {
 		Type:     schema.TypeSet,
-		Optional: true,
+		Computed: true,
 		Elem: &schema.Resource{
 			Schema: recordTemplateDefaultParserSchema,
 		},
@@ -44,6 +47,7 @@ var recordTemplateSchema = map[string]*schema.Schema{
 	"nodes": {
 		Type:     schema.TypeSet,
 		Optional: true,
+		ForceNew: true,
 		Elem: &schema.Resource{
 			Schema: recordTemplateNodeSnapshotSchema,
 		},
@@ -51,6 +55,7 @@ var recordTemplateSchema = map[string]*schema.Schema{
 	"properties": {
 		Type:     schema.TypeSet,
 		Optional: true,
+		ForceNew: true,
 		Elem: &schema.Resource{
 			Schema: recordTemplatePropertySchema,
 		},
@@ -79,7 +84,14 @@ var recordTemplateSchema = map[string]*schema.Schema{
 }
 
 var recordTemplateDefaultParserSchema = map[string]*schema.Schema{
-	// TODO
+	"id": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"file_type": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
 }
 
 var recordTemplateNodeSnapshotSchema = map[string]*schema.Schema{
@@ -87,7 +99,23 @@ var recordTemplateNodeSnapshotSchema = map[string]*schema.Schema{
 }
 
 var recordTemplatePropertySchema = map[string]*schema.Schema{
-	// TODO
+	"name": {
+		Type:     schema.TypeString,
+		Required: true,
+	},
+	"attributes": {
+		Type:     schema.TypeList,
+		Required: true,
+		MinItems: 1,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: general_objects.DefinitionAttributeSchema(
+				[]string{"BINARY", "ENUM", "TIMESTAMP", "DATE", "TIME", "TLE", "ARRAY", "GEOPOINT", "TUPLE"}, // Attribute types not allowed in attributes
+				nil,   // All fields are used
+				false, // Does not force recreation if the type changes
+			),
+		},
+	},
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{

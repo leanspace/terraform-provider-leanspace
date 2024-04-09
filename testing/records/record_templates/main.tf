@@ -38,8 +38,16 @@ data "leanspace_record_templates" "all" {
 }
 
 resource "leanspace_record_templates" "a_record_template" {
-  name      = "Terraform Record Template"
+  name = "Terraform Record Template"
   // TODO add assetId and metricId
+  properties {
+    name        = "TestPropertyNumeric"
+    attributes {
+      type          = "NUMERIC"
+      required      = true
+      default_value = 2
+    }
+  }
 }
 
 output "a_record_template" {

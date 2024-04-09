@@ -70,7 +70,19 @@ var recordSchema = map[string]*schema.Schema{
 }
 
 var recordPropertySchema = map[string]*schema.Schema{
-	// TODO
+	"name": {
+		Type:     schema.TypeString,
+		Required: true,
+	},
+	"attributes": {
+		Type:     schema.TypeList,
+		Required: true,
+		MinItems: 1,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: general_objects.ValueAttributeSchema,
+		},
+	},
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{
