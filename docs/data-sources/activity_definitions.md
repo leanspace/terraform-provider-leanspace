@@ -152,6 +152,7 @@ Read-Only:
 
 - `activity_definition_argument_name` (String)
 - `command_definition_argument_name` (String)
+- `mapping_status` (String)
 
 
 <a id="nestedobjatt--content--command_mappings--metadata_mappings"></a>
@@ -161,6 +162,7 @@ Read-Only:
 
 - `activity_definition_metadata_name` (String)
 - `command_definition_argument_name` (String)
+- `mapping_status` (String)
 
 
 

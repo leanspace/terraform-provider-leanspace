@@ -295,6 +295,10 @@ Required:
 - `activity_definition_argument_name` (String)
 - `command_definition_argument_name` (String)
 
+Read-Only:
+
+- `mapping_status` (String) Mapping status with the Command definition argument. Can be IN_SYNC or OUT_OF_SYNC
+
 
 <a id="nestedblock--command_mappings--metadata_mappings"></a>
 ### Nested Schema for `command_mappings.metadata_mappings`
@@ -303,6 +307,10 @@ Required:
 
 - `activity_definition_metadata_name` (String)
 - `command_definition_argument_name` (String)
+
+Read-Only:
+
+- `mapping_status` (String) Mapping status with the Command definition argument. Can be IN_SYNC or OUT_OF_SYNC
 
 
 
