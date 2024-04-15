@@ -45,9 +45,11 @@ type CommandMapping struct {
 type ArgumentMapping struct {
 	ActivityDefinitionArgumentName string `json:"activityDefinitionArgumentName"`
 	CommandDefinitionArgumentName  string `json:"commandDefinitionArgumentName"`
+	MappingStatus                  string `json:"mappingStatus,omitempty"`
 }
 
 type MetadataMapping struct {
 	ActivityDefinitionMetadataName string `json:"activityDefinitionMetadataName"`
 	CommandDefinitionArgumentName  string `json:"commandDefinitionArgumentName"`
+	MappingStatus                  string `json:"mappingStatus,omitempty"`
 }

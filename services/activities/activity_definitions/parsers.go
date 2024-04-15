@@ -158,12 +158,14 @@ func (commandMapping *CommandMapping) FromMap(commandMappingMap map[string]any) 
 func (argumentMapping *ArgumentMapping) FromMap(argumentMappingMap map[string]any) error {
 	argumentMapping.ActivityDefinitionArgumentName = argumentMappingMap["activity_definition_argument_name"].(string)
 	argumentMapping.CommandDefinitionArgumentName = argumentMappingMap["command_definition_argument_name"].(string)
+	argumentMapping.MappingStatus = argumentMappingMap["mapping_status"].(string)
 	return nil
 }
 
 func (metadataMapping *MetadataMapping) FromMap(metadataMappingMap map[string]any) error {
 	metadataMapping.ActivityDefinitionMetadataName = metadataMappingMap["activity_definition_metadata_name"].(string)
 	metadataMapping.CommandDefinitionArgumentName = metadataMappingMap["command_definition_argument_name"].(string)
+	metadataMapping.MappingStatus = metadataMappingMap["mapping_status"].(string)
 	return nil
 }
 
