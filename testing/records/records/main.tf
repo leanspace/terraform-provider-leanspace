@@ -1,17 +1,9 @@
 terraform {
   required_providers {
     leanspace = {
-      source = "leanspace/leanspace"
-      version = "0.0.1" // TODO to remove
+      source  = "leanspace/leanspace"
     }
   }
-}
-
-provider "leanspace" { // TODO to remove
-  env           = "develop"
-  tenant        = "yuri"
-  client_id     = "4a4e5cnf4i11rmes6albkqa1st"
-  client_secret = "iudp3kn5htosttt11h6753dog6qfvejjs4ge0kmbu93n0d5iju0"
 }
 
 variable "record_template_id" {
@@ -26,25 +18,25 @@ variable "start_date_time" {
 
 data "leanspace_records" "all" {
   filters {
-    ids               = []
+    ids                 = []
     record_template_ids = [var.record_template_id]
-    names             = []
-    query             = ""
-    tags              = []
-    page              = 0
-    size              = 10
-    sort              = ["name,asc"]
+    names               = []
+    query               = ""
+    tags                = []
+    page                = 0
+    size                = 10
+    sort                = ["name,asc"]
   }
 }
 
 resource "leanspace_records" "a_record" {
-  name      = "Terraform Record"
+  name               = "Terraform Record"
   record_template_id = var.record_template_id
-  start_date_time = var.start_date_time
+  start_date_time    = var.start_date_time
   properties {
-    name        = "TestPropertyNumeric"
+    name = "TestPropertyNumeric"
     attributes {
-      type = "NUMERIC"
+      type  = "NUMERIC"
       value = 3
     }
   }

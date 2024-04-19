@@ -44,12 +44,20 @@ var recordTemplateSchema = map[string]*schema.Schema{
 			Schema: recordTemplateDefaultParserSchema,
 		},
 	},
-	"nodes": {
+	"node_ids": {
 		Type:     schema.TypeSet,
 		Optional: true,
-		ForceNew: true,
-		Elem: &schema.Resource{
-			Schema: recordTemplateNodeSnapshotSchema,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"metric_ids": {
+		Type:     schema.TypeSet,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
 		},
 	},
 	"properties": {
@@ -92,10 +100,6 @@ var recordTemplateDefaultParserSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Computed: true,
 	},
-}
-
-var recordTemplateNodeSnapshotSchema = map[string]*schema.Schema{
-	// TODO
 }
 
 var recordTemplatePropertySchema = map[string]*schema.Schema{

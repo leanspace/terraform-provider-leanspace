@@ -12,7 +12,8 @@ type RecordTemplate struct {
 	StartDateTime  string                     `json:"startDateTime"`
 	StopDateTime   string                     `json:"stopDateTime"`
 	DefaultParsers []DefaultParser            `json:"defaultParsers"`
-	Nodes          []Node                     `json:"nodes"`
+	NodeIds        []string                   `json:"nodeIds"`
+	MetricIds      []string                   `json:"metricIds"`
 	Properties     []Property[any]            `json:"properties"`
 	Tags           []general_objects.KeyValue `json:"tags,omitempty"`
 	CreatedAt      string                     `json:"createdAt"`
@@ -26,10 +27,6 @@ func (recordTemplate *RecordTemplate) GetID() string { return recordTemplate.ID 
 type DefaultParser struct {
 	ID       string `json:"id"`
 	FileType string `json:"fileType"`
-}
-
-type Node struct {
-	// TODO
 }
 
 type Property[T any] struct {

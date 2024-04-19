@@ -18,9 +18,8 @@ func (recordTemplate *RecordTemplate) ToMap() map[string]any {
 	if recordTemplate.DefaultParsers != nil {
 		resourceMap["default_parsers"] = helper.ParseToMaps(recordTemplate.DefaultParsers)
 	}
-	if recordTemplate.Nodes != nil {
-		resourceMap["nodes"] = helper.ParseToMaps(recordTemplate.Nodes)
-	}
+	resourceMap["node_ids"] = recordTemplate.NodeIds
+	resourceMap["metric_ids"] = recordTemplate.MetricIds
 	if recordTemplate.Properties != nil {
 		resourceMap["properties"] = helper.ParseToMaps(recordTemplate.Properties)
 	}
@@ -38,12 +37,6 @@ func (defaultParser *DefaultParser) ToMap() map[string]any {
 	defaultParserMap["id"] = defaultParser.ID
 	defaultParserMap["file_type"] = []any{defaultParser.FileType}
 	return defaultParserMap
-}
-
-func (node *Node) ToMap() map[string]any {
-	nodeMap := make(map[string]any)
-	// TODO
-	return nodeMap
 }
 
 func (property *Property[T]) ToMap() map[string]any {
@@ -69,14 +62,13 @@ func (recordTemplate *RecordTemplate) FromMap(resourceMap map[string]any) error 
 			recordTemplate.DefaultParsers = defaultParsers
 		}
 	}
-	if resourceMap["nodes"] != nil {
-		if nodeSnapshots, err := helper.ParseFromMaps[Node](
-			resourceMap["nodes"].(*schema.Set).List(),
-		); err != nil {
-			return err
-		} else {
-			recordTemplate.Nodes = nodeSnapshots
-		}
+	recordTemplate.NodeIds = make([]string, resourceMap["node_ids"].(*schema.Set).Len())
+	for index, node := range resourceMap["node_ids"].(*schema.Set).List() {
+		recordTemplate.NodeIds[index] = node.(string)
+	}
+	recordTemplate.MetricIds = make([]string, resourceMap["metric_ids"].(*schema.Set).Len())
+	for index, node := range resourceMap["metric_ids"].(*schema.Set).List() {
+		recordTemplate.MetricIds[index] = node.(string)
 	}
 	if resourceMap["properties"] != nil {
 		if properties, err := helper.ParseFromMaps[Property[any]](
@@ -103,11 +95,6 @@ func (recordTemplate *RecordTemplate) FromMap(resourceMap map[string]any) error 
 func (defaultParser *DefaultParser) FromMap(defaultParserMap map[string]any) error {
 	defaultParser.ID = defaultParserMap["id"].(string)
 	defaultParser.FileType = defaultParserMap["file_type"].(string)
-	return nil
-}
-
-func (node *Node) FromMap(nodeMap map[string]any) error {
-	// TODO
 	return nil
 }
 

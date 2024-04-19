@@ -11,6 +11,8 @@ type Record struct {
 	RecordState      string                     `json:"state"`
 	StartDateTime    string                     `json:"startDateTime"`
 	StopDateTime     string                     `json:"stopDateTime"`
+	NodeIds          []string                   `json:"nodeIds"`
+	MetricIds        []string                   `json:"metricIds"`
 	Properties       []Property[any]            `json:"properties"`
 	Tags             []general_objects.KeyValue `json:"tags,omitempty"`
 	Comment          string                     `json:"comment"`
