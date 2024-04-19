@@ -114,7 +114,7 @@ Optional:
 Required:
 
 - `h` (Number)
-- `type` (String) it must be one of these values: TABLE, LINE, BAR, AREA, VALUE
+- `type` (String) it must be one of these values: TABLE, LINE, BAR, AREA, VALUE, RESOURCES
 - `w` (Number)
 - `x` (Number)
 - `y` (Number)

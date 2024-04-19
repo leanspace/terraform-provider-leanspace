@@ -17,6 +17,11 @@ variable "node_id" {
   description = "The ID of the node to which the metrics will be added."
 }
 
+variable "unit_id" {
+  type        = string
+  description = "The ID of the unit to create numeric metrics for."
+}
+
 resource "leanspace_metrics" "test_numeric" {
   name        = "Terra Number Metric"
   description = "A numeric metric, entirely created under terraform."
@@ -24,6 +29,7 @@ resource "leanspace_metrics" "test_numeric" {
 
   attributes {
     type = "NUMERIC"
+    unit_id     = var.unit_id
   }
 }
 

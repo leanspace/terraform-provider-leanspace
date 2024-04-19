@@ -73,6 +73,7 @@ Read-Only:
 - `id` (String)
 - `last_modified_at` (String)
 - `last_modified_by` (String)
+- `mapping_status` (String)
 - `metadata` (Set of Object) (see [below for nested schema](#nestedobjatt--content--metadata))
 - `name` (String)
 - `node_id` (String)
@@ -151,6 +152,7 @@ Read-Only:
 
 - `activity_definition_argument_name` (String)
 - `command_definition_argument_name` (String)
+- `mapping_status` (String)
 
 
 <a id="nestedobjatt--content--command_mappings--metadata_mappings"></a>
@@ -160,6 +162,7 @@ Read-Only:
 
 - `activity_definition_metadata_name` (String)
 - `command_definition_argument_name` (String)
+- `mapping_status` (String)
 
 
 

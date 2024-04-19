@@ -168,6 +168,11 @@ var argumentMappingSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Required: true,
 	},
+	"mapping_status": {
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Mapping status with the Command definition argument. Can be IN_SYNC or OUT_OF_SYNC",
+	},
 }
 
 var metadataMappingSchema = map[string]*schema.Schema{
@@ -178,6 +183,11 @@ var metadataMappingSchema = map[string]*schema.Schema{
 	"command_definition_argument_name": {
 		Type:     schema.TypeString,
 		Required: true,
+	},
+	"mapping_status": {
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Mapping status with the Command definition argument. Can be IN_SYNC or OUT_OF_SYNC",
 	},
 }
 
