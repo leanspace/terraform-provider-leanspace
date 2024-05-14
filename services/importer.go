@@ -15,6 +15,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/commands/release_queues"
 	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/dashboards"
 	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/widgets"
+	"github.com/leanspace/terraform-provider-leanspace/services/events/events_definitions"
 	"github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/contact_reservation_status_mappings"
 	"github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/leaf_space_connections"
 	"github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/link/groundstation"
@@ -72,4 +73,5 @@ func AddDataTypes() {
 	leaf_space_satellite_links.LeafSpaceSatellitesLinkDataType.Subscribe()
 	leaf_space_contact_reservation_status_mappings.LeafSpaceContactReservationStatusMappingDataType.Subscribe()
 	resources.ResourceDataType.Subscribe()
+	events_definitions.EventsDefinitionDataType.Subscribe()
 }
