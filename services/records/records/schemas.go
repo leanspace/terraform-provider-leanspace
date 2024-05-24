@@ -35,6 +35,26 @@ var recordSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Optional: true,
 	},
+	"stream_id": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"node_ids": {
+		Type:     schema.TypeSet,
+		Computed: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"metric_ids": {
+		Type:     schema.TypeSet,
+		Computed: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
 	"properties": {
 		Type:     schema.TypeSet,
 		Optional: true,
@@ -42,10 +62,21 @@ var recordSchema = map[string]*schema.Schema{
 			Schema: recordPropertySchema,
 		},
 	},
+	"command_definition_ids": {
+		Type:     schema.TypeSet,
+		Computed: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
 	"tags": general_objects.KeyValuesSchema,
-	"comment": {
-		Type:     schema.TypeString,
-		Optional: true,
+	"comments": {
+		Type:     schema.TypeSet,
+		Computed: true,
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
+		},
 	},
 	"created_at": {
 		Type:        schema.TypeString,

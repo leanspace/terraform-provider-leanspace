@@ -12,14 +12,16 @@ func (recordTemplate *RecordTemplate) ToMap() map[string]any {
 	resourceMap["id"] = recordTemplate.ID
 	resourceMap["name"] = recordTemplate.Name
 	resourceMap["description"] = recordTemplate.Description
-	resourceMap["record_state"] = recordTemplate.RecordState
+	resourceMap["state"] = recordTemplate.State
 	resourceMap["start_date_time"] = recordTemplate.StartDateTime
 	resourceMap["stop_date_time"] = recordTemplate.StopDateTime
+	resourceMap["stream_id"] = recordTemplate.StreamId
 	if recordTemplate.DefaultParsers != nil {
 		resourceMap["default_parsers"] = helper.ParseToMaps(recordTemplate.DefaultParsers)
 	}
 	resourceMap["node_ids"] = recordTemplate.NodeIds
 	resourceMap["metric_ids"] = recordTemplate.MetricIds
+	resourceMap["command_definition_ids"] = recordTemplate.CommandDefinitionIds
 	if recordTemplate.Properties != nil {
 		resourceMap["properties"] = helper.ParseToMaps(recordTemplate.Properties)
 	}
@@ -50,7 +52,7 @@ func (recordTemplate *RecordTemplate) FromMap(resourceMap map[string]any) error 
 	recordTemplate.ID = resourceMap["id"].(string)
 	recordTemplate.Name = resourceMap["name"].(string)
 	recordTemplate.Description = resourceMap["description"].(string)
-	recordTemplate.RecordState = resourceMap["record_state"].(string)
+	recordTemplate.State = resourceMap["state"].(string)
 	recordTemplate.StartDateTime = resourceMap["start_date_time"].(string)
 	recordTemplate.StopDateTime = resourceMap["stop_date_time"].(string)
 	if resourceMap["default_parsers"] != nil {

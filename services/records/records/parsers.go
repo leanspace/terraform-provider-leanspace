@@ -14,11 +14,15 @@ func (record *Record) ToMap() map[string]any {
 	resourceMap["record_state"] = record.RecordState
 	resourceMap["start_date_time"] = record.StartDateTime
 	resourceMap["stop_date_time"] = record.StopDateTime
+	resourceMap["stream_id"] = record.StreamId
+	resourceMap["node_ids"] = record.NodeIds
+	resourceMap["metric_ids"] = record.MetricIds
 	if record.Properties != nil {
 		resourceMap["properties"] = helper.ParseToMaps(record.Properties)
 	}
+	resourceMap["command_definition_ids"] = record.CommandDefinitionIds
 	resourceMap["tags"] = helper.ParseToMaps(record.Tags)
-	resourceMap["comment"] = record.Comment
+	resourceMap["comments"] = record.Comments
 	resourceMap["created_at"] = record.CreatedAt
 	resourceMap["created_by"] = record.CreatedBy
 	resourceMap["last_modified_at"] = record.LastModifiedAt
@@ -55,7 +59,6 @@ func (record *Record) FromMap(resourceMap map[string]any) error {
 	} else {
 		record.Tags = tags
 	}
-	record.Comment = resourceMap["comment"].(string)
 	record.CreatedAt = resourceMap["created_at"].(string)
 	record.CreatedBy = resourceMap["created_by"].(string)
 	record.LastModifiedAt = resourceMap["last_modified_at"].(string)

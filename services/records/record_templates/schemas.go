@@ -23,7 +23,7 @@ var recordTemplateSchema = map[string]*schema.Schema{
 		Optional: true,
 		ForceNew: true,
 	},
-	"record_state": {
+	"state": {
 		Type:         schema.TypeString,
 		Optional:     true,
 		ForceNew:     true,
@@ -37,6 +37,11 @@ var recordTemplateSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Computed: true,
 	},
+	"stream_id": {
+		Type:     schema.TypeString,
+		Optional: true,
+		ForceNew: true,
+	},
 	"default_parsers": {
 		Type:     schema.TypeSet,
 		Computed: true,
@@ -47,6 +52,7 @@ var recordTemplateSchema = map[string]*schema.Schema{
 	"node_ids": {
 		Type:     schema.TypeSet,
 		Optional: true,
+		ForceNew: true,
 		Elem: &schema.Schema{
 			Type:         schema.TypeString,
 			ValidateFunc: validation.IsUUID,
@@ -55,6 +61,16 @@ var recordTemplateSchema = map[string]*schema.Schema{
 	"metric_ids": {
 		Type:     schema.TypeSet,
 		Optional: true,
+		ForceNew: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"command_definition_ids": {
+		Type:     schema.TypeSet,
+		Optional: true,
+		ForceNew: true,
 		Elem: &schema.Schema{
 			Type:         schema.TypeString,
 			ValidateFunc: validation.IsUUID,
