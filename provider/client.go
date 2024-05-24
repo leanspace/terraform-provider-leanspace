@@ -118,6 +118,8 @@ func (c *Client) DoRequest(req *http.Request, authToken *string) ([]byte, error,
 		req.Header.Set("Authorization", "Bearer "+token)
 	}
 
+	req.Header.Set("X-LS-Application", "terraform-provider-leanspace")
+
 	// We want to be able to print the request body in the error message,
 	// in case it goes wrong.
 	// Because req.Body is a ReadCloser, reading it twice isn't possible. We thus
