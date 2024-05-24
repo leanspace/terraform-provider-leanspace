@@ -24,10 +24,8 @@ var recordTemplateSchema = map[string]*schema.Schema{
 		ForceNew: true,
 	},
 	"state": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ForceNew:     true,
-		ValidateFunc: validation.StringInSlice(validRecordTemplatesConstraintTypes, false),
+		Type:     schema.TypeString,
+		Computed: true,
 	},
 	"start_date_time": {
 		Type:     schema.TypeString,
@@ -39,8 +37,7 @@ var recordTemplateSchema = map[string]*schema.Schema{
 	},
 	"stream_id": {
 		Type:     schema.TypeString,
-		Optional: true,
-		ForceNew: true,
+		Computed: true,
 	},
 	"default_parsers": {
 		Type:     schema.TypeSet,
@@ -139,14 +136,6 @@ var recordTemplatePropertySchema = map[string]*schema.Schema{
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{
-	"ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-	},
 	"names": {
 		Type:     schema.TypeList,
 		Optional: true,
@@ -168,10 +157,5 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 		Elem: &schema.Schema{
 			Type: schema.TypeString,
 		},
-	},
-	"query": {
-		Type:        schema.TypeString,
-		Optional:    true,
-		Description: "Partial search by name. Allowed wildcard characters are `.*` and `%`",
 	},
 }

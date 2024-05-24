@@ -117,14 +117,6 @@ var recordPropertySchema = map[string]*schema.Schema{
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{
-	"ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-	},
 	"record_template_ids": {
 		Type:     schema.TypeList,
 		Optional: true,
@@ -146,10 +138,5 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 		Elem: &schema.Schema{
 			Type: schema.TypeString,
 		},
-	},
-	"query": {
-		Type:        schema.TypeString,
-		Optional:    true,
-		Description: "Partial search by name. Allowed wildcard characters are `.*` and `%`",
 	},
 }
