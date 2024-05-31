@@ -21,11 +21,15 @@ var recordSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Required: true,
 	},
-	"record_state": {
+	"state": {
 		Type:         schema.TypeString,
 		Optional:     true,
 		Default:      "UNKNOWN",
 		ValidateFunc: validation.StringInSlice(validRecordConstraintTypes, false),
+	},
+	"processing_status": {
+		Type:     schema.TypeString,
+		Computed: true,
 	},
 	"start_date_time": {
 		Type:     schema.TypeString,
@@ -76,6 +80,13 @@ var recordSchema = map[string]*schema.Schema{
 		Computed: true,
 		Elem: &schema.Schema{
 			Type: schema.TypeString,
+		},
+	},
+	"errors": {
+		Type:     schema.TypeSet,
+		Computed: true,
+		Elem: &schema.Resource{
+			Schema: errorSchema,
 		},
 	},
 	"created_at": {
@@ -138,5 +149,16 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 		Elem: &schema.Schema{
 			Type: schema.TypeString,
 		},
+	},
+}
+
+var errorSchema = map[string]*schema.Schema{
+	"code": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"message": {
+		Type:     schema.TypeString,
+		Computed: true,
 	},
 }
