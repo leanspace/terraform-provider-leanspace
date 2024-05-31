@@ -37,7 +37,7 @@ var recordTemplateSchema = map[string]*schema.Schema{
 	},
 	"stream_id": {
 		Type:     schema.TypeString,
-		Computed: true,
+		Optional: true,
 	},
 	"default_parsers": {
 		Type:     schema.TypeSet,
