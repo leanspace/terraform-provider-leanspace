@@ -38,6 +38,7 @@ var recordTemplateSchema = map[string]*schema.Schema{
 	"stream_id": {
 		Type:     schema.TypeString,
 		Optional: true,
+		ForceNew: true,
 	},
 	"default_parsers": {
 		Type:     schema.TypeSet,
@@ -119,10 +120,12 @@ var recordTemplatePropertySchema = map[string]*schema.Schema{
 	"name": {
 		Type:     schema.TypeString,
 		Required: true,
+		ForceNew: true,
 	},
 	"attributes": {
 		Type:     schema.TypeList,
 		Required: true,
+		ForceNew: true,
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
@@ -139,6 +142,7 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 	"names": {
 		Type:     schema.TypeList,
 		Optional: true,
+		ForceNew: true,
 		Elem: &schema.Schema{
 			Type: schema.TypeString,
 		},
@@ -146,6 +150,7 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 	"related_asset_ids": {
 		Type:     schema.TypeList,
 		Optional: true,
+		ForceNew: true,
 		Elem: &schema.Schema{
 			Type:         schema.TypeString,
 			ValidateFunc: validation.IsUUID,
@@ -154,6 +159,7 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 	"tags": {
 		Type:     schema.TypeList,
 		Optional: true,
+		ForceNew: true,
 		Elem: &schema.Schema{
 			Type: schema.TypeString,
 		},

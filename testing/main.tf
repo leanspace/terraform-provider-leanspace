@@ -34,9 +34,9 @@ module "command_definitions" {
 }
 
 module "metrics" {
-  source  = "./metrics/metrics"
-  node_id = module.nodes.satellite_node.id
-  unit_id = module.units.test_units["k"].id
+  source     = "./metrics/metrics"
+  node_id    = module.nodes.satellite_node.id
+  unit_id    = module.units.test_units["k"].id
   depends_on = [
     module.nodes,
     module.units
@@ -79,7 +79,7 @@ module "widgets" {
   text_metric_id    = module.metrics.test_text_metric.id
   numeric_metric_id = module.metrics.test_numeric_metric.id
   resource_id       = module.resources.a_resource.id
-  depends_on = [
+  depends_on        = [
     module.metrics
   ]
 }
@@ -216,11 +216,9 @@ module "resource_functions" {
 }
 
 module "record_templates" {
-  source             = "records/record_templates"
-  record_template_id = module.record_templates.a_record_template.id
-  asset_id           = module.nodes.satellite_node.id
-  metric_id          = module.metrics.test_numeric_metric.id
-  depends_on         = [
+  source     = "./records/record_templates"
+  node_id    = module.nodes.satellite_node.id
+  depends_on = [
     module.nodes,
     module.metrics
   ]
@@ -228,8 +226,8 @@ module "record_templates" {
 
 module "records" {
   source             = "./records/records"
-  record_id          = module.records.a_record.id
   record_template_id = module.record_templates.a_record_template.id
+  start_date_time    = "2024-09-01T00:00:00.000Z"
   depends_on         = [
     module.record_templates,
   ]
