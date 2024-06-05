@@ -185,7 +185,6 @@ The available resources per service are:
   - plugins: it has one `leanspace_plugins` resource, with basic filler data.
 - records:
   - record_templates: it has one `leanspace_record_templates` resource.
-  - records: it has one `leanspace_records` resource.
 - routes:
   - processors: it has one `leanspace_processors` resource, with basic filler data.
   - routes: it has one `leanspace_routes` resource, with basic filler data.
