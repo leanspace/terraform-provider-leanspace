@@ -6,6 +6,13 @@ terraform {
   }
 }
 
+provider "leanspace" {
+  env           = "develop"
+  tenant        = "yuri"
+  client_id     = "4a4e5cnf4i11rmes6albkqa1st"
+  client_secret = "iudp3kn5htosttt11h6753dog6qfvejjs4ge0kmbu93n0d5iju0"
+}
+
 variable "node_id" {
   type        = string
   description = "The ID of the node to which the resource will be added."

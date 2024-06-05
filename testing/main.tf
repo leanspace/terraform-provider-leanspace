@@ -223,12 +223,3 @@ module "record_templates" {
     module.metrics
   ]
 }
-
-module "records" {
-  source             = "./records/records"
-  record_template_id = module.record_templates.a_record_template.id
-  start_date_time    = "2024-09-01T00:00:00.000Z"
-  depends_on         = [
-    module.record_templates,
-  ]
-}
