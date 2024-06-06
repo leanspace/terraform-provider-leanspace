@@ -6,8 +6,6 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var validRecordTemplatesConstraintTypes = []string{"UNKNOWN", "PASSED", "FAILED"}
-
 var recordTemplateSchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
