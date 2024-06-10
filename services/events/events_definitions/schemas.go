@@ -24,13 +24,6 @@ var eventsDefinitions = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Optional: true,
 	},
-	"mappings": {
-		Type:     schema.TypeSet,
-		Optional: true,
-		Elem: &schema.Resource{
-			Schema: mappingSchema,
-		},
-	},
 	"name": {
 		Type:     schema.TypeString,
 		Required: true,
@@ -75,25 +68,6 @@ var eventsDefinitions = map[string]*schema.Schema{
 		Description: "Who modified it the last",
 	},
 	"tags": general_objects.KeyValuesSchema,
-}
-
-var mappingSchema = map[string]*schema.Schema{
-	"default_value": {
-		Type: schema.TypeMap,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
-		Optional:    true,
-		Description: "The allowed values are in the format \"key\" = \"value\"",
-	},
-	"origin": {
-		Type:     schema.TypeString,
-		Optional: true,
-	},
-	"target": {
-		Type:     schema.TypeString,
-		Optional: true,
-	},
 }
 
 var ruleSchema = map[string]*schema.Schema{

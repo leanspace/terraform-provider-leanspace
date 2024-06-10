@@ -8,7 +8,6 @@ type EventsDefinition struct {
 	Source         string                     `json:"source"`
 	State          string                     `json:"state"`
 	Description    string                     `json:"description,omitempty"`
-	Mappings       []Mappings                 `json:"mappings,omitempty"`
 	Rules          []Rules[any]               `json:"rules,omitempty"`
 	CreatedAt      string                     `json:"createdAt"`
 	CreatedBy      string                     `json:"createdBy"`
@@ -28,10 +27,4 @@ type Rules[T any] struct {
 type ComparisonValue[T any] struct {
 	Value T      `json:"value,omitempty"`
 	Type  string `json:"type"`
-}
-
-type Mappings struct {
-	Origin       string          `json:"origin"`
-	Target       string          `json:"target"`
-	DefaultValue *map[string]any `json:"defaultValue,omitempty"`
 }
