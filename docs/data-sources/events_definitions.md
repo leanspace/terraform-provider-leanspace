@@ -69,22 +69,11 @@ Read-Only:
 - `id` (String)
 - `last_modified_at` (String)
 - `last_modified_by` (String)
-- `mappings` (Set of Object) (see [below for nested schema](#nestedobjatt--content--mappings))
 - `name` (String)
 - `rules` (Set of Object) (see [below for nested schema](#nestedobjatt--content--rules))
 - `source` (String)
 - `state` (String)
 - `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
-
-<a id="nestedobjatt--content--mappings"></a>
-### Nested Schema for `content.mappings`
-
-Read-Only:
-
-- `default_value` (Map of String)
-- `origin` (String)
-- `target` (String)
-
 
 <a id="nestedobjatt--content--rules"></a>
 ### Nested Schema for `content.rules`

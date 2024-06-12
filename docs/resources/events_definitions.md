@@ -26,15 +26,6 @@ resource "leanspace_events_definitions" "event" {
 
     }
   }
-  mappings {
-    origin = "testorigin"
-    target = "testDestinations"
-    default_value = {
-      "1" = "value1"
-      "2" = "value3"
-    }
-
-  }
   tags {
     key   = "Mission"
     value = "Terraform"
@@ -55,7 +46,6 @@ resource "leanspace_events_definitions" "event" {
 ### Optional
 
 - `description` (String)
-- `mappings` (Block Set) (see [below for nested schema](#nestedblock--mappings))
 - `rules` (Block Set) (see [below for nested schema](#nestedblock--rules))
 - `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
 
@@ -66,16 +56,6 @@ resource "leanspace_events_definitions" "event" {
 - `id` (String) The ID of this resource.
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
-
-<a id="nestedblock--mappings"></a>
-### Nested Schema for `mappings`
-
-Optional:
-
-- `default_value` (Map of String) The allowed values are in the format "key" = "value"
-- `origin` (String)
-- `target` (String)
-
 
 <a id="nestedblock--rules"></a>
 ### Nested Schema for `rules`
