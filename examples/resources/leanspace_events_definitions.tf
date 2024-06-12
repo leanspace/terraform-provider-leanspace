@@ -13,15 +13,6 @@ resource "leanspace_events_definitions" "event" {
 
     }
   }
-  mappings {
-    origin = "testorigin"
-    target = "testDestinations"
-    default_value = {
-      "1" = "value1"
-      "2" = "value3"
-    }
-
-  }
   tags {
     key   = "Mission"
     value = "Terraform"

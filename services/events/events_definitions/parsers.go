@@ -14,9 +14,6 @@ func (eventDefinition *EventsDefinition) ToMap() map[string]any {
 	eventDefinitionMap["description"] = eventDefinition.Description
 	eventDefinitionMap["source"] = eventDefinition.Source
 	eventDefinitionMap["state"] = eventDefinition.State
-	if eventDefinition.Mappings != nil {
-		eventDefinitionMap["mappings"] = helper.ParseToMaps(eventDefinition.Mappings)
-	}
 	if eventDefinition.Rules != nil {
 		eventDefinitionMap["rules"] = helper.ParseToMaps(eventDefinition.Rules)
 	}
@@ -56,14 +53,6 @@ func (comparisonValue *ComparisonValue[T]) ToMap() map[string]any {
 	return comparisonValueMap
 }
 
-func (mapping *Mappings) ToMap() map[string]any {
-	mappingMap := make(map[string]any)
-	mappingMap["origin"] = mapping.Origin
-	mappingMap["target"] = mapping.Target
-	mappingMap["default_value"] = *mapping.DefaultValue
-	return mappingMap
-}
-
 func (eventDefinition *EventsDefinition) FromMap(eventDefinitionMap map[string]any) error {
 	eventDefinition.ID = eventDefinitionMap["id"].(string)
 	eventDefinition.Name = eventDefinitionMap["name"].(string)
@@ -74,15 +63,6 @@ func (eventDefinition *EventsDefinition) FromMap(eventDefinitionMap map[string]a
 	eventDefinition.CreatedBy = eventDefinitionMap["created_by"].(string)
 	eventDefinition.LastModifiedAt = eventDefinitionMap["last_modified_at"].(string)
 	eventDefinition.LastModifiedBy = eventDefinitionMap["last_modified_by"].(string)
-	if eventDefinitionMap["mappings"] != nil {
-		if mapping, err := helper.ParseFromMaps[Mappings](
-			eventDefinitionMap["mappings"].(*schema.Set).List(),
-		); err != nil {
-			return err
-		} else {
-			eventDefinition.Mappings = mapping
-		}
-	}
 	if eventDefinitionMap["rules"] != nil {
 		if rules, err := helper.ParseFromMaps[Rules[any]](
 			eventDefinitionMap["rules"].(*schema.Set).List(),
@@ -96,16 +76,6 @@ func (eventDefinition *EventsDefinition) FromMap(eventDefinitionMap map[string]a
 		return err
 	} else {
 		eventDefinition.Tags = tags
-	}
-	return nil
-}
-
-func (mappings *Mappings) FromMap(mappingMap map[string]any) error {
-	mappings.Origin = mappingMap["origin"].(string)
-	mappings.Target = mappingMap["target"].(string)
-	if mappingMap["default_value"] != nil {
-		defaultValue := mappingMap["default_value"].(map[string]any)
-		mappings.DefaultValue = &defaultValue
 	}
 	return nil
 }
