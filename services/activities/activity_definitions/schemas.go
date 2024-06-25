@@ -80,10 +80,6 @@ var activityDefinitionSchema = map[string]*schema.Schema{
 }
 
 var metadataSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
-		Computed: true,
-	},
 	"name": {
 		Type:     schema.TypeString,
 		Required: true,
@@ -104,10 +100,6 @@ var metadataSchema = map[string]*schema.Schema{
 }
 
 var argumentDefinitionSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
-		Computed: true,
-	},
 	"name": {
 		Type:     schema.TypeString,
 		Required: true,
