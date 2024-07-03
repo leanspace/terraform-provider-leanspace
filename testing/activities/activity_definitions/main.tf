@@ -40,7 +40,7 @@ locals {
 }
 
 resource "leanspace_activity_definitions" "test" {
-  name               = "Terraform Activity Definition new"
+  name               = "Terraform Activity Definition"
   description        = "A complex activity definition, entirely created under terraform."
   node_id            = var.node_id
   estimated_duration = 3
@@ -264,27 +264,27 @@ resource "leanspace_activity_definitions" "test" {
       }
     }
   }
-}
 
-command_mappings {
-  command_definition_id = var.command_definition.id
-  delay_in_milliseconds = 0
-  metadata_mappings {
-    activity_definition_metadata_name = "ActivityMetadataText"
-    command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "TEXT")].name
+  command_mappings {
+    command_definition_id = var.command_definition.id
+    delay_in_milliseconds = 0
+    metadata_mappings {
+      activity_definition_metadata_name = "ActivityMetadataText"
+      command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "TEXT")].name
+    }
+    metadata_mappings {
+      activity_definition_metadata_name = "ActivityMetadataNumeric"
+      command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "NUMERIC")].name
+    }
+    argument_mappings {
+      activity_definition_argument_name = "ActivityArgumentEnum"
+      command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "ENUM")].name
+    }
   }
-  metadata_mappings {
-    activity_definition_metadata_name = "ActivityMetadataNumeric"
-    command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "NUMERIC")].name
+  command_mappings {
+    command_definition_id = var.command_definition.id
+    delay_in_milliseconds = 30
   }
-  argument_mappings {
-    activity_definition_argument_name = "ActivityArgumentEnum"
-    command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "ENUM")].name
-  }
-}
-command_mappings {
-  command_definition_id = var.command_definition.id
-  delay_in_milliseconds = 30
 }
 
 output "test_activity_definition" {
