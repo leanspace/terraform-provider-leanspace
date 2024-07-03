@@ -94,7 +94,7 @@ var metadataSchema = map[string]*schema.Schema{
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: general_objects.ValueAttributeSchema,
+			Schema: general_objects.ValueAttributeSchema([]string{"ENUM", "STRUCTURE", "TLE"}),
 		},
 	},
 }

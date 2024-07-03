@@ -11,36 +11,19 @@ variable "node_id" {
   description = "The ID of the node to which the activity definitions will be added."
 }
 
-variable "command_definition" {
-  type = object({
-    id = string
-    arguments = set(object({
-      name = string
-      attributes = list(object({
-        type = string
-      }))
-    }))
-  })
-  description = "The command definition that will be used for this activity definition"
-}
-
 data "leanspace_activity_definitions" "all" {
   filters {
     node_ids = [var.node_id]
-    ids      = []
-    query    = ""
-    page     = 0
-    size     = 10
-    sort     = ["name,asc"]
+    ids = []
+    query = ""
+    page  = 0
+    size  = 10
+    sort = ["name,asc"]
   }
 }
 
-locals {
-  arguments = tolist(var.command_definition.arguments)
-}
-
 resource "leanspace_activity_definitions" "test" {
-  name               = "Terraform Activity Definition"
+  name               = "Terraform Activity Definition new"
   description        = "A complex activity definition, entirely created under terraform."
   node_id            = var.node_id
   estimated_duration = 3
@@ -94,6 +77,32 @@ resource "leanspace_activity_definitions" "test" {
     }
   }
   metadata {
+    name        = "ActivityMetadataBinary"
+    description = "A binary metadata value"
+    attributes {
+      value = "62696e617279"
+      type  = "BINARY"
+    }
+  }
+  metadata {
+    name        = "ActivityMetadataGeoPoint"
+    description = "A geopoint metadata value"
+    attributes {
+      type = "GEOPOINT"
+      fields {
+        elevation {
+          value = 141.0
+        }
+        latitude {
+          value = 48.5
+        }
+        longitude {
+          value = 7.7
+        }
+      }
+    }
+  }
+  metadata {
     name        = "ActivityMetadataArrayNumeric"
     description = "A Numeric Array metadata value"
     attributes {
@@ -125,7 +134,7 @@ resource "leanspace_activity_definitions" "test" {
     name        = "ActivityArgumentText"
     description = "A text input"
     attributes {
-      default_value = "test"
+      default_value = "test3"
       type          = "TEXT"
     }
   }
@@ -135,7 +144,7 @@ resource "leanspace_activity_definitions" "test" {
     attributes {
       default_value = true
       type          = "BOOLEAN"
-      required      = true
+      required      = false
     }
   }
   argument_definitions {
@@ -144,15 +153,6 @@ resource "leanspace_activity_definitions" "test" {
     attributes {
       default_value = "2022-06-30T13:57:23Z"
       type          = "TIMESTAMP"
-      required      = true
-    }
-  }
-  argument_definitions {
-    name        = "ActivityArgumentDate"
-    description = "A date input"
-    attributes {
-      default_value = "2022-06-30"
-      type          = "DATE"
       required      = true
     }
   }
@@ -166,13 +166,70 @@ resource "leanspace_activity_definitions" "test" {
     }
   }
   argument_definitions {
+    name        = "ActivityArgumentDate"
+    description = "A date input"
+    attributes {
+      default_value = "2022-06-30"
+      type          = "DATE"
+      required      = true
+    }
+  }
+  argument_definitions {
     name        = "ActivityArgumentEnum"
     description = "An enum input"
     attributes {
       default_value = 1
-      options       = { 1 = "test" }
-      type          = "ENUM"
+      options = {
+        1 = "test1"
+        2 = "test3"
+      }
+      type     = "ENUM"
+      required = true
+    }
+  }
+  argument_definitions {
+    name        = "ActivityArgumentBinary"
+    description = "A binary input"
+    attributes {
+      default_value = "62696e617279"
+      type          = "BINARY"
       required      = true
+    }
+  }
+  argument_definitions {
+    name        = "ActivityArgumentGeoPoint"
+    description = "A geopoint input"
+    attributes {
+      type = "GEOPOINT"
+      fields {
+        elevation {
+          default_value = 141.0
+        }
+        latitude {
+          default_value = 48.5
+        }
+        longitude {
+          default_value = 7.7
+        }
+      }
+      required = true
+    }
+  }
+  argument_definitions {
+    name        = "ActivityArgumentNumericArray"
+    description = "A numeric array"
+    attributes {
+      type          = "ARRAY"
+      required      = true
+      min_size      = 1
+      max_size      = 4
+      unique        = true
+      default_value = "1,2,3"
+      constraint {
+        type = "NUMERIC"
+        min  = 1
+        max  = 10
+      }
     }
   }
   argument_definitions {
@@ -189,27 +246,6 @@ resource "leanspace_activity_definitions" "test" {
         max_length = 10
       }
     }
-  }
-
-  command_mappings {
-    command_definition_id = var.command_definition.id
-    delay_in_milliseconds = 0
-    metadata_mappings {
-      activity_definition_metadata_name = "ActivityMetadataText"
-      command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "TEXT")].name
-    }
-    metadata_mappings {
-      activity_definition_metadata_name = "ActivityMetadataNumeric"
-      command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "NUMERIC")].name
-    }
-    argument_mappings {
-      activity_definition_argument_name = "ActivityArgumentEnum"
-      command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "ENUM")].name
-    }
-  }
-  command_mappings {
-    command_definition_id = var.command_definition.id
-    delay_in_milliseconds = 30
   }
 }
 
