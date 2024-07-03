@@ -127,7 +127,6 @@ resource "leanspace_activity_definitions" "activity_definition" {
   }
   argument_definitions {
     name        = "TestArgumentBinaryArray"
-    identifier  = "Binary ARRAY"
     description = "A binary array"
     attributes {
       type          = "ARRAY"
@@ -149,15 +148,15 @@ resource "leanspace_activity_definitions" "activity_definition" {
     delay_in_milliseconds = 0
     metadata_mappings {
       activity_definition_metadata_name = "ActivityMetadataText"
-      command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "TEXT")].name
+      command_definition_argument_name  = "CommandArgumentText"
     }
     metadata_mappings {
       activity_definition_metadata_name = "ActivityMetadataNumeric"
-      command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "NUMERIC")].name
+      command_definition_argument_name  = "CommandArgumentNumeric"
     }
     argument_mappings {
       activity_definition_argument_name = "ActivityArgumentEnum"
-      command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "ENUM")].name
+      command_definition_argument_name  = "CommandArgumentEnum"
     }
   }
 }
