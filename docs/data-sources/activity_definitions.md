@@ -97,6 +97,7 @@ Read-Only:
 - `before` (String)
 - `constraint` (List of Object) (see [below for nested schema](#nestedobjatt--content--argument_definitions--attributes--constraint))
 - `default_value` (String)
+- `fields` (List of Object) (see [below for nested schema](#nestedobjatt--content--argument_definitions--attributes--fields))
 - `max` (Number)
 - `max_length` (Number)
 - `max_size` (Number)
@@ -113,7 +114,7 @@ Read-Only:
 - `unit_id` (String)
 
 <a id="nestedobjatt--content--argument_definitions--attributes--constraint"></a>
-### Nested Schema for `content.argument_definitions.attributes.unit_id`
+### Nested Schema for `content.argument_definitions.attributes.constraint`
 
 Read-Only:
 
@@ -132,6 +133,27 @@ Read-Only:
 - `unit_id` (String)
 
 
+<a id="nestedobjatt--content--argument_definitions--attributes--fields"></a>
+### Nested Schema for `content.argument_definitions.attributes.fields`
+
+Read-Only:
+
+- `latitude` (Object) (see [below for nested schema](#nestedobjatt--content--argument_definitions--attributes--fields-field))
+- `longitude` (Object) (see [below for nested schema](#nestedobjatt--content--argument_definitions--attributes--fields-field))
+- `altitude` (Object) (see [below for nested schema](#nestedobjatt--content--argument_definitions--attributes--fields-field))
+
+<a id="nestedobjatt--content--argument_definitions--attributes--fields-field"></a>
+### Nested Schema for `content.argument_definitions.attributes.fields.field`
+
+Read-Only:
+
+- `default_value` (Number)
+- `max` (Number)
+- `min` (Number)
+- `precision` (Number)
+- `required` (Boolean)
+- `scale` (Number)
+- `unit_id` (String)
 
 
 <a id="nestedobjatt--content--command_mappings"></a>
@@ -182,12 +204,32 @@ Read-Only:
 Read-Only:
 
 - `data_type` (String)
+- `fields` (List of Object) (see [below for nested schema](#nestedobjatt--content--metadata--attributes--fields))
 - `type` (String)
 - `unit_id` (String)
 - `value` (String)
 
+<a id="nestedobjatt--content--metadata--attributes--fields"></a>
+### Nested Schema for `content.metadata.attributes.fields`
 
+Read-Only:
 
+- `latitude` (Object) (see [below for nested schema](#nestedobjatt--content--metadata--attributes--fields-field))
+- `longitude` (Object) (see [below for nested schema](#nestedobjatt--content--metadata--attributes--fields-field))
+- `altitude` (Object) (see [below for nested schema](#nestedobjatt--content--metadata--attributes--fields-field))
+
+<a id="nestedobjatt--content--metadata--attributes--fields-field"></a>
+### Nested Schema for `content.metadata.attributes.fields.field`
+
+Read-Only:
+
+- `value` (Number)
+- `max` (Number)
+- `min` (Number)
+- `precision` (Number)
+- `required` (Boolean)
+- `scale` (Number)
+- `unit_id` (String)
 
 <a id="nestedatt--pageable"></a>
 ### Nested Schema for `pageable`
