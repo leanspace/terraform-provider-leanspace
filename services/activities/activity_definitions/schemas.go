@@ -114,7 +114,10 @@ var argumentDefinitionSchema = map[string]*schema.Schema{
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: general_objects.DefinitionAttributeSchema([]string{}, nil, false),
+			Schema: general_objects.DefinitionAttributeSchema(
+				[]string{"STRUCTURE", "TLE"}, // attribute types not allowed in command definition attributes
+				nil,                          // All fields are used
+				false,                        // Does not force recreation if the type changes
 		},
 	},
 }
