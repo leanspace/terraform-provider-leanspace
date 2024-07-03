@@ -32,7 +32,6 @@ func (activityDefinition *ActivityDefinition) ToMap() map[string]any {
 
 func (metadata *Metadata[T]) ToMap() map[string]any {
 	metadataMap := make(map[string]any)
-	metadataMap["id"] = metadata.ID
 	metadataMap["name"] = metadata.Name
 	metadataMap["description"] = metadata.Description
 	metadataMap["attributes"] = []any{metadata.Attributes.ToMap()}
@@ -41,7 +40,6 @@ func (metadata *Metadata[T]) ToMap() map[string]any {
 
 func (argument *ArgumentDefinition[T]) ToMap() map[string]any {
 	argumentMap := make(map[string]any)
-	argumentMap["id"] = argument.ID
 	argumentMap["name"] = argument.Name
 	argumentMap["description"] = argument.Description
 	argumentMap["attributes"] = []any{argument.Attributes.ToMap()}
@@ -114,7 +112,6 @@ func (activityDefinition *ActivityDefinition) FromMap(actDefinitionMap map[strin
 }
 
 func (metadata *Metadata[T]) FromMap(metadataMap map[string]any) error {
-	metadata.ID = metadataMap["id"].(string)
 	metadata.Name = metadataMap["name"].(string)
 	metadata.Description = metadataMap["description"].(string)
 	if len(metadataMap["attributes"].([]any)) > 0 {
@@ -126,7 +123,6 @@ func (metadata *Metadata[T]) FromMap(metadataMap map[string]any) error {
 }
 
 func (argument *ArgumentDefinition[T]) FromMap(argumentMap map[string]any) error {
-	argument.ID = argumentMap["id"].(string)
 	argument.Name = argumentMap["name"].(string)
 	argument.Description = argumentMap["description"].(string)
 

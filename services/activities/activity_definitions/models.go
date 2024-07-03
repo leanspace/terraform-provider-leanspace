@@ -21,14 +21,12 @@ type ActivityDefinition struct {
 func (actDefinition *ActivityDefinition) GetID() string { return actDefinition.ID }
 
 type Metadata[T any] struct {
-	ID          string                            `json:"id"`
 	Name        string                            `json:"name"`
 	Description string                            `json:"description,omitempty"`
 	Attributes  general_objects.ValueAttribute[T] `json:"attributes"`
 }
 
 type ArgumentDefinition[T any] struct {
-	ID          string                                 `json:"id"`
 	Name        string                                 `json:"name"`
 	Description string                                 `json:"description,omitempty"`
 	Attributes  general_objects.DefinitionAttribute[T] `json:"attributes"`
