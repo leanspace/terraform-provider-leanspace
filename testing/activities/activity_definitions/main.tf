@@ -11,6 +11,19 @@ variable "node_id" {
   description = "The ID of the node to which the activity definitions will be added."
 }
 
+variable "command_definition" {
+  type = object({
+    id = string
+    arguments = set(object({
+      name = string
+      attributes = list(object({
+        type = string
+      }))
+    }))
+  })
+  description = "The command definition that will be used for this activity definition"
+}
+
 data "leanspace_activity_definitions" "all" {
   filters {
     node_ids = [var.node_id]
@@ -20,6 +33,10 @@ data "leanspace_activity_definitions" "all" {
     size  = 10
     sort = ["name,asc"]
   }
+}
+
+locals {
+  arguments = tolist(var.command_definition.arguments)
 }
 
 resource "leanspace_activity_definitions" "test" {
@@ -247,6 +264,27 @@ resource "leanspace_activity_definitions" "test" {
       }
     }
   }
+}
+
+command_mappings {
+  command_definition_id = var.command_definition.id
+  delay_in_milliseconds = 0
+  metadata_mappings {
+    activity_definition_metadata_name = "ActivityMetadataText"
+    command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "TEXT")].name
+  }
+  metadata_mappings {
+    activity_definition_metadata_name = "ActivityMetadataNumeric"
+    command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "NUMERIC")].name
+  }
+  argument_mappings {
+    activity_definition_argument_name = "ActivityArgumentEnum"
+    command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "ENUM")].name
+  }
+}
+command_mappings {
+  command_definition_id = var.command_definition.id
+  delay_in_milliseconds = 30
 }
 
 output "test_activity_definition" {
