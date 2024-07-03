@@ -442,16 +442,16 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string, fo
 			Description: "Enum only: The allowed values for the enum in the format 1 = \"value\"",
 		},
 
-        // Geopoint only
-        "fields": {
-            Type:     schema.TypeList,
-            MaxItems: 1,
-            Optional: true,
-            Elem: &schema.Resource{
-                Schema: geoPointFieldsDefSchema,
-            },
-            Description: "Geopoint only",
-        },
+		// Geopoint only
+		"fields": {
+			Type:     schema.TypeList,
+			MaxItems: 1,
+			Optional: true,
+			Elem: &schema.Resource{
+				Schema: geoPointFieldsDefSchema,
+			},
+			Description: "Geopoint only",
+		},
 
 		// Array
 		"min_size": {
@@ -523,12 +523,12 @@ func DefinitionAttributeArrayConstraintSchema(excludeTypes []string, excludeFiel
 			ValidateFunc: validation.IntAtLeast(1),
 			Description:  "Only array elements with text type: Maximum length of this text (at least 1)",
 		},
-        "min_length": {
-            Type:         schema.TypeInt,
-            Optional:     true,
-            ValidateFunc: validation.IntAtLeast(1),
-            Description:  "Only array elements with text type: Minimum length of this text (at least 1)",
-        },
+		"min_length": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			ValidateFunc: validation.IntAtLeast(1),
+			Description:  "Only array elements with text type: Minimum length of this text (at least 1)",
+		},
 
 		// Text only
 		"pattern": {
@@ -606,48 +606,48 @@ var validArraydataTypes = []string{
 }
 
 func ValueAttributeSchema(excludeTypes []string) map[string]*schema.Schema {
-    validTypes := []string{}
-    for _, value := range validMetadataTypes {
-        if contains(excludeTypes, value) {
-            continue
-        }
-        validTypes = append(validTypes, value)
-    }
+	validTypes := []string{}
+	for _, value := range validMetadataTypes {
+		if contains(excludeTypes, value) {
+			continue
+		}
+		validTypes = append(validTypes, value)
+	}
 
-    schema := map[string]*schema.Schema{
-        "value": {
-            Type:     schema.TypeString,
-            Optional: true,
-        },
-        "type": {
-            Type:         schema.TypeString,
-            Required:     true,
-            ValidateFunc: validation.StringInSlice(validTypes, false),
-            Description:  helper.AllowedValuesToDescription(validTypes),
-        },
-        "data_type": {
-            Type:         schema.TypeString,
-            Optional:     true,
-            ValidateFunc: validation.StringInSlice(validArraydataTypes, false),
-            Description:  helper.AllowedValuesToDescription(validArraydataTypes),
-        },
-        // Numeric only
-        "unit_id": {
-            Type:         schema.TypeString,
-            Optional:     true,
-            ValidateFunc: validation.IsUUID,
-        },
-        // Geopoint only
-        "fields": {
-            Type:     schema.TypeList,
-            MaxItems: 1,
-            Optional: true,
-            Elem: &schema.Resource{
-                Schema: geoPointFieldsSchema,
-            },
-            Description: "Geopoint only",
-        },
-    }
+	schema := map[string]*schema.Schema{
+		"value": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"type": {
+			Type:         schema.TypeString,
+			Required:     true,
+			ValidateFunc: validation.StringInSlice(validTypes, false),
+			Description:  helper.AllowedValuesToDescription(validTypes),
+		},
+		"data_type": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: validation.StringInSlice(validArraydataTypes, false),
+			Description:  helper.AllowedValuesToDescription(validArraydataTypes),
+		},
+		// Numeric only
+		"unit_id": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: validation.IsUUID,
+		},
+		// Geopoint only
+		"fields": {
+			Type:     schema.TypeList,
+			MaxItems: 1,
+			Optional: true,
+			Elem: &schema.Resource{
+				Schema: geoPointFieldsSchema,
+			},
+			Description: "Geopoint only",
+		},
+	}
 
-    return schema
+	return schema
 }

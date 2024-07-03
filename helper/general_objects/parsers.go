@@ -65,22 +65,22 @@ func (attribute *ValueAttribute[T]) ToMap() map[string]any {
 		attributeMap["value"] = attribute.Value
 	case "BOOLEAN":
 		attributeMap["value"] = strconv.FormatBool(any(attribute.Value).(bool))
-    case "GEOPOINT":
-        if attribute.Fields != nil {
-            fieldList := make([]map[string]any, 1)
-            fieldMap := make(map[string]any)
-            elevationList := make([]map[string]any, 1)
-            elevationList[0] = (&attribute.Fields.Elevation).ToMap()
-            fieldMap["elevation"] = elevationList
-            latitudeList := make([]map[string]any, 1)
-            latitudeList[0] = (&attribute.Fields.Latitude).ToMap()
-            fieldMap["latitude"] = latitudeList
-            longitudeList := make([]map[string]any, 1)
-            longitudeList[0] = (&attribute.Fields.Longitude).ToMap()
-            fieldMap["longitude"] = longitudeList
-            fieldList[0] = fieldMap
-            attributeMap["fields"] = fieldList
-        }
+	case "GEOPOINT":
+		if attribute.Fields != nil {
+			fieldList := make([]map[string]any, 1)
+			fieldMap := make(map[string]any)
+			elevationList := make([]map[string]any, 1)
+			elevationList[0] = (&attribute.Fields.Elevation).ToMap()
+			fieldMap["elevation"] = elevationList
+			latitudeList := make([]map[string]any, 1)
+			latitudeList[0] = (&attribute.Fields.Latitude).ToMap()
+			fieldMap["latitude"] = latitudeList
+			longitudeList := make([]map[string]any, 1)
+			longitudeList[0] = (&attribute.Fields.Longitude).ToMap()
+			fieldMap["longitude"] = longitudeList
+			fieldList[0] = fieldMap
+			attributeMap["fields"] = fieldList
+		}
 	case "ARRAY":
 		if any(attribute.Value) != nil {
 			var defaultValue string
@@ -175,21 +175,21 @@ func (attribute *DefinitionAttribute[T]) FromMap(attributeMap map[string]any) er
 		attribute.MaxLength = attributeMap["max_length"].(int)
 		attribute.Pattern = attributeMap["pattern"].(string)
 	case "BINARY":
-        attribute.MinLength = attributeMap["min_length"].(int)
-        attribute.MaxLength = attributeMap["max_length"].(int)
+		attribute.MinLength = attributeMap["min_length"].(int)
+		attribute.MaxLength = attributeMap["max_length"].(int)
 	case "TIMESTAMP", "DATE", "TIME":
 		attribute.Before = attributeMap["before"].(string)
 		attribute.After = attributeMap["after"].(string)
 	case "BOOLEAN":
 		// no extra field
-    case "GEOPOINT":
-        if attributeMap["fields"] != nil {
-            fields := attributeMap["fields"].([]any)[0].(map[string]any)
-            attribute.Fields = &FieldsDef{}
-            attribute.Fields.Elevation.FromMap(fields["elevation"].([]any)[0].(map[string]any))
-            attribute.Fields.Latitude.FromMap(fields["latitude"].([]any)[0].(map[string]any))
-            attribute.Fields.Longitude.FromMap(fields["longitude"].([]any)[0].(map[string]any))
-        }
+	case "GEOPOINT":
+		if attributeMap["fields"] != nil {
+			fields := attributeMap["fields"].([]any)[0].(map[string]any)
+			attribute.Fields = &FieldsDef{}
+			attribute.Fields.Elevation.FromMap(fields["elevation"].([]any)[0].(map[string]any))
+			attribute.Fields.Latitude.FromMap(fields["latitude"].([]any)[0].(map[string]any))
+			attribute.Fields.Longitude.FromMap(fields["longitude"].([]any)[0].(map[string]any))
+		}
 	case "ARRAY":
 		attribute.MinSize = attributeMap["min_size"].(int)
 		attribute.MaxSize = attributeMap["max_size"].(int)
@@ -281,15 +281,15 @@ func (attribute *ValueAttribute[T]) FromMap(attributeMap map[string]any) error {
 		}
 		attribute.Value = any(interfaceOfValues).(T)
 	}
-    if attributeMap["type"] == "GEOPOINT" {
-        if attributeMap["fields"] != nil {
-            fields := attributeMap["fields"].([]any)[0].(map[string]any)
-            attribute.Fields = &Fields{}
-            attribute.Fields.Elevation.FromMap(fields["elevation"].([]any)[0].(map[string]any))
-            attribute.Fields.Latitude.FromMap(fields["latitude"].([]any)[0].(map[string]any))
-            attribute.Fields.Longitude.FromMap(fields["longitude"].([]any)[0].(map[string]any))
-        }
-    }
+	if attributeMap["type"] == "GEOPOINT" {
+		if attributeMap["fields"] != nil {
+			fields := attributeMap["fields"].([]any)[0].(map[string]any)
+			attribute.Fields = &Fields{}
+			attribute.Fields.Elevation.FromMap(fields["elevation"].([]any)[0].(map[string]any))
+			attribute.Fields.Latitude.FromMap(fields["latitude"].([]any)[0].(map[string]any))
+			attribute.Fields.Longitude.FromMap(fields["longitude"].([]any)[0].(map[string]any))
+		}
+	}
 	return nil
 }
 
@@ -342,22 +342,22 @@ func (attribute *DefinitionAttribute[T]) ToMap() map[string]any {
 		if attribute.Options != nil {
 			attributeMap["options"] = *attribute.Options
 		}
-    case "GEOPOINT":
-        if attribute.Fields != nil {
-            fieldList := make([]map[string]any, 1)
-            fieldMap := make(map[string]any)
-            elevationList := make([]map[string]any, 1)
-            elevationList[0] = (&attribute.Fields.Elevation).ToMap()
-            fieldMap["elevation"] = elevationList
-            latitudeList := make([]map[string]any, 1)
-            latitudeList[0] = (&attribute.Fields.Latitude).ToMap()
-            fieldMap["latitude"] = latitudeList
-            longitudeList := make([]map[string]any, 1)
-            longitudeList[0] = (&attribute.Fields.Longitude).ToMap()
-            fieldMap["longitude"] = longitudeList
-            fieldList[0] = fieldMap
-            attributeMap["fields"] = fieldList
-        }
+	case "GEOPOINT":
+		if attribute.Fields != nil {
+			fieldList := make([]map[string]any, 1)
+			fieldMap := make(map[string]any)
+			elevationList := make([]map[string]any, 1)
+			elevationList[0] = (&attribute.Fields.Elevation).ToMap()
+			fieldMap["elevation"] = elevationList
+			latitudeList := make([]map[string]any, 1)
+			latitudeList[0] = (&attribute.Fields.Latitude).ToMap()
+			fieldMap["latitude"] = latitudeList
+			longitudeList := make([]map[string]any, 1)
+			longitudeList[0] = (&attribute.Fields.Longitude).ToMap()
+			fieldMap["longitude"] = longitudeList
+			fieldList[0] = fieldMap
+			attributeMap["fields"] = fieldList
+		}
 	case "ARRAY":
 		attributeMap["min_size"] = attribute.MinSize
 		attributeMap["max_size"] = attribute.MaxSize
