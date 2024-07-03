@@ -85,7 +85,6 @@ Read-Only:
 
 - `attributes` (List of Object) (see [below for nested schema](#nestedobjatt--content--argument_definitions--attributes))
 - `description` (String)
-- `id` (String)
 - `name` (String)
 
 <a id="nestedobjatt--content--argument_definitions--attributes"></a>
@@ -173,7 +172,6 @@ Read-Only:
 
 - `attributes` (List of Object) (see [below for nested schema](#nestedobjatt--content--metadata--attributes))
 - `description` (String)
-- `id` (String)
 - `name` (String)
 
 <a id="nestedobjatt--content--metadata--attributes"></a>
