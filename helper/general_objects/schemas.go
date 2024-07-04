@@ -189,128 +189,80 @@ var PageableSchema = map[string]*schema.Schema{
 	},
 }
 
-var geoPointFieldsDefSchema = map[string]*schema.Schema{
-	"latitude": {
-		Type:     schema.TypeList,
-		MaxItems: 1,
-		Required: true,
-		Elem: &schema.Resource{
-			Schema: attributeFieldDefSchema,
-		},
-	},
-	"longitude": {
-		Type:     schema.TypeList,
-		MaxItems: 1,
-		Required: true,
-		Elem: &schema.Resource{
-			Schema: attributeFieldDefSchema,
-		},
-	},
-	"elevation": {
-		Type:     schema.TypeList,
-		MaxItems: 1,
-		Required: true,
-		Elem: &schema.Resource{
-			Schema: attributeFieldDefSchema,
-		},
-	},
+func createGeoPointFieldsSchema(isValueField bool) map[string]*schema.Schema {
+    fieldSchema := baseAttributeFieldSchema(isValueField)
+    return map[string]*schema.Schema{
+        "latitude": {
+            Type:     schema.TypeList,
+            MaxItems: 1,
+            Required: true,
+            Elem: &schema.Resource{
+                Schema: fieldSchema,
+            },
+        },
+        "longitude": {
+            Type:     schema.TypeList,
+            MaxItems: 1,
+            Required: true,
+            Elem: &schema.Resource{
+                Schema: fieldSchema,
+            },
+        },
+        "elevation": {
+            Type:     schema.TypeList,
+            MaxItems: 1,
+            Required: true,
+            Elem: &schema.Resource{
+                Schema: fieldSchema,
+            },
+        },
+    }
 }
 
-var attributeFieldDefSchema = map[string]*schema.Schema{
-	"default_value": {
-		Type:     schema.TypeString,
-		Optional: true,
-	},
+var geoPointFieldsDefSchema = createGeoPointFieldsSchema(false)
+var geoPointFieldsSchema = createGeoPointFieldsSchema(true)
 
-	// Numeric only
-	"scale": {
-		Type:        schema.TypeInt,
-		Optional:    true,
-		Description: "Property field with numeric type only: the scale required.",
-	},
-	"unit_id": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.IsUUID,
-		Description:  "Property field with numeric type only",
-	},
-	"min": {
-		Type:        schema.TypeFloat,
-		Optional:    true,
-		Description: "Property field with numeric type only: the minimum value allowed.",
-	},
-	"precision": {
-		Type:        schema.TypeInt,
-		Optional:    true,
-		Description: "Property field with numeric type only: How many values after the comma should be accepted",
-	},
-	"max": {
-		Type:        schema.TypeFloat,
-		Optional:    true,
-		Description: "Property field with numeric type only: the maximum value allowed.",
-	},
-}
-
-var geoPointFieldsSchema = map[string]*schema.Schema{
-	"latitude": {
-		Type:     schema.TypeList,
-		MaxItems: 1,
-		Required: true,
-		Elem: &schema.Resource{
-			Schema: attributeFieldSchema,
-		},
-	},
-	"longitude": {
-		Type:     schema.TypeList,
-		MaxItems: 1,
-		Required: true,
-		Elem: &schema.Resource{
-			Schema: attributeFieldSchema,
-		},
-	},
-	"elevation": {
-		Type:     schema.TypeList,
-		MaxItems: 1,
-		Required: true,
-		Elem: &schema.Resource{
-			Schema: attributeFieldSchema,
-		},
-	},
-}
-
-var attributeFieldSchema = map[string]*schema.Schema{
-	"value": {
-		Type:     schema.TypeString,
-		Optional: true,
-	},
-
-	// Numeric only
-	"scale": {
-		Type:        schema.TypeInt,
-		Optional:    true,
-		Description: "Property field with numeric type only: the scale required.",
-	},
-	"unit_id": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.IsUUID,
-		Description:  "Property field with numeric type only",
-	},
-	"min": {
-		Type:        schema.TypeFloat,
-		Optional:    true,
-		Description: "Property field with numeric type only: the minimum value allowed.",
-	},
-	"precision": {
-		Type:        schema.TypeInt,
-		Optional:    true,
-		Description: "Property field with numeric type only: How many values after the comma should be accepted",
-	},
-	"max": {
-		Type:        schema.TypeFloat,
-		Optional:    true,
-		Description: "Property field with numeric type only: the maximum value allowed.",
-	},
+func baseAttributeFieldSchema(isValueField bool) map[string]*schema.Schema {
+    baseSchema := map[string]*schema.Schema{
+        "scale": {
+            Type:        schema.TypeInt,
+            Optional:    true,
+            Description: "Property field with numeric type only: the scale required.",
+        },
+        "unit_id": {
+            Type:         schema.TypeString,
+            Optional:     true,
+            ValidateFunc: validation.IsUUID,
+            Description:  "Property field with numeric type only",
+        },
+        "min": {
+            Type:        schema.TypeFloat,
+            Optional:    true,
+            Description: "Property field with numeric type only: the minimum value allowed.",
+        },
+        "precision": {
+            Type:        schema.TypeInt,
+            Optional:    true,
+            Description: "Property field with numeric type only: How many values after the comma should be accepted",
+        },
+        "max": {
+            Type:        schema.TypeFloat,
+            Optional:    true,
+            Description: "Property field with numeric type only: the maximum value allowed.",
+        },
+    }
+    if isValueField {
+        baseSchema["value"] = &schema.Schema{
+            Type:     schema.TypeString,
+            Optional: true,
+        }
+    } else {
+        baseSchema["default_value"] = &schema.Schema{
+            Type:        schema.TypeString,
+            Optional:    true,
+        }
+    }
+    return baseSchema
 }
 
 var KeyValuesSchema = &schema.Schema{
