@@ -71,7 +71,7 @@ Required:
 
 Required:
 
-- `type` (String) it must be one of these values: NUMERIC, BOOLEAN, TEXT
+- `type` (String) it must be one of these values: NUMERIC, BOOLEAN, TEXT, STRUCTURE
 
 Optional:
 
@@ -79,6 +79,7 @@ Optional:
 - `before` (String) Time/date/timestamp only: Maximum date allowed
 - `constraint` (Block List, Max: 1) Array only: Constraint applied to all elements in the array (see [below for nested schema](#nestedblock--properties--attributes--constraint))
 - `default_value` (String) The default value can be of any type. In case of an array type, please surround the list values with double quotes and use the comma separator.
+- `fields` (Block List, Max: 1) Geopoint only (see [below for nested schema](#nestedblock--properties--attributes--fields))
 - `max` (Number) Numeric only
 - `max_length` (Number) Text only: Maximum length of this text (at least 1)
 - `max_size` (Number) Array only: The maximum number of elements allowed
@@ -114,6 +115,55 @@ Optional:
 - `required` (Boolean)
 - `scale` (Number) Only array elements with numeric type
 - `unit_id` (String) Only array elements with numeric type
+
+
+<a id="nestedblock--properties--attributes--fields"></a>
+### Nested Schema for `properties.attributes.fields`
+
+Required:
+
+- `elevation` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--properties--attributes--fields--elevation))
+- `latitude` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--properties--attributes--fields--latitude))
+- `longitude` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--properties--attributes--fields--longitude))
+
+<a id="nestedblock--properties--attributes--fields--elevation"></a>
+### Nested Schema for `properties.attributes.fields.elevation`
+
+Optional:
+
+- `default_value` (String)
+- `max` (Number) Property field with numeric type only: the maximum value allowed.
+- `min` (Number) Property field with numeric type only: the minimum value allowed.
+- `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
+- `scale` (Number) Property field with numeric type only: the scale required.
+- `unit_id` (String) Property field with numeric type only
+
+
+<a id="nestedblock--properties--attributes--fields--latitude"></a>
+### Nested Schema for `properties.attributes.fields.latitude`
+
+Optional:
+
+- `default_value` (String)
+- `max` (Number) Property field with numeric type only: the maximum value allowed.
+- `min` (Number) Property field with numeric type only: the minimum value allowed.
+- `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
+- `scale` (Number) Property field with numeric type only: the scale required.
+- `unit_id` (String) Property field with numeric type only
+
+
+<a id="nestedblock--properties--attributes--fields--longitude"></a>
+### Nested Schema for `properties.attributes.fields.longitude`
+
+Optional:
+
+- `default_value` (String)
+- `max` (Number) Property field with numeric type only: the maximum value allowed.
+- `min` (Number) Property field with numeric type only: the minimum value allowed.
+- `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
+- `scale` (Number) Property field with numeric type only: the scale required.
+- `unit_id` (String) Property field with numeric type only
+
 
 
 

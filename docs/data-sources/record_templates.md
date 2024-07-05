@@ -112,6 +112,7 @@ Read-Only:
 - `before` (String)
 - `constraint` (List of Object) (see [below for nested schema](#nestedobjatt--content--properties--attributes--constraint))
 - `default_value` (String)
+- `fields` (List of Object) (see [below for nested schema](#nestedobjatt--content--properties--attributes--fields))
 - `max` (Number)
 - `max_length` (Number)
 - `max_size` (Number)
@@ -145,6 +146,55 @@ Read-Only:
 - `scale` (Number)
 - `type` (String)
 - `unit_id` (String)
+
+
+<a id="nestedobjatt--content--properties--attributes--fields"></a>
+### Nested Schema for `content.properties.attributes.unit_id`
+
+Read-Only:
+
+- `elevation` (List of Object) (see [below for nested schema](#nestedobjatt--content--properties--attributes--unit_id--elevation))
+- `latitude` (List of Object) (see [below for nested schema](#nestedobjatt--content--properties--attributes--unit_id--latitude))
+- `longitude` (List of Object) (see [below for nested schema](#nestedobjatt--content--properties--attributes--unit_id--longitude))
+
+<a id="nestedobjatt--content--properties--attributes--unit_id--elevation"></a>
+### Nested Schema for `content.properties.attributes.unit_id.elevation`
+
+Read-Only:
+
+- `default_value` (String)
+- `max` (Number)
+- `min` (Number)
+- `precision` (Number)
+- `scale` (Number)
+- `unit_id` (String)
+
+
+<a id="nestedobjatt--content--properties--attributes--unit_id--latitude"></a>
+### Nested Schema for `content.properties.attributes.unit_id.latitude`
+
+Read-Only:
+
+- `default_value` (String)
+- `max` (Number)
+- `min` (Number)
+- `precision` (Number)
+- `scale` (Number)
+- `unit_id` (String)
+
+
+<a id="nestedobjatt--content--properties--attributes--unit_id--longitude"></a>
+### Nested Schema for `content.properties.attributes.unit_id.longitude`
+
+Read-Only:
+
+- `default_value` (String)
+- `max` (Number)
+- `min` (Number)
+- `precision` (Number)
+- `scale` (Number)
+- `unit_id` (String)
+
 
 
 
