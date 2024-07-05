@@ -13,16 +13,16 @@ variable "node_id" {
 
 data "leanspace_command_definitions" "all" {
   filters {
-    node_ids                    = [var.node_id]
-    node_types                  = ["ASSET"]
-    node_kinds                  = ["SATELLITE"]
+    node_ids = [var.node_id]
+    node_types = ["ASSET"]
+    node_kinds = ["SATELLITE"]
     with_arguments_and_metadata = true
-    ids                         = []
-    created_bys                 = []
+    ids = []
+    created_bys = []
     query                       = ""
     page                        = 0
     size                        = 10
-    sort                        = ["name,asc"]
+    sort = ["name,asc"]
   }
 }
 
@@ -146,8 +146,18 @@ resource "leanspace_command_definitions" "test" {
     description = "An enum input"
     attributes {
       default_value = 1
-      options       = { 1 = "test" }
+      options = { 1 = "test" }
       type          = "ENUM"
+      required      = true
+    }
+  }
+  arguments {
+    name        = "TestArgumentBinary"
+    identifier  = "BINARY"
+    description = "A binary input"
+    attributes {
+      default_value = "62696e617279"
+      type          = "BINARY"
       required      = true
     }
   }
@@ -269,7 +279,7 @@ resource "leanspace_command_definitions" "test" {
       unique        = false
       default_value = "1,2,3,1"
       constraint {
-        type    = "ENUM"
+        type = "ENUM"
         options = { 1 = "value1", 2 = "value2", 3 = "value3" }
       }
     }
@@ -286,9 +296,9 @@ resource "leanspace_command_definitions" "test" {
       unique        = true
       default_value = "62696e617279"
       constraint {
-        type = "BINARY"
-        min_length  = 1
-        max_length  = 10
+        type       = "BINARY"
+        min_length = 1
+        max_length = 10
       }
     }
   }

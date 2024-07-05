@@ -189,6 +189,82 @@ var PageableSchema = map[string]*schema.Schema{
 	},
 }
 
+func createGeoPointFieldsSchema(isValueField bool) map[string]*schema.Schema {
+    fieldSchema := baseAttributeFieldSchema(isValueField)
+    return map[string]*schema.Schema{
+        "latitude": {
+            Type:     schema.TypeList,
+            MaxItems: 1,
+            Required: true,
+            Elem: &schema.Resource{
+                Schema: fieldSchema,
+            },
+        },
+        "longitude": {
+            Type:     schema.TypeList,
+            MaxItems: 1,
+            Required: true,
+            Elem: &schema.Resource{
+                Schema: fieldSchema,
+            },
+        },
+        "elevation": {
+            Type:     schema.TypeList,
+            MaxItems: 1,
+            Required: true,
+            Elem: &schema.Resource{
+                Schema: fieldSchema,
+            },
+        },
+    }
+}
+
+var geoPointFieldsDefSchema = createGeoPointFieldsSchema(false)
+var geoPointFieldsSchema = createGeoPointFieldsSchema(true)
+
+func baseAttributeFieldSchema(isValueField bool) map[string]*schema.Schema {
+    baseSchema := map[string]*schema.Schema{
+        "scale": {
+            Type:        schema.TypeInt,
+            Optional:    true,
+            Description: "Property field with numeric type only: the scale required.",
+        },
+        "unit_id": {
+            Type:         schema.TypeString,
+            Optional:     true,
+            ValidateFunc: validation.IsUUID,
+            Description:  "Property field with numeric type only",
+        },
+        "min": {
+            Type:        schema.TypeFloat,
+            Optional:    true,
+            Description: "Property field with numeric type only: the minimum value allowed.",
+        },
+        "precision": {
+            Type:        schema.TypeInt,
+            Optional:    true,
+            Description: "Property field with numeric type only: How many values after the comma should be accepted",
+        },
+        "max": {
+            Type:        schema.TypeFloat,
+            Optional:    true,
+            Description: "Property field with numeric type only: the maximum value allowed.",
+        },
+    }
+    if isValueField {
+        baseSchema["value"] = &schema.Schema{
+            Type:     schema.TypeString,
+            Optional: true,
+        }
+    } else {
+        baseSchema["default_value"] = &schema.Schema{
+            Type:        schema.TypeString,
+            Optional:    true,
+        }
+    }
+    return baseSchema
+}
+
 var KeyValuesSchema = &schema.Schema{
 	Type:     schema.TypeSet,
 	Optional: true,
@@ -207,7 +283,7 @@ var KeyValuesSchema = &schema.Schema{
 }
 
 var ValidAttributeSchemaTypes = []string{
-	"NUMERIC", "BOOLEAN", "TEXT", "DATE", "TIME", "TIMESTAMP", "ENUM", "BINARY", "ARRAY",
+	"NUMERIC", "BOOLEAN", "TEXT", "DATE", "TIME", "TIMESTAMP", "ENUM", "BINARY", "ARRAY", "TLE", "GEOPOINT", "STRUCTURE",
 }
 
 func contains(slice []string, value string) bool {
@@ -318,6 +394,17 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string, fo
 			Description: "Enum only: The allowed values for the enum in the format 1 = \"value\"",
 		},
 
+		// Geopoint only
+		"fields": {
+			Type:     schema.TypeList,
+			MaxItems: 1,
+			Optional: true,
+			Elem: &schema.Resource{
+				Schema: geoPointFieldsDefSchema,
+			},
+			Description: "Geopoint only",
+		},
+
 		// Array
 		"min_size": {
 			Type:        schema.TypeInt,
@@ -381,23 +468,25 @@ func DefinitionAttributeArrayConstraintSchema(excludeTypes []string, excludeFiel
 			Type:     schema.TypeBool,
 			Optional: true,
 		},
-		// Text only
+		// Text & Binary
 		"max_length": {
 			Type:         schema.TypeInt,
 			Optional:     true,
 			ValidateFunc: validation.IntAtLeast(1),
 			Description:  "Only array elements with text type: Maximum length of this text (at least 1)",
 		},
-		"pattern": {
-			Type:        schema.TypeString,
-			Optional:    true,
-			Description: "Only array elements with text type: Regex defined the allowed pattern of this text",
-		},
 		"min_length": {
 			Type:         schema.TypeInt,
 			Optional:     true,
 			ValidateFunc: validation.IntAtLeast(1),
 			Description:  "Only array elements with text type: Minimum length of this text (at least 1)",
+		},
+
+		// Text only
+		"pattern": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Only array elements with text type: Regex defined the allowed pattern of this text",
 		},
 
 		// Numeric only
@@ -461,34 +550,56 @@ func DefinitionAttributeArrayConstraintSchema(excludeTypes []string, excludeFiel
 }
 
 var validMetadataTypes = []string{
-	"NUMERIC", "BOOLEAN", "TEXT", "DATE", "TIME", "TIMESTAMP", "ENUM", "BINARY", "ARRAY",
+	"NUMERIC", "BOOLEAN", "TEXT", "DATE", "TIME", "TIMESTAMP", "ENUM", "BINARY", "ARRAY", "TLE", "GEOPOINT", "STRUCTURE",
 }
 
 var validArraydataTypes = []string{
 	"NUMERIC", "BOOLEAN", "TEXT", "DATE", "TIME", "TIMESTAMP", "ENUM", "BINARY",
 }
 
-var ValueAttributeSchema = map[string]*schema.Schema{
-	"value": {
-		Type:     schema.TypeString,
-		Optional: true,
-	},
-	"type": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validMetadataTypes, false),
-		Description:  helper.AllowedValuesToDescription(validMetadataTypes),
-	},
-	"data_type": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.StringInSlice(validArraydataTypes, false),
-		Description:  helper.AllowedValuesToDescription(validArraydataTypes),
-	},
-	// Numeric only
-	"unit_id": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.IsUUID,
-	},
+func ValueAttributeSchema(excludeTypes []string) map[string]*schema.Schema {
+	validTypes := []string{}
+	for _, value := range validMetadataTypes {
+		if contains(excludeTypes, value) {
+			continue
+		}
+		validTypes = append(validTypes, value)
+	}
+
+	schema := map[string]*schema.Schema{
+		"value": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"type": {
+			Type:         schema.TypeString,
+			Required:     true,
+			ValidateFunc: validation.StringInSlice(validTypes, false),
+			Description:  helper.AllowedValuesToDescription(validTypes),
+		},
+		"data_type": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: validation.StringInSlice(validArraydataTypes, false),
+			Description:  helper.AllowedValuesToDescription(validArraydataTypes),
+		},
+		// Numeric only
+		"unit_id": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: validation.IsUUID,
+		},
+		// Geopoint only
+		"fields": {
+			Type:     schema.TypeList,
+			MaxItems: 1,
+			Optional: true,
+			Elem: &schema.Resource{
+				Schema: geoPointFieldsSchema,
+			},
+			Description: "Geopoint only",
+		},
+	}
+
+	return schema
 }
