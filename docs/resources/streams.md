@@ -590,7 +590,9 @@ Required:
 Optional:
 
 - `data_type` (String) Only required for fields, it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY
+- `elements` (Block List) Only required for switches and containers (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements))
 - `endianness` (String) Only required for fields, it must be one of these values: BE, LE
+- `expression` (Block List, Max: 1) Only required for switches (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression))
 - `length` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--length))
 - `processor` (String) Only required for fields
 - `repetitive` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--repetitive))
@@ -601,6 +603,259 @@ Read-Only:
 - `order` (Number) Position of this component in the current context
 - `path` (String) Path of this component in the current context
 - `valid` (Boolean)
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements`
+
+Required:
+
+- `name` (String)
+- `type` (String)
+
+Optional:
+
+- `data_type` (String) Only required for fields, it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY
+- `elements` (Block List) Only required for switches and containers (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements))
+- `endianness` (String) Only required for fields, it must be one of these values: BE, LE
+- `expression` (Block List, Max: 1) Only required for switches (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression))
+- `length` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--length))
+- `processor` (String) Only required for fields
+- `repetitive` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--repetitive))
+
+Read-Only:
+
+- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors))
+- `order` (Number) Position of this component in the current context
+- `path` (String) Path of this component in the current context
+- `valid` (Boolean)
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements`
+
+Required:
+
+- `name` (String)
+- `type` (String)
+
+Optional:
+
+- `data_type` (String) Only required for fields, it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY
+- `elements` (Block List) Only required for switches and containers (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements))
+- `endianness` (String) Only required for fields, it must be one of these values: BE, LE
+- `expression` (Block List, Max: 1) Only required for switches (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression))
+- `length` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--length))
+- `processor` (String) Only required for fields
+- `repetitive` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--repetitive))
+
+Read-Only:
+
+- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors))
+- `order` (Number) Position of this component in the current context
+- `path` (String) Path of this component in the current context
+- `valid` (Boolean)
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements`
+
+Required:
+
+- `name` (String)
+- `type` (String)
+
+Optional:
+
+- `data_type` (String) Only required for fields, it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY
+- `endianness` (String) Only required for fields, it must be one of these values: BE, LE
+- `length` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--length))
+- `processor` (String) Only required for fields
+- `repetitive` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--repetitive))
+
+Read-Only:
+
+- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors))
+- `order` (Number) Position of this component in the current context
+- `path` (String) Path of this component in the current context
+- `valid` (Boolean)
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--length"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.length`
+
+Required:
+
+- `type` (String) Type of the length, it must be one of these values: FIXED, DYNAMIC
+- `unit` (String) Unit of the length, it must be one of these values: BITS, BYTES
+
+Optional:
+
+- `path` (String)
+- `value` (Number)
+
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--repetitive"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.repetitive`
+
+Optional:
+
+- `path` (String)
+- `value` (Number)
+
+
+<a id="nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.errors`
+
+Read-Only:
+
+- `code` (String)
+- `message` (String)
+
+
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.expression`
+
+Required:
+
+- `options` (Block List, Min: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression--options))
+- `switch_on` (String) Path of the field that the switch will use
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression--options"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.expression.options`
+
+Required:
+
+- `component` (String)
+- `value` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression--options--value))
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression--options--value"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.expression.options.value`
+
+Required:
+
+- `data` (String)
+- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY
+
+
+
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--length"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.length`
+
+Required:
+
+- `type` (String) Type of the length, it must be one of these values: FIXED, DYNAMIC
+- `unit` (String) Unit of the length, it must be one of these values: BITS, BYTES
+
+Optional:
+
+- `path` (String)
+- `value` (Number)
+
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--repetitive"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.repetitive`
+
+Optional:
+
+- `path` (String)
+- `value` (Number)
+
+
+<a id="nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.errors`
+
+Read-Only:
+
+- `code` (String)
+- `message` (String)
+
+
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.expression`
+
+Required:
+
+- `options` (Block List, Min: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression--options))
+- `switch_on` (String) Path of the field that the switch will use
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression--options"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.expression.options`
+
+Required:
+
+- `component` (String)
+- `value` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression--options--value))
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression--options--value"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.expression.options.value`
+
+Required:
+
+- `data` (String)
+- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY
+
+
+
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--length"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.length`
+
+Required:
+
+- `type` (String) Type of the length, it must be one of these values: FIXED, DYNAMIC
+- `unit` (String) Unit of the length, it must be one of these values: BITS, BYTES
+
+Optional:
+
+- `path` (String)
+- `value` (Number)
+
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--repetitive"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.repetitive`
+
+Optional:
+
+- `path` (String)
+- `value` (Number)
+
+
+<a id="nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.errors`
+
+Read-Only:
+
+- `code` (String)
+- `message` (String)
+
+
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.expression`
+
+Required:
+
+- `options` (Block List, Min: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression--options))
+- `switch_on` (String) Path of the field that the switch will use
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression--options"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.expression.options`
+
+Required:
+
+- `component` (String)
+- `value` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression--options--value))
+
+<a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression--options--value"></a>
+### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.expression.options.value`
+
+Required:
+
+- `data` (String)
+- `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY
+
+
+
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--length"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.length`
