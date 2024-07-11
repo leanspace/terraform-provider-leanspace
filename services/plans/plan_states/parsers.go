@@ -1,4 +1,4 @@
-package plan_states
+package new_plan_states
 
 func (state *PlanState) ToMap() map[string]any {
 	stateMap := make(map[string]any)

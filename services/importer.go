@@ -16,17 +16,19 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/dashboards"
 	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/widgets"
 	"github.com/leanspace/terraform-provider-leanspace/services/events/events_definitions"
-	"github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/contact_reservation_status_mappings"
+	leaf_space_contact_reservation_status_mappings "github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/contact_reservation_status_mappings"
 	"github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/leaf_space_connections"
-	"github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/link/groundstation"
-	"github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/link/satellite"
+	leaf_space_groundstation_links "github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/link/groundstation"
+	leaf_space_satellite_links "github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/link/satellite"
 	"github.com/leanspace/terraform-provider-leanspace/services/metrics/metrics"
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/action_templates"
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/monitors"
 	"github.com/leanspace/terraform-provider-leanspace/services/orbits/orbits"
 	"github.com/leanspace/terraform-provider-leanspace/services/pass/contact_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/pass/pass_states"
-	"github.com/leanspace/terraform-provider-leanspace/services/plans/plan_states"
+	new_plan_states "github.com/leanspace/terraform-provider-leanspace/services/plans/plan_states"
+	"github.com/leanspace/terraform-provider-leanspace/services/plans/plan_templates"
+	plan_states "github.com/leanspace/terraform-provider-leanspace/services/plans/states"
 	"github.com/leanspace/terraform-provider-leanspace/services/plugins/plugins"
 	"github.com/leanspace/terraform-provider-leanspace/services/records/record_templates"
 	"github.com/leanspace/terraform-provider-leanspace/services/resources/resources"
@@ -64,6 +66,8 @@ func AddDataTypes() {
 	units.UnitDataType.Subscribe()
 	widgets.WidgetDataType.Subscribe()
 	plan_states.PlanStateDataType.Subscribe()
+	new_plan_states.NewPlanStateDataType.Subscribe()
+	plan_templates.PlanTemplateDataType.Subscribe()
 	pass_states.PassStateDataType.Subscribe()
 	contact_states.ContactStateDataType.Subscribe()
 	activity_states.ActivityStateDataType.Subscribe()

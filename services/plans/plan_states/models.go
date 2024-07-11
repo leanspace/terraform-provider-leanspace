@@ -1,4 +1,4 @@
-package plan_states
+package new_plan_states
 
 type PlanState struct {
 	ID             string `json:"id"`
