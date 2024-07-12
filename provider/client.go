@@ -75,7 +75,8 @@ func NewClient(host, env, tenant, clientId, clientSecret, region *string) (*Clie
 	}
 
 	c.Token = ar.Token
-	time.AfterFunc(58*time.Minute, func() {
+	scheduledTime := time.Duration(ar.ExpiresIn)*time.Second - 2*time.Minute
+	time.AfterFunc(scheduledTime, func() {
 		newClient, _ := NewClient(host, env, tenant, clientId, clientSecret, region)
 		c = *newClient
 	})
