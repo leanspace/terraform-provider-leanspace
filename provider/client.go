@@ -75,6 +75,10 @@ func NewClient(host, env, tenant, clientId, clientSecret, region *string) (*Clie
 	}
 
 	c.Token = ar.Token
+	time.AfterFunc(58*time.Minute, func() {
+		newClient, _ := NewClient(host, env, tenant, clientId, clientSecret, region)
+		c = *newClient
+	})
 
 	return &c, nil
 }
