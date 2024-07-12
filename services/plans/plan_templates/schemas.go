@@ -8,16 +8,17 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var nameRegex = regexp.MustCompile(`^[A-Z](?:[A-Z_]*[A-Z])?$`)
+var nameRegex = regexp.MustCompile(`^[a-zA-Z0-9_-]*$`)
 
 var planTemplateSchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
 		Computed: true,
 	},
-	"assetId": {
-		Type:     schema.TypeString,
-		Required: true,
+	"asset_id": {
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.IsUUID,
 	},
 	"name": {
 		Type:         schema.TypeString,
@@ -26,26 +27,26 @@ var planTemplateSchema = map[string]*schema.Schema{
 	},
 	"description": {
 		Type:         schema.TypeString,
-		Required:     false,
-		ValidateFunc: validation.StringLenBetween(1, 2000),
+		Optional:     true,
+		ValidateFunc: validation.StringLenBetween(0, 2000),
 	},
-	"integrityStatus": {
+	"integrity_status": {
 		Type:     schema.TypeString,
 		Computed: true,
 	},
-	"activityConfigs": {
-		Type:     schema.TypeList,
-		Required: true,
+	"activity_configs": {
+		Type:     schema.TypeSet,
+		Optional: true,
 		Elem: &schema.Resource{
 			Schema: activityConfigResultSchema,
 		},
 	},
-	"estimatedDurationInSeconds": {
+	"estimated_duration_in_seconds": {
 		Type:     schema.TypeInt,
 		Computed: true,
 	},
-	"invalidPlanTemplateReasons": {
-		Type:     schema.TypeList,
+	"invalid_plan_template_reasons": {
+		Type:     schema.TypeSet,
 		Computed: true,
 		Elem: &schema.Resource{
 			Schema: invalidPlanTemplateReasonSchema,
@@ -73,52 +74,68 @@ var planTemplateSchema = map[string]*schema.Schema{
 	},
 }
 
+// si position != 0, delay_reference_on_predecessor est requis
+
 var activityConfigResultSchema = map[string]*schema.Schema{
-	"activityDefinitionId": {
+	"activity_definition_id": {
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.IsUUID,
 	},
-	"delayReferenceOnPredecessor": {
-		Type: schema.TypeString,
+	"delay_reference_on_predecessor": {
+		Type:     schema.TypeString,
+		Optional: true,
 	},
+
 	"position": {
-		Type:         schema.TypeInt,
-		ValidateFunc: validation.IntBetween(0, 499),
-	},
-	"delayInSeconds": {
 		Type:         schema.TypeInt,
 		Required:     true,
 		ValidateFunc: validation.IntBetween(0, 499),
 	},
-	"estimatedDurationInSeconds": {
+
+	"delay_in_seconds": {
 		Type:         schema.TypeInt,
 		Required:     true,
 		ValidateFunc: validation.IntBetween(0, 86400),
 	},
+
+	"estimated_duration_in_seconds": {
+		Type:         schema.TypeInt,
+		Optional:     true,
+		ValidateFunc: validation.IntBetween(0, 86400),
+	},
+
 	"name": {
 		Type:         schema.TypeString,
+		Optional:     true,
 		ValidateFunc: validation.StringMatch(nameRegex, "Must be a valid name"),
 	},
+
 	"arguments": {
-		Type: schema.TypeList,
+		Type:     schema.TypeSet,
+		Optional: true,
 		Elem: &schema.Resource{
 			Schema: argumentSchema,
 		},
 	},
-	"resourceFunctionFormulas": {
-		Type: schema.TypeList,
+
+	"resource_function_formulas": {
+		Type:     schema.TypeSet,
+		Optional: true,
 		Elem: &schema.Resource{
 			Schema: resourceFunctionFormulaOverloadSchema,
 		},
 	},
+
 	"tags": general_objects.KeyValuesSchema,
-	"definitionLinkStatus": {
+
+	"definition_link_status": {
 		Type:     schema.TypeString,
 		Computed: true,
 	},
-	"invalidDefinitionLinkReasons": {
-		Type:     schema.TypeList,
+
+	"invalid_definition_link_reasons": {
+		Type:     schema.TypeSet,
 		Computed: true,
 		Elem: &schema.Resource{
 			Schema: invalidDefinitionLinkReasonSchema,
@@ -129,11 +146,11 @@ var activityConfigResultSchema = map[string]*schema.Schema{
 var invalidPlanTemplateReasonSchema = map[string]*schema.Schema{
 	"code": {
 		Type:     schema.TypeString,
-		Required: true,
+		Computed: true,
 	},
 	"message": {
 		Type:     schema.TypeString,
-		Required: true,
+		Computed: true,
 	},
 }
 
@@ -144,7 +161,7 @@ var argumentSchema = map[string]*schema.Schema{
 		ValidateFunc: validation.StringMatch(nameRegex, "Must be a valid name"),
 	},
 	"attributes": {
-		Type:     schema.TypeList,
+		Type:     schema.TypeSet,
 		Required: true,
 		MinItems: 1,
 		MaxItems: 1,
@@ -155,12 +172,14 @@ var argumentSchema = map[string]*schema.Schema{
 }
 
 var resourceFunctionFormulaOverloadSchema = map[string]*schema.Schema{
-	"resourceFunctionId": {
+	"resource_function_id": {
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.IsUUID,
 	},
 	"formula": {
+		Type:     schema.TypeSet,
+		Required: true,
 		Elem: &schema.Resource{
 			Schema: resourceFunctionFormulaSchema,
 		},
@@ -169,7 +188,8 @@ var resourceFunctionFormulaOverloadSchema = map[string]*schema.Schema{
 
 var resourceFunctionFormulaSchema = map[string]*schema.Schema{
 	"type": {
-		Type: schema.TypeString,
+		Type:     schema.TypeString,
+		Optional: true,
 	},
 }
 
