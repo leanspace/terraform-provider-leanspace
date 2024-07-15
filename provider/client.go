@@ -75,10 +75,10 @@ func NewClient(host, env, tenant, clientId, clientSecret, region *string) (*Clie
 	}
 
 	c.Token = ar.Token
-	scheduledTime := time.Duration(ar.ExpiresIn)*time.Second - 2*time.Minute // schedule before to avoid 401 between refresh
+	scheduledTime := time.Duration(ar.ExpiresIn)*time.Second - 2*time.Minute // schedule token refresh before expiration to avoid 401 while the token refreshes
 	go func(scheduledTime time.Duration) {
 		ticker := time.NewTicker(scheduledTime)
-		defer ticker.Stop()  // should never stop
+		defer ticker.Stop()  // should never be called as we never exit the function
 		for range ticker.C { // enters at each scheduledTime
 			authResponse, err := c.SignIn()
 			if err != nil {
