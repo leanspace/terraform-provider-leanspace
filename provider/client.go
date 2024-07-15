@@ -76,10 +76,17 @@ func NewClient(host, env, tenant, clientId, clientSecret, region *string) (*Clie
 
 	c.Token = ar.Token
 	scheduledTime := time.Duration(ar.ExpiresIn)*time.Second - 2*time.Minute
-	time.AfterFunc(scheduledTime, func() {
-		newClient, _ := NewClient(host, env, tenant, clientId, clientSecret, region)
-		c = *newClient
-	})
+	go func(scheduledTime time.Duration) {
+		ticker := time.NewTicker(scheduledTime)
+		defer ticker.Stop()
+		for range ticker.C {
+			authResponse, err := c.SignIn()
+			if err != nil {
+				return
+			}
+			c.Token = authResponse.Token
+		}
+	}(scheduledTime)
 
 	return &c, nil
 }
