@@ -29,45 +29,8 @@ func (planTemplate *PlanTemplate) ToMap() map[string]any {
 	planTemplateMap["last_modified_at"] = planTemplate.LastModifiedAt
 	planTemplateMap["last_modified_by"] = planTemplate.LastModifiedBy
 
+	helper.Logger.Printf("%s", planTemplateMap)
 	return planTemplateMap
-}
-
-func (planTemplate *PlanTemplate) FromMap(planTemplateMap map[string]any) error {
-
-	planTemplate.ID = planTemplateMap["id"].(string)
-	planTemplate.AssetId = planTemplateMap["asset_id"].(string)
-	planTemplate.Name = planTemplateMap["name"].(string)
-	planTemplate.Description = planTemplateMap["description"].(string)
-	planTemplate.IntegrityStatus = planTemplateMap["integrity_status"].(string)
-
-	if planTemplateMap["activity_configs"] != nil {
-		if activityConfigs, err := helper.ParseFromMaps[ActivityConfigResult](
-			planTemplateMap["activity_configs"].(*schema.Set).List(),
-		); err != nil {
-			return err
-		} else {
-			planTemplate.ActivityConfigs = activityConfigs
-		}
-	}
-
-	planTemplate.EstimatedDurationInSeconds = planTemplateMap["estimated_duration_in_seconds"].(int)
-
-	if planTemplateMap["invalid_plan_template_reasons"] != nil {
-		if invalidPlanTemplateReason, err := helper.ParseFromMaps[InvalidPlanTemplateReason](
-			planTemplateMap["invalid_plan_template_reasons"].(*schema.Set).List(),
-		); err != nil {
-			return err
-		} else {
-			planTemplate.InvalidPlanTemplateReasons = invalidPlanTemplateReason
-		}
-	}
-
-	planTemplate.CreatedAt = planTemplateMap["created_at"].(string)
-	planTemplate.CreatedBy = planTemplateMap["created_by"].(string)
-	planTemplate.LastModifiedAt = planTemplateMap["last_modified_at"].(string)
-	planTemplate.LastModifiedBy = planTemplateMap["last_modified_by"].(string)
-
-	return nil
 }
 
 func (activityConfigResult *ActivityConfigResult) ToMap() map[string]any {
@@ -83,62 +46,17 @@ func (activityConfigResult *ActivityConfigResult) ToMap() map[string]any {
 		activityConfigResultMap["arguments"] = helper.ParseToMaps(activityConfigResult.Arguments)
 	}
 
-	activityConfigResultMap["resource_function_formulas"] = []any{activityConfigResult.ResourceFunctionFormulas.ToMap()}
+	//if activityConfigResult.ResourceFunctionFormulas != nil {
+	//	activityConfigResultMap["resource_function_formulas"] = helper.ParseToMaps(activityConfigResult.ResourceFunctionFormulas)
+	//}
+
 	activityConfigResultMap["tags"] = activityConfigResult.Tags
 	activityConfigResultMap["definition_link_status"] = activityConfigResult.DefinitionLinkStatus
 
-	if activityConfigResult.InvalidDefinitionLinkReasons != nil {
-		activityConfigResultMap["invalid_definition_link_reasons"] = helper.ParseToMaps(activityConfigResult.InvalidDefinitionLinkReasons)
-	}
+	activityConfigResultMap["invalid_definition_link_reasons"] = helper.ParseToMaps(activityConfigResult.InvalidDefinitionLinkReasons)
 
 	return activityConfigResultMap
 
-}
-
-func (activityConfigResult *ActivityConfigResult) FromMap(activityConfigResultMap map[string]any) error {
-
-	activityConfigResult.ActivityDefinitionId = activityConfigResultMap["activity_definition_id"].(string)
-	activityConfigResult.DelayReferenceOnPredecessor = activityConfigResultMap["delay_reference_on_predecessor"].(string)
-	activityConfigResult.Position = activityConfigResultMap["position"].(int)
-	activityConfigResult.DelayInSeconds = activityConfigResultMap["delay_in_seconds"].(int)
-	activityConfigResult.EstimatedDurationInSeconds = activityConfigResultMap["estimated_duration_in_seconds"].(int)
-	activityConfigResult.Name = activityConfigResultMap["name"].(string)
-
-	if activityConfigResultMap["arguments"] != nil {
-		if arguments, err := helper.ParseFromMaps[Argument](
-			activityConfigResultMap["arguments"].(*schema.Set).List(),
-		); err != nil {
-			return err
-		} else {
-			activityConfigResult.Arguments = arguments
-		}
-	}
-
-	if len(activityConfigResultMap["resource_function_formulas"].([]any)) > 0 {
-		if err := activityConfigResult.ResourceFunctionFormulas.FromMap(activityConfigResultMap["resource_function_formulas"].([]any)[0].(map[string]any)); err != nil {
-			return err
-		}
-	}
-
-	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](activityConfigResultMap["tags"].(*schema.Set).List()); err != nil {
-		return err
-	} else {
-		activityConfigResult.Tags = tags
-	}
-
-	activityConfigResult.DefinitionLinkStatus = activityConfigResultMap["definition_link_status"].(string)
-
-	if activityConfigResultMap["invalid_definition_link_reasons"] != nil {
-		if invalidDefinitionLinkReasons, err := helper.ParseFromMaps[Argument](
-			activityConfigResultMap["invalid_definition_link_reasons"].(*schema.Set).List(),
-		); err != nil {
-			return err
-		} else {
-			activityConfigResult.Arguments = invalidDefinitionLinkReasons
-		}
-	}
-
-	return nil
 }
 
 func (invalidPlanTemplateReason *InvalidPlanTemplateReason) ToMap() map[string]any {
@@ -146,12 +64,6 @@ func (invalidPlanTemplateReason *InvalidPlanTemplateReason) ToMap() map[string]a
 	invalidPlanTemplateReasonMap["code"] = invalidPlanTemplateReason.Code
 	invalidPlanTemplateReasonMap["message"] = invalidPlanTemplateReason.Message
 	return invalidPlanTemplateReasonMap
-}
-
-func (invalidPlanTemplateReason *InvalidPlanTemplateReason) FromMap(invalidPlanTemplateReasonMap map[string]any) error {
-	invalidPlanTemplateReason.Code = invalidPlanTemplateReasonMap["code"].(string)
-	invalidPlanTemplateReason.Message = invalidPlanTemplateReasonMap["message"].(string)
-	return nil
 }
 
 func (argument *Argument) ToMap() map[string]any {
@@ -163,6 +75,116 @@ func (argument *Argument) ToMap() map[string]any {
 	}
 
 	return argumentMap
+}
+
+func (resourceFunctionFormulaOverload *ResourceFunctionFormulaOverload) ToMap() map[string]any {
+	resourceFunctionFormulaOverloadMap := make(map[string]any)
+	resourceFunctionFormulaOverloadMap["resource_function_id"] = resourceFunctionFormulaOverload.ResourceFunctionId
+	//resourceFunctionFormulaOverloadMap["formula"] = []map[string]any{resourceFunctionFormulaOverload.Formula.ToMap()}
+	return resourceFunctionFormulaOverloadMap
+}
+
+func (invalidDefinitionLinkReason *ResourceFunctionFormula) ToMap() map[string]any {
+	invalidDefinitionLinkMap := make(map[string]any)
+	invalidDefinitionLinkMap["type"] = invalidDefinitionLinkReason.Type
+	return invalidDefinitionLinkMap
+}
+
+func (invalidDefinitionLinkReason *InvalidDefinitionLinkReason) ToMap() map[string]any {
+	invalidDefinitionLinkMap := make(map[string]any)
+	invalidDefinitionLinkMap["code"] = invalidDefinitionLinkReason.Code
+	invalidDefinitionLinkMap["message"] = invalidDefinitionLinkReason.Message
+	return invalidDefinitionLinkMap
+}
+
+func (planTemplate *PlanTemplate) FromMap(planTemplateMap map[string]any) error {
+
+	planTemplate.ID = planTemplateMap["id"].(string)
+	planTemplate.AssetId = planTemplateMap["asset_id"].(string)
+	planTemplate.Name = planTemplateMap["name"].(string)
+	planTemplate.Description = planTemplateMap["description"].(string)
+	planTemplate.IntegrityStatus = planTemplateMap["integrity_status"].(string)
+
+	if planTemplateMap["activity_configs"] != nil {
+		if activityConfigs, err := helper.ParseFromMaps[ActivityConfigResult](
+			planTemplateMap["activity_configs"].([]any),
+		); err != nil {
+			return err
+		} else {
+			planTemplate.ActivityConfigs = activityConfigs
+		}
+	}
+
+	planTemplate.EstimatedDurationInSeconds = planTemplateMap["estimated_duration_in_seconds"].(int)
+
+	if planTemplateMap["invalid_plan_template_reasons"] != nil {
+		if invalidPlanTemplateReason, err := helper.ParseFromMaps[InvalidPlanTemplateReason](
+			planTemplateMap["invalid_plan_template_reasons"].([]any),
+		); err != nil {
+			return err
+		} else {
+			planTemplate.InvalidPlanTemplateReasons = invalidPlanTemplateReason
+		}
+	}
+
+	planTemplate.CreatedAt = planTemplateMap["created_at"].(string)
+	planTemplate.CreatedBy = planTemplateMap["created_by"].(string)
+	planTemplate.LastModifiedAt = planTemplateMap["last_modified_at"].(string)
+	planTemplate.LastModifiedBy = planTemplateMap["last_modified_by"].(string)
+
+	return nil
+}
+
+func (activityConfigResult *ActivityConfigResult) FromMap(activityConfigResultMap map[string]any) error {
+
+	activityConfigResult.ActivityDefinitionId = activityConfigResultMap["activity_definition_id"].(string)
+	activityConfigResult.DelayReferenceOnPredecessor = activityConfigResultMap["delay_reference_on_predecessor"].(string)
+	activityConfigResult.Position = activityConfigResultMap["position"].(int)
+	activityConfigResult.DelayInSeconds = activityConfigResultMap["delay_in_seconds"].(int)
+	activityConfigResult.EstimatedDurationInSeconds = activityConfigResultMap["estimated_duration_in_seconds"].(int)
+	activityConfigResult.Name = activityConfigResultMap["name"].(string)
+
+	//if activityConfigResultMap["arguments"] != nil {
+	//	if arguments, err := helper.ParseFromMaps[Argument](
+	//		activityConfigResultMap["argument_dargumentsefinitions"].(*schema.Set).List(),
+	//	); err != nil {
+	//		return err
+	//	} else {
+	//		activityConfigResult.Arguments = arguments
+	//	}
+	//}
+
+	//if activityConfigResultMap["resource_function_formulas"] != nil {
+	//	if resourceFunctionFormulaOverload, err := helper.ParseFromMaps[ResourceFunctionFormulaOverload](
+	//		activityConfigResultMap["resource_function_formulas"].([]any),
+	//	); err != nil {
+	//		return err
+	//	} else {
+	//		activityConfigResult.ResourceFunctionFormulas = resourceFunctionFormulaOverload
+	//	}
+	//}
+
+	//if tags, err := helper.ParseFromMaps[general_objects.KeyValue](activityConfigResultMap["tags"].([]any)); err != nil {
+	//	return err
+	//} else {
+	//	activityConfigResult.Tags = tags
+	//}
+
+	activityConfigResult.DefinitionLinkStatus = activityConfigResultMap["definition_link_status"].(string)
+
+	if invalidDefinitionLinkReasons, err := helper.ParseFromMaps[InvalidDefinitionLinkReason](activityConfigResultMap["invalid_definition_link_reasons"].(*schema.Set).List()); err != nil {
+		return err
+	} else {
+		activityConfigResult.InvalidDefinitionLinkReasons = invalidDefinitionLinkReasons
+	}
+
+	return nil
+}
+
+func (invalidPlanTemplateReason *InvalidPlanTemplateReason) FromMap(invalidPlanTemplateReasonMap map[string]any) error {
+	invalidPlanTemplateReason.Code = invalidPlanTemplateReasonMap["code"].(string)
+	invalidPlanTemplateReason.Message = invalidPlanTemplateReasonMap["message"].(string)
+	return nil
 }
 
 func (argument *Argument) FromMap(argumentMap map[string]any) error {
@@ -182,40 +204,22 @@ func (argument *Argument) FromMap(argumentMap map[string]any) error {
 	return nil
 }
 
-func (resourceFunctionFormulaOverload *ResourceFunctionFormulaOverload) ToMap() map[string]any {
-	resourceFunctionFormulaOverloadMap := make(map[string]any)
-	resourceFunctionFormulaOverloadMap["resource_function_id"] = resourceFunctionFormulaOverload.ResourceFunctionId
-	resourceFunctionFormulaOverloadMap["formula"] = []any{resourceFunctionFormulaOverload.Formula.ToMap()}
-	return resourceFunctionFormulaOverloadMap
-}
+func (resourceFunctionFormulaOverload *ResourceFunctionFormulaOverload) FromMap(resourceFunctionFormulaOverloadMap map[string]any) error {
+	resourceFunctionFormulaOverload.ResourceFunctionId = resourceFunctionFormulaOverloadMap["resource_function_id"].(string)
 
-func (invalidDefinitionLinkReason *ResourceFunctionFormulaOverload) FromMap(invalidDefinitionLinkMap map[string]any) error {
-	invalidDefinitionLinkReason.ResourceFunctionId = invalidDefinitionLinkMap["resource_function_id"].(string)
+	//if len(resourceFunctionFormulaOverloadMap["formula"].([]any)) > 0 && resourceFunctionFormulaOverloadMap["formula"].([]any)[0] != nil {
+	//	resourceFunctionFormulaOverload.Formula = new(ResourceFunctionFormula)
+	//	if err := resourceFunctionFormulaOverload.Formula.FromMap(resourceFunctionFormulaOverloadMap["formula"].([]any)[0].(map[string]any)); err != nil {
+	//		return err
+	//	}
+	//}
 
-	if len(invalidDefinitionLinkMap["formula"].([]any)) > 0 {
-		if err := invalidDefinitionLinkReason.Formula.FromMap(invalidDefinitionLinkMap["formula"].([]any)[0].(map[string]any)); err != nil {
-			return err
-		}
-	}
 	return nil
-}
-
-func (invalidDefinitionLinkReason *ResourceFunctionFormula) ToMap() map[string]any {
-	invalidDefinitionLinkMap := make(map[string]any)
-	invalidDefinitionLinkMap["type"] = invalidDefinitionLinkReason.Type
-	return invalidDefinitionLinkMap
 }
 
 func (invalidDefinitionLinkReason *ResourceFunctionFormula) FromMap(invalidDefinitionLinkMap map[string]any) error {
 	invalidDefinitionLinkReason.Type = invalidDefinitionLinkMap["type"].(string)
 	return nil
-}
-
-func (invalidDefinitionLinkReason *InvalidDefinitionLinkReason) ToMap() map[string]any {
-	invalidDefinitionLinkMap := make(map[string]any)
-	invalidDefinitionLinkMap["code"] = invalidDefinitionLinkReason.Code
-	invalidDefinitionLinkMap["message"] = invalidDefinitionLinkReason.Message
-	return invalidDefinitionLinkMap
 }
 
 func (invalidDefinitionLinkReason *InvalidDefinitionLinkReason) FromMap(invalidDefinitionLinkMap map[string]any) error {

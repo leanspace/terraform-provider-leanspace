@@ -35,7 +35,7 @@ var planTemplateSchema = map[string]*schema.Schema{
 		Computed: true,
 	},
 	"activity_configs": {
-		Type:     schema.TypeSet,
+		Type:     schema.TypeList,
 		Optional: true,
 		Elem: &schema.Resource{
 			Schema: activityConfigResultSchema,
@@ -46,7 +46,7 @@ var planTemplateSchema = map[string]*schema.Schema{
 		Computed: true,
 	},
 	"invalid_plan_template_reasons": {
-		Type:     schema.TypeSet,
+		Type:     schema.TypeList,
 		Computed: true,
 		Elem: &schema.Resource{
 			Schema: invalidPlanTemplateReasonSchema,
@@ -73,8 +73,6 @@ var planTemplateSchema = map[string]*schema.Schema{
 		Description: "Who modified it the last",
 	},
 }
-
-// si position != 0, delay_reference_on_predecessor est requis
 
 var activityConfigResultSchema = map[string]*schema.Schema{
 	"activity_definition_id": {
@@ -166,7 +164,7 @@ var argumentSchema = map[string]*schema.Schema{
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: general_objects.ValueAttributeSchema([]string{"NUMERIC", "TEXT", "BOOLEAN", "ENUM", "TIMESTAMP", "DATE", "TIME", "GEOPOINT", "BINARY", "ARRAY"}),
+			Schema: general_objects.ValueAttributeSchema([]string{"TLE", "STRUCTURE"}),
 		},
 	},
 }

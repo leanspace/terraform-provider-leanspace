@@ -20,17 +20,17 @@ type PlanTemplate struct {
 func (template *PlanTemplate) GetID() string { return template.ID }
 
 type ActivityConfigResult struct {
-	ActivityDefinitionId         string                          `json:"activityDefinitionId"`
-	DelayReferenceOnPredecessor  string                          `json:"delayReferenceOnPredecessor"`
-	Position                     int                             `json:"position"`
-	DelayInSeconds               int                             `json:"delayInSeconds"`
-	EstimatedDurationInSeconds   int                             `json:"estimatedDurationInSeconds"`
-	Name                         string                          `json:"name"`
-	Arguments                    []Argument                      `json:"arguments"`
-	ResourceFunctionFormulas     ResourceFunctionFormulaOverload `json:"resourceFunctionFormulas,omitempty"`
-	Tags                         []general_objects.KeyValue      `json:"tags,omitempty"`
-	DefinitionLinkStatus         string                          `json:"definitionLinkStatus"`
-	InvalidDefinitionLinkReasons []InvalidDefinitionLinkReason   `json:"invalidDefinitionLinkReasons"`
+	ActivityDefinitionId         string                            `json:"activityDefinitionId"`
+	DelayReferenceOnPredecessor  string                            `json:"delayReferenceOnPredecessor,omitempty"`
+	Position                     int                               `json:"position"`
+	DelayInSeconds               int                               `json:"delayInSeconds"`
+	EstimatedDurationInSeconds   int                               `json:"estimatedDurationInSeconds,omitempty"`
+	Name                         string                            `json:"name,omitempty"`
+	Arguments                    []Argument                        `json:"arguments,omitempty"`
+	ResourceFunctionFormulas     []ResourceFunctionFormulaOverload `json:"resourceFunctionFormulas,omitempty"`
+	Tags                         []general_objects.KeyValue        `json:"tags,omitempty"`
+	DefinitionLinkStatus         string                            `json:"definitionLinkStatus,omitempty"`
+	InvalidDefinitionLinkReasons []InvalidDefinitionLinkReason     `json:"invalidDefinitionLinkReasons,omitempty"`
 }
 
 type InvalidPlanTemplateReason struct {
@@ -44,12 +44,12 @@ type Argument struct {
 }
 
 type ResourceFunctionFormulaOverload struct {
-	ResourceFunctionId string                  `json:"resourceFunctionId"`
-	Formula            ResourceFunctionFormula `json:"formula"`
+	ResourceFunctionId string                   `json:"resourceFunctionId,omitempty"`
+	Formula            *ResourceFunctionFormula `json:"formula,omitempty"`
 }
 
 type ResourceFunctionFormula struct {
-	Type string `json:"type"`
+	Type string `json:"type,omitempty"`
 }
 
 type InvalidDefinitionLinkReason struct {
