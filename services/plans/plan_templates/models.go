@@ -39,8 +39,8 @@ type InvalidPlanTemplateReason struct {
 }
 
 type Argument struct {
-	Name       string                                `json:"name"`
-	Attributes []general_objects.ValueAttribute[any] `json:"attributes"`
+	Name       string                              `json:"name"`
+	Attributes general_objects.ValueAttribute[any] `json:"attributes"`
 }
 
 type ResourceFunctionFormulaOverload struct {

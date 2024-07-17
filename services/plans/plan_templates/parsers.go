@@ -50,7 +50,7 @@ func (activityConfigResult *ActivityConfigResult) ToMap() map[string]any {
 	//	activityConfigResultMap["resource_function_formulas"] = helper.ParseToMaps(activityConfigResult.ResourceFunctionFormulas)
 	//}
 
-	activityConfigResultMap["tags"] = activityConfigResult.Tags
+	activityConfigResultMap["tags"] = helper.ParseToMaps(activityConfigResult.Tags)
 	activityConfigResultMap["definition_link_status"] = activityConfigResult.DefinitionLinkStatus
 
 	activityConfigResultMap["invalid_definition_link_reasons"] = helper.ParseToMaps(activityConfigResult.InvalidDefinitionLinkReasons)
@@ -69,10 +69,7 @@ func (invalidPlanTemplateReason *InvalidPlanTemplateReason) ToMap() map[string]a
 func (argument *Argument) ToMap() map[string]any {
 	argumentMap := make(map[string]any)
 	argumentMap["name"] = argument.Name
-
-	if argument.Attributes != nil {
-		argumentMap["attributes"] = helper.ParseToMaps(argument.Attributes)
-	}
+	argumentMap["attributes"] = []any{argument.Attributes.ToMap()}
 
 	return argumentMap
 }
@@ -144,15 +141,15 @@ func (activityConfigResult *ActivityConfigResult) FromMap(activityConfigResultMa
 	activityConfigResult.EstimatedDurationInSeconds = activityConfigResultMap["estimated_duration_in_seconds"].(int)
 	activityConfigResult.Name = activityConfigResultMap["name"].(string)
 
-	//if activityConfigResultMap["arguments"] != nil {
-	//	if arguments, err := helper.ParseFromMaps[Argument](
-	//		activityConfigResultMap["argument_dargumentsefinitions"].(*schema.Set).List(),
-	//	); err != nil {
-	//		return err
-	//	} else {
-	//		activityConfigResult.Arguments = arguments
-	//	}
-	//}
+	if activityConfigResultMap["arguments"] != nil {
+		if arguments, err := helper.ParseFromMaps[Argument](
+			activityConfigResultMap["arguments"].(*schema.Set).List(),
+		); err != nil {
+			return err
+		} else {
+			activityConfigResult.Arguments = arguments
+		}
+	}
 
 	//if activityConfigResultMap["resource_function_formulas"] != nil {
 	//	if resourceFunctionFormulaOverload, err := helper.ParseFromMaps[ResourceFunctionFormulaOverload](
@@ -164,11 +161,11 @@ func (activityConfigResult *ActivityConfigResult) FromMap(activityConfigResultMa
 	//	}
 	//}
 
-	//if tags, err := helper.ParseFromMaps[general_objects.KeyValue](activityConfigResultMap["tags"].([]any)); err != nil {
-	//	return err
-	//} else {
-	//	activityConfigResult.Tags = tags
-	//}
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](activityConfigResultMap["tags"].(*schema.Set).List()); err != nil {
+		return err
+	} else {
+		activityConfigResult.Tags = tags
+	}
 
 	activityConfigResult.DefinitionLinkStatus = activityConfigResultMap["definition_link_status"].(string)
 
@@ -191,13 +188,9 @@ func (argument *Argument) FromMap(argumentMap map[string]any) error {
 
 	argument.Name = argumentMap["name"].(string)
 
-	if argumentMap["attributes"] != nil {
-		if attributes, err := helper.ParseFromMaps[general_objects.ValueAttribute[any]](
-			argumentMap["attributes"].(*schema.Set).List(),
-		); err != nil {
+	if len(argumentMap["attributes"].(*schema.Set).List()) > 0 {
+		if err := argument.Attributes.FromMap(argumentMap["attributes"].(*schema.Set).List()[0].(map[string]any)); err != nil {
 			return err
-		} else {
-			argument.Attributes = attributes
 		}
 	}
 

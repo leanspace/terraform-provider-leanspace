@@ -36,18 +36,18 @@ resource "leanspace_plan_templates" "created" {
     delay_in_seconds       = 5
     name = "marcActivityDefinitionTerraformFromPlanTemplate"
     arguments {
-      name = "testNumericArgument"
-      attributes {
-        type = "NUMERIC"
-        value = 56
-      }
-    }
-    arguments {
       name = "binaryArgument"
       attributes {
         type = "BINARY"
         value = "f6d9c3"
       }
+    }
+    tags {
+      key = "terraform"
+    }
+    tags {
+      key = "itworks"
+      value = "no"
     }
   }
 }
