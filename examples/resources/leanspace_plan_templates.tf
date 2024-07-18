@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    leanspace = {
-      source  = "leanspace/leanspace"
-    }
-  }
-}
-
 variable "asset_id" {
   type        = string
   description = "The ID of the asset to which the resource will be added."
@@ -19,28 +11,17 @@ variable "resource_function_id" {
   description = "The ID of the resource function linked to the activity definition if any"
 }
 
-data "leanspace_activity_definitions" "all" {
-  filters {
-    node_ids = [var.asset_id]
-    ids      = []
-    query    = ""
-    page     = 0
-    size     = 10
-    sort     = ["name,asc"]
-  }
-}
-
-resource "leanspace_plan_templates" "created" {
-  name = "marcPlanTemplateTerraform"
+resource "leanspace_plan_templates" "template" {
+  name = "TerraformPlanTemplate"
   asset_id = var.asset_id
-  description = "marcDescriptionTerraform"
+  description = "Terraform plan optional description"
   activity_configs {
     activity_definition_id = var.activity_definition_id
     position               = 0
     delay_in_seconds       = 5
-    name                   = "marcActivityDefinitionTerraformFromPlanTemplate"
+    name                   = "TerraformActivityTemplateLinkedToPlanTemplate"
     arguments {
-      name = "test3"
+      name = "TerraformArgumentNameIfPresentInActivity"
       attributes {
         type  = "NUMERIC"
         value = 10
@@ -48,10 +29,7 @@ resource "leanspace_plan_templates" "created" {
     }
     tags {
       key = "terraform"
-    }
-    tags {
-      key   = "itworks"
-      value = "yes"
+      value = "optionalValue"
     }
 
     resource_function_formulas {
@@ -63,8 +41,4 @@ resource "leanspace_plan_templates" "created" {
       resource_function_id = var.resource_function_id
     }
   }
-}
-
-output "created" {
-  value = leanspace_plan_templates.created
 }

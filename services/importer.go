@@ -28,7 +28,6 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/pass/pass_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/plans/plan_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/plans/plan_templates"
-	pass_plan_states "github.com/leanspace/terraform-provider-leanspace/services/plans/states"
 	"github.com/leanspace/terraform-provider-leanspace/services/plugins/plugins"
 	"github.com/leanspace/terraform-provider-leanspace/services/records/record_templates"
 	"github.com/leanspace/terraform-provider-leanspace/services/resources/resources"
@@ -65,7 +64,6 @@ func AddDataTypes() {
 	teams.TeamDataType.Subscribe()
 	units.UnitDataType.Subscribe()
 	widgets.WidgetDataType.Subscribe()
-	pass_plan_states.PassPlanStateDataType.Subscribe()
 	plan_states.PlanStateDataType.Subscribe()
 	plan_templates.PlanTemplateDataType.Subscribe()
 	pass_states.PassStateDataType.Subscribe()
