@@ -63,22 +63,22 @@ resource "leanspace_plan_templates" "template" {
 
 ### Required
 
-- `asset_id` (String) Id of the asset associated to the template
-- `name` (String) Name of the template
+- `asset_id` (String)
+- `name` (String)
 
 ### Optional
 
-- `activity_configs` (Block List) List of activity definitions registered in the template (see [below for nested schema](#nestedblock--activity_configs))
-- `description` (String) Template's description
+- `activity_configs` (Block List) (see [below for nested schema](#nestedblock--activity_configs))
+- `description` (String)
 
 ### Read-Only
 
 - `created_at` (String) When it was created
 - `created_by` (String) Who created it
-- `estimated_duration_in_seconds` (Number) Plan template estimated execution duration
-- `id` (String) Id of the plan template
-- `integrity_status` (String) Whether the template is valid ; values are VALID|INVALID
-- `invalid_plan_template_reasons` (List of Object) List of problems making the plan template invalid (see [below for nested schema](#nestedatt--invalid_plan_template_reasons))
+- `estimated_duration_in_seconds` (Number)
+- `id` (String) The ID of this resource.
+- `integrity_status` (String)
+- `invalid_plan_template_reasons` (List of Object) (see [below for nested schema](#nestedatt--invalid_plan_template_reasons))
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
 
@@ -87,23 +87,23 @@ resource "leanspace_plan_templates" "template" {
 
 Required:
 
-- `activity_definition_id` (String) Id of the linked activity definition
-- `delay_in_seconds` (Number) Delay to apply with the previous activity definition
-- `position` (Number) Position of this activity definition in the plan template
+- `activity_definition_id` (String)
+- `delay_in_seconds` (Number)
+- `position` (Number)
 
 Optional:
 
-- `arguments` (Block Set) Override of the activity definition's default argument values for this plan template (see [below for nested schema](#nestedblock--activity_configs--arguments))
-- `delay_reference_on_predecessor` (String) Whether to apply the delay with the previous activity at its start, or end ; values are ACTIVITY_START_TIME|ACTIVITY_END_TIME
-- `estimated_duration_in_seconds` (Number) Estimated duration of this activity definition
-- `name` (String) Name of the activity definition in this plan template
-- `resource_function_formulas` (Block Set) List of overloaded resource function formulas of this activity definition in the context of this plan template (see [below for nested schema](#nestedblock--activity_configs--resource_function_formulas))
+- `arguments` (Block Set) (see [below for nested schema](#nestedblock--activity_configs--arguments))
+- `delay_reference_on_predecessor` (String)
+- `estimated_duration_in_seconds` (Number)
+- `name` (String)
+- `resource_function_formulas` (Block Set) (see [below for nested schema](#nestedblock--activity_configs--resource_function_formulas))
 - `tags` (Block Set) (see [below for nested schema](#nestedblock--activity_configs--tags))
 
 Read-Only:
 
-- `definition_link_status` (String) Whether the activity definition is still valid ; values can be IN_SYNC|OUT_OF_SYNC
-- `invalid_definition_link_reasons` (Set of Object) If the activity definition link status is OUT_OF_SYNC, holds the reason ; values can be ACTIVITY_DEFINITION_DELETED|ARGUMENT_BECAME_INVALID (see [below for nested schema](#nestedatt--activity_configs--invalid_definition_link_reasons))
+- `definition_link_status` (String)
+- `invalid_definition_link_reasons` (Set of Object) (see [below for nested schema](#nestedatt--activity_configs--invalid_definition_link_reasons))
 
 <a id="nestedblock--activity_configs--arguments"></a>
 ### Nested Schema for `activity_configs.arguments`
@@ -193,9 +193,6 @@ Required:
 
 - `constant` (Number)
 - `rate` (Number)
-
-Optional:
-
 - `type` (String)
 
 
