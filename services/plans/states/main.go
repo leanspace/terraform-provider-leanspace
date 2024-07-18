@@ -1,9 +1,9 @@
-package plan_states
+package pass_plan_states
 
 import "github.com/leanspace/terraform-provider-leanspace/provider"
 
-var PlanStateDataType = provider.DataSourceType[PlanState, *PlanState]{
-	ResourceIdentifier: "leanspace_plan_states",
+var PassPlanStateDataType = provider.DataSourceType[PassPlanState, *PassPlanState]{
+	ResourceIdentifier: "leanspace_pass_plan_states",
 	Path:               "plans-repository/pass-plans/states",
 	Schema:             planStateSchema,
 	FilterSchema:       nil,

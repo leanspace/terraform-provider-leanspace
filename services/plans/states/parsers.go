@@ -1,6 +1,6 @@
-package plan_states
+package pass_plan_states
 
-func (state *PlanState) ToMap() map[string]any {
+func (state *PassPlanState) ToMap() map[string]any {
 	stateMap := make(map[string]any)
 	stateMap["id"] = state.ID
 	stateMap["name"] = state.Name
@@ -13,7 +13,7 @@ func (state *PlanState) ToMap() map[string]any {
 	return stateMap
 }
 
-func (state *PlanState) FromMap(stateMap map[string]any) error {
+func (state *PassPlanState) FromMap(stateMap map[string]any) error {
 	state.ID = stateMap["id"].(string)
 	state.Name = stateMap["name"].(string)
 	state.ReadOnly = stateMap["read_only"].(bool)

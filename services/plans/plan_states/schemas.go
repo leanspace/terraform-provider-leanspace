@@ -1,4 +1,4 @@
-package new_plan_states
+package plan_states
 
 import (
 	"regexp"

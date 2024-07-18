@@ -1,6 +1,6 @@
-package plan_states
+package pass_plan_states
 
-type PlanState struct {
+type PassPlanState struct {
 	ID             string `json:"id"`
 	Name           string `json:"name"`
 	ReadOnly       bool   `json:"readOnly"`
@@ -10,4 +10,4 @@ type PlanState struct {
 	LastModifiedBy string `json:"lastModifiedBy"`
 }
 
-func (state *PlanState) GetID() string { return state.ID }
+func (state *PassPlanState) GetID() string { return state.ID }
