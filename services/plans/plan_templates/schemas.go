@@ -187,7 +187,7 @@ var resourceFunctionFormulaOverloadSchema = map[string]*schema.Schema{
 var resourceFunctionFormulaSchema = map[string]*schema.Schema{
 	"type": {
 		Type:     schema.TypeString,
-		Optional: true,
+		Required: true,
 	},
 	"constant": {
 		Type:     schema.TypeFloat,
