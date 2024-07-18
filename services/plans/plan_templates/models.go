@@ -49,7 +49,9 @@ type ResourceFunctionFormulaOverload struct {
 }
 
 type ResourceFunctionFormula struct {
-	Type string `json:"type,omitempty"`
+	Constant float64 `json:"constant"`
+	Rate     float64 `json:"rate"`
+	Type     string  `json:"type"`
 }
 
 type InvalidDefinitionLinkReason struct {

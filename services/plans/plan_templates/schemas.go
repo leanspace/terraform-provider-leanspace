@@ -189,6 +189,14 @@ var resourceFunctionFormulaSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Optional: true,
 	},
+	"constant": {
+		Type:     schema.TypeFloat,
+		Required: true,
+	},
+	"rate": {
+		Type:     schema.TypeFloat,
+		Required: true,
+	},
 }
 
 var invalidDefinitionLinkReasonSchema = map[string]*schema.Schema{

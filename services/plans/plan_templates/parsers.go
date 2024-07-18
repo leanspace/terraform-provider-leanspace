@@ -46,9 +46,9 @@ func (activityConfigResult *ActivityConfigResult) ToMap() map[string]any {
 		activityConfigResultMap["arguments"] = helper.ParseToMaps(activityConfigResult.Arguments)
 	}
 
-	//if activityConfigResult.ResourceFunctionFormulas != nil {
-	//	activityConfigResultMap["resource_function_formulas"] = helper.ParseToMaps(activityConfigResult.ResourceFunctionFormulas)
-	//}
+	if activityConfigResult.ResourceFunctionFormulas != nil {
+		activityConfigResultMap["resource_function_formulas"] = helper.ParseToMaps(activityConfigResult.ResourceFunctionFormulas)
+	}
 
 	activityConfigResultMap["tags"] = helper.ParseToMaps(activityConfigResult.Tags)
 	activityConfigResultMap["definition_link_status"] = activityConfigResult.DefinitionLinkStatus
@@ -77,14 +77,16 @@ func (argument *Argument) ToMap() map[string]any {
 func (resourceFunctionFormulaOverload *ResourceFunctionFormulaOverload) ToMap() map[string]any {
 	resourceFunctionFormulaOverloadMap := make(map[string]any)
 	resourceFunctionFormulaOverloadMap["resource_function_id"] = resourceFunctionFormulaOverload.ResourceFunctionId
-	//resourceFunctionFormulaOverloadMap["formula"] = []map[string]any{resourceFunctionFormulaOverload.Formula.ToMap()}
+	resourceFunctionFormulaOverloadMap["formula"] = []map[string]any{resourceFunctionFormulaOverload.Formula.ToMap()}
 	return resourceFunctionFormulaOverloadMap
 }
 
-func (invalidDefinitionLinkReason *ResourceFunctionFormula) ToMap() map[string]any {
-	invalidDefinitionLinkMap := make(map[string]any)
-	invalidDefinitionLinkMap["type"] = invalidDefinitionLinkReason.Type
-	return invalidDefinitionLinkMap
+func (formula *ResourceFunctionFormula) ToMap() map[string]any {
+	formulaMap := make(map[string]any)
+	formulaMap["type"] = formula.Type
+	formulaMap["constant"] = formula.Constant
+	formulaMap["rate"] = formula.Rate
+	return formulaMap
 }
 
 func (invalidDefinitionLinkReason *InvalidDefinitionLinkReason) ToMap() map[string]any {
@@ -151,15 +153,15 @@ func (activityConfigResult *ActivityConfigResult) FromMap(activityConfigResultMa
 		}
 	}
 
-	//if activityConfigResultMap["resource_function_formulas"] != nil {
-	//	if resourceFunctionFormulaOverload, err := helper.ParseFromMaps[ResourceFunctionFormulaOverload](
-	//		activityConfigResultMap["resource_function_formulas"].([]any),
-	//	); err != nil {
-	//		return err
-	//	} else {
-	//		activityConfigResult.ResourceFunctionFormulas = resourceFunctionFormulaOverload
-	//	}
-	//}
+	if activityConfigResultMap["resource_function_formulas"] != nil {
+		if resourceFunctionFormulaOverload, err := helper.ParseFromMaps[ResourceFunctionFormulaOverload](
+			activityConfigResultMap["resource_function_formulas"].(*schema.Set).List(),
+		); err != nil {
+			return err
+		} else {
+			activityConfigResult.ResourceFunctionFormulas = resourceFunctionFormulaOverload
+		}
+	}
 
 	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](activityConfigResultMap["tags"].(*schema.Set).List()); err != nil {
 		return err
@@ -200,23 +202,25 @@ func (argument *Argument) FromMap(argumentMap map[string]any) error {
 func (resourceFunctionFormulaOverload *ResourceFunctionFormulaOverload) FromMap(resourceFunctionFormulaOverloadMap map[string]any) error {
 	resourceFunctionFormulaOverload.ResourceFunctionId = resourceFunctionFormulaOverloadMap["resource_function_id"].(string)
 
-	//if len(resourceFunctionFormulaOverloadMap["formula"].([]any)) > 0 && resourceFunctionFormulaOverloadMap["formula"].([]any)[0] != nil {
-	//	resourceFunctionFormulaOverload.Formula = new(ResourceFunctionFormula)
-	//	if err := resourceFunctionFormulaOverload.Formula.FromMap(resourceFunctionFormulaOverloadMap["formula"].([]any)[0].(map[string]any)); err != nil {
-	//		return err
-	//	}
-	//}
+	if len(resourceFunctionFormulaOverloadMap["formula"].(*schema.Set).List()) > 0 && resourceFunctionFormulaOverloadMap["formula"].(*schema.Set).List()[0] != nil {
+		resourceFunctionFormulaOverload.Formula = new(ResourceFunctionFormula)
+		if err := resourceFunctionFormulaOverload.Formula.FromMap(resourceFunctionFormulaOverloadMap["formula"].(*schema.Set).List()[0].(map[string]any)); err != nil {
+			return err
+		}
+	}
 
 	return nil
 }
 
-func (invalidDefinitionLinkReason *ResourceFunctionFormula) FromMap(invalidDefinitionLinkMap map[string]any) error {
-	invalidDefinitionLinkReason.Type = invalidDefinitionLinkMap["type"].(string)
+func (formula *ResourceFunctionFormula) FromMap(formulaMap map[string]any) error {
+	formula.Type = formulaMap["type"].(string)
+	formula.Constant = formulaMap["constant"].(float64)
+	formula.Rate = formulaMap["rate"].(float64)
 	return nil
 }
 
-func (invalidDefinitionLinkReason *InvalidDefinitionLinkReason) FromMap(invalidDefinitionLinkMap map[string]any) error {
-	invalidDefinitionLinkReason.Code = invalidDefinitionLinkMap["code"].(string)
-	invalidDefinitionLinkReason.Message = invalidDefinitionLinkMap["message"].(string)
+func (invalidDefinitionLinkReason *InvalidDefinitionLinkReason) FromMap(invalidDefinitionLinReasonMap map[string]any) error {
+	invalidDefinitionLinkReason.Code = invalidDefinitionLinReasonMap["code"].(string)
+	invalidDefinitionLinkReason.Message = invalidDefinitionLinReasonMap["message"].(string)
 	return nil
 }
