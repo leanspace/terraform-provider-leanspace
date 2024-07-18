@@ -97,16 +97,14 @@ func (c *Client) SignIn() (*AuthResponse, error) {
 		return nil, fmt.Errorf("define client id and client secret")
 	}
 
-	cognitoURL := fmt.Sprintf("https://%s-%s.auth.%s.amazoncognito.com/oauth2/token?scope=https://api.leanspace.io/READ&grant_type=client_credentials", c.Auth.Tenant, c.Auth.Env, c.Auth.Region)
-	if strings.HasPrefix(c.Auth.Region, "us-gov") {
-		cognitoURL = fmt.Sprintf("https://%s-%s.auth-fips.%s.amazoncognito.com/oauth2/token?scope=https://api.leanspace.io/READ&grant_type=client_credentials", c.Auth.Tenant, c.Auth.Env, c.Auth.Region)
-	}
+	tokenUrl := fmt.Sprintf("%s/teams-repository/oauth2/token?tenant=%s", c.HostURL, c.Auth.Tenant)
 
-	req, err := http.NewRequest("POST", cognitoURL, strings.NewReader("Content-Type=application%2Fx-www-form-urlencoded"))
+	payload := strings.NewReader(fmt.Sprintf("client_id=%s&client_secret=%s&grant_type=client_credentials", c.Auth.ClientId, c.Auth.ClientSecret))
+
+	req, err := http.NewRequest("POST", tokenUrl, payload)
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Add("Authorization", "Basic "+basicAuth(c.Auth.ClientId, c.Auth.ClientSecret))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	body, err, _ := c.DoRequest(req, nil)
