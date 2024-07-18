@@ -19,6 +19,7 @@ var planTemplateSchema = map[string]*schema.Schema{
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.IsUUID,
+		ForceNew:     true,
 	},
 	"name": {
 		Type:         schema.TypeString,
