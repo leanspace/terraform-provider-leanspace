@@ -173,8 +173,12 @@ module "units" {
   source = "./asset/units"
 }
 
-module "plans" {
-  source = "./plans/states"
+module "plan_states" {
+  source = "./plans/plan_states"
+}
+
+module "plan_templates" {
+  source = "./plans/plan_templates"
 }
 
 module "routes" {

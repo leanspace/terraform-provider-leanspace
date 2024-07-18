@@ -27,6 +27,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/pass/contact_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/pass/pass_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/plans/plan_states"
+	"github.com/leanspace/terraform-provider-leanspace/services/plans/plan_templates"
 	"github.com/leanspace/terraform-provider-leanspace/services/plugins/plugins"
 	"github.com/leanspace/terraform-provider-leanspace/services/records/record_templates"
 	"github.com/leanspace/terraform-provider-leanspace/services/resources/resources"
@@ -64,6 +65,7 @@ func AddDataTypes() {
 	units.UnitDataType.Subscribe()
 	widgets.WidgetDataType.Subscribe()
 	plan_states.PlanStateDataType.Subscribe()
+	plan_templates.PlanTemplateDataType.Subscribe()
 	pass_states.PassStateDataType.Subscribe()
 	contact_states.ContactStateDataType.Subscribe()
 	activity_states.ActivityStateDataType.Subscribe()
