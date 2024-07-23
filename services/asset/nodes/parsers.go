@@ -1,14 +1,10 @@
 package nodes
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
-	"github.com/leanspace/terraform-provider-leanspace/provider"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/properties"
-	"net/http"
 )
 
 var NORAD_ID = "NORAD ID"
@@ -71,14 +67,14 @@ func (node *Node) FromMap(nodeMap map[string]any) error {
 		}
 	}
 	var propertylist []properties.Property[any]
-	if nodeMap["norad_id"] != nil {
+	if nodeMap["norad_id"] != "" {
 		noradInfo := properties.Property[any]{}
 		noradInfo.Attributes.Type = "TEXT"
 		noradInfo.Attributes.Value = nodeMap["norad_id"].(string)
 		noradInfo.Name = NORAD_ID
 		propertylist = append(propertylist, noradInfo)
 	}
-	if nodeMap["international_designator"] != nil {
+	if nodeMap["international_designator"] != "" {
 		internationalDesignatorInfo := properties.Property[any]{}
 		internationalDesignatorInfo.Attributes.Type = "TEXT"
 		internationalDesignatorInfo.Attributes.Value = nodeMap["international_designator"].(string)
@@ -114,67 +110,4 @@ func (node *Node) FromMap(nodeMap map[string]any) error {
 	node.PropertyList = propertylist
 
 	return nil
-}
-
-func (node *Node) PostReadProcess(client *provider.Client, destNodeRaw any) error {
-	createdNode := destNodeRaw.(*Node)
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/asset-repository/properties/v2?category=BUILT_IN_PROPERTIES_ONLY&nodeIds=%s", client.HostURL, createdNode.ID), nil)
-	if err != nil {
-		return err
-	}
-	body, err, _ := client.DoRequest(req, &(client).Token)
-	if err != nil {
-		return err
-	}
-
-	dataMap := make(map[string]any)
-	err = json.Unmarshal(body, &dataMap)
-	if err != nil {
-		return err
-	}
-	builtInProperties := dataMap["content"].([]any)
-	for _, property := range builtInProperties {
-		if property.(map[string]any)["name"] == NORAD_ID {
-			attributeProperites := property.(map[string]any)["attributes"].(map[string]any)
-			if attributeProperites["value"] != nil {
-				createdNode.NoradId = attributeProperites["value"].(string)
-			}
-		}
-		if property.(map[string]any)["name"] == "TLE" {
-			attributeProperites := property.(map[string]any)["attributes"].(map[string]any)
-			var strList []string
-			if attributeProperites["value"] != nil {
-				for _, v := range attributeProperites["value"].([]interface{}) {
-					str, ok := v.(string)
-					if !ok {
-						fmt.Println("Failed to convert interface{} to string")
-						return nil
-					}
-					strList = append(strList, str)
-				}
-				createdNode.Tle = strList
-			}
-		}
-		if property.(map[string]any)["name"] == INTERNATIONAL_DESIGNATOR {
-			attributeProperites := property.(map[string]any)["attributes"].(map[string]any)
-			if attributeProperites["value"] != nil {
-				createdNode.InternationalDesignator = attributeProperites["value"].(string)
-			}
-		}
-		if property.(map[string]any)["name"] == LOCATION_COORDINATES {
-			attributeProperites := property.(map[string]any)["attributes"].(map[string]any)
-			field := attributeProperites["fields"].(map[string]any)
-			if field["latitude"].(map[string]any)["value"] != nil {
-				createdNode.Latitude = field["latitude"].(map[string]any)["value"].(float64)
-			}
-			if field["longitude"].(map[string]any)["value"] != nil {
-				createdNode.Longitude = field["longitude"].(map[string]any)["value"].(float64)
-			}
-			if field["elevation"].(map[string]any)["value"] != nil {
-				createdNode.Elevation = field["elevation"].(map[string]any)["value"].(float64)
-			}
-		}
-	}
-	return nil
-
 }

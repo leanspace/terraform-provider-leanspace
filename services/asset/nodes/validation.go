@@ -2,6 +2,7 @@ package nodes
 
 import (
 	"fmt"
+
 	. "github.com/leanspace/terraform-provider-leanspace/helper"
 )
 
@@ -12,7 +13,11 @@ var nodeValidators = Validators{
 	),
 	If(
 		Not(Equals("kind", "SATELLITE")),
-		Or(Not(IsSet("tle")), IsEmpty("tle")),
+		And(Or(Not(IsSet("tle")), IsEmpty("tle")), Not(IsSet("norad_id")), Not(IsSet("international_designator"))),
+	),
+	If(
+		Not(Equals("kind", "GROUND_STATION")),
+		And(Not(IsSet("latitude")), Not(IsSet("longitude")), Not(IsSet("elevation"))),
 	),
 	If(
 		And(IsSet("tle"), Not(IsEmpty("tle"))),
