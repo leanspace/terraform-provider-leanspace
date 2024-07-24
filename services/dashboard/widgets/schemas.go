@@ -1,6 +1,8 @@
 package widgets
 
 import (
+	"regexp"
+
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
@@ -9,11 +11,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-var validWidgetTypes = []string{"TABLE", "LINE", "BAR", "AREA", "VALUE", "RESOURCES"}
+var validWidgetTypes = []string{"TABLE", "LINE", "BAR", "AREA", "VALUE", "RESOURCES", "EARTH", "GAUGE", "ENUM"}
 var validGranularities = []string{"second", "minute", "hour", "day", "week", "month", "raw"}
-var validDatasources = []string{"metric", "raw_stream", "resources"}
+var validDatasources = []string{"metric", "raw_stream", "resources", "topology"}
 var validAggregations = []string{"avg", "count", "sum", "min", "max", "none"}
 var validFilterOperators = []string{"gt", "lt", "equals", "notEquals"}
+
+var colorRegex = regexp.MustCompile(`^#(?:[0-9a-fA-F]{3}){1,2}$`)
 
 var widgetSchema = map[string]*schema.Schema{
 	"id": {
@@ -156,6 +160,35 @@ var metadataSchema = map[string]*schema.Schema{
 		Elem: &schema.Schema{
 			Type: schema.TypeFloat,
 		},
+	},
+	"thresholds": {
+		Type:        schema.TypeList,
+		Optional:    true,
+		MinItems:    1,
+		MaxItems:    10,
+		Description: "The threshold applies only to the Gauge widget.",
+		Elem: &schema.Resource{
+			Schema: thresholdSchema,
+		},
+	},
+}
+
+/*
+From and to are strings so that they can be nil.
+*/
+var thresholdSchema = map[string]*schema.Schema{
+	"from": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"to": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"color": {
+		Type:         schema.TypeString,
+		ValidateFunc: validation.StringMatch(colorRegex, "Must be a valid hex color"),
+		Required:     true,
 	},
 }
 
