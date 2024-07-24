@@ -26,6 +26,31 @@ variable "value_widget_id" {
   description = "The ID of the value widget to display."
 }
 
+variable "enum_widget_id" {
+  type        = string
+  description = "The ID of the enum widget to display."
+}
+
+variable "earth_widget_id" {
+  type        = string
+  description = "The ID of the earth widget to display."
+}
+
+variable "gauge_widget_id" {
+  type        = string
+  description = "The ID of the gauge widget to display."
+}
+
+variable "bar_widget_id" {
+  type        = string
+  description = "The ID of the bar widget to display."
+}
+
+variable "area_widget_id" {
+  type        = string
+  description = "The ID of the area widget to display."
+}
+
 data "leanspace_dashboards" "all" {
   filters {
     node_ids   = var.attached_node_ids
@@ -72,6 +97,56 @@ resource "leanspace_dashboards" "test" {
     h     = 13
     min_w = 2
     min_h = 13
+  }
+  widget_info {
+    id    = var.enum_widget_id
+    type  = "TABLE"
+    x     = 0
+    y     = 2
+    w     = 1
+    h     = 5
+    min_w = 1
+    min_h = 5
+  }
+  widget_info {
+    id    = var.earth_widget_id
+    type  = "TABLE"
+    x     = 1
+    y     = 2
+    w     = 1
+    h     = 5
+    min_w = 1
+    min_h = 5
+  }
+  widget_info {
+    id    = var.gauge_widget_id
+    type  = "TABLE"
+    x     = 2
+    y     = 2
+    w     = 1
+    h     = 10
+    min_w = 1
+    min_h = 10
+  }
+  widget_info {
+    id    = var.bar_widget_id
+    type  = "TABLE"
+    x     = 0
+    y     = 3
+    w     = 1
+    h     = 5
+    min_w = 1
+    min_h = 5
+  }
+  widget_info {
+    id    = var.area_widget_id
+    type  = "TABLE"
+    x     = 1
+    y     = 3
+    w     = 1
+    h     = 5
+    min_w = 1
+    min_h = 5
   }
   tags {
     key   = "Mission"

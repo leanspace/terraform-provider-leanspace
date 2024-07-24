@@ -150,7 +150,7 @@ resource "leanspace_widgets" "test_bar" {
   series {
     id          = "error_code"
     datasource  = "raw_stream"
-    aggregation = "avg"
+    aggregation = "count"
     filters {
       filter_by = "error_code"
       operator  = "notEquals"

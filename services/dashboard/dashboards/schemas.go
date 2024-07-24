@@ -252,6 +252,29 @@ var metadataSchema = map[string]*schema.Schema{
 			Type: schema.TypeFloat,
 		},
 	},
+	"thresholds": {
+		Type:        schema.TypeList,
+		Computed:    true,
+		Description: "The threshold applies only to the Gauge widget.",
+		Elem: &schema.Resource{
+			Schema: thresholdSchema,
+		},
+	},
+}
+
+var thresholdSchema = map[string]*schema.Schema{
+	"from": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"to": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"color": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
 }
 
 var dashboardInfoSchema = map[string]*schema.Schema{

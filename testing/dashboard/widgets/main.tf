@@ -173,7 +173,7 @@ resource "leanspace_widgets" "test_bar" {
   series {
     id          = "error_code"
     datasource  = "raw_stream"
-    aggregation = "avg"
+    aggregation = "count"
     filters {
       filter_by = "error_code"
       operator  = "notEquals"
@@ -254,6 +254,18 @@ output "test_table_widget" {
 
 output "test_line_widget" {
   value = leanspace_widgets.test_line
+}
+
+output "test_enum_widget" {
+  value = leanspace_widgets.test_enum
+}
+
+output "test_earth_widget" {
+  value = leanspace_widgets.test_earth
+}
+
+output "test_gauge_widget" {
+  value = leanspace_widgets.test_gauge
 }
 
 output "test_bar_widget" {

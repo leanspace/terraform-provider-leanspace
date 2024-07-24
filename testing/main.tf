@@ -80,7 +80,7 @@ module "widgets" {
   numeric_metric_id = module.metrics.test_numeric_metric.id
   enum_metric_id = module.metrics.test_enum_metric.id
   resource_id       = module.resources.a_resource.id
-  topology_id = module.nodes.satellite_node.id
+  topology_id = module.nodes.groundstation_node.id
   depends_on = [
     module.metrics
   ]
@@ -91,6 +91,11 @@ module "dashboards" {
   table_widget_id   = module.widgets.test_table_widget.id
   value_widget_id   = module.widgets.test_value_widget.id
   line_widget_id    = module.widgets.test_line_widget.id
+  enum_widget_id    = module.widgets.test_enum_widget.id
+  earth_widget_id   = module.widgets.test_earth_widget.id
+  gauge_widget_id   = module.widgets.test_gauge_widget.id
+  bar_widget_id     = module.widgets.test_bar_widget.id
+  area_widget_id    = module.widgets.test_area_widget.id
   attached_node_ids = [module.nodes.satellite_node.id]
   depends_on = [
     module.widgets,
