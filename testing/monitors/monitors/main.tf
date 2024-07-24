@@ -34,7 +34,7 @@ data "leanspace_monitors" "all" {
 
 resource "leanspace_monitors" "test_greater_than_monitor" {
   name                         = "Terraform Monitor 1"
-  description                  = "A monitor created throug terraform."
+  description                  = "A monitor created through terraform."
   metric_id                    = var.metric_id
   rule {
     comparison_operator  = "GREATER_THAN"
@@ -50,7 +50,7 @@ resource "leanspace_monitors" "test_greater_than_monitor" {
 
 resource "leanspace_monitors" "test_equals_monitor" {
   name                         = "Terraform Monitor 2"
-  description                  = "Another monitor created throug terraform."
+  description                  = "Another monitor created through terraform."
   metric_id                    = var.metric_id
   rule {
     comparison_operator  = "NOT_EQUAL_TO"
