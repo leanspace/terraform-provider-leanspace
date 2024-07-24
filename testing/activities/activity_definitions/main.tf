@@ -197,8 +197,7 @@ resource "leanspace_activity_definitions" "test" {
     attributes {
       default_value = 1
       options = {
-        1 = "test1"
-        2 = "test3"
+        1 = "test"
       }
       type     = "ENUM"
       required = true

@@ -40,10 +40,10 @@ resource "leanspace_plan_templates" "created" {
     delay_in_seconds       = 5
     name                   = "marcActivityDefinitionTerraformFromPlanTemplate"
     arguments {
-      name = "test3"
+      name = "ActivityArgumentNumeric"
       attributes {
-        type  = "NUMERIC"
-        value = 10
+      value = "10"
+      type  = "NUMERIC"
       }
     }
     tags {
