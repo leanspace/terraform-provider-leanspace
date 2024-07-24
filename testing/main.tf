@@ -18,25 +18,25 @@ module "nodes" {
 }
 
 module "properties" {
-  source     = "./asset/properties"
-  node_id    = module.nodes.satellite_node.id
+  source  = "./asset/properties"
+  node_id = module.nodes.satellite_node.id
   depends_on = [
     module.nodes
   ]
 }
 
 module "command_definitions" {
-  source     = "./commands/command_definitions"
-  node_id    = module.nodes.satellite_node.id
+  source  = "./commands/command_definitions"
+  node_id = module.nodes.satellite_node.id
   depends_on = [
     module.nodes
   ]
 }
 
 module "metrics" {
-  source     = "./metrics/metrics"
-  node_id    = module.nodes.satellite_node.id
-  unit_id    = module.units.test_units["k"].id
+  source  = "./metrics/metrics"
+  node_id = module.nodes.satellite_node.id
+  unit_id = module.units.test_units["k"].id
   depends_on = [
     module.nodes,
     module.units
@@ -47,14 +47,14 @@ module "command_queues" {
   source             = "./commands/command_queues"
   asset_id           = module.nodes.satellite_node.id
   ground_station_ids = [module.nodes.groundstation_node.id]
-  depends_on         = [
+  depends_on = [
     module.nodes
   ]
 }
 
 module "release_queues" {
-  source     = "./commands/release_queues"
-  asset_id   = module.nodes.satellite_node.id
+  source   = "./commands/release_queues"
+  asset_id = module.nodes.satellite_node.id
   depends_on = [
     module.nodes
   ]
@@ -68,7 +68,7 @@ module "streams" {
   source            = "./streams/streams"
   asset_id          = module.nodes.satellite_node.id
   numeric_metric_id = module.metrics.test_numeric_metric.id
-  depends_on        = [
+  depends_on = [
     module.nodes,
     module.metrics
   ]
@@ -79,7 +79,7 @@ module "widgets" {
   text_metric_id    = module.metrics.test_text_metric.id
   numeric_metric_id = module.metrics.test_numeric_metric.id
   resource_id       = module.resources.a_resource.id
-  depends_on        = [
+  depends_on = [
     module.metrics
   ]
 }
@@ -90,7 +90,7 @@ module "dashboards" {
   value_widget_id   = module.widgets.test_value_widget.id
   line_widget_id    = module.widgets.test_line_widget.id
   attached_node_ids = [module.nodes.satellite_node.id]
-  depends_on        = [
+  depends_on = [
     module.widgets,
     module.nodes
   ]
@@ -101,7 +101,7 @@ module "remote_agents" {
   ground_station_id = module.nodes.groundstation_node.id
   command_queue_id  = module.command_queues.test_command_queue.id
   stream_id         = module.streams.test_stream.id
-  depends_on        = [
+  depends_on = [
     module.nodes,
     module.command_queues,
     module.streams
@@ -116,7 +116,7 @@ module "members" {
   source          = "./teams/members"
   usernames       = ["TerraPaul", "TerraCotta", "TerraKium"]
   access_policies = [module.access_policies.test_access_policy.id]
-  depends_on      = [
+  depends_on = [
     module.access_policies
   ]
 }
@@ -125,7 +125,7 @@ module "service_accounts" {
   source          = "./teams/service_accounts"
   usernames       = ["TerraBot 1", "TerraBot 2", "TerraBot 3"]
   access_policies = [module.access_policies.test_access_policy.id]
-  depends_on      = [
+  depends_on = [
     module.access_policies
   ]
 }
@@ -134,7 +134,7 @@ module "teams" {
   source          = "./teams/teams"
   members         = [for member in module.members.test_members : member.id]
   access_policies = [module.access_policies.test_access_policy.id]
-  depends_on      = [
+  depends_on = [
     module.access_policies,
     module.members
   ]
@@ -144,7 +144,7 @@ module "activity_definitions" {
   source             = "./activities/activity_definitions"
   node_id            = module.nodes.satellite_node.id
   command_definition = module.command_definitions.test_command_definition
-  depends_on         = [
+  depends_on = [
     module.nodes,
     module.command_definitions
   ]
@@ -178,7 +178,15 @@ module "plan_states" {
 }
 
 module "plan_templates" {
-  source = "./plans/plan_templates"
+  source                 = "./plans/plan_templates"
+  asset_id               = module.nodes.satellite_node.id
+  activity_definition_id = module.activity_definitions.test_activity_definition.id
+  resource_function_id   = module.resource_functions.a_resource_function.id
+  depends_on = [
+    module.nodes,
+    module.activity_definitions,
+    module.resource_functions
+  ]
 }
 
 module "routes" {
@@ -194,15 +202,15 @@ module "processors" {
 module "orbits" {
   source       = "./orbits/orbits"
   satellite_id = module.nodes.satellite_node.id
-  depends_on   = [
+  depends_on = [
     module.nodes
   ]
 }
 
 module "resources" {
-  source     = "./resources/resources"
-  asset_id   = module.nodes.satellite_node.id
-  metric_id  = module.metrics.test_numeric_metric.id
+  source    = "./resources/resources"
+  asset_id  = module.nodes.satellite_node.id
+  metric_id = module.metrics.test_numeric_metric.id
   depends_on = [
     module.nodes,
     module.metrics
@@ -213,15 +221,15 @@ module "resource_functions" {
   source                 = "./activities/resource_functions"
   resource_id            = module.resources.a_resource.id
   activity_definition_id = module.activity_definitions.test_activity_definition.id
-  depends_on             = [
+  depends_on = [
     module.activity_definitions,
     module.resources
   ]
 }
 
 module "record_templates" {
-  source     = "./records/record_templates"
-  node_id    = module.nodes.satellite_node.id
+  source  = "./records/record_templates"
+  node_id = module.nodes.satellite_node.id
   depends_on = [
     module.nodes,
     module.metrics

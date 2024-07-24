@@ -27,11 +27,11 @@ variable "command_definition" {
 data "leanspace_activity_definitions" "all" {
   filters {
     node_ids = [var.node_id]
-    ids = []
-    query = ""
-    page  = 0
-    size  = 10
-    sort = ["name,asc"]
+    ids      = []
+    query    = ""
+    page     = 0
+    size     = 10
+    sort     = ["name,asc"]
   }
 }
 
@@ -197,8 +197,7 @@ resource "leanspace_activity_definitions" "test" {
     attributes {
       default_value = 1
       options = {
-        1 = "test1"
-        2 = "test3"
+        1 = "test"
       }
       type     = "ENUM"
       required = true

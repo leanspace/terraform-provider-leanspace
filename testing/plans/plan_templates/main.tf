@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     leanspace = {
-      source  = "leanspace/leanspace"
+      source = "leanspace/leanspace"
     }
   }
 }
@@ -31,8 +31,8 @@ data "leanspace_activity_definitions" "all" {
 }
 
 resource "leanspace_plan_templates" "created" {
-  name = "marcPlanTemplateTerraform"
-  asset_id = var.asset_id
+  name        = "marcPlanTemplateTerraform"
+  asset_id    = var.asset_id
   description = "marcDescriptionTerraform"
   activity_configs {
     activity_definition_id = var.activity_definition_id
@@ -40,10 +40,10 @@ resource "leanspace_plan_templates" "created" {
     delay_in_seconds       = 5
     name                   = "marcActivityDefinitionTerraformFromPlanTemplate"
     arguments {
-      name = "test3"
+      name = "ActivityArgumentNumeric"
       attributes {
+        value = "10"
         type  = "NUMERIC"
-        value = 10
       }
     }
     tags {

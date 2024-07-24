@@ -9,12 +9,12 @@ variable "action_template_ids" {
 }
 
 resource "leanspace_monitors" "test_greater_than_monitor" {
-  name                         = "Terraform Monitor 1"
-  description                  = "A monitor created throug terraform."
-  metric_id                    = var.metric_id
+  name        = "Terraform Monitor 1"
+  description = "A monitor created throug terraform."
+  metric_id   = var.metric_id
   rule {
-    comparison_operator  = "GREATER_THAN"
-    comparison_value     = 200
+    comparison_operator = "GREATER_THAN"
+    comparison_value    = 200
   }
   action_template_ids = var.action_template_ids
   tags {
@@ -25,13 +25,13 @@ resource "leanspace_monitors" "test_greater_than_monitor" {
 
 
 resource "leanspace_monitors" "test_equals_monitor" {
-  name                         = "Terraform Monitor 2"
-  description                  = "Another monitor created throug terraform."
-  metric_id                    = var.metric_id
+  name        = "Terraform Monitor 2"
+  description = "Another monitor created throug terraform."
+  metric_id   = var.metric_id
   rule {
-    comparison_operator  = "NOT_EQUAL_TO"
-    comparison_value     = 120
-    tolerance            = 10
+    comparison_operator = "NOT_EQUAL_TO"
+    comparison_value    = 120
+    tolerance           = 10
   }
   action_template_ids = var.action_template_ids
   tags {
