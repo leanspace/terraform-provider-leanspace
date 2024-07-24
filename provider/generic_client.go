@@ -229,6 +229,11 @@ func (client GenericClient[T, PT]) Update(elementId string, updateElement PT) (P
 }
 
 func (client GenericClient[T, PT]) Delete(elementId string, element PT) error {
+	if preDelete, ok := any(element).(PreDeleteModel); ok {
+		if err := preDelete.PreDeleteProcess(client.Client, element); err != nil {
+			return err
+		}
+	}
 	path := fmt.Sprintf("%s/%s", client.Path, elementId)
 	if client.DeletePath != nil {
 		path = client.DeletePath(elementId)

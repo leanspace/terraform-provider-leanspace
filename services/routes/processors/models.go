@@ -19,4 +19,12 @@ type ProcessorUrl struct {
 	Expires string `json:"expires"`
 }
 
+type AttachedRoute struct {
+	Content []AttachedRouteContent `json:"content"`
+}
+
+type AttachedRouteContent struct {
+	ID string `json:"id"`
+}
+
 func (processor *Processor) GetID() string { return processor.ID }
