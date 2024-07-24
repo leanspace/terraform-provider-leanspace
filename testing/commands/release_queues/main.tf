@@ -13,24 +13,24 @@ variable "asset_id" {
 
 data "leanspace_release_queues" "all" {
   filters {
-    asset_ids                       = [var.asset_id]
-    command_transformer_plugin_ids  = []
-    ids                             = []
-    logical_lock                    = true
-    query                           = ""
-    page                            = 0
-    size                            = 10
-    sort                            = ["name,asc"]
+    asset_ids                      = [var.asset_id]
+    command_transformer_plugin_ids = []
+    ids                            = []
+    logical_lock                   = true
+    query                          = ""
+    page                           = 0
+    size                           = 10
+    sort                           = ["name,asc"]
   }
 }
 
 resource "leanspace_release_queues" "test" {
-  name                            = "Terraform Release Queue"
-  asset_id                        = var.asset_id
-  command_transformation_strategy = "TEST"
+  name                                          = "Terraform Release Queue"
+  asset_id                                      = var.asset_id
+  command_transformation_strategy               = "TEST"
   command_transformer_plugin_configuration_data = "{ \"key\" = \"value\" }"
   global_transmission_metadata {
-    key = "mykey"
+    key   = "mykey"
     value = "myvalue"
   }
 }

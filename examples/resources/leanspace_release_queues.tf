@@ -8,7 +8,7 @@ resource "leanspace_release_queues" "test" {
   asset_id                        = var.asset_id
   command_transformation_strategy = "TEST"
   global_transmission_metadata {
-    key = "mykey"
+    key   = "mykey"
     value = "myvalue"
   }
 }

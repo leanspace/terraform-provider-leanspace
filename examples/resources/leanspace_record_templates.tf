@@ -9,7 +9,7 @@ variable "rt_metric_id" {
 }
 
 resource "leanspace_record_templates" "record_template" {
-  name = "TERRAFORM_RECORD_TEMPLATE"
-  node_ids = [var.rt_node_id]
+  name       = "TERRAFORM_RECORD_TEMPLATE"
+  node_ids   = [var.rt_node_id]
   metric_ids = [var.rt_metric_id]
 }

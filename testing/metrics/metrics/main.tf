@@ -35,8 +35,8 @@ resource "leanspace_metrics" "test_numeric" {
   node_id     = var.node_id
 
   attributes {
-    type = "NUMERIC"
-    unit_id     = var.unit_id
+    type    = "NUMERIC"
+    unit_id = var.unit_id
   }
 }
 
