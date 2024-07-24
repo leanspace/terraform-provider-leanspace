@@ -8,9 +8,19 @@ variable "numeric_metric_id" {
   description = "The ID of the numeric metric to create widgets for."
 }
 
+variable "enum_metric_id" {
+  type        = string
+  description = "The ID of the enum metric to create widgets for."
+}
+
 variable "resource_id" {
   type        = string
   description = "The ID of the text resources to create widgets for."
+}
+
+variable "topology_id" {
+  type        = string
+  description = "The ID of the asset to create widgets for."
 }
 
 resource "leanspace_widgets" "test_table" {
@@ -54,6 +64,84 @@ resource "leanspace_widgets" "test_line" {
   }
 }
 
+resource "leanspace_widgets" "test_enum" {
+  name        = "Terraform Enum Widget"
+  description = "An enum widget created with Terraform"
+  type        = "ENUM"
+  granularity = "second"
+  series {
+    id          = var.enum_metric_id
+    datasource  = "metric"
+    aggregation = "avg"
+    filters {
+      filter_by = var.enum_metric_id
+      operator  = "gt"
+      value     = 3
+    }
+  }
+  metadata {
+    y_axis_range_max = [100]
+    y_axis_label     = "This is a label"
+  }
+  tags {
+    key   = "Mission"
+    value = "Terraform"
+  }
+}
+
+resource "leanspace_widgets" "test_earth" {
+  name        = "Terraform Earth Widget"
+  description = "An earth widget created with Terraform"
+  type        = "EARTH"
+  granularity = "second"
+  series {
+    id          = var.topology_id
+    datasource  = "topology"
+    aggregation = "count"
+  }
+  metadata {
+    y_axis_range_max = [100]
+    y_axis_label     = "This is a label"
+  }
+  tags {
+    key   = "Mission"
+    value = "Terraform"
+  }
+}
+
+resource "leanspace_widgets" "test_gauge" {
+  name        = "Terraform Gauge Widget"
+  description = "A gauge widget created with Terraform"
+  type        = "GAUGE"
+  granularity = "second"
+  series {
+    id          = var.numeric_metric_id
+    datasource  = "metric"
+    aggregation = "avg"
+  }
+  metadata {
+    y_axis_range_max = [100]
+    y_axis_label     = "This is a label"
+    thresholds {
+      to    = 49
+      color = "#52C31A"
+    }
+    thresholds {
+      from  = 49
+      to    = 500
+      color = "#FAAD14"
+    }
+    thresholds {
+      from  = 500
+      color = "#FF4D4F"
+    }
+  }
+  tags {
+    key   = "Mission"
+    value = "Terraform"
+  }
+}
+
 resource "leanspace_widgets" "test_bar" {
   name        = "Terraform Bar Widget"
   description = "A bar widget created with Terraform"
@@ -62,7 +150,7 @@ resource "leanspace_widgets" "test_bar" {
   series {
     id          = "error_code"
     datasource  = "raw_stream"
-    aggregation = "avg"
+    aggregation = "count"
     filters {
       filter_by = "error_code"
       operator  = "notEquals"

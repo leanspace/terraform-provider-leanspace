@@ -1,6 +1,8 @@
 package widgets
 
 import (
+	"strconv"
+
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
@@ -48,6 +50,7 @@ func (metadata *Metadata) ToMap() map[string]any {
 	min_set, max_set := false, false
 	metadataMap := make(map[string]any)
 	metadataMap["y_axis_label"] = metadata.YAxisLabel
+	metadataMap["thresholds"] = helper.ParseToMaps(metadata.Thresholds)
 	if metadata.YAxisRange != nil && len(metadata.YAxisRange) == 2 {
 		if metadata.YAxisRange[0] != nil {
 			metadataMap["y_axis_range_min"] = []any{metadata.YAxisRange[0]}
@@ -62,6 +65,22 @@ func (metadata *Metadata) ToMap() map[string]any {
 		return nil
 	}
 	return metadataMap
+}
+
+func (threshold *Threshold) ToMap() map[string]any {
+	thresoldMap := make(map[string]any)
+	if threshold.From != nil {
+		from := *threshold.From
+		fromInString := strconv.FormatFloat(from, 'g', -1, 64)
+		thresoldMap["from"] = fromInString
+	}
+	if threshold.To != nil {
+		to := *threshold.To
+		toInString := strconv.FormatFloat(to, 'g', -1, 64)
+		thresoldMap["to"] = toInString
+	}
+	thresoldMap["color"] = threshold.Color
+	return thresoldMap
 }
 
 func (dashboardInfo *DashboardInfo) ToMap() map[string]any {
@@ -127,6 +146,13 @@ func (metadata *Metadata) FromMap(metadataMap map[string]any) error {
 	metadata.YAxisLabel = metadataMap["y_axis_label"].(string)
 
 	metadata.YAxisRange = make([]*float64, 2)
+	if len(metadataMap["thresholds"].([]any)) > 0 {
+		if thresholds, err := helper.ParseFromMaps[Threshold](metadataMap["thresholds"].([]any)); err != nil {
+			return err
+		} else {
+			metadata.Thresholds = thresholds
+		}
+	}
 	if min, exists := metadataMap["y_axis_range_min"]; exists {
 		if len(min.([]any)) == 1 {
 			min := min.([]any)[0].(float64)
@@ -139,6 +165,21 @@ func (metadata *Metadata) FromMap(metadataMap map[string]any) error {
 			metadata.YAxisRange[1] = &max
 		}
 	}
+	return nil
+}
+
+func (thresold *Threshold) FromMap(thresoldMap map[string]any) error {
+	from := thresoldMap["from"].(string)
+	fromInFloat, _ := strconv.ParseFloat(from, 64)
+	to := thresoldMap["to"].(string)
+	toInFloat, _ := strconv.ParseFloat(to, 64)
+	if from != "" {
+		thresold.From = &fromInFloat
+	}
+	if to != "" {
+		thresold.To = &toInFloat
+	}
+	thresold.Color = thresoldMap["color"].(string)
 	return nil
 }
 

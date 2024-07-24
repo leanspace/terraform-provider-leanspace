@@ -34,8 +34,15 @@ type Filter struct {
 }
 
 type Metadata struct {
-	YAxisLabel string     `json:"yAxisLabel"`
-	YAxisRange []*float64 `json:"yAxisRange"`
+	YAxisLabel string      `json:"yAxisLabel"`
+	YAxisRange []*float64  `json:"yAxisRange"`
+	Thresholds []Threshold `json:"thresholds"`
+}
+
+type Threshold struct {
+	From  *float64 `json:"from,omitempty"`
+	To    *float64 `json:"to,omitempty"`
+	Color string   `json:"color"`
 }
 
 type DashboardInfo struct {
