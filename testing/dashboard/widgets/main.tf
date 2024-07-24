@@ -146,17 +146,17 @@ resource "leanspace_widgets" "test_gauge" {
     y_axis_range_max = [100]
     y_axis_label     = "This is a label"
     thresholds {
-        to   = 49
-        color = "#52C31A"
+      to    = 49
+      color = "#52C31A"
     }
     thresholds {
-        from = 49
-        to   = 500
-        color = "#FAAD14"
+      from  = 49
+      to    = 500
+      color = "#FAAD14"
     }
     thresholds {
-        from = 500
-        color = "#FF4D4F"
+      from  = 500
+      color = "#FF4D4F"
     }
   }
   tags {
