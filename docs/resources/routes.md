@@ -32,8 +32,8 @@ resource "leanspace_routes" "test_create_route" {
         - to:
             uri: 'log:yaml'
 EOT
-)
-    log_level     = "INFO"
+    )
+    log_level = "INFO"
   }
   processor_ids = var.processor_ids
   tags {

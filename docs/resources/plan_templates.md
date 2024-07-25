@@ -26,8 +26,8 @@ variable "resource_function_id" {
 }
 
 resource "leanspace_plan_templates" "template" {
-  name = "TerraformPlanTemplate"
-  asset_id = var.asset_id
+  name        = "TerraformPlanTemplate"
+  asset_id    = var.asset_id
   description = "Terraform plan optional description"
   activity_configs {
     activity_definition_id = var.activity_definition_id
@@ -42,7 +42,7 @@ resource "leanspace_plan_templates" "template" {
       }
     }
     tags {
-      key = "terraform"
+      key   = "terraform"
       value = "optionalValue"
     }
 

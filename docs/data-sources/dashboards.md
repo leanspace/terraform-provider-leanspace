@@ -129,9 +129,20 @@ Read-Only:
 
 Read-Only:
 
+- `thresholds` (List of Object) (see [below for nested schema](#nestedobjatt--content--widgets--metadata--thresholds))
 - `y_axis_label` (String)
 - `y_axis_range_max` (List of Number)
 - `y_axis_range_min` (List of Number)
+
+<a id="nestedobjatt--content--widgets--metadata--thresholds"></a>
+### Nested Schema for `content.widgets.metadata.y_axis_range_min`
+
+Read-Only:
+
+- `color` (String)
+- `from` (String)
+- `to` (String)
+
 
 
 <a id="nestedobjatt--content--widgets--metrics"></a>

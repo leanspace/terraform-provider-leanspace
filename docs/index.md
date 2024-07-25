@@ -75,3 +75,7 @@ one of the two resources.
 We perform a trimming on all text, therefore is it recommanded to avoid 
 having spaces at the start and the end of your text. Otherwise terraform 
 will inform you that there is changes to be made even though there isn't any.
+
+> 6.0.0 : Breaking change, previous "plan_states" were linked to the deprecated service "pass-plans/state"
+> It is now linked to the correct service "plans/states"
+> Last version using deprecated plan_states : 5.8.2
