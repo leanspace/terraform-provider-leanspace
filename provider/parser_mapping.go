@@ -56,6 +56,13 @@ type PostUpdateModel interface {
 	PostUpdateProcess(*Client, any) error
 }
 
+type PreDeleteModel interface {
+	// An optional extra function that is called before this instance was delete remotely by terraform.
+	// Extra requests (e.g. detaching linked entity) can be done here to allow for the deletion of the resource,
+	// as this method is exclusively called before the resource is deleted..
+	PreDeleteProcess(*Client, any) error
+}
+
 type PostDeleteModel interface {
 	// An optional extra function that is called after this instance was delete remotely by terraform.
 	// Extra requests (e.g. a cleanup) can be done here, as this method is exclusively called after the resource

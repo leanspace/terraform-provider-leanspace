@@ -4,8 +4,8 @@ This repository enables the use of Terraform for the different services of Leans
 
 ## Requirements
 
-- terraform (`choco install terraform` (windows) or `brew install terraform` (mac)): >=1.5.0
-- go (for plugin development): >=1.20
+- terraform (`choco install terraform` (windows) or `brew install hashicorp/tap/terraform` (mac)): >=1.5.0
+- go (for plugin development): >=1.22
 
 ## Supported platform
 
@@ -49,7 +49,6 @@ These platforms are defined in `.goreleaser.yml`.
 }
 ```
 
-- Compile your code by doing `make install -e DEBUG=true`
 - In VSCode, start "Debug Terraform Provider"
 - It will output something like `TF_REATTACH_PROVIDERS='{"registry.terraform.io/my-org/my-provider":{"Protocol":"grpc","Pid":3382870,"Test":true,"Addr":{"Network":"unix","String":"/tmp/plugin713096927"}}}'` in the Debug Console Tab
 - Export this variable by doing `export TF_REATTACH_PROVIDERS=[...]`

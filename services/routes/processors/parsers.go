@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
@@ -80,6 +81,46 @@ func (processor *Processor) PostCreateProcess(_ *provider.Client, destProcessorR
 	createdProcessor := destProcessorRaw.(*Processor)
 	processor.persistFilePath(createdProcessor)
 	return processor.persistFileSha(createdProcessor)
+}
+
+type apiValidProcessors struct {
+	ProcessorIds []string `json:"processorIds"`
+}
+
+func (processor *Processor) PreDeleteProcess(client *provider.Client, destProcessorRaw any) error {
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/routes-repository/processors/%s/routes", client.HostURL, processor.ID), nil)
+	if err != nil {
+		return err
+	}
+
+	body, err, _ := client.DoRequest(req, &(client).Token)
+	if err != nil {
+		return err
+	}
+	var element AttachedRoute
+	err = json.Unmarshal(body, &element)
+	if err != nil {
+		return err
+	}
+	processorsIds, err := json.Marshal(apiValidProcessors{ProcessorIds: []string{processor.ID}})
+	if err != nil {
+		return err
+	}
+
+	for _, route := range element.Content {
+		req, err = http.NewRequest("PUT", fmt.Sprintf("%s/routes-repository/routes/%s/processors", client.HostURL, route.ID), strings.NewReader(string(processorsIds)))
+		req.Header.Set("Content-Type", "application/json")
+		if err != nil {
+			return err
+		}
+
+		_, err, _ := client.DoRequest(req, &(client).Token)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 func (processor *Processor) PostUpdateProcess(_ *provider.Client, destProcessorRaw any) error {
 	return processor.PostCreateProcess(nil, destProcessorRaw)
