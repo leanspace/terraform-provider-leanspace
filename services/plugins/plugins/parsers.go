@@ -106,8 +106,8 @@ func (plugin *Plugin) PostCreateProcess(client *provider.Client, destPluginRaw a
 	return nil
 }
 
-func (plugin *Plugin) PostUpdateProcess(_ *provider.Client, destPluginRaw any) error {
-	return plugin.PostCreateProcess(nil, destPluginRaw)
+func (plugin *Plugin) PostUpdateProcess(client *provider.Client, destPluginRaw any) error {
+	return plugin.PostCreateProcess(client, destPluginRaw)
 }
 func (plugin *Plugin) PostReadProcess(client *provider.Client, destPluginRaw any) error {
 	createdPlugin := destPluginRaw.(*Plugin)
