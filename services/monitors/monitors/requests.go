@@ -21,7 +21,7 @@ func (actionTemplateLink *ActionTemplateLink) toAPIFormat() ([]byte, error) {
 }
 
 func (monitor *Monitor) actionTemplateChange(action string, actionTemplateLink ActionTemplateLink, client *provider.Client) error {
-	data, err := actionTemplateLink.toAPIFormat()
+	data, err := actionTemplateLink.toAPIFormat() // ignored when deleting
 	if err != nil {
 		return err
 	}

@@ -19,10 +19,7 @@ var validComparisonOperators = []string{
 	"NOT_EQUAL_TO",
 }
 
-var validTriggeredOn = []string{
-	"TRIGGERED",
-	"OK",
-}
+var actionTemplateSchema = action_templates.MakeActionTemplateSchema(true)
 
 var monitorSchema = map[string]*schema.Schema{
 	"id": {
@@ -101,70 +98,6 @@ var monitorSchema = map[string]*schema.Schema{
 	},
 }
 
-var actionTemplateSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
-		Computed: true,
-	},
-	"name": {
-		Type:     schema.TypeString,
-		Required: true,
-	},
-	"type": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		Default:      "WEBHOOK",
-		ValidateFunc: validation.StringInSlice(action_templates.ValidTypes, false),
-		Description:  helper.AllowedValuesToDescription(action_templates.ValidTypes),
-	},
-	"url": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.IsURLWithHTTPorHTTPS,
-	},
-	"payload": {
-		Type:     schema.TypeString,
-		Required: true,
-	},
-	"headers": {
-		Type:     schema.TypeMap,
-		Optional: true,
-		Default:  make(map[string]string),
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
-	},
-	"triggered_on": {
-		Type:     schema.TypeSet,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.StringInSlice(validTriggeredOn, false),
-			Description:  helper.AllowedValuesToDescription(validTriggeredOn),
-		},
-	},
-	"created_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
-
 var ruleSchema = map[string]*schema.Schema{ // ruleSchema
 	"comparison_operator": {
 		Type:         schema.TypeString,
@@ -196,8 +129,8 @@ var actionTemplateLinkSchema = map[string]*schema.Schema{
 		Optional: true,
 		Elem: &schema.Schema{
 			Type:         schema.TypeString,
-			ValidateFunc: validation.StringInSlice(validTriggeredOn, false),
-			Description:  helper.AllowedValuesToDescription(validTriggeredOn),
+			ValidateFunc: validation.StringInSlice(action_templates.ValidTriggeredOn, false),
+			Description:  helper.AllowedValuesToDescription(action_templates.ValidTriggeredOn),
 		},
 	},
 }
