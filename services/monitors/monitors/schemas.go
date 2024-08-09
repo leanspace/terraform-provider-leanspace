@@ -19,6 +19,11 @@ var validComparisonOperators = []string{
 	"NOT_EQUAL_TO",
 }
 
+var validTriggeredOn = []string{
+	"TRIGGERED",
+	"OK",
+}
+
 var monitorSchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
@@ -58,15 +63,14 @@ var monitorSchema = map[string]*schema.Schema{
 		Type:     schema.TypeSet,
 		Computed: true,
 		Elem: &schema.Resource{
-			Schema: action_templates.ActionTemplateSchema,
+			Schema: actionTemplateSchema,
 		},
 	},
-	"action_template_ids": {
+	"action_template_links": {
 		Type:     schema.TypeSet,
 		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
+		Elem: &schema.Resource{
+			Schema: actionTemplateLinkSchema,
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
@@ -97,6 +101,70 @@ var monitorSchema = map[string]*schema.Schema{
 	},
 }
 
+var actionTemplateSchema = map[string]*schema.Schema{
+	"id": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"name": {
+		Type:     schema.TypeString,
+		Required: true,
+	},
+	"type": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		Default:      "WEBHOOK",
+		ValidateFunc: validation.StringInSlice(action_templates.ValidTypes, false),
+		Description:  helper.AllowedValuesToDescription(action_templates.ValidTypes),
+	},
+	"url": {
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.IsURLWithHTTPorHTTPS,
+	},
+	"payload": {
+		Type:     schema.TypeString,
+		Required: true,
+	},
+	"headers": {
+		Type:     schema.TypeMap,
+		Optional: true,
+		Default:  make(map[string]string),
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
+		},
+	},
+	"triggered_on": {
+		Type:     schema.TypeSet,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringInSlice(validTriggeredOn, false),
+			Description:  helper.AllowedValuesToDescription(validTriggeredOn),
+		},
+	},
+	"created_at": {
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "When it was created",
+	},
+	"created_by": {
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Who created it",
+	},
+	"last_modified_at": {
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "When it was last modified",
+	},
+	"last_modified_by": {
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "Who modified it the last",
+	},
+}
+
 var ruleSchema = map[string]*schema.Schema{ // ruleSchema
 	"comparison_operator": {
 		Type:         schema.TypeString,
@@ -113,6 +181,24 @@ var ruleSchema = map[string]*schema.Schema{ // ruleSchema
 		Optional:     true,
 		ValidateFunc: validation.FloatAtLeast(0),
 		Description:  "Only valid for EQUAL_TO or NOT_EQUAL_TO comparison operator",
+	},
+}
+
+var actionTemplateLinkSchema = map[string]*schema.Schema{
+	"id": {
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.IsUUID,
+		Description:  "Identifier of the Action Template",
+	},
+	"triggered_on": {
+		Type:     schema.TypeSet,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringInSlice(validTriggeredOn, false),
+			Description:  helper.AllowedValuesToDescription(validTriggeredOn),
+		},
 	},
 }
 

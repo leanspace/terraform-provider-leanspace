@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-var validTypes = []string{"WEBHOOK"}
+var ValidTypes = []string{"WEBHOOK"}
 
 var ActionTemplateSchema = map[string]*schema.Schema{
 	"id": {
@@ -22,8 +22,8 @@ var ActionTemplateSchema = map[string]*schema.Schema{
 		Type:         schema.TypeString,
 		Optional:     true,
 		Default:      "WEBHOOK",
-		ValidateFunc: validation.StringInSlice(validTypes, false),
-		Description:  helper.AllowedValuesToDescription(validTypes),
+		ValidateFunc: validation.StringInSlice(ValidTypes, false),
+		Description:  helper.AllowedValuesToDescription(ValidTypes),
 	},
 	"url": {
 		Type:         schema.TypeString,
@@ -70,8 +70,8 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 		Optional: true,
 		Elem: &schema.Schema{
 			Type:         schema.TypeString,
-			ValidateFunc: validation.StringInSlice(validTypes, false),
-			Description:  helper.AllowedValuesToDescription(validTypes),
+			ValidateFunc: validation.StringInSlice(ValidTypes, false),
+			Description:  helper.AllowedValuesToDescription(ValidTypes),
 		},
 	},
 	"monitor_ids": {
