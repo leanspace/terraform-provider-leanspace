@@ -1,4 +1,5 @@
 .terraform*
+!.terraform-registry
 terraform.tfstate*
 terraform-provider-leanspace.exe
 terraform-provider-leanspace
