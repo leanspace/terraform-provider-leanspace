@@ -66,7 +66,7 @@ resource "leanspace_monitors" "test_equals_monitor" {
 
 ### Optional
 
-- `action_template_ids` (Set of String)
+- `action_template_links` (Block Set) (see [below for nested schema](#nestedblock--action_template_links))
 - `description` (String)
 - `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
 
@@ -95,6 +95,18 @@ Optional:
 - `tolerance` (Number) Only valid for EQUAL_TO or NOT_EQUAL_TO comparison operator
 
 
+<a id="nestedblock--action_template_links"></a>
+### Nested Schema for `action_template_links`
+
+Required:
+
+- `id` (String) Identifier of the Action Template
+
+Optional:
+
+- `triggered_on` (Set of String)
+
+
 <a id="nestedblock--tags"></a>
 ### Nested Schema for `tags`
 
@@ -120,5 +132,6 @@ Read-Only:
 - `last_modified_by` (String)
 - `name` (String)
 - `payload` (String)
+- `triggered_on` (Set of String)
 - `type` (String)
 - `url` (String)

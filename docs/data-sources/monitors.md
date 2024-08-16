@@ -74,7 +74,7 @@ Optional:
 
 Read-Only:
 
-- `action_template_ids` (Set of String)
+- `action_template_links` (Set of Object) (see [below for nested schema](#nestedobjatt--content--action_template_links))
 - `action_templates` (Set of Object) (see [below for nested schema](#nestedobjatt--content--action_templates))
 - `created_at` (String)
 - `created_by` (String)
@@ -90,6 +90,15 @@ Read-Only:
 - `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
 - `type` (String)
 
+<a id="nestedobjatt--content--action_template_links"></a>
+### Nested Schema for `content.action_template_links`
+
+Read-Only:
+
+- `id` (String)
+- `triggered_on` (Set of String)
+
+
 <a id="nestedobjatt--content--action_templates"></a>
 ### Nested Schema for `content.action_templates`
 
@@ -103,6 +112,7 @@ Read-Only:
 - `last_modified_by` (String)
 - `name` (String)
 - `payload` (String)
+- `triggered_on` (Set of String)
 - `type` (String)
 - `url` (String)
 
