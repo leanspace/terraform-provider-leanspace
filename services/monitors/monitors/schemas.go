@@ -19,6 +19,8 @@ var validComparisonOperators = []string{
 	"NOT_EQUAL_TO",
 }
 
+var actionTemplateSchema = action_templates.MakeActionTemplateSchema(true)
+
 var monitorSchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
@@ -58,15 +60,14 @@ var monitorSchema = map[string]*schema.Schema{
 		Type:     schema.TypeSet,
 		Computed: true,
 		Elem: &schema.Resource{
-			Schema: action_templates.ActionTemplateSchema,
+			Schema: actionTemplateSchema,
 		},
 	},
-	"action_template_ids": {
+	"action_template_links": {
 		Type:     schema.TypeSet,
 		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
+		Elem: &schema.Resource{
+			Schema: actionTemplateLinkSchema,
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
@@ -113,6 +114,24 @@ var ruleSchema = map[string]*schema.Schema{ // ruleSchema
 		Optional:     true,
 		ValidateFunc: validation.FloatAtLeast(0),
 		Description:  "Only valid for EQUAL_TO or NOT_EQUAL_TO comparison operator",
+	},
+}
+
+var actionTemplateLinkSchema = map[string]*schema.Schema{
+	"id": {
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.IsUUID,
+		Description:  "Identifier of the Action Template",
+	},
+	"triggered_on": {
+		Type:     schema.TypeSet,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringInSlice(action_templates.ValidTriggeredOn, false),
+			Description:  helper.AllowedValuesToDescription(action_templates.ValidTriggeredOn),
+		},
 	},
 }
 
