@@ -44,10 +44,9 @@ func (stream *Stream) PostCreateProcess(client *provider.Client, destStreamRaw a
 
 	var streamQueue apiStreamQueueResponse
 	currentStatus := "UNKNOWN"
-	startTime := time.Now()
 
 	// do ... while loop
-	for ok := true; ok; ok = currentStatus != "SUCCEEDED" && currentStatus != "FAILED" && time.Since(startTime).Seconds() < client.RetryTimeout.Seconds() {
+	for ok := true; ok; ok = currentStatus != "SUCCEEDED" && currentStatus != "FAILED" {
 		time.Sleep(1 * time.Second)
 		streamQueuePointer, err := GetStreamQueue(createdStream.ID, client)
 		if err != nil {
