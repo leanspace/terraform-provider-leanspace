@@ -7,4 +7,7 @@ var StreamDataType = provider.DataSourceType[Stream, *Stream]{
 	Path:               "streams-repository/streams",
 	Schema:             streamSchema,
 	FilterSchema:       dataSourceFilterSchema,
+	CreatePath: func(_ *Stream) string {
+		return "streams-repository/stream-queues"
+	},
 }
