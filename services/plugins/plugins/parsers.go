@@ -90,16 +90,20 @@ func (plugin *Plugin) PostCreateProcess(client *provider.Client, destPluginRaw a
 	plugin.persistFileSha(createdPlugin)
 	plugin.persistFilePath(createdPlugin)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	startTime := time.Now()
 	for metadata.Status != "ACTIVE" && metadata.Status != "FAILED" && time.Since(startTime).Seconds() < client.RetryTimeout.Seconds() {
 		metadata, err = GetPluginMetadata(createdPlugin.ID, client)
 		if err != nil {
-			break
+			return err
 		}
 		time.Sleep(1 * time.Second)
+	}
+
+	if metadata.Status == "FAILED" {
+		return fmt.Errorf("Plugin creation failed")
 	}
 
 	plugin.Status = metadata.Status
