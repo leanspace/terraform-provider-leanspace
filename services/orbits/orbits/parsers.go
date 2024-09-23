@@ -65,10 +65,10 @@ func (gpsMetrics *GpsMetrics) ToMap() map[string]any {
 
 func (standardDeviations *StandardDeviations) ToMap() map[string]any {
 	standardDeviationsMap := make(map[string]any)
-	standardDeviationsMap["latitude"] = gpsMetrics.Latitude
-	standardDeviationsMap["longitude"] = gpsMetrics.Longitude
-	standardDeviationsMap["altitude"] = gpsMetrics.Altitude
-	standardDeviationsMap["groundSpeed"] = gpsMetrics.GroundSpeed
+	standardDeviationsMap["latitude"] = standardDeviations.Latitude
+	standardDeviationsMap["longitude"] = standardDeviations.Longitude
+	standardDeviationsMap["altitude"] = standardDeviations.Altitude
+	standardDeviationsMap["ground_speed"] = standardDeviations.GroundSpeed
 	return standardDeviationsMap
 }
 
@@ -116,15 +116,15 @@ func (idealOrbit *IdealOrbit) FromMap(idealOrbitMap map[string]any) error {
 
 func (gpsConfiguration *GpsConfiguration) FromMap(gpsConfigurationMap map[string]any) error {
 	if len(gpsConfigurationMap["gps_metrics"].([]any)) > 0 && gpsConfigurationMap["gps_metrics"].([]any)[0] != nil {
-		orbit.GpsMetrics = new(GpsMetrics)
-		if err := orbit.GpsMetrics.FromMap(gpsConfigurationMap["gps_metrics"].([]any)[0].(map[string]any)); err != nil {
+		gpsConfiguration.GpsMetrics = new(GpsMetrics)
+		if err := gpsConfiguration.GpsMetrics.FromMap(gpsConfigurationMap["gps_metrics"].([]any)[0].(map[string]any)); err != nil {
 			return err
 		}
 	}
 
 	if len(gpsConfigurationMap["standard_deviations"].([]any)) > 0 && gpsConfigurationMap["standard_deviations"].([]any)[0] != nil {
-		orbit.StandardDeviations = new(GpsMetrics)
-		if err := orbit.StandardDeviations.FromMap(gpsConfigurationMap["standard_deviations"].([]any)[0].(map[string]any)); err != nil {
+		gpsConfiguration.StandardDeviations = new(StandardDeviations)
+		if err := gpsConfiguration.StandardDeviations.FromMap(gpsConfigurationMap["standard_deviations"].([]any)[0].(map[string]any)); err != nil {
 			return err
 		}
 	}
@@ -146,6 +146,6 @@ func (standardDeviations *StandardDeviations) FromMap(standardDeviationsMap map[
 	standardDeviations.Latitude = standardDeviationsMap["latitude"].(float64)
 	standardDeviations.Longitude = standardDeviationsMap["longitude"].(float64)
 	standardDeviations.Altitude = standardDeviationsMap["altitude"].(float64)
-	standardDeviations.GroundSpeed = standardDeviationsMap["groundSpeed"].(float64)
+	standardDeviations.GroundSpeed = standardDeviationsMap["ground_speed"].(float64)
 	return nil
 }

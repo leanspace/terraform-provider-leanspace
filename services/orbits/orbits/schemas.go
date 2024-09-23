@@ -42,6 +42,7 @@ var orbitSchema = map[string]*schema.Schema{
         Elem: &schema.Resource{
             Schema: gpsConfigurationSchema,
         },
+    },
 	"tags": general_objects.KeyValuesSchema,
 	"created_at": {
 		Type:        schema.TypeString,
@@ -169,22 +170,22 @@ var standardDeviationsSchema = map[string]*schema.Schema{
     "latitude": {
         Type:         schema.TypeFloat,
         Required:     true,
-        ValidateFunc: validation.FloatAtLeastAndLessThan(0.1, 1.0),
+        ValidateFunc: helper.FloatAtLeastAndLessThan(0.1, 1.0),
     },
     "longitude": {
         Type:         schema.TypeFloat,
         Required:     true,
-        ValidateFunc: validation.FloatAtLeastAndLessThan(0.1, 1.0),
+        ValidateFunc: helper.FloatAtLeastAndLessThan(0.1, 1.0),
     },
     "altitude": {
         Type:         schema.TypeFloat,
         Required:     true,
-        ValidateFunc: validation.FloatAtLeastAndLessThan(0.0, 5000.1),
+        ValidateFunc: helper.FloatAtLeastAndLessThan(0.0, 5000.1),
     },
     "ground_speed": {
         Type:         schema.TypeFloat,
         Required:     true,
-        ValidateFunc: validation.FloatAtLeastAndLessThan(0.0, 5000.1),
+        ValidateFunc: helper.FloatAtLeastAndLessThan(0.0, 5000.1),
     },
 }
 
