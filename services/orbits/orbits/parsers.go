@@ -57,9 +57,9 @@ func (gpsMetrics *GpsMetrics) ToMap() map[string]any {
 	gpsMetricsMap["metric_id_for_position_x"] = gpsMetrics.MetricIdForPositionX
 	gpsMetricsMap["metric_id_for_position_y"] = gpsMetrics.MetricIdForPositionY
 	gpsMetricsMap["metric_id_for_position_z"] = gpsMetrics.MetricIdForPositionZ
-	gpsMetricsMap["metric_id_for_position_x"] = gpsMetrics.MetricIdForVelocityX
-	gpsMetricsMap["metric_id_for_position_y"] = gpsMetrics.MetricIdForVelocityY
-	gpsMetricsMap["metric_id_for_position_z"] = gpsMetrics.MetricIdForVelocityZ
+	gpsMetricsMap["metric_id_for_velocity_x"] = gpsMetrics.MetricIdForVelocityX
+	gpsMetricsMap["metric_id_for_velocity_y"] = gpsMetrics.MetricIdForVelocityY
+	gpsMetricsMap["metric_id_for_velocity_z"] = gpsMetrics.MetricIdForVelocityZ
 	return gpsMetricsMap
 }
 
@@ -136,9 +136,9 @@ func (gpsMetrics *GpsMetrics) FromMap(gpsMetricsMap map[string]any) error {
 	gpsMetrics.MetricIdForPositionX = gpsMetricsMap["metric_id_for_position_x"].(string)
 	gpsMetrics.MetricIdForPositionY = gpsMetricsMap["metric_id_for_position_y"].(string)
 	gpsMetrics.MetricIdForPositionZ = gpsMetricsMap["metric_id_for_position_z"].(string)
-	gpsMetrics.MetricIdForVelocityX = gpsMetricsMap["metric_id_for_position_x"].(string)
-	gpsMetrics.MetricIdForVelocityY = gpsMetricsMap["metric_id_for_position_y"].(string)
-	gpsMetrics.MetricIdForVelocityZ = gpsMetricsMap["metric_id_for_position_z"].(string)
+	gpsMetrics.MetricIdForVelocityX = gpsMetricsMap["metric_id_for_velocity_x"].(string)
+	gpsMetrics.MetricIdForVelocityY = gpsMetricsMap["metric_id_for_velocity_y"].(string)
+	gpsMetrics.MetricIdForVelocityZ = gpsMetricsMap["metric_id_for_velocity_z"].(string)
 	return nil
 }
 

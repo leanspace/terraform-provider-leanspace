@@ -96,6 +96,73 @@ resource "leanspace_metrics" "test_binary" {
   }
 }
 
+resource "leanspace_metrics" "test_numeric_1" {
+  name        = "Test Number Metric 1"
+  description = "A numeric metric, entirely created under terraform."
+  node_id     = var.node_id
+
+  attributes {
+    type    = "NUMERIC"
+    unit_id = var.unit_id
+  }
+}
+
+resource "leanspace_metrics" "test_numeric_2" {
+  name        = "Test Number Metric 2"
+  description = "A numeric metric, entirely created under terraform."
+  node_id     = var.node_id
+
+  attributes {
+    type    = "NUMERIC"
+    unit_id = var.unit_id
+  }
+}
+
+resource "leanspace_metrics" "test_numeric_3" {
+  name        = "Test Number Metric 3"
+  description = "A numeric metric, entirely created under terraform."
+  node_id     = var.node_id
+
+  attributes {
+    type    = "NUMERIC"
+    unit_id = var.unit_id
+  }
+}
+
+resource "leanspace_metrics" "test_numeric_4" {
+  name        = "Test Number Metric 4"
+  description = "A numeric metric, entirely created under terraform."
+  node_id     = var.node_id
+
+  attributes {
+    type    = "NUMERIC"
+    unit_id = var.unit_id
+  }
+}
+
+resource "leanspace_metrics" "test_numeric_5" {
+  name        = "Test Number Metric 5"
+  description = "A numeric metric, entirely created under terraform."
+  node_id     = var.node_id
+
+  attributes {
+    type    = "NUMERIC"
+    unit_id = var.unit_id
+  }
+}
+
+resource "leanspace_metrics" "test_numeric_6" {
+  name        = "Test Number Metric 6"
+  description = "A numeric metric, entirely created under terraform."
+  node_id     = var.node_id
+
+  attributes {
+    type    = "NUMERIC"
+    unit_id = var.unit_id
+  }
+}
+
+
 output "test_numeric_metric" {
   value = leanspace_metrics.test_numeric
 }
@@ -122,4 +189,28 @@ output "test_enum_metric" {
 
 output "test_binary_metric" {
   value = leanspace_metrics.test_binary
+}
+
+output "test_numeric_1" {
+  value = leanspace_metrics.test_numeric_1
+}
+
+output "test_numeric_2" {
+  value = leanspace_metrics.test_numeric_2
+}
+
+output "test_numeric_3" {
+  value = leanspace_metrics.test_numeric_3
+}
+
+output "test_numeric_4" {
+  value = leanspace_metrics.test_numeric_4
+}
+
+output "test_numeric_5" {
+  value = leanspace_metrics.test_numeric_5
+}
+
+output "test_numeric_6" {
+  value = leanspace_metrics.test_numeric_6
 }
