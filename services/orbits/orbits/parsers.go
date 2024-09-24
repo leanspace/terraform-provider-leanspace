@@ -18,6 +18,9 @@ func (orbit *Orbit) ToMap() map[string]any {
 	if orbit.GpsConfiguration != nil {
 		orbitMap["gps_configuration"] = []map[string]any{orbit.GpsConfiguration.ToMap()}
 	}
+	if orbit.SatelliteConfiguration != nil {
+		orbitMap["satellite_configuration"] = []map[string]any{orbit.SatelliteConfiguration.ToMap()}
+	}
 	orbitMap["tags"] = helper.ParseToMaps(orbit.Tags)
 	orbitMap["created_at"] = orbit.CreatedAt
 	orbitMap["created_by"] = orbit.CreatedBy
@@ -72,6 +75,13 @@ func (standardDeviations *StandardDeviations) ToMap() map[string]any {
 	return standardDeviationsMap
 }
 
+func (satelliteConfiguration *SatelliteConfiguration) ToMap() map[string]any {
+	satelliteConfigurationMap := make(map[string]any)
+	satelliteConfigurationMap["drag_cross_section"] = satelliteConfiguration.DragCrossSection
+	satelliteConfigurationMap["radiation_cross_section"] = satelliteConfiguration.RadiationCrossSection
+	return satelliteConfigurationMap
+}
+
 func (orbit *Orbit) FromMap(orbitMap map[string]any) error {
 	orbit.ID = orbitMap["id"].(string)
 	orbit.SatelliteId = orbitMap["satellite_id"].(string)
@@ -85,6 +95,12 @@ func (orbit *Orbit) FromMap(orbitMap map[string]any) error {
 	if len(orbitMap["gps_configuration"].([]any)) > 0 && orbitMap["gps_configuration"].([]any)[0] != nil {
 		orbit.GpsConfiguration = new(GpsConfiguration)
 		if err := orbit.GpsConfiguration.FromMap(orbitMap["gps_configuration"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
+	}
+	if len(orbitMap["satellite_configuration"].([]any)) > 0 && orbitMap["satellite_configuration"].([]any)[0] != nil {
+		orbit.SatelliteConfiguration = new(SatelliteConfiguration)
+		if err := orbit.SatelliteConfiguration.FromMap(orbitMap["satellite_configuration"].([]any)[0].(map[string]any)); err != nil {
 			return err
 		}
 	}
@@ -147,5 +163,11 @@ func (standardDeviations *StandardDeviations) FromMap(standardDeviationsMap map[
 	standardDeviations.Longitude = standardDeviationsMap["longitude"].(float64)
 	standardDeviations.Altitude = standardDeviationsMap["altitude"].(float64)
 	standardDeviations.GroundSpeed = standardDeviationsMap["ground_speed"].(float64)
+	return nil
+}
+
+func (satelliteConfiguration *SatelliteConfiguration) FromMap(satelliteConfigurationMap map[string]any) error {
+	satelliteConfiguration.DragCrossSection = satelliteConfigurationMap["drag_cross_section"].(float64)
+	satelliteConfiguration.RadiationCrossSection = satelliteConfigurationMap["radiation_cross_section"].(float64)
 	return nil
 }

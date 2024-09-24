@@ -34,15 +34,24 @@ var orbitSchema = map[string]*schema.Schema{
 			Schema: idealOrbitSchema,
 		},
 	},
-    "gps_configuration": {
-        Type:     schema.TypeList,
-        Optional: true,
-        MinItems: 1,
-        MaxItems: 1,
-        Elem: &schema.Resource{
-            Schema: gpsConfigurationSchema,
-        },
-    },
+	"gps_configuration": {
+		Type:     schema.TypeList,
+		Optional: true,
+		MinItems: 1,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: gpsConfigurationSchema,
+		},
+	},
+	"satellite_configuration": {
+		Type:     schema.TypeList,
+		Optional: true,
+		MinItems: 1,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: satelliteConfigurationSchema,
+		},
+	},
 	"tags": general_objects.KeyValuesSchema,
 	"created_at": {
 		Type:        schema.TypeString,
@@ -113,80 +122,93 @@ var idealOrbitSchema = map[string]*schema.Schema{
 }
 
 var gpsConfigurationSchema = map[string]*schema.Schema{
-    "gps_metrics": {
-        Type:     schema.TypeList,
-        Optional: true,
-        MinItems: 1,
-        MaxItems: 1,
-        Elem: &schema.Resource{
-            Schema: gpsMetricsSchema,
-        },
-    },
-    "standard_deviations": {
-        Type:     schema.TypeList,
-        Optional: true,
-        MinItems: 1,
-        MaxItems: 1,
-        Elem: &schema.Resource{
-            Schema: standardDeviationsSchema,
-        },
-    },
+	"gps_metrics": {
+		Type:     schema.TypeList,
+		Optional: true,
+		MinItems: 1,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: gpsMetricsSchema,
+		},
+	},
+	"standard_deviations": {
+		Type:     schema.TypeList,
+		Optional: true,
+		MinItems: 1,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: standardDeviationsSchema,
+		},
+	},
 }
 
 var gpsMetricsSchema = map[string]*schema.Schema{
-    "metric_id_for_position_x": {
-        Type:         schema.TypeString,
-        Required:     true,
-        ValidateFunc: validation.IsUUID,
-    },
-    "metric_id_for_position_y": {
-        Type:         schema.TypeString,
-        Required:     true,
-        ValidateFunc: validation.IsUUID,
-    },
-    "metric_id_for_position_z": {
-        Type:         schema.TypeString,
-        Required:     true,
-        ValidateFunc: validation.IsUUID,
-    },
-    "metric_id_for_velocity_x": {
-        Type:         schema.TypeString,
-        Required:     true,
-        ValidateFunc: validation.IsUUID,
-    },
-    "metric_id_for_velocity_y": {
-        Type:         schema.TypeString,
-        Required:     true,
-        ValidateFunc: validation.IsUUID,
-    },
-    "metric_id_for_velocity_z": {
-        Type:         schema.TypeString,
-        Required:     true,
-        ValidateFunc: validation.IsUUID,
-    },
+	"metric_id_for_position_x": {
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.IsUUID,
+	},
+	"metric_id_for_position_y": {
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.IsUUID,
+	},
+	"metric_id_for_position_z": {
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.IsUUID,
+	},
+	"metric_id_for_velocity_x": {
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.IsUUID,
+	},
+	"metric_id_for_velocity_y": {
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.IsUUID,
+	},
+	"metric_id_for_velocity_z": {
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.IsUUID,
+	},
 }
 
 var standardDeviationsSchema = map[string]*schema.Schema{
-    "latitude": {
-        Type:         schema.TypeFloat,
-        Required:     true,
-        ValidateFunc: helper.FloatAtLeastAndLessThan(0.1, 1.0),
-    },
-    "longitude": {
-        Type:         schema.TypeFloat,
-        Required:     true,
-        ValidateFunc: helper.FloatAtLeastAndLessThan(0.1, 1.0),
-    },
-    "altitude": {
-        Type:         schema.TypeFloat,
-        Required:     true,
-        ValidateFunc: helper.FloatAtLeastAndLessThan(0.0, 5000.1),
-    },
-    "ground_speed": {
-        Type:         schema.TypeFloat,
-        Required:     true,
-        ValidateFunc: helper.FloatAtLeastAndLessThan(0.0, 5000.1),
-    },
+	"latitude": {
+		Type:         schema.TypeFloat,
+		Required:     true,
+		ValidateFunc: helper.FloatAtLeastAndLessThan(0.1, 1.0),
+	},
+	"longitude": {
+		Type:         schema.TypeFloat,
+		Required:     true,
+		ValidateFunc: helper.FloatAtLeastAndLessThan(0.1, 1.0),
+	},
+	"altitude": {
+		Type:         schema.TypeFloat,
+		Required:     true,
+		ValidateFunc: helper.FloatAtLeastAndLessThan(0.0, 5000.1),
+	},
+	"ground_speed": {
+		Type:         schema.TypeFloat,
+		Required:     true,
+		ValidateFunc: helper.FloatAtLeastAndLessThan(0.0, 5000.1),
+	},
+}
+
+var satelliteConfigurationSchema = map[string]*schema.Schema{
+	"drag_cross_section": {
+		Type:         schema.TypeFloat,
+		Required:     true,
+		ValidateFunc: validation.FloatAtLeast(0.1),
+	},
+	"radiation_cross_section": {
+		Type:         schema.TypeFloat,
+		Required:     true,
+		ValidateFunc: validation.FloatAtLeast(0.1),
+	},
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{

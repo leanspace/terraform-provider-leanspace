@@ -80,6 +80,10 @@ resource "leanspace_orbits" "an_orbit" {
       ground_speed = 10
     }
   }
+  satellite_configuration {
+    drag_cross_section = 35.3
+    radiation_cross_section = 55.2
+  }
   tags {
     key   = "Mission"
     value = "Terraform"
