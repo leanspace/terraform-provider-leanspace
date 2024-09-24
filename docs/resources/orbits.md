@@ -47,6 +47,7 @@ resource "leanspace_orbits" "an_orbit" {
 
 - `gps_configuration` (Block List, Max: 1) (see [below for nested schema](#nestedblock--gps_configuration))
 - `ideal_orbit` (Block List, Max: 1) (see [below for nested schema](#nestedblock--ideal_orbit))
+- `satellite_configuration` (Block List, Max: 1) (see [below for nested schema](#nestedblock--satellite_configuration))
 - `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
 
 ### Read-Only
@@ -107,6 +108,15 @@ Read-Only:
 - `apogee_altitude_in_meters` (Number)
 - `perigee_altitude_in_meters` (Number)
 - `semi_major_axis` (Number)
+
+
+<a id="nestedblock--satellite_configuration"></a>
+### Nested Schema for `satellite_configuration`
+
+Required:
+
+- `drag_cross_section` (Number)
+- `radiation_cross_section` (Number)
 
 
 <a id="nestedblock--tags"></a>

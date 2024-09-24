@@ -81,6 +81,7 @@ Read-Only:
 - `last_modified_at` (String)
 - `last_modified_by` (String)
 - `name` (String)
+- `satellite_configuration` (List of Object) (see [below for nested schema](#nestedobjatt--content--satellite_configuration))
 - `satellite_id` (String)
 - `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
 
@@ -131,6 +132,15 @@ Read-Only:
 - `right_ascension_of_ascending_node` (Number)
 - `semi_major_axis` (Number)
 - `type` (String)
+
+
+<a id="nestedobjatt--content--satellite_configuration"></a>
+### Nested Schema for `content.satellite_configuration`
+
+Read-Only:
+
+- `drag_cross_section` (Number)
+- `radiation_cross_section` (Number)
 
 
 <a id="nestedobjatt--content--tags"></a>
