@@ -75,6 +75,7 @@ Read-Only:
 
 - `created_at` (String)
 - `created_by` (String)
+- `gps_configuration` (List of Object) (see [below for nested schema](#nestedobjatt--content--gps_configuration))
 - `id` (String)
 - `ideal_orbit` (List of Object) (see [below for nested schema](#nestedobjatt--content--ideal_orbit))
 - `last_modified_at` (String)
@@ -82,6 +83,39 @@ Read-Only:
 - `name` (String)
 - `satellite_id` (String)
 - `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
+
+<a id="nestedobjatt--content--gps_configuration"></a>
+### Nested Schema for `content.gps_configuration`
+
+Read-Only:
+
+- `gps_metrics` (List of Object) (see [below for nested schema](#nestedobjatt--content--gps_configuration--gps_metrics))
+- `standard_deviations` (List of Object) (see [below for nested schema](#nestedobjatt--content--gps_configuration--standard_deviations))
+
+<a id="nestedobjatt--content--gps_configuration--gps_metrics"></a>
+### Nested Schema for `content.gps_configuration.gps_metrics`
+
+Read-Only:
+
+- `metric_id_for_position_x` (String)
+- `metric_id_for_position_y` (String)
+- `metric_id_for_position_z` (String)
+- `metric_id_for_velocity_x` (String)
+- `metric_id_for_velocity_y` (String)
+- `metric_id_for_velocity_z` (String)
+
+
+<a id="nestedobjatt--content--gps_configuration--standard_deviations"></a>
+### Nested Schema for `content.gps_configuration.standard_deviations`
+
+Read-Only:
+
+- `altitude` (Number)
+- `ground_speed` (Number)
+- `latitude` (Number)
+- `longitude` (Number)
+
+
 
 <a id="nestedobjatt--content--ideal_orbit"></a>
 ### Nested Schema for `content.ideal_orbit`

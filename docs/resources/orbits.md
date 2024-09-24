@@ -45,6 +45,7 @@ resource "leanspace_orbits" "an_orbit" {
 
 ### Optional
 
+- `gps_configuration` (Block List, Max: 1) (see [below for nested schema](#nestedblock--gps_configuration))
 - `ideal_orbit` (Block List, Max: 1) (see [below for nested schema](#nestedblock--ideal_orbit))
 - `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
 
@@ -55,6 +56,39 @@ resource "leanspace_orbits" "an_orbit" {
 - `id` (String) The ID of this resource.
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
+
+<a id="nestedblock--gps_configuration"></a>
+### Nested Schema for `gps_configuration`
+
+Optional:
+
+- `gps_metrics` (Block List, Max: 1) (see [below for nested schema](#nestedblock--gps_configuration--gps_metrics))
+- `standard_deviations` (Block List, Max: 1) (see [below for nested schema](#nestedblock--gps_configuration--standard_deviations))
+
+<a id="nestedblock--gps_configuration--gps_metrics"></a>
+### Nested Schema for `gps_configuration.gps_metrics`
+
+Required:
+
+- `metric_id_for_position_x` (String)
+- `metric_id_for_position_y` (String)
+- `metric_id_for_position_z` (String)
+- `metric_id_for_velocity_x` (String)
+- `metric_id_for_velocity_y` (String)
+- `metric_id_for_velocity_z` (String)
+
+
+<a id="nestedblock--gps_configuration--standard_deviations"></a>
+### Nested Schema for `gps_configuration.standard_deviations`
+
+Required:
+
+- `altitude` (Number)
+- `ground_speed` (Number)
+- `latitude` (Number)
+- `longitude` (Number)
+
+
 
 <a id="nestedblock--ideal_orbit"></a>
 ### Nested Schema for `ideal_orbit`
