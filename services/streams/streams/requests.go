@@ -1,6 +1,7 @@
 package streams
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -16,9 +17,8 @@ type apiStreamQueueInfo struct {
 }
 
 type apiStreamQueueResponse struct {
-	Status   string  `json:"status"`
-	StreamId string  `json:"streamId"`
-	Errors   []Error `json:"errors,omitempty"`
+	Status   string `json:"status"`
+	StreamId string `json:"streamId"`
 }
 
 func (stream *Stream) toAPIFormat() ([]byte, error) {
@@ -44,24 +44,24 @@ func (stream *Stream) PostCreateProcess(client *provider.Client, destStreamRaw a
 
 	var streamQueue apiStreamQueueResponse
 	currentStatus := "UNKNOWN"
+	var byteData []byte
 
 	// do ... while loop
 	for ok := true; ok; ok = currentStatus != "SUCCEEDED" && currentStatus != "FAILED" {
 		time.Sleep(1 * time.Second)
-		streamQueuePointer, err := GetStreamQueue(createdStream.ID, client)
+		originalByteData, streamQueuePointer, err := GetStreamQueue(createdStream.ID, client)
 		if err != nil {
 			return err
 		}
 		streamQueue = *streamQueuePointer
 		currentStatus = streamQueue.Status
+		byteData = *originalByteData
 	}
 
 	if currentStatus == "FAILED" {
-		jsonValue, err := json.Marshal(streamQueue.Errors)
-		if err != nil {
-			return err
-		}
-		return fmt.Errorf("Stream creation failed with errors: %s", string(jsonValue))
+		var jsonValue bytes.Buffer
+		json.Indent(&jsonValue, byteData, "", "    ")
+		return fmt.Errorf("Stream creation failed with errors: %s", jsonValue.String())
 	}
 
 	stream.ID = streamQueue.StreamId
@@ -85,25 +85,25 @@ func (stream *Stream) PostCreateProcess(client *provider.Client, destStreamRaw a
 	return nil
 }
 
-func GetStreamQueue(streamQueueId string, client *provider.Client) (*apiStreamQueueResponse, error) {
+func GetStreamQueue(streamQueueId string, client *provider.Client) (*[]byte, *apiStreamQueueResponse, error) {
 	path := fmt.Sprintf("%s/streams-repository/stream-queues/%s", client.HostURL, streamQueueId)
 	req, err := http.NewRequest("GET", path, nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	data, err, code := client.DoRequest(req, &(client).Token)
 	if code == http.StatusNotFound {
-		return nil, nil
+		return nil, nil, nil
 	}
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	var element apiStreamQueueResponse
 	err = json.Unmarshal(data, &element)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return &element, nil
+	return &data, &element, nil
 }
 
 func GetStream(streamId string, client *provider.Client) (*Stream, error) {
