@@ -38,12 +38,10 @@ type GpsConfiguration struct {
 }
 
 type GpsMetrics struct {
-	MetricIdForPositionX string `json:"metricIdForPositionX"`
-	MetricIdForPositionY string `json:"metricIdForPositionY"`
-	MetricIdForPositionZ string `json:"metricIdForPositionZ"`
-	MetricIdForVelocityX string `json:"metricIdForVelocityX"`
-	MetricIdForVelocityY string `json:"metricIdForVelocityY"`
-	MetricIdForVelocityZ string `json:"metricIdForVelocityZ"`
+	MetricIdForLatitude    string `json:"metricIdForLatitude"`
+	MetricIdForLongitude   string `json:"metricIdForLongitude"`
+	MetricIdForAltitude    string `json:"metricIdForAltitude"`
+	MetricIdForGroundSpeed string `json:"metricIdForGroundSpeed"`
 }
 
 type StandardDeviations struct {

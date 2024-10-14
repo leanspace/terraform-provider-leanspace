@@ -11,34 +11,24 @@ variable "satellite_id" {
   description = "The ID of the satellite to which the orbit will be added."
 }
 
-variable "metric_id_for_position_x" {
+variable "metric_id_for_latitude" {
   type        = string
-  description = "The ID of the metric which hold gps position X data."
+  description = "The ID of the metric which hold gps latitude data."
 }
 
-variable "metric_id_for_position_y" {
+variable "metric_id_for_longitude" {
   type        = string
-  description = "The ID of the metric which hold gps position Y data."
+  description = "The ID of the metric which hold gps longitude data."
 }
 
-variable "metric_id_for_position_z" {
+variable "metric_id_for_altitude" {
   type        = string
-  description = "The ID of the metric which hold gps position Z data."
+  description = "The ID of the metric which hold gps altitude data."
 }
 
-variable "metric_id_for_velocity_x" {
+variable "metric_id_for_ground_speed" {
   type        = string
-  description = "The ID of the metric which hold gps velocity X data."
-}
-
-variable "metric_id_for_velocity_y" {
-  type        = string
-  description = "The ID of the metric which hold gps velocity Y data."
-}
-
-variable "metric_id_for_velocity_z" {
-  type        = string
-  description = "The ID of the metric which hold gps velocity Z data."
+  description = "The ID of the metric which hold ground speed data."
 }
 
 data "leanspace_orbits" "all" {
@@ -66,12 +56,10 @@ resource "leanspace_orbits" "an_orbit" {
   }
   gps_configuration {
     gps_metrics {
-      metric_id_for_position_x = var.metric_id_for_position_x
-      metric_id_for_position_y = var.metric_id_for_position_y
-      metric_id_for_position_z = var.metric_id_for_position_z
-      metric_id_for_velocity_x = var.metric_id_for_velocity_x
-      metric_id_for_velocity_y = var.metric_id_for_velocity_y
-      metric_id_for_velocity_z = var.metric_id_for_velocity_z
+      metric_id_for_latitude = var.metric_id_for_latitude
+      metric_id_for_longitude = var.metric_id_for_longitude
+      metric_id_for_altitude = var.metric_id_for_altitude
+      metric_id_for_ground_speed = var.metric_id_for_ground_speed
     }
     standard_deviations {
       latitude  = 0.2

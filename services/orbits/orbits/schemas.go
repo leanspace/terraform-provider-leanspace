@@ -143,32 +143,22 @@ var gpsConfigurationSchema = map[string]*schema.Schema{
 }
 
 var gpsMetricsSchema = map[string]*schema.Schema{
-	"metric_id_for_position_x": {
+	"metric_id_for_latitude": {
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.IsUUID,
 	},
-	"metric_id_for_position_y": {
+	"metric_id_for_longitude": {
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.IsUUID,
 	},
-	"metric_id_for_position_z": {
+	"metric_id_for_altitude": {
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.IsUUID,
 	},
-	"metric_id_for_velocity_x": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.IsUUID,
-	},
-	"metric_id_for_velocity_y": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.IsUUID,
-	},
-	"metric_id_for_velocity_z": {
+	"metric_id_for_ground_speed": {
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.IsUUID,

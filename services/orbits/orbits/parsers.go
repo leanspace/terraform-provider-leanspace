@@ -57,12 +57,10 @@ func (gpsConfiguration *GpsConfiguration) ToMap() map[string]any {
 
 func (gpsMetrics *GpsMetrics) ToMap() map[string]any {
 	gpsMetricsMap := make(map[string]any)
-	gpsMetricsMap["metric_id_for_position_x"] = gpsMetrics.MetricIdForPositionX
-	gpsMetricsMap["metric_id_for_position_y"] = gpsMetrics.MetricIdForPositionY
-	gpsMetricsMap["metric_id_for_position_z"] = gpsMetrics.MetricIdForPositionZ
-	gpsMetricsMap["metric_id_for_velocity_x"] = gpsMetrics.MetricIdForVelocityX
-	gpsMetricsMap["metric_id_for_velocity_y"] = gpsMetrics.MetricIdForVelocityY
-	gpsMetricsMap["metric_id_for_velocity_z"] = gpsMetrics.MetricIdForVelocityZ
+	gpsMetricsMap["metric_id_for_latitude"] = gpsMetrics.MetricIdForLatitude
+	gpsMetricsMap["metric_id_for_longitude"] = gpsMetrics.MetricIdForLongitude
+	gpsMetricsMap["metric_id_for_altitude"] = gpsMetrics.MetricIdForAltitude
+	gpsMetricsMap["metric_id_for_ground_speed"] = gpsMetrics.MetricIdForGroundSpeed
 	return gpsMetricsMap
 }
 
@@ -149,12 +147,10 @@ func (gpsConfiguration *GpsConfiguration) FromMap(gpsConfigurationMap map[string
 }
 
 func (gpsMetrics *GpsMetrics) FromMap(gpsMetricsMap map[string]any) error {
-	gpsMetrics.MetricIdForPositionX = gpsMetricsMap["metric_id_for_position_x"].(string)
-	gpsMetrics.MetricIdForPositionY = gpsMetricsMap["metric_id_for_position_y"].(string)
-	gpsMetrics.MetricIdForPositionZ = gpsMetricsMap["metric_id_for_position_z"].(string)
-	gpsMetrics.MetricIdForVelocityX = gpsMetricsMap["metric_id_for_velocity_x"].(string)
-	gpsMetrics.MetricIdForVelocityY = gpsMetricsMap["metric_id_for_velocity_y"].(string)
-	gpsMetrics.MetricIdForVelocityZ = gpsMetricsMap["metric_id_for_velocity_z"].(string)
+	gpsMetrics.MetricIdForLatitude = gpsMetricsMap["metric_id_for_latitude"].(string)
+	gpsMetrics.MetricIdForLongitude = gpsMetricsMap["metric_id_for_longitude"].(string)
+	gpsMetrics.MetricIdForAltitude = gpsMetricsMap["metric_id_for_altitude"].(string)
+	gpsMetrics.MetricIdForGroundSpeed = gpsMetricsMap["metric_id_for_ground_speed"].(string)
 	return nil
 }
 
