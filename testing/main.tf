@@ -1,7 +1,8 @@
 terraform {
   required_providers {
     leanspace = {
-      source = "leanspace/leanspace"
+      source = "leanspace/leanspace",
+      version = "7.1.0"
     }
   }
 }
@@ -209,12 +210,10 @@ module "processors" {
 module "orbits" {
   source       = "./orbits/orbits"
   satellite_id = module.nodes.satellite_node.id
-  metric_id_for_position_x = module.metrics.test_numeric_1.id
-  metric_id_for_position_y = module.metrics.test_numeric_2.id
-  metric_id_for_position_z = module.metrics.test_numeric_3.id
-  metric_id_for_velocity_x = module.metrics.test_numeric_4.id
-  metric_id_for_velocity_y = module.metrics.test_numeric_5.id
-  metric_id_for_velocity_z = module.metrics.test_numeric_6.id
+  metric_id_for_latitude = module.metrics.test_numeric_1.id
+  metric_id_for_longitude = module.metrics.test_numeric_2.id
+  metric_id_for_altitude = module.metrics.test_numeric_3.id
+  metric_id_for_ground_speed = module.metrics.test_numeric_4.id
   depends_on = [
     module.nodes,
     module.metrics
