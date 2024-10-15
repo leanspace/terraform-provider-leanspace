@@ -98,12 +98,10 @@ Read-Only:
 
 Read-Only:
 
-- `metric_id_for_position_x` (String)
-- `metric_id_for_position_y` (String)
-- `metric_id_for_position_z` (String)
-- `metric_id_for_velocity_x` (String)
-- `metric_id_for_velocity_y` (String)
-- `metric_id_for_velocity_z` (String)
+- `metric_id_for_altitude` (String)
+- `metric_id_for_ground_speed` (String)
+- `metric_id_for_latitude` (String)
+- `metric_id_for_longitude` (String)
 
 
 <a id="nestedobjatt--content--gps_configuration--standard_deviations"></a>
