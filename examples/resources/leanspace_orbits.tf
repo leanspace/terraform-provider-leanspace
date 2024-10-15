@@ -16,12 +16,10 @@ resource "leanspace_orbits" "an_orbit" {
   }
   gps_configuration {
     gps_metrics {
-      metric_id_for_position_x = var.metric_id_for_position_x
-      metric_id_for_position_y = var.metric_id_for_position_y
-      metric_id_for_position_z = var.metric_id_for_position_z
-      metric_id_for_velocity_x = var.metric_id_for_velocity_x
-      metric_id_for_velocity_y = var.metric_id_for_velocity_y
-      metric_id_for_velocity_z = var.metric_id_for_velocity_z
+      metric_id_for_latitude = var.metric_id_for_latitude
+      metric_id_for_longitude = var.metric_id_for_longitude
+      metric_id_for_altitude = var.metric_id_for_altitude
+      metric_id_for_ground_speed = var.metric_id_for_ground_speed
     }
     standard_deviations {
       latitude  = 0.2
