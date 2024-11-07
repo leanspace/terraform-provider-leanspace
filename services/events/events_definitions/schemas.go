@@ -9,7 +9,7 @@ import (
 )
 
 var validOperator = []string{"EQUAL_TO"}
-var source = []string{"COMMAND_STATE_CHANGED", "MONITOR_TRIGGERED", "PASS_AOS", "PASS_LOS", "STREAM_DECODED"}
+var source = []string{"COMMAND_STATE_CHANGED", "MONITOR_TRIGGERED", "PASS_AOS", "PASS_LOS", "STREAM_DECODED", "CUSTOM"}
 var state = []string{"ACTIVE", "INACTIVE"}
 var validMetadataTypes = []string{
 	"NUMERIC", "BOOLEAN", "TEXT",
