@@ -96,7 +96,6 @@ type Computation struct {
 
 type Mapping struct {
 	MetricId   string `json:"metricId"`
-	Component  string `json:"component,omitempty"`
 	Expression string `json:"expression,omitempty"`
 }
 
