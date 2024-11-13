@@ -443,10 +443,6 @@ var mappingSchema = map[string]*schema.Schema{
 		Required:     true,
 		ValidateFunc: validation.IsUUID,
 	},
-	"component": {
-		Type:     schema.TypeString,
-		Optional: true,
-	},
 	"expression": {
 		Type:     schema.TypeString,
 		Optional: true,

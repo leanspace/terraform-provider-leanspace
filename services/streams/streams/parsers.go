@@ -153,7 +153,6 @@ func (computation *Computation) ToMap() map[string]any {
 func (mapping *Mapping) ToMap() map[string]any {
 	mappingMap := make(map[string]any)
 	mappingMap["metric_id"] = mapping.MetricId
-	mappingMap["component"] = mapping.Component
 	mappingMap["expression"] = mapping.Expression
 	return mappingMap
 }
@@ -371,7 +370,6 @@ func (computation *Computation) FromMap(computationMap map[string]any) error {
 
 func (mapping *Mapping) FromMap(mappingMap map[string]any) error {
 	mapping.MetricId = mappingMap["metric_id"].(string)
-	mapping.Component = mappingMap["component"].(string)
 	mapping.Expression = mappingMap["expression"].(string)
 	return nil
 }
