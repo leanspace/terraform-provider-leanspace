@@ -445,7 +445,7 @@ var mappingSchema = map[string]*schema.Schema{
 	},
 	"expression": {
 		Type:     schema.TypeString,
-		Optional: true,
+		Required: true,
 	},
 }
 
