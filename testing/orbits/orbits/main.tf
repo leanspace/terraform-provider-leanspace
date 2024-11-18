@@ -56,20 +56,20 @@ resource "leanspace_orbits" "an_orbit" {
   }
   gps_configuration {
     gps_metrics {
-      metric_id_for_latitude = var.metric_id_for_latitude
-      metric_id_for_longitude = var.metric_id_for_longitude
-      metric_id_for_altitude = var.metric_id_for_altitude
+      metric_id_for_latitude     = var.metric_id_for_latitude
+      metric_id_for_longitude    = var.metric_id_for_longitude
+      metric_id_for_altitude     = var.metric_id_for_altitude
       metric_id_for_ground_speed = var.metric_id_for_ground_speed
     }
     standard_deviations {
-      latitude  = 0.2
-      longitude = 0.2
-      altitude  = 100
+      latitude     = 0.2
+      longitude    = 0.2
+      altitude     = 100
       ground_speed = 10
     }
   }
   satellite_configuration {
-    drag_cross_section = 35.3
+    drag_cross_section      = 35.3
     radiation_cross_section = 55.2
   }
   tags {
