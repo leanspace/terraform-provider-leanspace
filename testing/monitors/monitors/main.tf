@@ -40,7 +40,12 @@ resource "leanspace_monitors" "test_greater_than_monitor" {
     comparison_operator = "GREATER_THAN"
     comparison_value    = 200
   }
-  action_template_ids = var.action_template_ids
+  dynamic "action_template_links" {
+    for_each = var.action_template_ids
+    content {
+      id = action_template_links.value
+    }
+  }
   tags {
     key   = "Mission"
     value = "Terraform"
@@ -57,7 +62,12 @@ resource "leanspace_monitors" "test_equals_monitor" {
     comparison_value    = 120
     tolerance           = 10
   }
-  action_template_ids = var.action_template_ids
+  dynamic "action_template_links" {
+    for_each = var.action_template_ids
+    content {
+      id = action_template_links.value
+    }
+  }
   tags {
     key   = "Mission"
     value = "Terraform"

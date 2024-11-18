@@ -207,11 +207,11 @@ module "processors" {
 }
 
 module "orbits" {
-  source       = "./orbits/orbits"
-  satellite_id = module.nodes.satellite_node.id
-  metric_id_for_latitude = module.metrics.test_numeric_1.id
-  metric_id_for_longitude = module.metrics.test_numeric_2.id
-  metric_id_for_altitude = module.metrics.test_numeric_3.id
+  source                     = "./orbits/orbits"
+  satellite_id               = module.nodes.satellite_node.id
+  metric_id_for_latitude     = module.metrics.test_numeric_1.id
+  metric_id_for_longitude    = module.metrics.test_numeric_2.id
+  metric_id_for_altitude     = module.metrics.test_numeric_3.id
   metric_id_for_ground_speed = module.metrics.test_numeric_4.id
   depends_on = [
     module.nodes,
