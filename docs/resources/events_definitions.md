@@ -40,7 +40,7 @@ resource "leanspace_events_definitions" "event" {
 ### Required
 
 - `name` (String)
-- `source` (String) it must be one of these values: COMMAND_STATE_CHANGED, MONITOR_TRIGGERED, PASS_AOS, PASS_LOS, STREAM_DECODED
+- `source` (String) it must be one of these values: COMMAND_STATE_CHANGED, MONITOR_TRIGGERED, PASS_AOS, PASS_LOS, STREAM_DECODED, CUSTOM
 - `state` (String) it must be one of these values: ACTIVE, INACTIVE
 
 ### Optional

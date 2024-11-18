@@ -1575,9 +1575,5 @@ Read-Only:
 
 Required:
 
-- `metric_id` (String)
-
-Optional:
-
-- `component` (String)
 - `expression` (String)
+- `metric_id` (String)
