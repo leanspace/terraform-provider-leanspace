@@ -36,7 +36,7 @@ resource "leanspace_plugins" "test" {
 - `file_path` (String) It must be a valid path to a .jar file
 - `implementation_class_name` (String) It must be a valid java class path
 - `name` (String)
-- `type` (String) it must be one of these values: STRING_IDENTITY_PLUGIN_TYPE, JSON_IDENTITY_PLUGIN_TYPE, COMMANDS_COMMAND_TRANSFORMER_PLUGIN_TYPE, COMMANDS_PROTOCOL_TRANSFORMER_PLUGIN_TYPE
+- `type` (String) it must be one of these values: COMMANDS_COMMAND_TRANSFORMER_PLUGIN_TYPE, COMMANDS_PROTOCOL_TRANSFORMER_PLUGIN_TYPE
 
 ### Optional
 
