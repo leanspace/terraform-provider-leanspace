@@ -71,6 +71,10 @@ func Ptr[T any](value T) *T {
 }
 
 func FileAndDataToMultipart(filePath string, data []byte) (io.Reader, string, error) {
+	return FileAndDatasToMultipart(filePath, "file", map[string]any{"command": string(data)})
+}
+
+func FileAndDatasToMultipart(filePath string, fileFieldName string, datas map[string]any) (io.Reader, string, error) {
 	processorFile, err := os.Open(filePath)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -83,7 +87,7 @@ func FileAndDataToMultipart(filePath string, data []byte) (io.Reader, string, er
 	formWriter := multipart.NewWriter(&b)
 
 	// Add file field
-	fileWriter, err := formWriter.CreateFormFile("file", processorFile.Name())
+	fileWriter, err := formWriter.CreateFormFile(fileFieldName, processorFile.Name())
 	if err != nil {
 		return nil, "", err
 	}
@@ -92,19 +96,29 @@ func FileAndDataToMultipart(filePath string, data []byte) (io.Reader, string, er
 		return nil, "", err
 	}
 
-	// Add data field
-	dataWriter, err := formWriter.CreateFormField("command")
-	if err != nil {
-		return nil, "", err
-	}
-	_, err = io.Copy(dataWriter, strings.NewReader(string(data)))
-	if err != nil {
-		return nil, "", err
+	// Add data fields
+	for key, value := range datas {
+		_, _, err := AddFormField(formWriter, key, fmt.Sprint(value))
+		if err != nil {
+			return nil, "", err
+		}
 	}
 
 	// Close the form and return
 	formWriter.Close()
 	return &b, formWriter.FormDataContentType(), nil
+}
+
+func AddFormField(formWriter *multipart.Writer, fieldName string, field string) (io.Reader, string, error) {
+	dataWriter, err := formWriter.CreateFormField(fieldName)
+	if err != nil {
+		return nil, "", err
+	}
+	_, err = io.Copy(dataWriter, strings.NewReader(field))
+	if err != nil {
+		return nil, "", err
+	}
+	return nil, "", nil
 }
 
 func SnakeToCamelCase(str string) string {

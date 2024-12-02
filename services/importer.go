@@ -28,6 +28,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/pass/pass_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/plans/plan_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/plans/plan_templates"
+	"github.com/leanspace/terraform-provider-leanspace/services/plugins/generic_plugins"
 	"github.com/leanspace/terraform-provider-leanspace/services/plugins/plugins"
 	"github.com/leanspace/terraform-provider-leanspace/services/records/record_templates"
 	"github.com/leanspace/terraform-provider-leanspace/services/resources/resources"
@@ -55,6 +56,7 @@ func AddDataTypes() {
 	metrics.MetricDataType.Subscribe()
 	monitors.MonitorDataType.Subscribe()
 	nodes.NodeDataType.Subscribe()
+	generic_plugins.GenericPluginDataType.Subscribe()
 	plugins.PluginDataType.Subscribe()
 	properties.PropertyDataType.Subscribe()
 	remote_agents.RemoteAgentDataType.Subscribe()

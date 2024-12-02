@@ -161,6 +161,11 @@ module "activity_states" {
   source = "./activities/activity_states"
 }
 
+module "generic_plugins" {
+  source = "./plugins/generic_plugins"
+  path   = abspath("./plugins/generic_plugins/checksum_function.jar")
+}
+
 module "plugins" {
   source = "./plugins/plugins"
   path   = abspath("./plugins/plugins/my_plugin.jar")
