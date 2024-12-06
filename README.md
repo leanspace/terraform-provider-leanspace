@@ -181,6 +181,7 @@ The available resources per service are:
 - plans:
   - plan_states: it has one `leanspace_plan_states` resource.
 - plugins:
+  - generic_plugins: it has one `leanspace_generic_plugins` resource, with basic filler data.
   - plugins: it has one `leanspace_plugins` resource, with basic filler data.
 - records:
   - record_templates: it has one `leanspace_record_templates` resource.
