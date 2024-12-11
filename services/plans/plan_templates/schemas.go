@@ -8,7 +8,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var nameRegex = regexp.MustCompile(`^[a-zA-Z0-9_-]*$`)
+var nameRegex = regexp.MustCompile(`^[ a-zA-Z0-9_-]*$`)
 
 var planTemplateSchema = map[string]*schema.Schema{
 	"id": {
