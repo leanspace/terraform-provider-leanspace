@@ -192,12 +192,12 @@ var satelliteConfigurationSchema = map[string]*schema.Schema{
 	"drag_cross_section": {
 		Type:         schema.TypeFloat,
 		Required:     true,
-		ValidateFunc: validation.FloatAtLeast(0.1),
+		ValidateFunc: validation.FloatAtLeast(0.01),
 	},
 	"radiation_cross_section": {
 		Type:         schema.TypeFloat,
 		Required:     true,
-		ValidateFunc: validation.FloatAtLeast(0.1),
+		ValidateFunc: validation.FloatAtLeast(0.01),
 	},
 }
 
