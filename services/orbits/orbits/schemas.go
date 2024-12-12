@@ -169,12 +169,12 @@ var standardDeviationsSchema = map[string]*schema.Schema{
 	"latitude": {
 		Type:         schema.TypeFloat,
 		Required:     true,
-		ValidateFunc: helper.FloatAtLeastAndLessThan(0.1, 1.0),
+		ValidateFunc: helper.FloatAtLeastAndLessThan(0.01, 1.0),
 	},
 	"longitude": {
 		Type:         schema.TypeFloat,
 		Required:     true,
-		ValidateFunc: helper.FloatAtLeastAndLessThan(0.1, 1.0),
+		ValidateFunc: helper.FloatAtLeastAndLessThan(0.01, 1.0),
 	},
 	"altitude": {
 		Type:         schema.TypeFloat,
