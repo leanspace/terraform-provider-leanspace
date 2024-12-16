@@ -90,9 +90,8 @@ var resourceConstraintsSchema = map[string]*schema.Schema{
 		Description:  helper.AllowedValuesToDescription(validIdealResourceConstraintKinds),
 	},
 	"value": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: validation.FloatBetween(0.0, 360.0),
+		Type:     schema.TypeFloat,
+		Required: true,
 	},
 }
 
