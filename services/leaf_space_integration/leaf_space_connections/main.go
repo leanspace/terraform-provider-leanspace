@@ -16,7 +16,7 @@ var LeafSpaceConnectionDataType = provider.DataSourceType[LeafSpaceConnection, *
 	DeletePath: func(id string) string {
 		return fmt.Sprintf("integration-leafspace/connections")
 	},
-	UpdatePath: func(id string) string {
+	UpdatePath: func(_ *LeafSpaceConnection) string {
 		return fmt.Sprintf("integration-leafspace/connections")
 	},
 	IsUnique: true,

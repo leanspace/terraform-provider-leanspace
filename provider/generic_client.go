@@ -189,8 +189,8 @@ func (client GenericClient[T, PT]) Create(createElement PT) (PT, error) {
 		if err := postCreate.PostCreateProcess(client.Client, value); err != nil {
 			return nil, err
 		}
+		helper.Logger.Printf("Created element with all fields: %v", value.GetID())
 	}
-
 	return value, nil
 }
 
@@ -198,7 +198,7 @@ func (client GenericClient[T, PT]) Update(elementId string, updateElement PT) (P
 	requestContent, contentType, err := client.encodeElement(updateElement, true)
 	path := fmt.Sprintf("%s/%s", client.Path, elementId)
 	if client.UpdatePath != nil {
-		path = client.UpdatePath(elementId)
+		path = client.UpdatePath(updateElement)
 	}
 	if err != nil {
 		return nil, err

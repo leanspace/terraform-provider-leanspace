@@ -1,9 +1,10 @@
-package streams
+package streams_queue
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"io"
 	"net/http"
 	"strings"
@@ -19,6 +20,7 @@ type apiStreamQueueInfo struct {
 type apiStreamQueueResponse struct {
 	Status   string `json:"status"`
 	StreamId string `json:"streamId"`
+	Id       string `json:"id"`
 }
 
 func (stream *Stream) toAPIFormat() ([]byte, error) {
@@ -63,13 +65,11 @@ func (stream *Stream) PostCreateProcess(client *provider.Client, destStreamRaw a
 		json.Indent(&jsonValue, byteData, "", "    ")
 		return fmt.Errorf("Stream creation failed with errors: %s", jsonValue.String())
 	}
-
-	stream.ID = streamQueue.StreamId
-	streamInfo, err := GetStream(stream.ID, client)
+	streamInfo, err := GetStream(streamQueue.StreamId, client)
 	if err != nil {
 		return err
 	}
-
+	createdStream.StreamQueueId = createdStream.ID
 	createdStream.ID = streamInfo.ID
 	createdStream.Version = streamInfo.Version
 	createdStream.Name = streamInfo.Name
@@ -81,6 +81,8 @@ func (stream *Stream) PostCreateProcess(client *provider.Client, destStreamRaw a
 	createdStream.CreatedBy = streamInfo.CreatedBy
 	createdStream.LastModifiedAt = streamInfo.LastModifiedAt
 	createdStream.LastModifiedBy = streamInfo.LastModifiedBy
+
+	helper.Logger.Printf("StreamQueueId in request %s", createdStream.StreamQueueId)
 
 	return nil
 }
@@ -106,8 +108,8 @@ func GetStreamQueue(streamQueueId string, client *provider.Client) (*[]byte, *ap
 	return &data, &element, nil
 }
 
-func GetStream(streamId string, client *provider.Client) (*Stream, error) {
-	path := fmt.Sprintf("%s/%s/%s", client.HostURL, StreamDataType.Path, streamId)
+func GetStream(queueId string, client *provider.Client) (*Stream, error) {
+	path := fmt.Sprintf("%s/%s/%s", client.HostURL, StreamQueueDataType.Path, queueId)
 	req, err := http.NewRequest("GET", path, nil)
 	if err != nil {
 		return nil, err
