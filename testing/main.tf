@@ -252,3 +252,7 @@ module "record_templates" {
     module.metrics
   ]
 }
+
+module "feasibility_constraint_definitions" {
+  source = "./requests/feasibility_constraint_definitions"
+}

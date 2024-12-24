@@ -31,6 +31,8 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/plugins/generic_plugins"
 	"github.com/leanspace/terraform-provider-leanspace/services/plugins/plugins"
 	"github.com/leanspace/terraform-provider-leanspace/services/records/record_templates"
+	"github.com/leanspace/terraform-provider-leanspace/services/requests/feasibility_constraint_definitions"
+	"github.com/leanspace/terraform-provider-leanspace/services/requests/request_definitions"
 	"github.com/leanspace/terraform-provider-leanspace/services/resources/resources"
 	"github.com/leanspace/terraform-provider-leanspace/services/routes/processors"
 	"github.com/leanspace/terraform-provider-leanspace/services/routes/routes"
@@ -80,4 +82,6 @@ func AddDataTypes() {
 	leaf_space_contact_reservation_status_mappings.LeafSpaceContactReservationStatusMappingDataType.Subscribe()
 	resources.ResourceDataType.Subscribe()
 	events_definitions.EventsDefinitionDataType.Subscribe()
+	feasibility_constraint_definitions.FeasibilityConstraintDefinitionDataType.Subscribe()
+	request_definitions.RequestDefinitionDataType.Subscribe()
 }
