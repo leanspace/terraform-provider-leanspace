@@ -3,7 +3,6 @@ package request_definitions
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
@@ -58,24 +57,20 @@ var requestDefinitionSchema = map[string]*schema.Schema{
 		},
 	},
 	"created_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was created",
+		Type:     schema.TypeString,
+		Computed: true,
 	},
 	"created_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who created it",
+		Type:     schema.TypeString,
+		Computed: true,
 	},
 	"last_modified_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was last modified",
+		Type:     schema.TypeString,
+		Computed: true,
 	},
 	"last_modified_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who modified it the last",
+		Type:     schema.TypeString,
+		Computed: true,
 	},
 }
 
@@ -105,24 +100,20 @@ var feasibilityConstraintDefinitionSchema = map[string]*schema.Schema{
 		},
 	},
 	"created_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was created",
+		Type:     schema.TypeString,
+		Computed: true,
 	},
 	"created_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who created it",
+		Type:     schema.TypeString,
+		Computed: true,
 	},
 	"last_modified_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was last modified",
+		Type:     schema.TypeString,
+		Computed: true,
 	},
 	"last_modified_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who modified it the last",
+		Type:     schema.TypeString,
+		Computed: true,
 	},
 }
 
@@ -168,58 +159,5 @@ var argumentMappingSchema = map[string]*schema.Schema{
 	"activity_definition_argument_definition_name": {
 		Type:     schema.TypeString,
 		Required: true,
-	},
-}
-
-var requestDefinitionFilterSchema = map[string]*schema.Schema{
-	"ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-		Description: "Only returns node whose id matches one of the provided values.",
-	},
-	"query": {
-		Type:        schema.TypeString,
-		Optional:    true,
-		Description: "Search by name or description",
-	},
-	"created_by": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.IsUUID,
-		Description:  "Filter on the user who created the Node. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"from_created_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Node creation date. Properties with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"to_created_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Node creation date. Nodes with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"last_modified_by": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.IsUUID,
-		Description:  "Filter on the user who modified last the Node. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"from_last_modified_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Node last modification date. Nodes with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"to_last_modified_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Node last modification date. Nodes with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
 }

@@ -6,5 +6,4 @@ var RequestDefinitionDataType = provider.DataSourceType[RequestDefinition, *Requ
 	ResourceIdentifier: "leanspace_request_definitions",
 	Path:               "requests-repository/request-definitions",
 	Schema:             requestDefinitionSchema,
-	FilterSchema:       requestDefinitionFilterSchema,
 }
