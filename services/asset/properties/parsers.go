@@ -151,7 +151,7 @@ func (property *Property[T]) FromMap(propertyMap map[string]any) error {
 			}
 		}
 	case "GEOPOINT":
-		if propertyMap["fields"] != nil {
+		if propertyMap["fields"] != nil && len(propertyMap["fields"].([]any)) > 0 {
 			fields := propertyMap["fields"].([]any)[0].(map[string]any)
 			property.Attributes.Fields = &Fields{}
 			property.Attributes.Fields.Elevation.FromMap(fields["elevation"].([]any)[0].(map[string]any))

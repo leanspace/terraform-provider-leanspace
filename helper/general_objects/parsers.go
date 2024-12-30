@@ -183,7 +183,7 @@ func (attribute *DefinitionAttribute[T]) FromMap(attributeMap map[string]any) er
 	case "BOOLEAN":
 		// no extra field
 	case "GEOPOINT":
-		if attributeMap["fields"] != nil {
+		if attributeMap["fields"] != nil && len(attributeMap["fields"].([]any)) > 0 {
 			fields := attributeMap["fields"].([]any)[0].(map[string]any)
 			attribute.Fields = &FieldsDef{}
 			attribute.Fields.Elevation.FromMap(fields["elevation"].([]any)[0].(map[string]any))
