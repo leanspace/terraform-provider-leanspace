@@ -77,26 +77,25 @@ var requestDefinitionSchema = map[string]*schema.Schema{
 var feasibilityConstraintDefinitionSchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
-		Computed: true,
+		Required: true,
 	},
 	"name": {
 		Type:     schema.TypeString,
-		Required: true,
+		Computed: true,
 	},
 	"description": {
 		Type:     schema.TypeString,
-		Optional: true,
+		Computed: true,
 	},
-	"cloned": {
+	"required": {
 		Type:     schema.TypeBool,
-		Optional: true,
+		Required: true,
 	},
 	"argument_definitions": {
 		Type:     schema.TypeSet,
-		Optional: true,
-		MaxItems: 499,
+		Computed: true,
 		Elem: &schema.Resource{
-			Schema: argumentDefinitionSchema,
+			Schema: computedArgumentDefinitionSchema,
 		},
 	},
 	"created_at": {
@@ -130,7 +129,29 @@ var argumentDefinitionSchema = map[string]*schema.Schema{
 		Type:     schema.TypeList,
 		Required: true,
 		MinItems: 1,
-		MaxItems: 1,
+		MaxItems: 499,
+		Elem: &schema.Resource{
+			Schema: general_objects.DefinitionAttributeSchema(
+				[]string{"TEXT", "BINARY", "BOOLEAN", "ENUM", "TIMESTAMP", "DATE", "ARRAY", "STRUCTURE", "TLE"}, // attribute types not allowed in command definition attributes
+				nil,   // All fields are used
+				false, // Does not force recreation if the type changes
+			),
+		},
+	},
+}
+
+var computedArgumentDefinitionSchema = map[string]*schema.Schema{
+	"name": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"description": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"attributes": {
+		Type:     schema.TypeList,
+		Computed: true,
 		Elem: &schema.Resource{
 			Schema: general_objects.DefinitionAttributeSchema(
 				[]string{"TEXT", "BINARY", "BOOLEAN", "ENUM", "TIMESTAMP", "DATE", "ARRAY", "STRUCTURE", "TLE"}, // attribute types not allowed in command definition attributes

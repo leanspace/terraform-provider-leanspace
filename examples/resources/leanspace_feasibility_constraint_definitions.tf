@@ -1,24 +1,7 @@
-terraform {
-  required_providers {
-    leanspace = {
-      source = "leanspace/leanspace"
-    }
-  }
-}
-
-data "leanspace_feasibility_constraint_definitions" "all" {
-  filters {
-    ids      = []
-    query = ""
-    page     = 0
-    size     = 10
-    sort     = ["name,asc"]
-  }
-}
-
-resource "leanspace_feasibility_constraint_definitions" "created" {
+resource "leanspace_feasibility_constraint_definitions" "a_feasibility_constraint_definition" {
   name        = "feasibilityConstraintDefinitionFromTerraform"
   description = "feasibilityConstraintDefinitionTerraformDescription"
+  cloned = false
   argument_definitions {
     name        = "NumericArgumentDefinition"
     description = "A numeric input"
@@ -56,8 +39,4 @@ resource "leanspace_feasibility_constraint_definitions" "created" {
       required = true
     }
   }
-}
-
-output "created" {
-  value = leanspace_feasibility_constraint_definitions.created
 }

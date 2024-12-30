@@ -20,10 +20,6 @@ var feasibilityConstraintDefinitionSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Optional: true,
 	},
-	"cloned": {
-		Type:     schema.TypeBool,
-		Optional: true,
-	},
 	"argument_definitions": {
 		Type:     schema.TypeSet,
 		Optional: true,
@@ -75,27 +71,23 @@ var argumentDefinitionSchema = map[string]*schema.Schema{
 }
 
 var feasibilityConstraintDefinitionFilterSchema = map[string]*schema.Schema{
-	"ids": {
+	"created_bys": {
 		Type:     schema.TypeList,
 		Optional: true,
 		Elem: &schema.Schema{
 			Type:         schema.TypeString,
 			ValidateFunc: validation.IsUUID,
 		},
+		Description: "Filter on the user who created the Resource Function. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
-	"query": {
-		Type:     schema.TypeString,
+	"last_modified_bys": {
+		Type:     schema.TypeList,
 		Optional: true,
-	},
-	"created_by": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.IsUUID,
-	},
-	"from_created_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+		Description: "Filter on the user who last modified the Resource Function. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
 	"to_created_at": {
 		Type:         schema.TypeString,
