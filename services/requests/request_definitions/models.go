@@ -10,8 +10,8 @@ type RequestDefinition struct {
 	Description                      string                                         `json:"description,omitempty"`
 	PlanTemplateIds                  []string                                       `json:"planTemplateIds"`
 	FeasibilityConstraintDefinitions []FeasibilityConstraintDefinition              `json:"feasibilityConstraintDefinitions"`
-	ConfigurationArgumentDefinitions []activity_definitions.ArgumentDefinition[any] `json:"configurationArgumentDefinitions"`
-	ConfigurationArgumentMappings    []ArgumentMapping                              `json:"configurationArgumentMappings"`
+	ConfigurationArgumentDefinitions []activity_definitions.ArgumentDefinition[any] `json:"configurationArgumentDefinitions,omitempty"`
+	ConfigurationArgumentMappings    []ArgumentMapping                              `json:"configurationArgumentMappings,omitempty"`
 	CreatedAt                        string                                         `json:"createdAt"`
 	CreatedBy                        string                                         `json:"createdBy"`
 	LastModifiedAt                   string                                         `json:"lastModifiedAt"`

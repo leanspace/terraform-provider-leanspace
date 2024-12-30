@@ -40,7 +40,7 @@ var requestDefinitionSchema = map[string]*schema.Schema{
 	},
 	"configuration_argument_definitions": {
 		Type:     schema.TypeSet,
-		Required: true,
+		Optional: true,
 		MinItems: 1,
 		MaxItems: 499,
 		Elem: &schema.Resource{
@@ -49,7 +49,7 @@ var requestDefinitionSchema = map[string]*schema.Schema{
 	},
 	"configuration_argument_mappings": {
 		Type:     schema.TypeSet,
-		Required: true,
+		Optional: true,
 		MinItems: 1,
 		MaxItems: 499,
 		Elem: &schema.Resource{
