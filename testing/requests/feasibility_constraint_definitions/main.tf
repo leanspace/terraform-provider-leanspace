@@ -8,11 +8,11 @@ terraform {
 
 data "leanspace_feasibility_constraint_definitions" "all" {
   filters {
-    ids      = []
+    ids   = []
     query = ""
-    page     = 0
-    size     = 10
-    sort     = ["name,asc"]
+    page  = 0
+    size  = 10
+    sort  = ["name,asc"]
   }
 }
 

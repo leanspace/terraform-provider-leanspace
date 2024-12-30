@@ -17,12 +17,12 @@ variable "feasibility_constraint_id" {
 }
 
 resource "leanspace_request_definitions" "created" {
-  name        = "requestDefinitionFromTerraform"
-  description = "requestDefinitionTerraformDescription"
-  plan_template_ids = [ var.plan_template_id ]
+  name              = "requestDefinitionFromTerraform"
+  description       = "requestDefinitionTerraformDescription"
+  plan_template_ids = [var.plan_template_id]
   feasibility_constraint_definitions {
-      id = var.feasibility_constraint_id
-      required = false
+    id       = var.feasibility_constraint_id
+    required = false
   }
   configuration_argument_definitions {
     name        = "NumericConfigurationArgumentDefinition"
@@ -34,9 +34,9 @@ resource "leanspace_request_definitions" "created" {
     }
   }
   configuration_argument_mappings {
-    plan_template_id = var.plan_template_id
-    activity_definition_position = 0
-    configuration_argument_definition_name = "NumericConfigurationArgumentDefinition"
+    plan_template_id                             = var.plan_template_id
+    activity_definition_position                 = 0
+    configuration_argument_definition_name       = "NumericConfigurationArgumentDefinition"
     activity_definition_argument_definition_name = "ActivityArgumentNumeric"
   }
 }

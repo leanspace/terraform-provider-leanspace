@@ -1,7 +1,6 @@
 resource "leanspace_feasibility_constraint_definitions" "a_feasibility_constraint_definition" {
   name        = "feasibilityConstraintDefinitionFromTerraform"
   description = "feasibilityConstraintDefinitionTerraformDescription"
-  cloned = false
   argument_definitions {
     name        = "NumericArgumentDefinition"
     description = "A numeric input"
