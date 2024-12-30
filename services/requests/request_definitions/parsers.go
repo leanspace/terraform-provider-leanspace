@@ -11,21 +11,18 @@ func (requestDefinition *RequestDefinition) ToMap() map[string]any {
 	requestDefinitionMap["id"] = requestDefinition.ID
 	requestDefinitionMap["name"] = requestDefinition.Name
 	requestDefinitionMap["description"] = requestDefinition.Description
-
-	if requestDefinition.PlanTemplateIds != nil {
-		requestDefinitionMap["planTemplateIds"] = []any{requestDefinition.PlanTemplateIds}
-	}
+	requestDefinitionMap["plan_template_ids"] = requestDefinition.PlanTemplateIds
 
 	if requestDefinition.FeasibilityConstraintDefinitions != nil {
-		requestDefinitionMap["feasibilityConstraintDefinitions"] = helper.ParseToMaps(requestDefinition.FeasibilityConstraintDefinitions)
+		requestDefinitionMap["feasibility_constraint_definitions"] = helper.ParseToMaps(requestDefinition.FeasibilityConstraintDefinitions)
 	}
 
 	if requestDefinition.ConfigurationArgumentDefinitions != nil {
-		requestDefinitionMap["configurationArgumentDefinitions"] = helper.ParseToMaps(requestDefinition.ConfigurationArgumentDefinitions)
+		requestDefinitionMap["configuration_argument_definitions"] = helper.ParseToMaps(requestDefinition.ConfigurationArgumentDefinitions)
 	}
 
 	if requestDefinition.ConfigurationArgumentMappings != nil {
-		requestDefinitionMap["configurationArgumentMappings"] = helper.ParseToMaps(requestDefinition.ConfigurationArgumentMappings)
+		requestDefinitionMap["configuration_argument_mappings"] = helper.ParseToMaps(requestDefinition.ConfigurationArgumentMappings)
 	}
 
 	requestDefinitionMap["created_at"] = requestDefinition.CreatedAt
@@ -59,10 +56,10 @@ func (feasibilityConstraintDefinition *FeasibilityConstraintDefinition) ToMap() 
 
 func (mapping *ArgumentMapping) ToMap() map[string]any {
 	mappingMap := make(map[string]any)
-	mappingMap["planTemplateId"] = mapping.PlanTemplateId
-	mappingMap["activityDefinitionPosition"] = mapping.ActivityDefinitionPosition
-	mappingMap["configurationArgumentDefinitionName"] = mapping.ConfigurationArgumentDefinitionName
-	mappingMap["activityDefinitionArgumentDefinitionName"] = mapping.ActivityDefinitionArgumentDefinitionName
+	mappingMap["plan_template_id"] = mapping.PlanTemplateId
+	mappingMap["activity_definition_position"] = mapping.ActivityDefinitionPosition
+	mappingMap["configuration_argument_definition_name"] = mapping.ConfigurationArgumentDefinitionName
+	mappingMap["activity_definition_argument_definition_name"] = mapping.ActivityDefinitionArgumentDefinitionName
 
 	return mappingMap
 }
@@ -72,14 +69,14 @@ func (requestDefinition *RequestDefinition) FromMap(requestDefinitionMap map[str
 	requestDefinition.Name = requestDefinitionMap["name"].(string)
 	requestDefinition.Description = requestDefinitionMap["description"].(string)
 
-	requestDefinition.PlanTemplateIds = make([]string, requestDefinitionMap["planTemplateIds"].(*schema.Set).Len())
-	for i, value := range requestDefinitionMap["planTemplateIds"].(*schema.Set).List() {
-		requestDefinition.PlanTemplateIds[i] = value.(string)
+	requestDefinition.PlanTemplateIds = make([]string, len(requestDefinitionMap["plan_template_ids"].(*schema.Set).List()))
+	for i, processorId := range requestDefinitionMap["plan_template_ids"].(*schema.Set).List() {
+		requestDefinition.PlanTemplateIds[i] = processorId.(string)
 	}
 
-	if requestDefinitionMap["feasibilityConstraintDefinitions"] != nil {
+	if requestDefinitionMap["feasibility_constraint_definitions"] != nil {
 		if feasibilityConstraintDefinitions, err := helper.ParseFromMaps[FeasibilityConstraintDefinition](
-			requestDefinitionMap["feasibilityConstraintDefinitions"].(*schema.Set).List(),
+			requestDefinitionMap["feasibility_constraint_definitions"].(*schema.Set).List(),
 		); err != nil {
 			return err
 		} else {
@@ -87,9 +84,9 @@ func (requestDefinition *RequestDefinition) FromMap(requestDefinitionMap map[str
 		}
 	}
 
-	if requestDefinitionMap["configurationArgumentDefinitions"] != nil {
+	if requestDefinitionMap["configuration_argument_definitions"] != nil {
 		if argumentDefinitions, err := helper.ParseFromMaps[activity_definitions.ArgumentDefinition[any]](
-			requestDefinitionMap["configurationArgumentDefinitions"].(*schema.Set).List(),
+			requestDefinitionMap["configuration_argument_definitions"].(*schema.Set).List(),
 		); err != nil {
 			return err
 		} else {
@@ -97,9 +94,9 @@ func (requestDefinition *RequestDefinition) FromMap(requestDefinitionMap map[str
 		}
 	}
 
-	if requestDefinitionMap["configurationArgumentMappings"] != nil {
+	if requestDefinitionMap["configuration_argument_mappings"] != nil {
 		if configurationArgumentMappings, err := helper.ParseFromMaps[ArgumentMapping](
-			requestDefinitionMap["configurationArgumentMappings"].(*schema.Set).List(),
+			requestDefinitionMap["configuration_argument_mappings"].(*schema.Set).List(),
 		); err != nil {
 			return err
 		} else {
@@ -138,10 +135,10 @@ func (feasibilityConstraintDefinition *FeasibilityConstraintDefinition) FromMap(
 }
 
 func (mapping *ArgumentMapping) FromMap(mappingMap map[string]any) error {
-	mapping.PlanTemplateId = mappingMap["planTemplateId"].(string)
-	mapping.ActivityDefinitionPosition = mappingMap["activityDefinitionPosition"].(int)
-	mapping.ConfigurationArgumentDefinitionName = mappingMap["configurationArgumentDefinitionName"].(string)
-	mapping.ActivityDefinitionArgumentDefinitionName = mappingMap["activityDefinitionArgumentDefinitionName"].(string)
+	mapping.PlanTemplateId = mappingMap["plan_template_id"].(string)
+	mapping.ActivityDefinitionPosition = mappingMap["activity_definition_position"].(int)
+	mapping.ConfigurationArgumentDefinitionName = mappingMap["configuration_argument_definition_name"].(string)
+	mapping.ActivityDefinitionArgumentDefinitionName = mappingMap["activity_definition_argument_definition_name"].(string)
 
 	return nil
 }

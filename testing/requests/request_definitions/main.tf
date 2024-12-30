@@ -19,7 +19,7 @@ variable "feasibility_constraint_id" {
 resource "leanspace_request_definitions" "created" {
   name              = "requestDefinitionFromTerraform"
   description       = "requestDefinitionTerraformDescription"
-  plan_template_ids = [var.plan_template_id]
+  plan_template_ids = [ var.plan_template_id ]
   feasibility_constraint_definitions {
     id       = var.feasibility_constraint_id
     required = false
