@@ -33,6 +33,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/records/record_templates"
 	"github.com/leanspace/terraform-provider-leanspace/services/requests/feasibility_constraint_definitions"
 	"github.com/leanspace/terraform-provider-leanspace/services/requests/request_definitions"
+	"github.com/leanspace/terraform-provider-leanspace/services/requests/request_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/resources/resources"
 	"github.com/leanspace/terraform-provider-leanspace/services/routes/processors"
 	"github.com/leanspace/terraform-provider-leanspace/services/routes/routes"
@@ -84,4 +85,5 @@ func AddDataTypes() {
 	events_definitions.EventsDefinitionDataType.Subscribe()
 	feasibility_constraint_definitions.FeasibilityConstraintDefinitionDataType.Subscribe()
 	request_definitions.RequestDefinitionDataType.Subscribe()
+	request_states.RequestStateDataType.Subscribe()
 }

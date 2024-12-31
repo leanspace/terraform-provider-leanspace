@@ -427,3 +427,23 @@ func FloatAtLeastAndLessThan(min, maxExclusive float64) schema.SchemaValidateFun
 		return
 	}
 }
+
+// --- State name validation ---
+
+const stateNameRegexStr = `^[A-Z](?:[A-Z_]*[A-Z])?$`
+
+var stateNameRegex = regexp.MustCompile(stateNameRegexStr)
+
+func IsValidStateName(i interface{}, k string) (warnings []string, errors []error) {
+	v, ok := i.(string)
+	if !ok {
+		errors = append(errors, fmt.Errorf("expected type of %q to be string", k))
+		return
+	}
+
+	if !stateNameRegex.Match([]byte(v)) {
+		errors = append(errors, fmt.Errorf("expected %q to be a valid state name, got %v.\nValid state name follows the regex: %v", k, v, stateNameRegexStr))
+	}
+
+	return warnings, errors
+}
