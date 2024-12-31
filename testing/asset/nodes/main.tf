@@ -28,7 +28,7 @@ data "leanspace_nodes" "all" {
 }
 
 resource "leanspace_nodes" "test_nodes_root" {
-  name        = "TerraMission - Jerome 0.1"
+  name        = "TerraMission - 0.1"
   description = "This is the root node for an entire mission made in terraform!"
   type        = "GROUP"
   tags {
@@ -43,7 +43,7 @@ resource "leanspace_nodes" "test_nodes_root" {
 
 resource "leanspace_nodes" "test_nodes_satellite" {
   parent_node_id = leanspace_nodes.test_nodes_root.id
-  name           = "TerraSatellite Jerome"
+  name           = "TerraSatellite"
   description    = "The satellite responsible for the terraform mission."
   type           = "ASSET"
   kind           = "SATELLITE"
@@ -61,7 +61,7 @@ resource "leanspace_nodes" "test_nodes_satellite" {
 
 resource "leanspace_nodes" "test_nodes_groundstation" {
   parent_node_id = leanspace_nodes.test_nodes_root.id
-  name           = "Jerome TerraGroundStation"
+  name           = "TerraGroundStation"
   description    = "The satellite responsible for the terraform mission."
   type           = "ASSET"
   kind           = "GROUND_STATION"

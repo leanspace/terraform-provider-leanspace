@@ -54,7 +54,12 @@ jobs:
         id: apply-create
         working-directory: ./testing
         run: |
-            summary_line=$(terraform apply -no-color -auto-approve -input=false | tail -n 1)
+            summary_line=$(terraform apply -no-color -auto-approve -input=false)
+            if [ $? -eq 0 ]; then
+              summary_line=$(echo "$summary_line" | tail -n 1)
+            else
+              exit 1
+            fi
 
             added=$(echo "$summary_line" | awk '{print $4}')
             changed=$(echo "$summary_line" | awk '{print $6}')
@@ -68,7 +73,12 @@ jobs:
         id: apply-modify
         working-directory: ./testing
         run: |
-            summary_line=$(terraform apply -no-color -auto-approve -input=false | tail -n 6)
+            summary_line=$(terraform apply -no-color -auto-approve -input=false)
+            if [ $? -eq 0 ]; then
+              summary_line=$(echo "$summary_line" | tail -n 6)
+            else
+              exit 1
+            fi
             no_change=$(echo "$summary_line" | grep -w -q "No changes. Your infrastructure matches the configuration." && echo "true" || echo "false")
             summary_line=$(echo "$summary_line" | tail -n 1)
             echo "no_change=$no_change" >> $GITHUB_OUTPUT
@@ -97,20 +107,22 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const correct = ${{ steps.plan.outputs.to_add }} == ${{ steps.apply-create.outputs.added }} && ${{ steps.apply-create.outputs.added }} == ${{ steps.destroy.outputs.actually_destroyed }} && "${{steps.apply-modify.outputs.no_change}}" == "true"
+            const correct = "${{ steps.plan.outcome }}" === "success" && "${{ steps.apply-create.outcome }}" === "success" && "${{ steps.apply-modify.outcome }}" === "success" && "${{ steps.destroy.outcome }}" === "success" &&
+              ${{ steps.plan.outputs.to_add }} === parseInt("${{ steps.apply-create.outputs.added }}") && parseInt("${{ steps.apply-create.outputs.added }}") === ${{ steps.destroy.outputs.actually_destroyed }} && "${{steps.apply-modify.outputs.no_change}}" === "true";
+            // parseInt is used so that it works even with empty values
 
             const status = correct ? "🟢 Success" : "🔴 Problem";
-            const apply_modify_result = ("${{steps.apply-modify.outputs.no_change}}" == "true") ? "🟢 No change detected" : "🔴 Changes were detected (Added ${{ steps.apply-modify.outputs.re_added }}, changed ${{ steps.apply-modify.outputs.re_changed }}, destroyed ${{ steps.apply-modify.outputs.re_destroyed }})";
-            const plan_status = ("${{ steps.plan.outcome }}" == "success") ? "🟢 Success" : "🔴 ${{ steps.plan.outcome }}";
-            const apply_create_status = ("${{ steps.apply-create.outcome }}" == "success") ? "🟢 Success" : "🔴 ${{ steps.apply-create.outcome }}";
-            const apply_modify_status = ("${{ steps.apply-modify.outcome }}" == "success") ? "🟢 Success" : "🔴 ${{ steps.apply-modify.outcome }}";
-            const destroy_status = ("${{ steps.destroy.outcome }}" == "success") ? "🟢 Success" : "🔴 ${{ steps.destroy.outcome }}";
+            const plan_status = ("${{ steps.plan.outcome }}" === "success") ? "🟢 Success" : "🔴 ${{ steps.plan.outcome }}";
+            const apply_create_status = ("${{ steps.apply-create.outcome }}" === "success") ? "🟢 Success" : "🔴 ${{ steps.apply-create.outcome }}";
+            const apply_modify_status = ("${{ steps.apply-modify.outcome }}" === "success") ? "🟢 Success" : "🔴 ${{ steps.apply-modify.outcome }}";
+            const apply_modify_result = ("${{steps.apply-modify.outputs.no_change}}" === "true") ? "🟢 No change detected" : "🔴 Changes were detected (Added ${{ steps.apply-modify.outputs.re_added }}, changed ${{ steps.apply-modify.outputs.re_changed }}, destroyed ${{ steps.apply-modify.outputs.re_destroyed }})";
+            const destroy_status = ("${{ steps.destroy.outcome }}" === "success") ? "🟢 Success" : "🔴 ${{ steps.destroy.outcome }}";
             
             const output = `<details><summary>${status}</summary>
-            1. Plan was: ${plan_status} --> To add ${{ steps.plan.outputs.to_add }}, to change ${{ steps.plan.outputs.to_change }}, to destroy ${{ steps.plan.outputs.to_destroy }}<br>
-            2. Apply Create was: ${apply_create_status} --> Added ${{ steps.apply-create.outputs.added }}, changed ${{ steps.apply-create.outputs.changed }}, destroyed ${{ steps.apply-create.outputs.destroyed }}<br>
-            3. Apply Modify was: ${apply_modify_status} --> ${apply_modify_result}<br>
-            4. Destroy was: ${destroy_status} --> Actually destroyed ${{ steps.destroy.outputs.actually_destroyed }}
+            1. Plan was ${plan_status}:  To add ${{ steps.plan.outputs.to_add }}, to change ${{ steps.plan.outputs.to_change }}, to destroy ${{ steps.plan.outputs.to_destroy }}<br>
+            2. Apply Create was ${apply_create_status}: Added ${{ steps.apply-create.outputs.added }}, changed ${{ steps.apply-create.outputs.changed }}, destroyed ${{ steps.apply-create.outputs.destroyed }}<br>
+            3. Apply Modify was ${apply_modify_status}: ${apply_modify_result}<br>
+            4. Destroy was ${destroy_status}: Destroyed ${{ steps.destroy.outputs.actually_destroyed }}
             </details>`
 
             github.rest.issues.createComment({
