@@ -1,13 +1,9 @@
 package pass_states
 
 import (
-	"regexp"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 )
-
-var nameRegex = regexp.MustCompile(`^[A-Z](?:[A-Z_]*[A-Z])?$`)
 
 var passStateSchema = map[string]*schema.Schema{
 	"id": {
@@ -17,7 +13,7 @@ var passStateSchema = map[string]*schema.Schema{
 	"name": {
 		Type:         schema.TypeString,
 		Required:     true,
-		ValidateFunc: validation.StringMatch(nameRegex, "Must be a valid State name"),
+		ValidateFunc: helper.IsValidStateName,
 	},
 	"read_only": {
 		Type:     schema.TypeBool,
