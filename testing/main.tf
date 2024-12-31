@@ -266,3 +266,7 @@ module "request_definitions" {
     module.plan_templates
   ]
 }
+
+module "request_states" {
+  source = "./requests/request_states/"
+}
