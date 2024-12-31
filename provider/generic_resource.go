@@ -5,8 +5,8 @@ import (
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 )
 
 func (dataSource DataSourceType[T, PT]) toResource() *schema.Resource {

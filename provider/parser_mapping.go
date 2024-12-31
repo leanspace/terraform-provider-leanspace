@@ -5,7 +5,7 @@ import (
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 )
 
 type ParseableModel[T any] interface {
