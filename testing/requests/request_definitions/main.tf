@@ -16,10 +16,22 @@ variable "feasibility_constraint_id" {
   description = "The ID of the pre-defined feasibility constraint to link to the request definition"
 }
 
+data "leanspace_request_definitions" "all" {
+  filters {
+    plan_template_ids                     = []
+    feasibility_constraint_definition_ids = []
+    ids                                   = []
+    query                                 = ""
+    page                                  = 0
+    size                                  = 10
+    sort                                  = ["name,asc"]
+  }
+}
+
 resource "leanspace_request_definitions" "created" {
   name              = "requestDefinitionFromTerraform"
   description       = "requestDefinitionTerraformDescription"
-  plan_template_ids = [ var.plan_template_id ]
+  plan_template_ids = [var.plan_template_id]
   feasibility_constraint_definitions {
     id       = var.feasibility_constraint_id
     required = false

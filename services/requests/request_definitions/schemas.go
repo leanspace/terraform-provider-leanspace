@@ -3,6 +3,7 @@ package request_definitions
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
@@ -180,5 +181,55 @@ var argumentMappingSchema = map[string]*schema.Schema{
 	"activity_definition_argument_definition_name": {
 		Type:     schema.TypeString,
 		Required: true,
+	},
+}
+
+var requestDefinitionFilterSchema = map[string]*schema.Schema{
+	"feasibility_constraint_definition_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"plan_template_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"created_bys": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"to_created_at": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+	},
+	"last_modified_bys": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"from_last_modified_at": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+	},
+	"to_last_modified_at": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
 	},
 }
