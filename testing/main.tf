@@ -258,8 +258,8 @@ module "feasibility_constraint_definitions" {
 }
 
 module "request_definitions" {
-  source = "./requests/request_definitions"
-  plan_template_id = module.plan_templates.created.id
+  source                    = "./requests/request_definitions"
+  plan_template_id          = module.plan_templates.created.id
   feasibility_constraint_id = module.feasibility_constraint_definitions.created.id
   depends_on = [
     module.feasibility_constraint_definitions,
