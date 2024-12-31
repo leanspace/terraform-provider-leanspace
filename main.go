@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
+	"github.com/hashicorp/terraform-plugin-framework/provider"
 
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 	"github.com/leanspace/terraform-provider-leanspace/services"
@@ -19,7 +19,7 @@ func main() {
 	flag.Parse()
 
 	services.AddDataTypes()
-	plugin.Serve(&plugin.ServeOpts{
+	provider.Serve(&provider.ServeOpts{
 		Debug:        debug,
 		ProviderAddr: "registry.terraform.io/leanspace/leanspace",
 		ProviderFunc: provider.Provider,

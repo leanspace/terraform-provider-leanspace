@@ -1,6 +1,6 @@
 package activity_definitions
 
-import "github.com/leanspace/terraform-provider-leanspace/provider"
+import "github.com/hashicorp/terraform-plugin-framework/provider"
 
 var ActivityDefinitionDataType = provider.DataSourceType[ActivityDefinition, *ActivityDefinition]{
 	ResourceIdentifier: "leanspace_activity_definitions",

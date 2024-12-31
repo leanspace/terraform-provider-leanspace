@@ -3,12 +3,14 @@ package provider
 import (
 	"context"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/provider"
+	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-var resourceMap = make(map[string]*schema.Resource)
-var dataSourceMap = make(map[string]*schema.Resource)
+var resourceMap = make(map[string]provider.Resource)
+var dataSourceMap = make(map[string]provider.DataSource)
 
 // Subscribes this data type, adding it to the valid terraform resources and data types.
 func (dataType DataSourceType[T, PT]) Subscribe() {
@@ -17,41 +19,35 @@ func (dataType DataSourceType[T, PT]) Subscribe() {
 }
 
 // Provider -
-func Provider() *schema.Provider {
+func Provider() provider.Provider {
 	return &schema.Provider{
-		Schema: map[string]*schema.Schema{
-			"host": {
-				Type:        schema.TypeString,
+		Schema: map[string]schema.Attribute{
+			"host": schema.StringAttribute{
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("HOST", nil),
 				Description: "Only set this value if you are using a specific URL given by leanspace",
 			},
-			"region": {
-				Type:        schema.TypeString,
+			"region": schema.StringAttribute{
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("REGION", "eu-central-1"),
 				Description: "Only set this value if you are using a specific region given by leanspace",
 			},
-			"env": {
-				Type:        schema.TypeString,
+			"env": schema.StringAttribute{
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("ENV", "prod"),
 				Description: "Only set this value if you are using a specific environment given by leanspace",
 			},
-			"tenant": {
-				Type:        schema.TypeString,
+			"tenant": schema.StringAttribute{
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("TENANT", nil),
 				Description: "The name given to your organization",
 			},
-			"client_id": {
-				Type:        schema.TypeString,
+			"client_id": schema.StringAttribute{
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("CLIENT_ID", nil),
 				Description: "Client id of your Service Account",
 			},
-			"client_secret": {
-				Type:        schema.TypeString,
+			"client_secret": schema.StringAttribute{
 				Optional:    true,
 				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc("CLIENT_SECRET", nil),
@@ -64,30 +60,39 @@ func Provider() *schema.Provider {
 	}
 }
 
-func providerConfigure(ctx context.Context, d *schema.ResourceData) (any, diag.Diagnostics) {
-	host := d.Get("host").(string)
-	env := d.Get("env").(string)
-	tenant := d.Get("tenant").(string)
-	clientId := d.Get("client_id").(string)
-	clientSecret := d.Get("client_secret").(string)
-	region := d.Get("region").(string)
+func providerConfigure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
+	var host, env, tenant, clientId, clientSecret, region types.String
 
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
+	diags := req.Config.Get(ctx, &host, &env, &tenant, &clientId, &clientSecret, &region)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
-	if (clientId != "") && (clientSecret != "") && (tenant != "") {
-		c, err := NewClient(&host, &env, &tenant, &clientId, &clientSecret, &region)
+	if !clientId.IsNull() && !clientSecret.IsNull() && !tenant.IsNull() {
+		c, err := NewClient(&host.Value, &env.Value, &tenant.Value, &clientId.Value, &clientSecret.Value, &region.Value)
 		if err != nil {
-			return nil, diag.FromErr(err)
+			resp.Diagnostics.AddError(
+				"Unable to create Leanspace client",
+				err.Error(),
+			)
+			return
 		}
 
-		return c, diags
+		resp.DataSourceData = c
+		resp.ResourceData = c
+		return
 	}
 
 	c, err := NewClient(nil, nil, nil, nil, nil, nil)
 	if err != nil {
-		return nil, diag.FromErr(err)
+		resp.Diagnostics.AddError(
+			"Unable to create Leanspace client",
+			err.Error(),
+		)
+		return
 	}
 
-	return c, diags
+	resp.DataSourceData = c
+	resp.ResourceData = c
 }
