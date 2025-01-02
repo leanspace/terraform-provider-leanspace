@@ -15,6 +15,7 @@ type ParseableModel[T any] interface {
 	GetID() string
 }
 
+// into JSON, XML,
 type ExtraMarshallModel interface {
 	// An optional extra function that is called before the object is marshalled.
 	// This can be useful to encode specific fields to an API-compatible format, or to extrapolate optional data.
@@ -22,6 +23,7 @@ type ExtraMarshallModel interface {
 	PreMarshallProcess() error
 }
 
+// into Go objects
 type ExtraUnmarshallModel interface {
 	// An optional extra function that is called after the object was unmarshalled.
 	// This can be useful to decode specific fields from an API-compatible format, or to extrapolate optional data.
@@ -92,13 +94,14 @@ type ValidationModel interface {
 }
 
 type GenericClient[T any, PT ParseableModel[T]] struct {
-	Client     *Client
-	Path       string
-	CreatePath func(PT) string
-	ReadPath   func(string) string
-	DeletePath func(string) string
-	UpdatePath func(string) string
-	IsUnique   bool `default:"false"`
+	Client         *Client
+	Path           string
+	CreatePath     func(PT) string
+	ReadPath       func(string) string
+	DeletePath     func(string) string
+	UpdatePath     func(PT) string
+	UpdateFunction func(*Client, string, PT) (PT, error)
+	IsUnique       bool `default:"false"`
 }
 
 type DataSourceType[T any, PT ParseableModel[T]] struct {
@@ -118,7 +121,10 @@ type DataSourceType[T any, PT ParseableModel[T]] struct {
 	DeletePath func(string) string
 	// Optional. A function that returns the path to which API update requests are sent.
 	// This can be useful when the path to update from has extra subpaths (e.g. "LEAFSPACE/update")
-	UpdatePath func(string) string
+	UpdatePath func(PT) string
+	// Optional. A function that is called when an update is requested. This can be useful when the update
+	// request is different from the default PUT request.
+	UpdateFunction func(*Client, string, PT) (PT, error)
 	// The schema to represent the data
 	Schema map[string]*schema.Schema
 	// The filters used for this resource's data source. The only allowed fields are primitives and lists of
@@ -131,12 +137,13 @@ type DataSourceType[T any, PT ParseableModel[T]] struct {
 
 func (dataSource DataSourceType[T, PT]) convert(client *Client) GenericClient[T, PT] {
 	return GenericClient[T, PT]{
-		Client:     client,
-		Path:       dataSource.Path,
-		CreatePath: dataSource.CreatePath,
-		ReadPath:   dataSource.ReadPath,
-		DeletePath: dataSource.DeletePath,
-		UpdatePath: dataSource.UpdatePath,
-		IsUnique:   dataSource.IsUnique,
+		Client:         client,
+		Path:           dataSource.Path,
+		CreatePath:     dataSource.CreatePath,
+		ReadPath:       dataSource.ReadPath,
+		DeletePath:     dataSource.DeletePath,
+		UpdatePath:     dataSource.UpdatePath,
+		UpdateFunction: dataSource.UpdateFunction,
+		IsUnique:       dataSource.IsUnique,
 	}
 }
