@@ -27,7 +27,7 @@ var validLengthTypes = []string{
 	"FIXED", "DYNAMIC",
 }
 
-var streamSchema = map[string]*schema.Schema{
+var StreamSchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
 		Computed: true,
@@ -460,7 +460,7 @@ var errorSchema = map[string]*schema.Schema{
 	},
 }
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
+var DataSourceFilterSchema = map[string]*schema.Schema{
 	"asset_ids": {
 		Type:     schema.TypeList,
 		Optional: true,
