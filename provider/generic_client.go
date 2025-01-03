@@ -190,33 +190,42 @@ func (client GenericClient[T, PT]) Create(createElement PT) (PT, error) {
 			return nil, err
 		}
 	}
-
 	return value, nil
 }
 
 func (client GenericClient[T, PT]) Update(elementId string, updateElement PT) (PT, error) {
-	requestContent, contentType, err := client.encodeElement(updateElement, true)
-	path := fmt.Sprintf("%s/%s", client.Path, elementId)
-	if client.UpdatePath != nil {
-		path = client.UpdatePath(elementId)
-	}
-	if err != nil {
-		return nil, err
-	}
-	req, err := http.NewRequest("PUT", fmt.Sprintf("%s/%s", client.Client.HostURL, path), requestContent)
-	req.Header.Set("Content-Type", contentType)
-	if err != nil {
-		return nil, err
-	}
+	var err error
+	var value PT
+	if client.UpdateFunction == nil {
+		requestContent, contentType, err := client.encodeElement(updateElement, true)
+		path := fmt.Sprintf("%s/%s", client.Path, elementId)
+		if client.UpdatePath != nil {
+			path = client.UpdatePath(updateElement)
+		}
+		if err != nil {
+			return nil, err
+		}
+		req, err := http.NewRequest("PUT", fmt.Sprintf("%s/%s", client.Client.HostURL, path), requestContent)
+		req.Header.Set("Content-Type", contentType)
+		if err != nil {
+			return nil, err
+		}
 
-	body, err, _ := client.Client.DoRequest(req, &(client.Client).Token)
-	if err != nil {
-		return nil, err
-	}
+		body, err, _ := client.Client.DoRequest(req, &(client.Client).Token)
+		if err != nil {
+			return nil, err
+		}
 
-	value, err := client.unmarshalElement(body)
-	if err != nil {
-		return nil, err
+		value, err = client.unmarshalElement(body)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		value, err = client.UpdateFunction(client.Client, elementId, updateElement)
+		if err != nil {
+			return nil, err
+		}
+
 	}
 
 	if postUpdate, ok := any(updateElement).(PostUpdateModel); ok {
