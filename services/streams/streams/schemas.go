@@ -422,7 +422,7 @@ var computationSchema = map[string]*schema.Schema{
 	"expression": {
 		Type:        schema.TypeString,
 		Required:    true,
-		Description: "i.e.: javascript function with 2 input parameters and a return value (ctx, raw) => ctx['metadata.received_at']",
+		Description: "i.e.: javascript function with 2 input parameters and a return value (ctx, raw) => ctx.metadata.received_at",
 	},
 	"valid": {
 		Type:     schema.TypeBool,

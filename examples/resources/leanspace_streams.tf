@@ -88,7 +88,7 @@ resource "leanspace_streams" "stream" {
     }
     metadata {
       timestamp {
-        expression = "(ctx, raw) => ctx['metadata.received_at'];"
+        expression = "(ctx, raw) => ctx.metadata.received_at;"
       }
     }
     computations {
@@ -96,7 +96,7 @@ resource "leanspace_streams" "stream" {
         data_type  = "UINTEGER"
         name       = "is_version_0"
         expression = <<-EOT
-            (ctx) => ctx['structure.version'] === 0
+            (ctx) => ctx.structure.version === 0
           EOT
       }
       elements {
