@@ -19,7 +19,7 @@ var streamComponentValidators = Validators{
 	),
 	If(
 		Or(Equals("data_type", "INTEGER"), Equals("data_type", "UINTEGER")),
-		LessThanEq("length.value", 32),
+		LessThanEq("length.value", 64),
 	),
 	If(
 		Equals("data_type", "DECIMAL"),

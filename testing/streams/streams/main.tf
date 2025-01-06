@@ -178,7 +178,7 @@ resource "leanspace_streams" "test" {
     }
     metadata {
       timestamp {
-        expression = "(ctx, raw) => ctx['metadata.received_at'];"
+        expression = "(ctx, raw) => ctx.metadata.received_at;"
       }
     }
     computations {
@@ -187,7 +187,7 @@ resource "leanspace_streams" "test" {
         name       = "power"
         expression = <<-EOT
             (ctx) => {
-              const voltage = ctx['structure.properties.solar_w'];
+              const voltage = ctx.structure.properties.solar_w;
               var power = voltage * 15;
               return (power);
             }
