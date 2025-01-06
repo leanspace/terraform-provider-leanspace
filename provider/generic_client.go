@@ -200,7 +200,7 @@ func (client GenericClient[T, PT]) Update(elementId string, updateElement PT) (P
 		requestContent, contentType, err := client.encodeElement(updateElement, true)
 		path := fmt.Sprintf("%s/%s", client.Path, elementId)
 		if client.UpdatePath != nil {
-			path = client.UpdatePath(updateElement)
+			path = client.UpdatePath(elementId)
 		}
 		if err != nil {
 			return nil, err

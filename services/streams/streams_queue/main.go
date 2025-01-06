@@ -2,18 +2,19 @@ package streams_queue
 
 import (
 	"github.com/leanspace/terraform-provider-leanspace/provider"
+	"github.com/leanspace/terraform-provider-leanspace/services/streams/streams"
 )
 
-var StreamQueueDataType = provider.DataSourceType[Stream, *Stream]{
-	ResourceIdentifier: "leanspace_streams_queue",
+var StreamQueueDataType = provider.DataSourceType[streams.Stream, *streams.Stream]{
+	ResourceIdentifier: "leanspace_stream_queues",
 	Path:               Path,
-	Schema:             streamSchema,
-	FilterSchema:       dataSourceFilterSchema,
-	CreatePath: func(_ *Stream) string {
+	Schema:             streams.StreamSchema,
+	FilterSchema:       streams.DataSourceFilterSchema,
+	CreatePath: func(_ *streams.Stream) string {
 		return "streams-repository/stream-queues"
 	},
-	UpdateFunction: func(client *provider.Client, id string, updatedStream *Stream) (*Stream, error) {
-		return updatedStream.UpdateStream(client, id, updatedStream)
+	UpdateFunction: func(client *provider.Client, id string, updatedStream *streams.Stream) (*streams.Stream, error) {
+		return UpdateStream(updatedStream, client, id, updatedStream)
 	},
 }
 

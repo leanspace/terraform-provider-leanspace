@@ -99,7 +99,7 @@ type GenericClient[T any, PT ParseableModel[T]] struct {
 	CreatePath     func(PT) string
 	ReadPath       func(string) string
 	DeletePath     func(string) string
-	UpdatePath     func(PT) string
+	UpdatePath     func(string) string
 	UpdateFunction func(*Client, string, PT) (PT, error)
 	IsUnique       bool `default:"false"`
 }
@@ -121,7 +121,7 @@ type DataSourceType[T any, PT ParseableModel[T]] struct {
 	DeletePath func(string) string
 	// Optional. A function that returns the path to which API update requests are sent.
 	// This can be useful when the path to update from has extra subpaths (e.g. "LEAFSPACE/update")
-	UpdatePath func(PT) string
+	UpdatePath func(string) string
 	// Optional. A function that is called when an update is requested. This can be useful when the update
 	// request is different from the default PUT request.
 	UpdateFunction func(*Client, string, PT) (PT, error)
