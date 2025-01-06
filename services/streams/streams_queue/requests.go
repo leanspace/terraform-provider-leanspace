@@ -74,13 +74,13 @@ func CustomEncoding(stream *streams.Stream, data []byte, isUpdating bool) (io.Re
 	return strings.NewReader(string(streamQueueData)), "application/json", nil
 }
 
-func UpdateStream(updatedStream streams.Stream, client *provider.Client, id string) (*streams.Stream, error) {
+func UpdateStream(updatedStream *streams.Stream, client *provider.Client, id string) (*streams.Stream, error) {
 	streamQueueInfo, err := fetchStreamQueueInfo(updatedStream.ID, client)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := performStreamUpdate(client, streamQueueInfo.StreamQueueId, &updatedStream); err != nil {
+	if err := performStreamUpdate(client, streamQueueInfo.StreamQueueId, updatedStream); err != nil {
 		return nil, err
 	}
 	streamId, err := waitForStreamQueueCompletion(streamQueueInfo.StreamQueueId, client)
@@ -88,7 +88,7 @@ func UpdateStream(updatedStream streams.Stream, client *provider.Client, id stri
 		return nil, err
 	}
 
-	return fetchUpdatedStreamInfo(&updatedStream, streamId, client)
+	return fetchUpdatedStreamInfo(updatedStream, streamId, client)
 }
 
 func performStreamUpdate(client *provider.Client, streamQueueId string, updatedStream *streams.Stream) error {

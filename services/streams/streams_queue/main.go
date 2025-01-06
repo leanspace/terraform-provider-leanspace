@@ -14,7 +14,7 @@ var StreamQueueDataType = provider.DataSourceType[streams.Stream, *streams.Strea
 		return "streams-repository/stream-queues"
 	},
 	UpdateFunction: func(client *provider.Client, id string, updatedStream *streams.Stream) (*streams.Stream, error) {
-		return UpdateStream(updatedStream, client, id, updatedStream)
+		return UpdateStream(updatedStream, client, id)
 	},
 }
 
