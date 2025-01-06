@@ -102,7 +102,7 @@ resource "leanspace_streams" "stream" {
     }
     metadata {
       timestamp {
-        expression = "(ctx, raw) => ctx['metadata.received_at'];"
+        expression = "(ctx, raw) => ctx.metadata.received_at;"
       }
     }
     computations {
@@ -110,7 +110,7 @@ resource "leanspace_streams" "stream" {
         data_type  = "UINTEGER"
         name       = "is_version_0"
         expression = <<-EOT
-            (ctx) => ctx['structure.version'] === 0
+            (ctx) => ctx.structure.version === 0
           EOT
       }
       elements {
@@ -199,7 +199,7 @@ Read-Only:
 Required:
 
 - `data_type` (String) it must be one of these values: INTEGER, UINTEGER, DECIMAL, TEXT, BOOLEAN, BINARY, TIMESTAMP, DATE
-- `expression` (String) i.e.: javascript function with 2 input parameters and a return value (ctx, raw) => ctx['metadata.received_at']
+- `expression` (String) i.e.: javascript function with 2 input parameters and a return value (ctx, raw) => ctx.metadata.received_at
 - `name` (String)
 
 Read-Only:
