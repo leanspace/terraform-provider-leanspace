@@ -31,7 +31,7 @@ data "leanspace_stream_queues" "all" {
 }
 
 resource "leanspace_stream_queues" "test" {
-  name        = "test terrdeaform stream queue"
+  name        = "test terraform stream queue"
   description = "A complex stream, entirely crdeeadeted under terraform."
   asset_id    = var.asset_id
   configuration {
