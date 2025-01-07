@@ -19,7 +19,7 @@ variable "numeric_metric_id" {
 
 }
 
-data "leanspace_streams" "all" {
+data "leanspace_stream_queues" "all" {
   filters {
     asset_ids = [var.asset_id]
     ids       = []
@@ -30,8 +30,8 @@ data "leanspace_streams" "all" {
   }
 }
 
-resource "leanspace_streams_queue" "test" {
-  name        = "test terraform"
+resource "leanspace_stream_queues" "test" {
+  name        = "test terrdeaform stream queue"
   description = "A complex stream, entirely crdeeadeted under terraform."
   asset_id    = var.asset_id
   configuration {
@@ -219,5 +219,5 @@ resource "leanspace_streams_queue" "test" {
 }
 
 output "test_stream" {
-  value = leanspace_streams_queue.test
+  value = leanspace_stream_queues.test
 }

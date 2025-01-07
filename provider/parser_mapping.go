@@ -101,6 +101,7 @@ type GenericClient[T any, PT ParseableModel[T]] struct {
 	DeletePath     func(string) string
 	UpdatePath     func(string) string
 	UpdateFunction func(*Client, string, PT) (PT, error)
+	CreateFunction func(*Client, PT) (PT, error)
 	IsUnique       bool `default:"false"`
 }
 
@@ -123,8 +124,11 @@ type DataSourceType[T any, PT ParseableModel[T]] struct {
 	// This can be useful when the path to update from has extra subpaths (e.g. "LEAFSPACE/update")
 	UpdatePath func(string) string
 	// Optional. A function that is called when an update is requested. This can be useful when the update
-	// request is different from the default PUT request.
+	// request is different from the default Update request.
 	UpdateFunction func(*Client, string, PT) (PT, error)
+	// Optional. A function that is called when an update is requested. This can be useful when the update
+	// request is different from the default Create request.
+	CreateFunction func(*Client, PT) (PT, error)
 	// The schema to represent the data
 	Schema map[string]*schema.Schema
 	// The filters used for this resource's data source. The only allowed fields are primitives and lists of
@@ -144,6 +148,7 @@ func (dataSource DataSourceType[T, PT]) convert(client *Client) GenericClient[T,
 		DeletePath:     dataSource.DeletePath,
 		UpdatePath:     dataSource.UpdatePath,
 		UpdateFunction: dataSource.UpdateFunction,
+		CreateFunction: dataSource.CreateFunction,
 		IsUnique:       dataSource.IsUnique,
 	}
 }

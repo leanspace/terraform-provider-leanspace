@@ -27,6 +27,10 @@ type apiStreamQueueResponse struct {
 	StreamId string `json:"streamId"`
 }
 
+type apiStreamQueueCreationResponse struct {
+	ID string `json:"id"`
+}
+
 type StreamQueueInformation struct {
 	Status        string
 	StreamId      string
@@ -48,6 +52,7 @@ func toAPICreateFormat(stream *streams.Stream) ([]byte, error) {
 	streamQueue := apiStreamQueueCreateInfo{
 		Command: *stream,
 	}
+
 	return json.Marshal(streamQueue)
 }
 
@@ -62,16 +67,45 @@ func toAPIUpdateFormat(stream *streams.Stream) ([]byte, error) {
 func CustomEncoding(stream *streams.Stream, data []byte, isUpdating bool) (io.Reader, string, error) {
 	var streamQueueData []byte
 	var err error
-	if isUpdating {
-		stream.PreMarshallProcess()
-		streamQueueData, err = toAPIUpdateFormat(stream)
-	} else {
-		streamQueueData, err = toAPICreateFormat(stream)
-	}
+
+	stream.PreMarshallProcess()
+	streamQueueData, err = toAPIUpdateFormat(stream)
 	if err != nil {
 		return nil, "", err
 	}
 	return strings.NewReader(string(streamQueueData)), "application/json", nil
+}
+
+func CreateStream(stream *streams.Stream, client *provider.Client) (*streams.Stream, error) {
+	streamQueueData, err := toAPICreateFormat(stream)
+	if err != nil {
+		return nil, err
+	}
+
+	requestContent, contentType, err := CustomEncoding(stream, streamQueueData, true)
+	if err != nil {
+		return nil, err
+	}
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/streams-repository/stream-queues", client.HostURL), requestContent)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", contentType)
+	data, err, _ := client.DoRequest(req, &client.Token)
+	if err != nil {
+		return nil, err
+	}
+
+	var streamQueue apiStreamQueueCreationResponse
+	if err := json.Unmarshal(data, &streamQueue); err != nil {
+		return nil, err
+	}
+	streamId, err := waitForStreamQueueCompletion(streamQueue.ID, client)
+	if err != nil {
+		return nil, err
+	}
+
+	return fetchStreamInfo(nil, streamId, client)
 }
 
 func UpdateStream(updatedStream *streams.Stream, client *provider.Client, id string) (*streams.Stream, error) {
@@ -88,7 +122,7 @@ func UpdateStream(updatedStream *streams.Stream, client *provider.Client, id str
 		return nil, err
 	}
 
-	return fetchUpdatedStreamInfo(updatedStream, streamId, client)
+	return fetchStreamInfo(updatedStream, streamId, client)
 }
 
 func performStreamUpdate(client *provider.Client, streamQueueId string, updatedStream *streams.Stream) error {
@@ -115,17 +149,6 @@ func performStreamUpdate(client *provider.Client, streamQueueId string, updatedS
 	return nil
 }
 
-func PostCreateProcess(stream *streams.Stream, client *provider.Client, destStreamRaw any) error {
-	// I will be force to use the same logic for creation as for update :(
-	createdStream := destStreamRaw.(*streams.Stream)
-	streamId, err := waitForStreamQueueCompletion(createdStream.ID, client)
-	if err != nil {
-		return err
-	}
-	updateStreamInfo(createdStream, streamId, client)
-	return nil
-}
-
 func waitForStreamQueueCompletion(streamQueueId string, client *provider.Client) (string, error) {
 	var streamQueueInfo *apiStreamQueueResponse
 	var err error
@@ -144,7 +167,10 @@ func waitForStreamQueueCompletion(streamQueueId string, client *provider.Client)
 	return streamQueueInfo.StreamId, nil
 }
 
-func fetchUpdatedStreamInfo(stream *streams.Stream, streamId string, client *provider.Client) (*streams.Stream, error) {
+func fetchStreamInfo(stream *streams.Stream, streamId string, client *provider.Client) (*streams.Stream, error) {
+	if stream == nil {
+		stream = &streams.Stream{}
+	}
 	streamInfo, err := getStream(streamId, client)
 	if err != nil {
 		return nil, err

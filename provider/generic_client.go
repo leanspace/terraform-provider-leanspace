@@ -156,40 +156,58 @@ func (client GenericClient[T, PT]) Get(id string, readElement PT) (PT, error) {
 }
 
 func (client GenericClient[T, PT]) Create(createElement PT) (PT, error) {
-	path := client.Path
-	if client.CreatePath != nil {
-		path = client.CreatePath(createElement)
-	}
+	var err error
+	var value PT
+	if client.CreateFunction == nil {
+		path := client.Path
 
-	requestContent, contentType, err := client.encodeElement(createElement, false)
-	if err != nil {
-		return nil, err
-	}
+		if client.CreatePath != nil {
+			path = client.CreatePath(createElement)
+		}
 
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/%s", client.Client.HostURL, path), requestContent)
-	req.Header.Set("Content-Type", contentType)
-	if err != nil {
-		return nil, err
-	}
+		requestContent, contentType, err := client.encodeElement(createElement, false)
+		if err != nil {
+			return nil, err
+		}
 
-	body, err, _ := client.Client.DoRequest(req, &(client.Client).Token)
+		req, err := http.NewRequest("POST", fmt.Sprintf("%s/%s", client.Client.HostURL, path), requestContent)
+		req.Header.Set("Content-Type", contentType)
+		if err != nil {
+			return nil, err
+		}
 
-	// Here, maybe check if the error is because of a 409 (conflict), in which case
-	// we update the object and continue as if it was created.
-	if err != nil {
-		return nil, err
-	}
+		body, err, _ := client.Client.DoRequest(req, &(client.Client).Token)
 
-	value, err := client.unmarshalElement(body)
-	if err != nil {
-		return nil, err
-	}
+		// Here, maybe check if the error is because of a 409 (conflict), in which case
+		// we update the object and continue as if it was created.
+		if err != nil {
+			return nil, err
+		}
 
-	if postCreate, ok := any(createElement).(PostCreateModel); ok {
-		if err := postCreate.PostCreateProcess(client.Client, value); err != nil {
+		value, err := client.unmarshalElement(body)
+		if err != nil {
+			return nil, err
+		}
+
+		if postCreate, ok := any(createElement).(PostCreateModel); ok {
+			if err := postCreate.PostCreateProcess(client.Client, value); err != nil {
+				return nil, err
+			}
+		}
+		return value, nil
+	} else {
+		value, err = client.CreateFunction(client.Client, createElement)
+		if err != nil {
 			return nil, err
 		}
 	}
+
+	if postUpdate, ok := any(createElement).(PostUpdateModel); ok {
+		if err := postUpdate.PostUpdateProcess(client.Client, value); err != nil {
+			return nil, err
+		}
+	}
+
 	return value, nil
 }
 

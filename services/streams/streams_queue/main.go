@@ -16,6 +16,9 @@ var StreamQueueDataType = provider.DataSourceType[streams.Stream, *streams.Strea
 	UpdateFunction: func(client *provider.Client, id string, updatedStream *streams.Stream) (*streams.Stream, error) {
 		return UpdateStream(updatedStream, client, id)
 	},
+	CreateFunction: func(client *provider.Client, stream *streams.Stream) (*streams.Stream, error) {
+		return CreateStream(stream, client)
+	},
 }
 
 // need to declare there in order to avoid cyclic dependencies
