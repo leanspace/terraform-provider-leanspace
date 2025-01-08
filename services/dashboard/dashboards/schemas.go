@@ -141,13 +141,6 @@ var dashboardWidgetSchema = map[string]*schema.Schema{
 			Schema: seriesSchema,
 		},
 	},
-	"metrics": {
-		Type:     schema.TypeList,
-		Computed: true,
-		Elem: &schema.Resource{
-			Schema: metricInfoSchema,
-		},
-	},
 	"metadata": {
 		Type:     schema.TypeList,
 		Computed: true,
@@ -217,17 +210,6 @@ var filterSchema = map[string]*schema.Schema{
 		Computed: true,
 	},
 	"value": {
-		Type:     schema.TypeString,
-		Computed: true,
-	},
-}
-
-var metricInfoSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
-		Computed: true,
-	},
-	"aggregation": {
 		Type:     schema.TypeString,
 		Computed: true,
 	},
