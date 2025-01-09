@@ -84,10 +84,5 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (any, diag.D
 		return c, diags
 	}
 
-	c, err := NewClient(nil, nil, nil, nil, nil, nil)
-	if err != nil {
-		return nil, diag.FromErr(err)
-	}
-
-	return c, diags
+	return nil, diag.Errorf("Please provide tenant, client_id and client_secret")
 }
