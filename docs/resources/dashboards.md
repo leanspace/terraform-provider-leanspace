@@ -142,7 +142,6 @@ Read-Only:
 - `last_modified_at` (String)
 - `last_modified_by` (String)
 - `metadata` (List of Object) (see [below for nested schema](#nestedobjatt--widgets--metadata))
-- `metrics` (List of Object) (see [below for nested schema](#nestedobjatt--widgets--metrics))
 - `name` (String)
 - `series` (List of Object) (see [below for nested schema](#nestedobjatt--widgets--series))
 - `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--widgets--tags))
@@ -168,15 +167,6 @@ Read-Only:
 - `from` (String)
 - `to` (String)
 
-
-
-<a id="nestedobjatt--widgets--metrics"></a>
-### Nested Schema for `widgets.metrics`
-
-Read-Only:
-
-- `aggregation` (String)
-- `id` (String)
 
 
 <a id="nestedobjatt--widgets--series"></a>
