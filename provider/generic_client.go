@@ -202,8 +202,8 @@ func (client GenericClient[T, PT]) Create(createElement PT) (PT, error) {
 		}
 	}
 
-	if postUpdate, ok := any(createElement).(PostUpdateModel); ok {
-		if err := postUpdate.PostUpdateProcess(client.Client, value); err != nil {
+	if postCreate, ok := any(createElement).(PostCreateModel); ok {
+		if err := postCreate.PostCreateProcess(client.Client, value); err != nil {
 			return nil, err
 		}
 	}
