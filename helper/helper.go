@@ -136,7 +136,7 @@ func Implements[T any, I any]() bool {
 	return isInstance
 }
 
-const Debug = true
+const Debug = false
 
 var Logger = func() *log.Logger {
 	if Debug {

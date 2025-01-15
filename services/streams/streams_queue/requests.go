@@ -3,7 +3,6 @@ package streams_queue
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	_ "github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/services/streams/streams"
 	"io"
@@ -49,9 +48,9 @@ type contentItem struct {
 	RequestID string `json:"requestId"`
 }
 
-func toAPICreateFormat(stream *streamQueue) ([]byte, error) {
+func toAPICreateFormat(stream *streams.Stream) ([]byte, error) {
 	streamQueue := apiStreamQueueCreateInfo{
-		Command: stream.stream,
+		Command: *stream,
 	}
 
 	return json.Marshal(streamQueue)
@@ -65,19 +64,19 @@ func toAPIUpdateFormat(stream *streams.Stream) ([]byte, error) {
 	return json.Marshal(streamQueue)
 }
 
-func CustomEncoding(streamQueue *streamQueue, data []byte, isUpdating bool) (io.Reader, string, error) {
+func CustomEncoding(stream *streams.Stream, data []byte, isUpdating bool) (io.Reader, string, error) {
 	var streamQueueData []byte
 	var err error
 
-	streamQueue.stream.PreMarshallProcess()
-	streamQueueData, err = toAPIUpdateFormat(&streamQueue.stream)
+	stream.PreMarshallProcess()
+	streamQueueData, err = toAPIUpdateFormat(stream)
 	if err != nil {
 		return nil, "", err
 	}
 	return strings.NewReader(string(streamQueueData)), "application/json", nil
 }
 
-func CreateStream(stream *streamQueue, client *provider.Client) (*streamQueue, error) {
+func CreateStream(stream *streams.Stream, client *provider.Client) (*streams.Stream, error) {
 	streamQueueData, err := toAPICreateFormat(stream)
 	if err != nil {
 		return nil, err
@@ -106,33 +105,38 @@ func CreateStream(stream *streamQueue, client *provider.Client) (*streamQueue, e
 		return nil, err
 	}
 
-	return fetchStreamInfo(nil, streamId, client, streamQueue.ID)
+	return fetchStreamInfo(nil, streamId, client)
 }
 
-func UpdateStream(updatedStreamQueue *streamQueue, client *provider.Client, id string) (*streamQueue, error) {
-	if err := performStreamUpdate(client, updatedStreamQueue); err != nil {
-		return nil, err
-	}
-	streamId, err := waitForStreamQueueCompletion(updatedStreamQueue.streamQueueId, client)
+func UpdateStream(updatedStream *streams.Stream, client *provider.Client, id string) (*streams.Stream, error) {
+	streamQueueInfo, err := fetchStreamQueueInfo(updatedStream.ID, client)
 	if err != nil {
 		return nil, err
 	}
 
-	return fetchStreamInfo(&updatedStreamQueue.stream, streamId, client, updatedStreamQueue.streamQueueId)
+	if err := performStreamUpdate(client, streamQueueInfo.StreamQueueId, updatedStream); err != nil {
+		return nil, err
+	}
+	streamId, err := waitForStreamQueueCompletion(streamQueueInfo.StreamQueueId, client)
+	if err != nil {
+		return nil, err
+	}
+
+	return fetchStreamInfo(updatedStream, streamId, client)
 }
 
-func performStreamUpdate(client *provider.Client, streamQueue *streamQueue) error {
-	updateData, err := json.Marshal(streamQueue.stream)
+func performStreamUpdate(client *provider.Client, streamQueueId string, updatedStream *streams.Stream) error {
+	updateData, err := json.Marshal(updatedStream)
 	if err != nil {
 		return err
 	}
 
-	requestContent, contentType, err := CustomEncoding(streamQueue, updateData, true)
+	requestContent, contentType, err := CustomEncoding(updatedStream, updateData, true)
 	if err != nil {
 		return err
 	}
 
-	req, err := http.NewRequest("PUT", fmt.Sprintf("%s/streams-repository/stream-queues/%s", client.HostURL, streamQueue.streamQueueId), requestContent)
+	req, err := http.NewRequest("PUT", fmt.Sprintf("%s/streams-repository/stream-queues/%s", client.HostURL, streamQueueId), requestContent)
 	if err != nil {
 		return err
 	}
@@ -163,7 +167,7 @@ func waitForStreamQueueCompletion(streamQueueId string, client *provider.Client)
 	return streamQueueInfo.StreamId, nil
 }
 
-func fetchStreamInfo(stream *streams.Stream, streamId string, client *provider.Client, streamQueueId string) (*streamQueue, error) {
+func fetchStreamInfo(stream *streams.Stream, streamId string, client *provider.Client) (*streams.Stream, error) {
 	if stream == nil {
 		stream = &streams.Stream{}
 	}
@@ -172,14 +176,17 @@ func fetchStreamInfo(stream *streams.Stream, streamId string, client *provider.C
 		return nil, err
 	}
 	updateStreamFields(stream, streamInfo)
-	helper.Logger.Printf("fetchStreamInfo: %v", streamQueueId)
-	helper.Logger.Printf("fetchStreamInfo: %v", stream)
-	helper.Logger.Printf("fetchStreamInfo id: %v", stream.ID)
+	return stream, nil
+}
+
+func updateStreamInfo(stream *streams.Stream, streamId string, client *provider.Client) error {
+	streamInfo, err := getStream(streamId, client)
+	if err != nil {
+		return err
+	}
+	updateStreamFields(stream, streamInfo)
 	stream.PostUnmarshallProcess()
-	return &streamQueue{
-		stream:        *stream,
-		streamQueueId: streamQueueId,
-	}, nil
+	return nil
 }
 
 func updateStreamFields(stream *streams.Stream, streamInfo *streams.Stream) {
@@ -216,7 +223,7 @@ func getStreamQueue(streamQueueId string, client *provider.Client) (*apiStreamQu
 }
 
 func getStream(streamId string, client *provider.Client) (*streams.Stream, error) {
-	path := fmt.Sprintf("%s/%s/%s", client.HostURL, path, streamId)
+	path := fmt.Sprintf("%s/%s/%s", client.HostURL, Path, streamId)
 	req, err := http.NewRequest("GET", path, nil)
 	if err != nil {
 		return nil, err
@@ -235,5 +242,36 @@ func getStream(streamId string, client *provider.Client) (*streams.Stream, error
 		return nil, err
 	}
 	return &stream, nil
+}
 
+func fetchStreamQueueInfo(streamId string, client *provider.Client) (*StreamQueueInformation, error) {
+	path := fmt.Sprintf("%s/streams-repository/stream-queues?streamIds=%s", client.HostURL, streamId)
+	req, err := http.NewRequest("GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	data, err, code := client.DoRequest(req, &client.Token)
+	if code == http.StatusNotFound {
+		return nil, fmt.Errorf("stream queue not found")
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	var response searchStreamQueueResponse
+	if err := json.Unmarshal(data, &response); err != nil {
+		return nil, err
+	}
+
+	if len(response.Content) != 1 {
+		return nil, fmt.Errorf("invalid number of stream queues found for stream ID %s", streamId)
+	}
+
+	item := response.Content[0]
+	return &StreamQueueInformation{
+		Status:        item.Status,
+		StreamId:      item.StreamID,
+		StreamQueueId: item.ID,
+	}, nil
 }

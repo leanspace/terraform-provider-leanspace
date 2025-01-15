@@ -10,8 +10,6 @@ import (
 )
 
 func (stream *Stream) ToMap() map[string]any {
-	helper.Logger.Printf("in stream: %v", stream)
-	helper.Logger.Printf("in stream.id: %v", stream.ID)
 	streamMap := make(map[string]any)
 	streamMap["id"] = stream.ID
 	streamMap["version"] = stream.Version
@@ -174,7 +172,6 @@ func (err *Error) ToMap() map[string]any {
 }
 
 func (stream *Stream) FromMap(streamMap map[string]any) error {
-	helper.Logger.Printf("in streamMap: %v", streamMap)
 	stream.ID = streamMap["id"].(string)
 	stream.Version = streamMap["version"].(int)
 	stream.Name = streamMap["name"].(string)

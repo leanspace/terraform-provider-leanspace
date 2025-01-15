@@ -29,6 +29,7 @@ func (planTemplate *PlanTemplate) ToMap() map[string]any {
 	planTemplateMap["last_modified_at"] = planTemplate.LastModifiedAt
 	planTemplateMap["last_modified_by"] = planTemplate.LastModifiedBy
 
+	helper.Logger.Printf("%s", planTemplateMap)
 	return planTemplateMap
 }
 
