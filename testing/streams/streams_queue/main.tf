@@ -2,8 +2,17 @@ terraform {
   required_providers {
     leanspace = {
       source = "leanspace/leanspace"
+      version = "0.4.0"
     }
   }
+}
+
+
+provider "leanspace" {
+  tenant        = "yuri"
+  env           = "develop"
+  client_id     = "nlbja2p65j8kj7of0tfs29rf4"
+  client_secret = "d762kk9862jn0j1qr4c2u3o8bjkv70o45pld3200ek89qtul6kg"
 }
 
 variable "asset_id" {
@@ -31,7 +40,7 @@ data "leanspace_stream_queues" "all" {
 }
 
 resource "leanspace_stream_queues" "test" {
-  name        = "test terraform stream queue"
+  name        = "test terraformd stream qduteeuddde"
   description = "A complex stream, entirely crdeeadeted under terraform."
   asset_id    = var.asset_id
   configuration {

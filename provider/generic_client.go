@@ -184,17 +184,11 @@ func (client GenericClient[T, PT]) Create(createElement PT) (PT, error) {
 			return nil, err
 		}
 
-		value, err := client.unmarshalElement(body)
+		value, err = client.unmarshalElement(body)
 		if err != nil {
 			return nil, err
 		}
 
-		if postCreate, ok := any(createElement).(PostCreateModel); ok {
-			if err := postCreate.PostCreateProcess(client.Client, value); err != nil {
-				return nil, err
-			}
-		}
-		return value, nil
 	} else {
 		value, err = client.CreateFunction(client.Client, createElement)
 		if err != nil {
