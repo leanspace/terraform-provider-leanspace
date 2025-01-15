@@ -74,6 +74,16 @@ module "streams" {
   ]
 }
 
+module "streams_queue" {
+  source            = "./streams/streams_queue"
+  asset_id          = module.nodes.satellite_node.id
+  numeric_metric_id = module.metrics.test_numeric_metric.id
+  depends_on = [
+    module.nodes,
+    module.metrics
+  ]
+}
+
 module "widgets" {
   source            = "./dashboard/widgets"
   text_metric_id    = module.metrics.test_text_metric.id
