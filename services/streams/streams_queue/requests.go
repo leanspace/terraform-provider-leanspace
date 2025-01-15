@@ -3,7 +3,6 @@ package streams_queue
 import (
 	"encoding/json"
 	"fmt"
-	_ "github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/services/streams/streams"
 	"io"
 	"net/http"
@@ -31,17 +30,17 @@ type apiStreamQueueCreationResponse struct {
 	ID string `json:"id"`
 }
 
-type StreamQueueInformation struct {
+type streamQueueInformation struct {
 	Status        string
 	StreamId      string
 	StreamQueueId string
 }
 
 type searchStreamQueueResponse struct {
-	Content []contentItem `json:"content"`
+	Content []streamQueueContentItem `json:"content"`
 }
 
-type contentItem struct {
+type streamQueueContentItem struct {
 	ID        string `json:"id"`
 	StreamID  string `json:"streamId"`
 	Status    string `json:"status"`
@@ -159,12 +158,12 @@ func waitForStreamQueueCompletion(streamQueueId string, client *provider.Client)
 			return "", err
 		}
 		if streamQueueInfo.Status == "SUCCEEDED" {
-			break
+			return streamQueueInfo.StreamId, nil
 		} else if streamQueueInfo.Status == "FAILED" {
 			return "", fmt.Errorf("stream queue processing failed for stream queue ID %s", streamQueueId)
 		}
 	}
-	return streamQueueInfo.StreamId, nil
+
 }
 
 func fetchStreamInfo(stream *streams.Stream, streamId string, client *provider.Client) (*streams.Stream, error) {
@@ -244,7 +243,7 @@ func getStream(streamId string, client *provider.Client) (*streams.Stream, error
 	return &stream, nil
 }
 
-func fetchStreamQueueInfo(streamId string, client *provider.Client) (*StreamQueueInformation, error) {
+func fetchStreamQueueInfo(streamId string, client *provider.Client) (*streamQueueInformation, error) {
 	path := fmt.Sprintf("%s/streams-repository/stream-queues?streamIds=%s", client.HostURL, streamId)
 	req, err := http.NewRequest("GET", path, nil)
 	if err != nil {
@@ -269,7 +268,7 @@ func fetchStreamQueueInfo(streamId string, client *provider.Client) (*StreamQueu
 	}
 
 	item := response.Content[0]
-	return &StreamQueueInformation{
+	return &streamQueueInformation{
 		Status:        item.Status,
 		StreamId:      item.StreamID,
 		StreamQueueId: item.ID,
