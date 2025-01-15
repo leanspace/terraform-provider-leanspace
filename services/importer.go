@@ -38,6 +38,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/routes/processors"
 	"github.com/leanspace/terraform-provider-leanspace/services/routes/routes"
 	"github.com/leanspace/terraform-provider-leanspace/services/streams/streams"
+	"github.com/leanspace/terraform-provider-leanspace/services/streams/streams_queue"
 	"github.com/leanspace/terraform-provider-leanspace/services/teams/access_policies"
 	"github.com/leanspace/terraform-provider-leanspace/services/teams/members"
 	"github.com/leanspace/terraform-provider-leanspace/services/teams/service_accounts"
@@ -66,6 +67,7 @@ func AddDataTypes() {
 	record_templates.RecordTemplateDataType.Subscribe()
 	service_accounts.ServiceAccountDataType.Subscribe()
 	streams.StreamDataType.Subscribe()
+	streams_queue.StreamQueueDataType.Subscribe()
 	teams.TeamDataType.Subscribe()
 	units.UnitDataType.Subscribe()
 	widgets.WidgetDataType.Subscribe()
