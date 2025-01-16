@@ -75,7 +75,7 @@ module "streams" {
 }
 
 module "streams_queue" {
-  source            = "./streams/streams_queue"
+  source            = "streams/stream_queues"
   asset_id          = module.nodes.satellite_node.id
   numeric_metric_id = module.metrics.test_numeric_metric.id
   depends_on = [

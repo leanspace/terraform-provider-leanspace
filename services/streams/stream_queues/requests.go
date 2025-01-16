@@ -1,4 +1,4 @@
-package streams_queue
+package stream_queues
 
 import (
 	"encoding/json"
