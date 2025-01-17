@@ -28,7 +28,12 @@ data "leanspace_stream_queues" "all" {
 }
 
 resource "leanspace_stream_queues" "test" {
-  name        = "test terraform with a  stream queue"
+  timeouts { # Temporary fix to avoid getting blocked by the bug
+    create = "1m"
+    update = "1m"
+    delete = "1m"
+  }
+  name        = "Terraform stream with a stream queue"
   description = "A complex stream, entirely crdeeadeted under terraform."
   asset_id    = var.asset_id
   configuration {
