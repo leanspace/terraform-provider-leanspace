@@ -33,8 +33,10 @@ jobs:
       - name: Verify presence of examples and tests for each resource
         id: file_errors
         run: |
+          set -x	
           errors=''
           resource_names=$(find ./services -type f -name "main.go" -exec sed -nE 's/\tResourceIdentifier: +"([a-z_]+)",/\1/p' {} \;)
+          echo "1"
           for resource_name in $resource_names
           do
             data_source_example=$(ls ./examples/data_sources/$resource_name.tf 2>/dev/null)
@@ -46,8 +48,10 @@ jobs:
               errors+="\nexamples/resource/$resource_name"
             fi
           done
+          echo "2"
 
           service_pathes=$(find ./services -type f -name "main.go" | sed -nE 's/.\/services\/([a-z_-]+\/[a-z_-]+)\/main.go/\1/p')
+          echo "3"
           for service_path in $service_pathes
           do
             testing=$(ls ./testing/$service_path 2>/dev/null)
@@ -60,10 +64,12 @@ jobs:
               errors+="\ntesting/main.tf/$service_path"
             fi
           done
+          echo "4"
 
           if [[ $errors != '' ]]; then
             echo "file_errors=$errors" >> GITHUB_OUTPUT
           fi
+          set +x
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
