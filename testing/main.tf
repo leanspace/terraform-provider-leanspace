@@ -74,7 +74,7 @@ module "streams" {
   ]
 }
 
-module "streams_queue" {
+/* module "streams_queue" {
   source            = "./streams/stream_queues"
   asset_id          = module.nodes.satellite_node.id
   numeric_metric_id = module.metrics.test_numeric_metric.id
@@ -82,7 +82,7 @@ module "streams_queue" {
     module.nodes,
     module.metrics
   ]
-}
+} */ // Disabled until stream_queues is fixed
 
 module "widgets" {
   source            = "./dashboard/widgets"
