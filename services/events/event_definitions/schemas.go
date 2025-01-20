@@ -1,4 +1,4 @@
-package events_definitions
+package event_definitions
 
 import (
 	"github.com/leanspace/terraform-provider-leanspace/helper"
