@@ -1,4 +1,4 @@
-package leaf_space_satellite_links
+package satellite_links
 
 import (
 	"github.com/leanspace/terraform-provider-leanspace/provider"
