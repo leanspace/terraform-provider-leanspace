@@ -1,4 +1,4 @@
-package leaf_space_contact_reservation_status_mappings
+package contact_reservation_status_mappings
 
 type ContactReservationStatusMapping struct {
 	ID              string `json:"id"`

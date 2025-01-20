@@ -29,6 +29,41 @@ jobs:
         run: |
           export VERSION=100.0.0
           make install
+      
+      - name: Verify presence of examples and tests for each resource
+        id: file_errors
+        run: |
+          errors=''
+          resource_names=$(find ./services -type f -name "main.go" -exec sed -nE 's/\tResourceIdentifier: +"([a-z_]+)",/\1/p' {} \;)
+          for resource_name in $resource_names
+          do
+            data_source_example=$(ls ./examples/data_sources/$resource_name.tf 2>/dev/null)
+            if [ $? -ne 0 ]; then
+              errors+="\nexamples/data_source/$resource_name"
+            fi
+            resource_example=$(ls ./examples/resources/$resource_name.tf 2>/dev/null)
+            if [ $? -ne 0 ]; then
+              errors+="\nexamples/resource/$resource_name"
+            fi
+          done
+
+          service_pathes=$(find ./services -type f -name "main.go" | sed -nE 's/.\/services\/([a-z_-]+\/[a-z_-]+)\/main.go/\1/p')
+          for service_path in $service_pathes
+          do
+            testing=$(ls ./testing/$service_path 2>/dev/null)
+            if [ $? -ne 0 ]; then
+              errors+="\ntesting/$service_path"
+            fi
+
+            main_testing_import=$(cat ./testing/main.tf | grep -E "source += +\"./$service_path/?\"")
+            if [ $? -ne 0 ]; then
+              errors+="\ntesting/main.tf/$service_path"
+            fi
+          done
+
+          if [[ $errors != '' ]]; then
+            echo "file_errors=$errors" >> GITHUB_OUTPUT
+          fi
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -119,11 +154,12 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const correct = "${{ steps.plan.outcome }}" === "success" && "${{ steps.apply-create.outcome }}" === "success" && "${{ steps.apply-modify.outcome }}" === "success" && "${{ steps.destroy.outcome }}" === "success" &&
-              ${{ steps.plan.outputs.to_add }} === parseInt("${{ steps.apply-create.outputs.added }}") && parseInt("${{ steps.apply-create.outputs.added }}") === ${{ steps.destroy.outputs.actually_destroyed }} && "${{steps.apply-modify.outputs.no_change}}" === "true";
+            const correct = "${{ steps.file_errors.outcome }}" === "success" && ${{ steps.plan.outcome }}" === "success" && "${{ steps.apply-create.outcome }}" === "success" && "${{ steps.apply-modify.outcome }}" === "success" && "${{ steps.destroy.outcome }}" === "success" &&
+            "${{ steps.file_errors.outputs.file_errors }}" === '' && ${{ steps.plan.outputs.to_add }} === parseInt("${{ steps.apply-create.outputs.added }}") && parseInt("${{ steps.apply-create.outputs.added }}") === ${{ steps.destroy.outputs.actually_destroyed }} && "${{steps.apply-modify.outputs.no_change}}" === "true";
             // parseInt is used so that it works even with empty values
 
             const status = correct ? "🟢 Success" : "🔴 Problem";
+            const file_status = "${{ steps.file_errors.outputs.file_errors }}" ? "🔴 Problem ${{ steps.file_errors.outputs.file_errors }}" : "🟢 Success";
             const plan_status = ("${{ steps.plan.outcome }}" === "success") ? "🟢 Success" : "🔴 ${{ steps.plan.outcome }}";
             const apply_create_status = ("${{ steps.apply-create.outcome }}" === "success") ? "🟢 Success" : "🔴 ${{ steps.apply-create.outcome }}";
             const apply_modify_status = ("${{ steps.apply-modify.outcome }}" === "success") ? "🟢 Success" : "🔴 ${{ steps.apply-modify.outcome }}";

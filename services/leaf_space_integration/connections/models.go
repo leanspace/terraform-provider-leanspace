@@ -1,4 +1,4 @@
-package leaf_space_connections
+package connections
 
 type LeafSpaceConnection struct {
 	ID                  string `json:"id"`

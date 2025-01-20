@@ -25,6 +25,31 @@ module "properties" {
   ]
 }
 
+module "event_definitions" {
+  source = "./events/event_definitions"
+}
+
+module "command_states" {
+  source = "./commands/command_states"
+}
+
+module "pass_contact_states" {
+  source = "./pass/contact_states"
+}
+
+module "pass_states" {
+  source = "./pass/pass_states"
+}
+
+module "leaf_space_connection" {
+  source = "./leaf_space_integration/connections"
+}
+
+module "leaf_space_contact_reservation_status_mappings" {
+  source = "./leaf_space_integration/contact_reservation_status_mappings"
+  contact_state_id = module.pass_contact_states.created.id
+}
+
 module "command_definitions" {
   source  = "./commands/command_definitions"
   node_id = module.nodes.satellite_node.id
