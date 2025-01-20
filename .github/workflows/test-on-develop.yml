@@ -18,32 +18,32 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: 'go.mod'
-          cache-dependency-path: go.sum
-          cache: true
+      # - name: Setup Go
+      #   uses: actions/setup-go@v5
+      #   with:
+      #     go-version-file: 'go.mod'
+      #     cache-dependency-path: go.sum
+      #     cache: true
 
-      - name: Build current version of the provider
-        run: |
-          export VERSION=100.0.0
-          make install
+      # - name: Build current version of the provider
+      #   run: |
+      #     export VERSION=100.0.0
+      #     make install
       
       - name: Verify presence of examples and tests for each resource
         id: file_errors
+        shell: bash
         run: |
           set -x	
           errors=''
           resource_names=$(find ./services -type f -name "main.go" -exec sed -nE 's/\tResourceIdentifier: +"([a-z_]+)",/\1/p' {} \;)
-          echo "1"
           for resource_name in $resource_names
           do
-            data_source_example=$(ls ./examples/data_sources/$resource_name.tf 2>/dev/null)
+            ls "./examples/data_sources/$resource_name.tf"
             if [ $? -ne 0 ]; then
               errors+="\nexamples/data_source/$resource_name"
             fi
-            resource_example=$(ls ./examples/resources/$resource_name.tf 2>/dev/null)
+            ls "./examples/resources/$resource_name.tf"
             if [ $? -ne 0 ]; then
               errors+="\nexamples/resource/$resource_name"
             fi
@@ -54,12 +54,12 @@ jobs:
           echo "3"
           for service_path in $service_pathes
           do
-            testing=$(ls ./testing/$service_path 2>/dev/null)
+            ls "./testing/$service_path"
             if [ $? -ne 0 ]; then
               errors+="\ntesting/$service_path"
             fi
 
-            main_testing_import=$(cat ./testing/main.tf | grep -E "source += +\"./$service_path/?\"")
+            cat "./testing/main.tf" | grep -E "source += +\"./$service_path/?\""
             if [ $? -ne 0 ]; then
               errors+="\ntesting/main.tf/$service_path"
             fi
@@ -70,6 +70,7 @@ jobs:
             echo "file_errors=$errors" >> GITHUB_OUTPUT
           fi
           set +x
+          exit 1;
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
