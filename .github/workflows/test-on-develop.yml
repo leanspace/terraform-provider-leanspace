@@ -1,0 +1,146 @@
+name: Terraform Pull Request Checker
+on:
+  pull_request
+
+concurrency:
+  group: terraform-provider-leanspace
+  cancel-in-progress: false
+
+jobs:
+  terraform:
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
+    name: "Terraform"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+          cache-dependency-path: go.sum
+          cache: true
+
+      - name: Build current version of the provider
+        run: |
+          export VERSION=100.0.0
+          make install
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Terraform Init
+        id: init
+        working-directory: ./testing
+        run: terraform init
+
+      - name: Set env variables
+        run: |
+          echo "TF_VAR_tenant=vostok" | tee -a $GITHUB_ENV
+          echo "TF_VAR_env=develop" | tee -a $GITHUB_ENV
+          echo "TF_VAR_client_id=${{ secrets.VOSTOK_CLIENTID_DEV }}" | tee -a $GITHUB_ENV
+          echo "TF_VAR_client_secret=${{ secrets.VOSTOK_CLIENTSECRET_DEV }}" | tee -a $GITHUB_ENV
+
+      - name: Terraform Plan
+        id: plan
+        if: github.event_name == 'pull_request'
+        working-directory: ./testing
+        run: |
+            summary_line=$(terraform plan -no-color -input=false | tail -n 6 | head -n 1)
+
+            to_add=$(echo "$summary_line" | awk '{print $2}')
+            to_change=$(echo "$summary_line" | awk '{print $5}')
+            to_destroy=$(echo "$summary_line" | awk '{print $8}')
+
+            echo "to_add=$to_add" >> $GITHUB_OUTPUT
+            echo "to_change=$to_change" >> $GITHUB_OUTPUT
+            echo "to_destroy=$to_destroy" >> $GITHUB_OUTPUT
+
+      - name: Terraform Apply (create)
+        id: apply-create
+        working-directory: ./testing
+        run: |
+            summary_line=$(terraform apply -no-color -auto-approve -input=false)
+            if [ $? -eq 0 ]; then
+              summary_line=$(echo "$summary_line" | tail -n 1)
+            else
+              exit 1
+            fi
+
+            added=$(echo "$summary_line" | awk '{print $4}')
+            changed=$(echo "$summary_line" | awk '{print $6}')
+            destroyed=$(echo "$summary_line" | awk '{print $8}')
+
+            echo "added=$added" >> $GITHUB_OUTPUT
+            echo "changed=$changed" >> $GITHUB_OUTPUT
+            echo "destroyed=$destroyed" >> $GITHUB_OUTPUT
+
+      - name: Terraform Apply (update)
+        id: apply-modify
+        working-directory: ./testing
+        run: |
+            summary_line=$(terraform apply -no-color -auto-approve -input=false)
+            if [ $? -eq 0 ]; then
+              summary_line=$(echo "$summary_line" | tail -n 6)
+            else
+              exit 1
+            fi
+            no_change=$(echo "$summary_line" | grep -w -q "No changes. Your infrastructure matches the configuration." && echo "true" || echo "false")
+            summary_line=$(echo "$summary_line" | tail -n 1)
+            echo "no_change=$no_change" >> $GITHUB_OUTPUT
+
+            re_added=$(echo "$summary_line" | awk '{print $4}')
+            re_changed=$(echo "$summary_line" | awk '{print $6}')
+            re_destroyed=$(echo "$summary_line" | awk '{print $8}')
+
+            echo "re_added=$re_added" >> $GITHUB_OUTPUT
+            echo "re_changed=$re_changed" >> $GITHUB_OUTPUT
+            echo "re_destroyed=$re_destroyed" >> $GITHUB_OUTPUT
+      - name: Terraform Destroy
+        id: destroy
+        working-directory: ./testing
+        if: always()
+        run: |
+            summary_line=$(terraform destroy -auto-approve -no-color -input=false | tail -n 1)
+
+            actually_destroyed=$(echo "$summary_line" | awk '{print $4}')
+
+            echo "actually_destroyed=$actually_destroyed" >> $GITHUB_OUTPUT
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const correct = "${{ steps.plan.outcome }}" === "success" && "${{ steps.apply-create.outcome }}" === "success" && "${{ steps.apply-modify.outcome }}" === "success" && "${{ steps.destroy.outcome }}" === "success" &&
+              ${{ steps.plan.outputs.to_add }} === parseInt("${{ steps.apply-create.outputs.added }}") && parseInt("${{ steps.apply-create.outputs.added }}") === ${{ steps.destroy.outputs.actually_destroyed }} && "${{steps.apply-modify.outputs.no_change}}" === "true";
+            // parseInt is used so that it works even with empty values
+
+            const status = correct ? "🟢 Success" : "🔴 Problem";
+            const plan_status = ("${{ steps.plan.outcome }}" === "success") ? "🟢 Success" : "🔴 ${{ steps.plan.outcome }}";
+            const apply_create_status = ("${{ steps.apply-create.outcome }}" === "success") ? "🟢 Success" : "🔴 ${{ steps.apply-create.outcome }}";
+            const apply_modify_status = ("${{ steps.apply-modify.outcome }}" === "success") ? "🟢 Success" : "🔴 ${{ steps.apply-modify.outcome }}";
+            const apply_modify_result = ("${{steps.apply-modify.outputs.no_change}}" === "true") ? "🟢 No change detected" : "🔴 Changes were detected (Added ${{ steps.apply-modify.outputs.re_added }}, changed ${{ steps.apply-modify.outputs.re_changed }}, destroyed ${{ steps.apply-modify.outputs.re_destroyed }})";
+            const destroy_status = ("${{ steps.destroy.outcome }}" === "success") ? "🟢 Success" : "🔴 ${{ steps.destroy.outcome }}";
+            
+            const output = `<details><summary>${status}</summary>
+            1. Plan was ${plan_status}:  To add ${{ steps.plan.outputs.to_add }}, to change ${{ steps.plan.outputs.to_change }}, to destroy ${{ steps.plan.outputs.to_destroy }}<br>
+            2. Apply Create was ${apply_create_status}: Added ${{ steps.apply-create.outputs.added }}, changed ${{ steps.apply-create.outputs.changed }}, destroyed ${{ steps.apply-create.outputs.destroyed }}<br>
+            3. Apply Modify was ${apply_modify_status}: ${apply_modify_result}<br>
+            4. Destroy was ${destroy_status}: Destroyed ${{ steps.destroy.outputs.actually_destroyed }}
+            </details>`
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+      
