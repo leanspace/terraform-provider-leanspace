@@ -97,7 +97,7 @@ resource "leanspace_metrics" "test_binary" {
 }
 
 resource "leanspace_metrics" "test_numeric_1" {
-  name        = "Test Number Metric 1"
+  name        = "Terra Number Metric 1"
   description = "A numeric metric, entirely created under terraform."
   node_id     = var.node_id
 
@@ -108,7 +108,7 @@ resource "leanspace_metrics" "test_numeric_1" {
 }
 
 resource "leanspace_metrics" "test_numeric_2" {
-  name        = "Test Number Metric 2"
+  name        = "Terra Number Metric 2"
   description = "A numeric metric, entirely created under terraform."
   node_id     = var.node_id
 
@@ -119,7 +119,7 @@ resource "leanspace_metrics" "test_numeric_2" {
 }
 
 resource "leanspace_metrics" "test_numeric_3" {
-  name        = "Test Number Metric 3"
+  name        = "Terra Number Metric 3"
   description = "A numeric metric, entirely created under terraform."
   node_id     = var.node_id
 
@@ -130,7 +130,7 @@ resource "leanspace_metrics" "test_numeric_3" {
 }
 
 resource "leanspace_metrics" "test_numeric_4" {
-  name        = "Test Number Metric 4"
+  name        = "Terra Number Metric 4"
   description = "A numeric metric, entirely created under terraform."
   node_id     = var.node_id
 
@@ -141,7 +141,7 @@ resource "leanspace_metrics" "test_numeric_4" {
 }
 
 resource "leanspace_metrics" "test_numeric_5" {
-  name        = "Test Number Metric 5"
+  name        = "Terra Number Metric 5"
   description = "A numeric metric, entirely created under terraform."
   node_id     = var.node_id
 
@@ -152,7 +152,7 @@ resource "leanspace_metrics" "test_numeric_5" {
 }
 
 resource "leanspace_metrics" "test_numeric_6" {
-  name        = "Test Number Metric 6"
+  name        = "Terra Number Metric 6"
   description = "A numeric metric, entirely created under terraform."
   node_id     = var.node_id
 

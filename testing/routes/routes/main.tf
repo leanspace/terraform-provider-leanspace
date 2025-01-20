@@ -8,7 +8,6 @@ terraform {
 
 variable "service_account_id" {
   type        = string
-  default     = ""
   description = "The service account id use for creating routes."
 }
 
@@ -44,7 +43,7 @@ resource "leanspace_routes" "test_create_route" {
 EOT
     )
     log_level          = "INFO"
-    service_account_id = var.service_account_id == "" ? null : var.service_account_id
+    service_account_id = var.service_account_id
   }
   processor_ids = var.processor_ids
   tags {

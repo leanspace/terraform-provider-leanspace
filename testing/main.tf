@@ -239,6 +239,7 @@ module "plan_templates" {
 module "routes" {
   source        = "./routes/routes"
   processor_ids = [module.processors.test_create_processor.id]
+  service_account_id = values(module.service_accounts.test_service_accounts)[0].id
 }
 
 module "processors" {

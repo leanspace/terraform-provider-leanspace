@@ -1,0 +1,24 @@
+name: Clean Up Terraform From Tenant
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    permissions:
+      id-token: write
+    name: "Terraform"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set env variables
+        run: |
+          echo "TF_VAR_tenant=buzz" | tee -a $GITHUB_ENV
+          echo "TF_VAR_env=develop" | tee -a $GITHUB_ENV
+          echo "TF_VAR_client_id=${{ secrets.BUZZ_CLIENTID_DEV }}" | tee -a $GITHUB_ENV
+          echo "TF_VAR_client_secret=${{ secrets.BUZZ_CLIENTSECRET_DEV }}" | tee -a $GITHUB_ENV
+      - name: CleanUp per Services
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const clean_up = require('./.github/workflows/clean_up_script.js')
+            await clean_up(process.env.TF_VAR_tenant, process.env.TF_VAR_env, process.env.TF_VAR_client_id, process.env.TF_VAR_client_secret)
+      
