@@ -25,6 +25,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/monitors"
 	"github.com/leanspace/terraform-provider-leanspace/services/orbits/orbits"
 	"github.com/leanspace/terraform-provider-leanspace/services/pass/contact_states"
+	"github.com/leanspace/terraform-provider-leanspace/services/pass/pass_delay_configuration"
 	"github.com/leanspace/terraform-provider-leanspace/services/pass/pass_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/plans/plan_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/plans/plan_templates"
@@ -75,6 +76,7 @@ func AddDataTypes() {
 	plan_templates.PlanTemplateDataType.Subscribe()
 	pass_states.PassStateDataType.Subscribe()
 	contact_states.ContactStateDataType.Subscribe()
+	pass_delay_configuration.PassDelayConfigurationType.Subscribe()
 	activity_states.ActivityStateDataType.Subscribe()
 	routes.RouteDataType.Subscribe()
 	processors.ProcessorDataType.Subscribe()

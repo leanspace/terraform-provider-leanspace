@@ -280,3 +280,7 @@ module "request_definitions" {
 module "request_states" {
   source = "./requests/request_states/"
 }
+
+module "leanspace_pass_delay_configuration" {
+  source = "./pass/pass_delay_configuration"
+}
