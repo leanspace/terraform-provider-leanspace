@@ -37,6 +37,10 @@ module "pass_contact_states" {
   source = "./pass/contact_states"
 }
 
+module "pass_states" {
+  source = "./pass/pass_states"
+}
+
 module "leaf_space_connection" {
   source = "./leaf_space_integration/connections"
 }
