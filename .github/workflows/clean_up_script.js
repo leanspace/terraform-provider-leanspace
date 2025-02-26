@@ -1,4 +1,15 @@
 module.exports = async (tenant, env, client_id, client_secret) => {
+	async function delete_resource(endpoint, headers) {
+		console.log(endpoint);
+		const delete_service = await fetch(endpoint, {
+			method: "DELETE",
+			headers
+		});
+		await delete_service.text();
+		if (delete_service.status !== 200) {
+			console.log(`Failed to delete ${delete_service.json()}`);
+		}
+	}
 	const token_request = await fetch(`https://api.develop.leanspace.io/teams-repository/oauth2/token?tenant=${tenant}`, {
 		method: "POST",
 		body: `client_id=${client_id}&client_secret=${client_secret}&grant_type=client_credentials`,
@@ -34,7 +45,9 @@ module.exports = async (tenant, env, client_id, client_secret) => {
 	];
 
 	for (const service of services) {
-		const get_all = await fetch(encodeURI(`https://api.develop.leanspace.io/${service}`), {
+		const endpoint = encodeURI(`https://api.develop.leanspace.io/${service}`);
+		const get_all_endpoint = encodeURI(`https://api.develop.leanspace.io/${service.split('?')[0]}/${item.id}`);
+		const get_all = await fetch(endpoint, {
 		method: "GET",
 		headers
 		});
@@ -44,33 +57,17 @@ module.exports = async (tenant, env, client_id, client_secret) => {
 			continue;
 		}
 		console.log(all);
-		console.log(`https://api.develop.leanspace.io/${service}`);
+		console.log(endpoint);
 		if (service.includes('?')) {
 			for (const item of all) {
 				if (item.name === 'terraform auto checker') {
 					console.log("Ignoring terraform auto checker");
 					continue;
 				}
-				console.log(`https://api.develop.leanspace.io/${service.split('?')[0]}/${item.id}`);
-				const delete_service = await fetch(encodeURI(`https://api.develop.leanspace.io/${service.split('?')[0]}/${item.id}`), {
-					method: "DELETE",
-					headers
-				});
-				await delete_service.text();
-				if (delete_service.status !== 200) {
-					console.log(`Failed to delete ${delete_service.json()}`);
-				}
+				delete_resource(get_all_endpoint, headers);
 			}
 		} else {
-			console.log(`https://api.develop.leanspace.io/${service}`);
-			const delete_service = await fetch(`https://api.develop.leanspace.io/${service}`, {
-				method: "DELETE",
-				headers
-			});
-			await delete_service.text();
-			if (delete_service.status !== 200) {
-				console.log(`Failed to delete ${delete_service.json()}`);
-			}
+			delete_resource(endpoint, headers);
 		}
 	}
 }
