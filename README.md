@@ -87,11 +87,19 @@ git config --global --add safe.directory [your dir here]
   - schemas.go
 - Add for each resource, the corresponding line to the root `main.go` file
 
+### Testing
+
 Automatically a check will be performed to verify that:
 
 - examples are present for each resource and data source
 - testing are present for each resource and data source
 - the implementation works (based on the testing folder) and that no modification is performed when reapplying
+
+Since automated tests are run the following convention is to be followed:
+
+- start the name of the resources with `Terraform`
+- the name of states shall be `TERRAFORM_STATE`
+- specific resources (`integration-leafspace/ground-stations/links` and `integration-leafspace/satellites/links`) does not follow these since they don't have names
 
 ### Create a new version
 
