@@ -33,7 +33,7 @@ data "leanspace_properties" "all" {
 }
 
 resource "leanspace_properties" "numeric_node_property" {
-  name        = "TestTerraformNumeric"
+  name        = "Terraform Numeric"
   description = "TestTerraformNumericDescription"
   node_id     = var.node_id
   type        = "NUMERIC"
@@ -54,7 +54,7 @@ resource "leanspace_properties" "numeric_node_property" {
 }
 
 resource "leanspace_properties" "text_node_property" {
-  name        = "TestTerraformText"
+  name        = "Terraform Text"
   description = "TestTerraformTextDescription"
   node_id     = var.node_id
   type        = "TEXT"
@@ -72,7 +72,7 @@ resource "leanspace_properties" "text_node_property" {
 }
 
 resource "leanspace_properties" "enum_node_property" {
-  name        = "TestTerraformEnum"
+  name        = "Terraform Enum"
   description = "TestTerraformEnumDescription"
   node_id     = var.node_id
   type        = "ENUM"
@@ -93,7 +93,7 @@ resource "leanspace_properties" "enum_node_property" {
 }
 
 resource "leanspace_properties" "timestamp_node_property" {
-  name        = "TestTerraformTimestamp"
+  name        = "Terraform Timestamp"
   description = "TestTerraformTimestampDescription"
   node_id     = var.node_id
   type        = "TIMESTAMP"
@@ -111,7 +111,7 @@ resource "leanspace_properties" "timestamp_node_property" {
 }
 
 resource "leanspace_properties" "date_node_property" {
-  name        = "TestTerraformDate"
+  name        = "Terraform Date"
   description = "TestTerraformDateDescription"
   node_id     = var.node_id
   type        = "DATE"
@@ -129,7 +129,7 @@ resource "leanspace_properties" "date_node_property" {
 }
 
 resource "leanspace_properties" "time_node_property" {
-  name        = "TestTerraformTime"
+  name        = "Terraform Time"
   description = "TestTerraformTimeDescription"
   node_id     = var.node_id
   type        = "TIME"
@@ -147,7 +147,7 @@ resource "leanspace_properties" "time_node_property" {
 }
 
 resource "leanspace_properties" "boolean_node_property" {
-  name        = "TestTerraformBoolean"
+  name        = "Terraform Boolean"
   description = "TestTerraformBooleanDescription"
   node_id     = var.node_id
   type        = "BOOLEAN"
@@ -163,7 +163,7 @@ resource "leanspace_properties" "boolean_node_property" {
 }
 
 resource "leanspace_properties" "geopoint_node_property" {
-  name        = "TestTerraformGeopoint"
+  name        = "Terraform Geopoint"
   description = "TestTerraformGeopointDescription"
   node_id     = var.node_id
   type        = "GEOPOINT"

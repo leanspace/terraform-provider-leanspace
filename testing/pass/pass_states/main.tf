@@ -11,7 +11,7 @@ data "leanspace_pass_states" "all" {
 }
 
 resource "leanspace_pass_states" "created" {
-  name = "MY_TEST"
+  name = "TERRAFORM_STATE"
 }
 
 output "created" {

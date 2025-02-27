@@ -13,7 +13,7 @@ variable "contact_state_id" {
 
 resource "leanspace_leaf_space_contact_reservation_status_mappings" "contact_reservation_status_mapping" {
   contact_state_id = var.contact_state_id
-  leafspace_status = "terraform test"
+  leafspace_status = "Terraform test"
 
 }
 

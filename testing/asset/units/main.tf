@@ -26,8 +26,8 @@ resource "leanspace_units" "custom_units" {
     "c" : "Centi"
     "m" : "Milli"
   }
-  symbol       = "${each.key}Cus"
-  display_name = "${each.value}Customium"
+  symbol       = "Terraform${each.key}"
+  display_name = "Terraform${each.value}"
 }
 
 output "test_units" {
