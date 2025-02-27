@@ -76,7 +76,7 @@ resource "leanspace_command_definitions" "test" {
     name        = "TestMetadataTime"
     description = "A time metadata value"
     attributes {
-      value = "10:37:19"
+      value = "10:37:19.000"
       type  = "TIME"
     }
   }
@@ -135,7 +135,7 @@ resource "leanspace_command_definitions" "test" {
     identifier  = "TIME"
     description = "A time input"
     attributes {
-      default_value = "10:37:19"
+      default_value = "10:37:19.000"
       type          = "TIME"
       required      = true
     }
@@ -223,7 +223,7 @@ resource "leanspace_command_definitions" "test" {
       min_size      = 1
       max_size      = 4
       unique        = true
-      default_value = "08:37:19,10:37:19,15:37:19"
+      default_value = "08:37:19.000,10:37:19.000,15:37:19.000"
       constraint {
         type   = "TIME"
         before = "20:00:00"

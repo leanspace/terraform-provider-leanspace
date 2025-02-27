@@ -32,7 +32,7 @@ resource "leanspace_feasibility_constraint_definitions" "created" {
     name        = "TimeArgumentDefinition"
     description = "A time input"
     attributes {
-      default_value = "10:37:19"
+      default_value = "10:37:19.000"
       type          = "TIME"
       required      = true
     }

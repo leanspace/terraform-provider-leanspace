@@ -86,7 +86,7 @@ jobs:
         if: github.event_name == 'pull_request'
         working-directory: ./testing
         run: |
-            summary_line=$(terraform plan -no-color -input=false | grep --color=never "Plan: ")
+            summary_line=$(terraform plan -no-color -input=false -out=tfplan | grep --color=never "Plan: ")
 
             to_add=$(echo "$summary_line" | awk '{print $2}')
             to_change=$(echo "$summary_line" | awk '{print $5}')
@@ -104,7 +104,7 @@ jobs:
             stdout_file=$(mktemp)
             stderr_file=$(mktemp)
 
-            terraform apply -no-color -auto-approve -input=false > "$stdout_file" 2> "$stderr_file"
+            terraform apply -no-color -auto-approve -input=false tfplan > "$stdout_file" 2> "$stderr_file"
             exit_code=$?
 
             summary_line=$(cat "$stdout_file")
