@@ -31,8 +31,6 @@ func (configuration *Configuration) ToMap() map[string]any {
 	configMap["structure"] = []any{configuration.Structure.ToMap()}
 	configMap["metadata"] = []any{configuration.Metadata.ToMap()}
 	configMap["computations"] = []any{configuration.Computations.ToMap()}
-	configMap["valid"] = configuration.Valid
-	configMap["errors"] = helper.ParseToMaps(configuration.Errors)
 	return configMap
 }
 
@@ -42,8 +40,6 @@ func (streamComp *StreamComponent) ToMap() map[string]any {
 	streamCompMap["order"] = streamComp.Order
 	streamCompMap["path"] = streamComp.Path
 	streamCompMap["type"] = streamComp.Type
-	streamCompMap["valid"] = streamComp.Valid
-	streamCompMap["errors"] = helper.ParseToMaps(streamComp.Errors)
 
 	if streamComp.Repetitive != nil {
 		streamCompMap["repetitive"] = []map[string]any{streamComp.Repetitive.ToMap()}
@@ -115,26 +111,19 @@ func (switchValue *SwitchValue[T]) ToMap() map[string]any {
 
 func (metadata *Metadata) ToMap() map[string]any {
 	metadataMap := make(map[string]any)
-	metadataMap["packet_id"] = []any{metadata.PacketID.ToMap()}
 	metadataMap["timestamp"] = []any{metadata.Timestamp.ToMap()}
-	metadataMap["valid"] = metadata.Valid
-	metadataMap["errors"] = helper.ParseToMaps(metadata.Errors)
 	return metadataMap
 }
 
 func (timestampDef *TimestampDefinition) ToMap() map[string]any {
 	timestampDefMap := make(map[string]any)
 	timestampDefMap["expression"] = timestampDef.Expression
-	timestampDefMap["valid"] = timestampDef.Valid
-	timestampDefMap["errors"] = helper.ParseToMaps(timestampDef.Errors)
 	return timestampDefMap
 }
 
 func (elementList *ElementList[T, PT]) ToMap() map[string]any {
 	elementListMap := make(map[string]any)
 	elementListMap["elements"] = helper.ParseToMaps[T, PT](elementList.Elements)
-	elementListMap["valid"] = elementList.Valid
-	elementListMap["errors"] = helper.ParseToMaps(elementList.Errors)
 	return elementListMap
 }
 
@@ -145,8 +134,6 @@ func (computation *Computation) ToMap() map[string]any {
 	computationMap["type"] = computation.Type
 	computationMap["data_type"] = computation.DataType
 	computationMap["expression"] = computation.Expression
-	computationMap["valid"] = computation.Valid
-	computationMap["errors"] = helper.ParseToMaps(computation.Errors)
 	return computationMap
 }
 
@@ -155,20 +142,6 @@ func (mapping *Mapping) ToMap() map[string]any {
 	mappingMap["metric_id"] = mapping.MetricId
 	mappingMap["expression"] = mapping.Expression
 	return mappingMap
-}
-
-func (elemStatus *ElementStatus) ToMap() map[string]any {
-	elemStatusMap := make(map[string]any)
-	elemStatusMap["valid"] = elemStatus.Valid
-	elemStatusMap["errors"] = helper.ParseToMaps(elemStatus.Errors)
-	return elemStatusMap
-}
-
-func (err *Error) ToMap() map[string]any {
-	errMap := make(map[string]any)
-	errMap["code"] = err.Code
-	errMap["message"] = err.Message
-	return errMap
 }
 
 func (stream *Stream) FromMap(streamMap map[string]any) error {
@@ -212,12 +185,6 @@ func (configuration *Configuration) FromMap(configMap map[string]any) error {
 			return err
 		}
 	}
-	configuration.Valid = configMap["valid"].(bool)
-	if errors, err := helper.ParseFromMaps[Error](configMap["errors"].(*schema.Set).List()); err != nil {
-		return err
-	} else {
-		configuration.Errors = errors
-	}
 	return nil
 }
 
@@ -226,17 +193,11 @@ func (streamComp *StreamComponent) FromMap(streamCompMap map[string]any) error {
 	streamComp.Order = streamCompMap["order"].(int)
 	streamComp.Path = streamCompMap["path"].(string)
 	streamComp.Type = streamCompMap["type"].(string)
-	streamComp.Valid = streamCompMap["valid"].(bool)
 	if len(streamCompMap["repetitive"].([]any)) > 0 && streamCompMap["repetitive"].([]any)[0] != nil {
 		streamComp.Repetitive = new(Repetitive)
 		if err := streamComp.Repetitive.FromMap(streamCompMap["repetitive"].([]any)[0].(map[string]any)); err != nil {
 			return err
 		}
-	}
-	errors, err := helper.ParseFromMaps[Error](streamCompMap["errors"].(*schema.Set).List())
-	streamComp.Errors = errors
-	if err != nil {
-		return err
 	}
 
 	if streamComp.Type == "FIELD" {
@@ -308,33 +269,16 @@ func (switchValue *SwitchValue[T]) FromMap(switchValueMap map[string]any) error 
 }
 
 func (metadata *Metadata) FromMap(metadataMap map[string]any) error {
-	if len(metadataMap["packet_id"].([]any)) > 0 {
-		if err := metadata.PacketID.FromMap(metadataMap["packet_id"].([]any)[0].(map[string]any)); err != nil {
-			return err
-		}
-	}
 	if len(metadataMap["timestamp"].([]any)) > 0 {
 		if err := metadata.Timestamp.FromMap(metadataMap["timestamp"].([]any)[0].(map[string]any)); err != nil {
 			return err
 		}
-	}
-	metadata.Valid = metadataMap["valid"].(bool)
-	if errors, err := helper.ParseFromMaps[Error](metadataMap["errors"].(*schema.Set).List()); err != nil {
-		return err
-	} else {
-		metadata.Errors = errors
 	}
 	return nil
 }
 
 func (timestampDef *TimestampDefinition) FromMap(timestampDefMap map[string]any) error {
 	timestampDef.Expression = timestampDefMap["expression"].(string)
-	timestampDef.Valid = timestampDefMap["valid"].(bool)
-	if errors, err := helper.ParseFromMaps[Error](timestampDefMap["errors"].(*schema.Set).List()); err != nil {
-		return err
-	} else {
-		timestampDef.Errors = errors
-	}
 	return nil
 }
 
@@ -343,12 +287,6 @@ func (elementList *ElementList[T, PT]) FromMap(elementListMap map[string]any) er
 		return err
 	} else {
 		elementList.Elements = elems
-	}
-	elementList.Valid = elementListMap["valid"].(bool)
-	if errors, err := helper.ParseFromMaps[Error](elementListMap["errors"].(*schema.Set).List()); err != nil {
-		return err
-	} else {
-		elementList.Errors = errors
 	}
 	return nil
 }
@@ -359,34 +297,12 @@ func (computation *Computation) FromMap(computationMap map[string]any) error {
 	computation.Type = computationMap["type"].(string)
 	computation.DataType = computationMap["data_type"].(string)
 	computation.Expression = computationMap["expression"].(string)
-	computation.Valid = computationMap["valid"].(bool)
-	if errors, err := helper.ParseFromMaps[Error](computationMap["errors"].(*schema.Set).List()); err != nil {
-		return err
-	} else {
-		computation.Errors = errors
-	}
 	return nil
 }
 
 func (mapping *Mapping) FromMap(mappingMap map[string]any) error {
 	mapping.MetricId = mappingMap["metric_id"].(string)
 	mapping.Expression = mappingMap["expression"].(string)
-	return nil
-}
-
-func (elemStatus *ElementStatus) FromMap(elemStatusMap map[string]any) error {
-	elemStatus.Valid = elemStatusMap["valid"].(bool)
-	if errors, err := helper.ParseFromMaps[Error](elemStatusMap["errors"].(*schema.Set).List()); err != nil {
-		return err
-	} else {
-		elemStatus.Errors = errors
-	}
-	return nil
-}
-
-func (err *Error) FromMap(errorMap map[string]any) error {
-	err.Code = errorMap["code"].(string)
-	err.Message = errorMap["message"].(string)
 	return nil
 }
 
