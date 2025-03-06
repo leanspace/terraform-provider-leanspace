@@ -103,7 +103,7 @@ var configurationSchema = map[string]*schema.Schema{
 		MinItems: 1,
 		Elem: &schema.Resource{
 			// Arbitrary depth
-			Schema: elementListSchema(streamComponentSchema(14)),
+			Schema: elementListSchema(streamComponentSchema(14), false),
 		},
 	},
 	"metadata": {
@@ -121,7 +121,7 @@ var configurationSchema = map[string]*schema.Schema{
 		MaxItems: 1,
 		MinItems: 1,
 		Elem: &schema.Resource{
-			Schema: elementListSchema(computationSchema),
+			Schema: elementListSchema(computationSchema, true),
 		},
 	},
 }
@@ -312,8 +312,8 @@ var timestampDefinitionSchema = map[string]*schema.Schema{
 	},
 }
 
-func elementListSchema(content map[string]*schema.Schema) map[string]*schema.Schema {
-	return map[string]*schema.Schema{
+func elementListSchema(content map[string]*schema.Schema, valid bool) map[string]*schema.Schema {
+	element := map[string]*schema.Schema{
 		"elements": {
 			Type:     schema.TypeList,
 			Optional: true,
@@ -322,6 +322,13 @@ func elementListSchema(content map[string]*schema.Schema) map[string]*schema.Sch
 			},
 		},
 	}
+	if valid {
+		element["valid"] = &schema.Schema{
+			Type:     schema.TypeBool,
+			Computed: true,
+		}
+	}
+	return element
 }
 
 var computationSchema = map[string]*schema.Schema{

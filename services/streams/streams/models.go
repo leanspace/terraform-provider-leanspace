@@ -19,10 +19,10 @@ type Stream struct {
 func (stream *Stream) GetID() string { return stream.ID }
 
 type Configuration struct {
-	Endianness   string                                         `json:"endianness"`
-	Structure    ElementList[StreamComponent, *StreamComponent] `json:"structure"`
-	Metadata     Metadata                                       `json:"metadata"`
-	Computations ElementList[Computation, *Computation]         `json:"computations"`
+	Endianness   string                                          `json:"endianness"`
+	Structure    ElementList[StreamComponent, *StreamComponent]  `json:"structure"`
+	Metadata     Metadata                                        `json:"metadata"`
+	Computations ElementListWithValid[Computation, *Computation] `json:"computations"`
 }
 
 type StreamComponent struct {
@@ -71,6 +71,11 @@ type TimestampDefinition struct {
 
 type ElementList[T any, PT helper.ParseablePointer[T]] struct {
 	Elements []T `json:"elements"`
+}
+
+type ElementListWithValid[T any, PT helper.ParseablePointer[T]] struct {
+	Elements []T  `json:"elements"`
+	Valid    bool `json:"valid,omitempty"`
 }
 
 type Computation struct {

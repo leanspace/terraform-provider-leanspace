@@ -127,6 +127,13 @@ func (elementList *ElementList[T, PT]) ToMap() map[string]any {
 	return elementListMap
 }
 
+func (elementList *ElementListWithValid[T, PT]) ToMap() map[string]any {
+	elementListMap := make(map[string]any)
+	elementListMap["elements"] = helper.ParseToMaps[T, PT](elementList.Elements)
+	elementListMap["valid"] = elementList.Valid
+	return elementListMap
+}
+
 func (computation *Computation) ToMap() map[string]any {
 	computationMap := make(map[string]any)
 	computationMap["name"] = computation.Name
@@ -288,6 +295,16 @@ func (elementList *ElementList[T, PT]) FromMap(elementListMap map[string]any) er
 	} else {
 		elementList.Elements = elems
 	}
+	return nil
+}
+
+func (elementList *ElementListWithValid[T, PT]) FromMap(elementListMap map[string]any) error {
+	if elems, err := helper.ParseFromMaps[T, PT](elementListMap["elements"].([]any)); err != nil {
+		return err
+	} else {
+		elementList.Elements = elems
+	}
+	elementList.Valid = elementListMap["valid"].(bool)
 	return nil
 }
 
