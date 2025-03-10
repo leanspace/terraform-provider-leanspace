@@ -103,7 +103,7 @@ var configurationSchema = map[string]*schema.Schema{
 		MinItems: 1,
 		Elem: &schema.Resource{
 			// Arbitrary depth
-			Schema: elementListSchema(streamComponentSchema(14)),
+			Schema: elementListSchema(streamComponentSchema(14), false),
 		},
 	},
 	"metadata": {
@@ -121,18 +121,7 @@ var configurationSchema = map[string]*schema.Schema{
 		MaxItems: 1,
 		MinItems: 1,
 		Elem: &schema.Resource{
-			Schema: elementListSchema(computationSchema),
-		},
-	},
-	"valid": {
-		Type:     schema.TypeBool,
-		Computed: true,
-	},
-	"errors": {
-		Type:     schema.TypeSet,
-		Computed: true,
-		Elem: &schema.Resource{
-			Schema: errorSchema,
+			Schema: elementListSchema(computationSchema, true),
 		},
 	},
 }
@@ -166,17 +155,6 @@ func streamComponentSchema(depth int) map[string]*schema.Schema {
 			MaxItems: 1,
 			Elem: &schema.Resource{
 				Schema: repetitiveSchema,
-			},
-		},
-		"valid": {
-			Type:     schema.TypeBool,
-			Computed: true,
-		},
-		"errors": {
-			Type:     schema.TypeSet,
-			Computed: true,
-			Elem: &schema.Resource{
-				Schema: errorSchema,
 			},
 		},
 
@@ -315,13 +293,6 @@ var switchValueSchema = map[string]*schema.Schema{
 }
 
 var metadataSchema = map[string]*schema.Schema{
-	"packet_id": {
-		Type:     schema.TypeList,
-		Computed: true,
-		Elem: &schema.Resource{
-			Schema: elementStatusSchema,
-		},
-	},
 	"timestamp": {
 		Type:     schema.TypeList,
 		Optional: true,
@@ -332,31 +303,6 @@ var metadataSchema = map[string]*schema.Schema{
 			Schema: timestampDefinitionSchema,
 		},
 	},
-	"valid": {
-		Type:     schema.TypeBool,
-		Computed: true,
-	},
-	"errors": {
-		Type:     schema.TypeSet,
-		Computed: true,
-		Elem: &schema.Resource{
-			Schema: errorSchema,
-		},
-	},
-}
-
-var elementStatusSchema = map[string]*schema.Schema{
-	"valid": {
-		Type:     schema.TypeBool,
-		Computed: true,
-	},
-	"errors": {
-		Type:     schema.TypeSet,
-		Computed: true,
-		Elem: &schema.Resource{
-			Schema: errorSchema,
-		},
-	},
 }
 
 var timestampDefinitionSchema = map[string]*schema.Schema{
@@ -364,21 +310,10 @@ var timestampDefinitionSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Required: true,
 	},
-	"valid": {
-		Type:     schema.TypeBool,
-		Computed: true,
-	},
-	"errors": {
-		Type:     schema.TypeSet,
-		Computed: true,
-		Elem: &schema.Resource{
-			Schema: errorSchema,
-		},
-	},
 }
 
-func elementListSchema(content map[string]*schema.Schema) map[string]*schema.Schema {
-	return map[string]*schema.Schema{
+func elementListSchema(content map[string]*schema.Schema, valid bool) map[string]*schema.Schema {
+	element := map[string]*schema.Schema{
 		"elements": {
 			Type:     schema.TypeList,
 			Optional: true,
@@ -386,18 +321,14 @@ func elementListSchema(content map[string]*schema.Schema) map[string]*schema.Sch
 				Schema: content,
 			},
 		},
-		"valid": {
+	}
+	if valid {
+		element["valid"] = &schema.Schema{
 			Type:     schema.TypeBool,
 			Computed: true,
-		},
-		"errors": {
-			Type:     schema.TypeSet,
-			Computed: true,
-			Elem: &schema.Resource{
-				Schema: errorSchema,
-			},
-		},
+		}
 	}
+	return element
 }
 
 var computationSchema = map[string]*schema.Schema{
@@ -424,17 +355,6 @@ var computationSchema = map[string]*schema.Schema{
 		Required:    true,
 		Description: "i.e.: javascript function with 2 input parameters and a return value (ctx, raw) => ctx.metadata.received_at",
 	},
-	"valid": {
-		Type:     schema.TypeBool,
-		Computed: true,
-	},
-	"errors": {
-		Type:     schema.TypeSet,
-		Computed: true,
-		Elem: &schema.Resource{
-			Schema: errorSchema,
-		},
-	},
 }
 
 var mappingSchema = map[string]*schema.Schema{
@@ -446,17 +366,6 @@ var mappingSchema = map[string]*schema.Schema{
 	"expression": {
 		Type:     schema.TypeString,
 		Required: true,
-	},
-}
-
-var errorSchema = map[string]*schema.Schema{
-	"code": {
-		Type:     schema.TypeString,
-		Computed: true,
-	},
-	"message": {
-		Type:     schema.TypeString,
-		Computed: true,
 	},
 }
 

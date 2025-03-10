@@ -19,12 +19,10 @@ type Stream struct {
 func (stream *Stream) GetID() string { return stream.ID }
 
 type Configuration struct {
-	Endianness   string                                         `json:"endianness"`
-	Structure    ElementList[StreamComponent, *StreamComponent] `json:"structure"`
-	Metadata     Metadata                                       `json:"metadata"`
-	Computations ElementList[Computation, *Computation]         `json:"computations"`
-	Valid        bool                                           `json:"valid,omitempty"`
-	Errors       []Error                                        `json:"errors,omitempty"`
+	Endianness   string                                          `json:"endianness"`
+	Structure    ElementList[StreamComponent, *StreamComponent]  `json:"structure"`
+	Metadata     Metadata                                        `json:"metadata"`
+	Computations ElementListWithValid[Computation, *Computation] `json:"computations"`
 }
 
 type StreamComponent struct {
@@ -34,8 +32,6 @@ type StreamComponent struct {
 	Path       string      `json:"path"`
 	Type       string      `json:"type"` // CONTAINER / FIELD / SWITCH
 	Repetitive *Repetitive `json:"repetitive,omitempty"`
-	Valid      bool        `json:"valid,omitempty"`
-	Errors     []Error     `json:"errors,omitempty"`
 
 	// Field only
 	Length     *Length `json:"length,omitempty"`
@@ -66,47 +62,33 @@ type SwitchValue[T any] struct {
 }
 
 type Metadata struct {
-	PacketID  ElementStatus       `json:"packetId,omitempty"`
 	Timestamp TimestampDefinition `json:"timestamp"`
-	Valid     bool                `json:"valid,omitempty"`
-	Errors    []Error             `json:"errors,omitempty"`
 }
 
 type TimestampDefinition struct {
-	Expression string  `json:"expression"`
-	Valid      bool    `json:"valid,omitempty"`
-	Errors     []Error `json:"errors,omitempty"`
+	Expression string `json:"expression"`
 }
 
 type ElementList[T any, PT helper.ParseablePointer[T]] struct {
-	Elements []T     `json:"elements"`
-	Valid    bool    `json:"valid,omitempty"`
-	Errors   []Error `json:"errors,omitempty"`
+	Elements []T `json:"elements"`
+}
+
+type ElementListWithValid[T any, PT helper.ParseablePointer[T]] struct {
+	Elements []T  `json:"elements"`
+	Valid    bool `json:"valid,omitempty"`
 }
 
 type Computation struct {
-	Name       string  `json:"name"`
-	Order      int     `json:"order"`
-	Type       string  `json:"type"`
-	DataType   string  `json:"dataType"`
-	Expression string  `json:"expression"`
-	Valid      bool    `json:"valid,omitempty"`
-	Errors     []Error `json:"errors,omitempty"`
+	Name       string `json:"name"`
+	Order      int    `json:"order"`
+	Type       string `json:"type"`
+	DataType   string `json:"dataType"`
+	Expression string `json:"expression"`
 }
 
 type Mapping struct {
 	MetricId   string `json:"metricId"`
 	Expression string `json:"expression,omitempty"`
-}
-
-type ElementStatus struct {
-	Valid  bool    `json:"valid,omitempty"`
-	Errors []Error `json:"errors,omitempty"`
-}
-
-type Error struct {
-	Code    string `json:"code"`
-	Message string `json:"message"`
 }
 
 type Repetitive struct {

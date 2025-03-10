@@ -3,11 +3,12 @@ package stream_queues
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/leanspace/terraform-provider-leanspace/services/streams/streams"
 	"io"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/leanspace/terraform-provider-leanspace/services/streams/streams"
 
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
@@ -176,16 +177,6 @@ func fetchStreamInfo(stream *streams.Stream, streamId string, client *provider.C
 	}
 	updateStreamFields(stream, streamInfo)
 	return stream, nil
-}
-
-func updateStreamInfo(stream *streams.Stream, streamId string, client *provider.Client) error {
-	streamInfo, err := getStream(streamId, client)
-	if err != nil {
-		return err
-	}
-	updateStreamFields(stream, streamInfo)
-	stream.PostUnmarshallProcess()
-	return nil
 }
 
 func updateStreamFields(stream *streams.Stream, streamInfo *streams.Stream) {
