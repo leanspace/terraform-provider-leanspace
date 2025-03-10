@@ -67,7 +67,7 @@ resource "leanspace_command_definitions" "test" {
     name        = "TestMetadataTime"
     description = "A time metadata value"
     attributes {
-      value = "10:37:19"
+      value = "10:37:19.000"
       type  = "TIME"
     }
   }
@@ -126,7 +126,7 @@ resource "leanspace_command_definitions" "test" {
     identifier  = "TIME"
     description = "A time input"
     attributes {
-      default_value = "10:37:19"
+      default_value = "10:37:19.000"
       type          = "TIME"
       required      = true
     }
@@ -204,7 +204,7 @@ resource "leanspace_command_definitions" "test" {
       min_size      = 1
       max_size      = 4
       unique        = true
-      default_value = "08:37:19,10:37:19,15:37:19"
+      default_value = "08:37:19.000,10:37:19.000,15:37:19.000"
       constraint {
         type   = "TIME"
         before = "20:00:00"
@@ -387,11 +387,14 @@ Optional:
 Optional:
 
 - `default_value` (String)
-- `max` (Number) Property field with numeric type only: the maximum value allowed.
-- `min` (Number) Property field with numeric type only: the minimum value allowed.
 - `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
 - `scale` (Number) Property field with numeric type only: the scale required.
 - `unit_id` (String) Property field with numeric type only
+
+Read-Only:
+
+- `max` (Number) Property field with numeric type only: the maximum value allowed.
+- `min` (Number) Property field with numeric type only: the minimum value allowed.
 
 
 <a id="nestedblock--arguments--attributes--fields--longitude"></a>
@@ -400,11 +403,14 @@ Optional:
 Optional:
 
 - `default_value` (String)
-- `max` (Number) Property field with numeric type only: the maximum value allowed.
-- `min` (Number) Property field with numeric type only: the minimum value allowed.
 - `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
 - `scale` (Number) Property field with numeric type only: the scale required.
 - `unit_id` (String) Property field with numeric type only
+
+Read-Only:
+
+- `max` (Number) Property field with numeric type only: the maximum value allowed.
+- `min` (Number) Property field with numeric type only: the minimum value allowed.
 
 
 
@@ -467,12 +473,15 @@ Optional:
 
 Optional:
 
-- `max` (Number) Property field with numeric type only: the maximum value allowed.
-- `min` (Number) Property field with numeric type only: the minimum value allowed.
 - `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
 - `scale` (Number) Property field with numeric type only: the scale required.
 - `unit_id` (String) Property field with numeric type only
 - `value` (String)
+
+Read-Only:
+
+- `max` (Number) Property field with numeric type only: the maximum value allowed.
+- `min` (Number) Property field with numeric type only: the minimum value allowed.
 
 
 <a id="nestedblock--metadata--attributes--fields--longitude"></a>
@@ -480,9 +489,12 @@ Optional:
 
 Optional:
 
-- `max` (Number) Property field with numeric type only: the maximum value allowed.
-- `min` (Number) Property field with numeric type only: the minimum value allowed.
 - `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
 - `scale` (Number) Property field with numeric type only: the scale required.
 - `unit_id` (String) Property field with numeric type only
 - `value` (String)
+
+Read-Only:
+
+- `max` (Number) Property field with numeric type only: the maximum value allowed.
+- `min` (Number) Property field with numeric type only: the minimum value allowed.

@@ -46,7 +46,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
     name        = "ActivityMetadataTimestamp"
     description = "A timestamp metadata value"
     attributes {
-      value = "2022-06-30T13:57:23Z"
+      value = "2022-06-30T13:57:23.000Z"
       type  = "TIMESTAMP"
     }
   }
@@ -62,7 +62,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
     name        = "ActivityMetadataTime"
     description = "A time metadata value"
     attributes {
-      value = "10:37:19"
+      value = "10:37:19.000"
       type  = "TIME"
     }
   }
@@ -106,7 +106,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
     name        = "ActivityArgumentTimestamp"
     description = "A timestamp input"
     attributes {
-      default_value = "2022-06-30T13:57:23Z"
+      default_value = "2022-06-30T13:57:23.000Z"
       type          = "TIMESTAMP"
       required      = true
     }
@@ -124,7 +124,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
     name        = "ActivityArgumentTime"
     description = "A time input"
     attributes {
-      default_value = "10:37:19"
+      default_value = "10:37:19.000"
       type          = "TIME"
       required      = true
     }
@@ -292,11 +292,14 @@ Optional:
 Optional:
 
 - `default_value` (String)
-- `max` (Number) Property field with numeric type only: the maximum value allowed.
-- `min` (Number) Property field with numeric type only: the minimum value allowed.
 - `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
 - `scale` (Number) Property field with numeric type only: the scale required.
 - `unit_id` (String) Property field with numeric type only
+
+Read-Only:
+
+- `max` (Number) Property field with numeric type only: the maximum value allowed.
+- `min` (Number) Property field with numeric type only: the minimum value allowed.
 
 
 <a id="nestedblock--argument_definitions--attributes--fields--longitude"></a>
@@ -305,11 +308,14 @@ Optional:
 Optional:
 
 - `default_value` (String)
-- `max` (Number) Property field with numeric type only: the maximum value allowed.
-- `min` (Number) Property field with numeric type only: the minimum value allowed.
 - `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
 - `scale` (Number) Property field with numeric type only: the scale required.
 - `unit_id` (String) Property field with numeric type only
+
+Read-Only:
+
+- `max` (Number) Property field with numeric type only: the maximum value allowed.
+- `min` (Number) Property field with numeric type only: the minimum value allowed.
 
 
 
@@ -412,12 +418,15 @@ Optional:
 
 Optional:
 
-- `max` (Number) Property field with numeric type only: the maximum value allowed.
-- `min` (Number) Property field with numeric type only: the minimum value allowed.
 - `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
 - `scale` (Number) Property field with numeric type only: the scale required.
 - `unit_id` (String) Property field with numeric type only
 - `value` (String)
+
+Read-Only:
+
+- `max` (Number) Property field with numeric type only: the maximum value allowed.
+- `min` (Number) Property field with numeric type only: the minimum value allowed.
 
 
 <a id="nestedblock--metadata--attributes--fields--longitude"></a>
@@ -425,9 +434,12 @@ Optional:
 
 Optional:
 
-- `max` (Number) Property field with numeric type only: the maximum value allowed.
-- `min` (Number) Property field with numeric type only: the minimum value allowed.
 - `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
 - `scale` (Number) Property field with numeric type only: the scale required.
 - `unit_id` (String) Property field with numeric type only
 - `value` (String)
+
+Read-Only:
+
+- `max` (Number) Property field with numeric type only: the maximum value allowed.
+- `min` (Number) Property field with numeric type only: the minimum value allowed.

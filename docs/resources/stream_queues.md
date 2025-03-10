@@ -176,11 +176,6 @@ Required:
 - `metadata` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--configuration--metadata))
 - `structure` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--configuration--structure))
 
-Read-Only:
-
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--errors))
-- `valid` (Boolean)
-
 <a id="nestedblock--configuration--computations"></a>
 ### Nested Schema for `configuration.computations`
 
@@ -190,7 +185,6 @@ Optional:
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--computations--errors))
 - `valid` (Boolean)
 
 <a id="nestedblock--configuration--computations--elements"></a>
@@ -204,28 +198,8 @@ Required:
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--computations--elements--errors))
 - `order` (Number)
 - `type` (String)
-- `valid` (Boolean)
-
-<a id="nestedatt--configuration--computations--elements--errors"></a>
-### Nested Schema for `configuration.computations.elements.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
-
-
-
-<a id="nestedatt--configuration--computations--errors"></a>
-### Nested Schema for `configuration.computations.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
 
 
 
@@ -236,59 +210,12 @@ Optional:
 
 - `timestamp` (Block List, Max: 1) (see [below for nested schema](#nestedblock--configuration--metadata--timestamp))
 
-Read-Only:
-
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--metadata--errors))
-- `packet_id` (List of Object) (see [below for nested schema](#nestedatt--configuration--metadata--packet_id))
-- `valid` (Boolean)
-
 <a id="nestedblock--configuration--metadata--timestamp"></a>
 ### Nested Schema for `configuration.metadata.timestamp`
 
 Required:
 
 - `expression` (String)
-
-Read-Only:
-
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--metadata--timestamp--errors))
-- `valid` (Boolean)
-
-<a id="nestedatt--configuration--metadata--timestamp--errors"></a>
-### Nested Schema for `configuration.metadata.timestamp.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
-
-
-
-<a id="nestedatt--configuration--metadata--errors"></a>
-### Nested Schema for `configuration.metadata.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
-
-
-<a id="nestedatt--configuration--metadata--packet_id"></a>
-### Nested Schema for `configuration.metadata.packet_id`
-
-Read-Only:
-
-- `errors` (Set of Object) (see [below for nested schema](#nestedobjatt--configuration--metadata--packet_id--errors))
-- `valid` (Boolean)
-
-<a id="nestedobjatt--configuration--metadata--packet_id--errors"></a>
-### Nested Schema for `configuration.metadata.packet_id.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
-
 
 
 
@@ -298,11 +225,6 @@ Read-Only:
 Optional:
 
 - `elements` (Block List) (see [below for nested schema](#nestedblock--configuration--structure--elements))
-
-Read-Only:
-
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--errors))
-- `valid` (Boolean)
 
 <a id="nestedblock--configuration--structure--elements"></a>
 ### Nested Schema for `configuration.structure.elements`
@@ -324,10 +246,8 @@ Optional:
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--errors))
 - `order` (Number) Position of this component in the current context
 - `path` (String) Path of this component in the current context
-- `valid` (Boolean)
 
 <a id="nestedblock--configuration--structure--elements--elements"></a>
 ### Nested Schema for `configuration.structure.elements.elements`
@@ -349,10 +269,8 @@ Optional:
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--errors))
 - `order` (Number) Position of this component in the current context
 - `path` (String) Path of this component in the current context
-- `valid` (Boolean)
 
 <a id="nestedblock--configuration--structure--elements--elements--elements"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements`
@@ -374,10 +292,8 @@ Optional:
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--errors))
 - `order` (Number) Position of this component in the current context
 - `path` (String) Path of this component in the current context
-- `valid` (Boolean)
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements`
@@ -399,10 +315,8 @@ Optional:
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--elements--errors))
 - `order` (Number) Position of this component in the current context
 - `path` (String) Path of this component in the current context
-- `valid` (Boolean)
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements`
@@ -424,10 +338,8 @@ Optional:
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--elements--elements--errors))
 - `order` (Number) Position of this component in the current context
 - `path` (String) Path of this component in the current context
-- `valid` (Boolean)
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements`
@@ -449,10 +361,8 @@ Optional:
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--errors))
 - `order` (Number) Position of this component in the current context
 - `path` (String) Path of this component in the current context
-- `valid` (Boolean)
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements`
@@ -474,10 +384,8 @@ Optional:
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--errors))
 - `order` (Number) Position of this component in the current context
 - `path` (String) Path of this component in the current context
-- `valid` (Boolean)
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements`
@@ -499,10 +407,8 @@ Optional:
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--errors))
 - `order` (Number) Position of this component in the current context
 - `path` (String) Path of this component in the current context
-- `valid` (Boolean)
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements`
@@ -524,10 +430,8 @@ Optional:
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors))
 - `order` (Number) Position of this component in the current context
 - `path` (String) Path of this component in the current context
-- `valid` (Boolean)
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements`
@@ -549,10 +453,8 @@ Optional:
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors))
 - `order` (Number) Position of this component in the current context
 - `path` (String) Path of this component in the current context
-- `valid` (Boolean)
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements`
@@ -574,10 +476,8 @@ Optional:
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors))
 - `order` (Number) Position of this component in the current context
 - `path` (String) Path of this component in the current context
-- `valid` (Boolean)
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements`
@@ -599,10 +499,8 @@ Optional:
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors))
 - `order` (Number) Position of this component in the current context
 - `path` (String) Path of this component in the current context
-- `valid` (Boolean)
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements`
@@ -624,10 +522,8 @@ Optional:
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors))
 - `order` (Number) Position of this component in the current context
 - `path` (String) Path of this component in the current context
-- `valid` (Boolean)
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements`
@@ -649,10 +545,8 @@ Optional:
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors))
 - `order` (Number) Position of this component in the current context
 - `path` (String) Path of this component in the current context
-- `valid` (Boolean)
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements`
@@ -672,10 +566,8 @@ Optional:
 
 Read-Only:
 
-- `errors` (Set of Object) (see [below for nested schema](#nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors))
 - `order` (Number) Position of this component in the current context
 - `path` (String) Path of this component in the current context
-- `valid` (Boolean)
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--length"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.length`
@@ -698,15 +590,6 @@ Optional:
 
 - `path` (String)
 - `value` (Number)
-
-
-<a id="nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors"></a>
-### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
 
 
 
@@ -760,15 +643,6 @@ Optional:
 - `value` (Number)
 
 
-<a id="nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors"></a>
-### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
-
-
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.expression`
@@ -818,15 +692,6 @@ Optional:
 
 - `path` (String)
 - `value` (Number)
-
-
-<a id="nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors"></a>
-### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
 
 
 
@@ -880,15 +745,6 @@ Optional:
 - `value` (Number)
 
 
-<a id="nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors"></a>
-### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
-
-
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.expression`
@@ -938,15 +794,6 @@ Optional:
 
 - `path` (String)
 - `value` (Number)
-
-
-<a id="nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors"></a>
-### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
 
 
 
@@ -1000,15 +847,6 @@ Optional:
 - `value` (Number)
 
 
-<a id="nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors"></a>
-### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.elements.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
-
-
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--expression"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.expression`
@@ -1058,15 +896,6 @@ Optional:
 
 - `path` (String)
 - `value` (Number)
-
-
-<a id="nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--elements--errors"></a>
-### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.elements.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
 
 
 
@@ -1120,15 +949,6 @@ Optional:
 - `value` (Number)
 
 
-<a id="nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--elements--errors"></a>
-### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.elements.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
-
-
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--elements--elements--expression"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.expression`
@@ -1178,15 +998,6 @@ Optional:
 
 - `path` (String)
 - `value` (Number)
-
-
-<a id="nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--elements--errors"></a>
-### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.elements.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
 
 
 
@@ -1240,15 +1051,6 @@ Optional:
 - `value` (Number)
 
 
-<a id="nestedatt--configuration--structure--elements--elements--elements--elements--elements--elements--errors"></a>
-### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.elements.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
-
-
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--elements--elements--expression"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.expression`
@@ -1298,15 +1100,6 @@ Optional:
 
 - `path` (String)
 - `value` (Number)
-
-
-<a id="nestedatt--configuration--structure--elements--elements--elements--elements--elements--errors"></a>
-### Nested Schema for `configuration.structure.elements.elements.elements.elements.elements.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
 
 
 
@@ -1360,15 +1153,6 @@ Optional:
 - `value` (Number)
 
 
-<a id="nestedatt--configuration--structure--elements--elements--elements--elements--errors"></a>
-### Nested Schema for `configuration.structure.elements.elements.elements.elements.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
-
-
 
 <a id="nestedblock--configuration--structure--elements--elements--elements--expression"></a>
 ### Nested Schema for `configuration.structure.elements.elements.elements.expression`
@@ -1418,15 +1202,6 @@ Optional:
 
 - `path` (String)
 - `value` (Number)
-
-
-<a id="nestedatt--configuration--structure--elements--elements--elements--errors"></a>
-### Nested Schema for `configuration.structure.elements.elements.elements.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
 
 
 
@@ -1480,15 +1255,6 @@ Optional:
 - `value` (Number)
 
 
-<a id="nestedatt--configuration--structure--elements--elements--errors"></a>
-### Nested Schema for `configuration.structure.elements.elements.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
-
-
 
 <a id="nestedblock--configuration--structure--elements--expression"></a>
 ### Nested Schema for `configuration.structure.elements.expression`
@@ -1540,33 +1306,6 @@ Optional:
 - `value` (Number)
 
 
-<a id="nestedatt--configuration--structure--elements--errors"></a>
-### Nested Schema for `configuration.structure.elements.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
-
-
-
-<a id="nestedatt--configuration--structure--errors"></a>
-### Nested Schema for `configuration.structure.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
-
-
-
-<a id="nestedatt--configuration--errors"></a>
-### Nested Schema for `configuration.errors`
-
-Read-Only:
-
-- `code` (String)
-- `message` (String)
 
 
 

@@ -286,11 +286,14 @@ Optional:
 Optional:
 
 - `default_value` (String)
-- `max` (Number) Property field with numeric type only: the maximum value allowed.
-- `min` (Number) Property field with numeric type only: the minimum value allowed.
 - `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
 - `scale` (Number) Property field with numeric type only: the scale required.
 - `unit_id` (String) Property field with numeric type only
+
+Read-Only:
+
+- `max` (Number) Property field with numeric type only: the maximum value allowed.
+- `min` (Number) Property field with numeric type only: the minimum value allowed.
 
 
 <a id="nestedblock--configuration_argument_definitions--attributes--fields--longitude"></a>
@@ -299,11 +302,14 @@ Optional:
 Optional:
 
 - `default_value` (String)
-- `max` (Number) Property field with numeric type only: the maximum value allowed.
-- `min` (Number) Property field with numeric type only: the minimum value allowed.
 - `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
 - `scale` (Number) Property field with numeric type only: the scale required.
 - `unit_id` (String) Property field with numeric type only
+
+Read-Only:
+
+- `max` (Number) Property field with numeric type only: the maximum value allowed.
+- `min` (Number) Property field with numeric type only: the minimum value allowed.
 
 
 
