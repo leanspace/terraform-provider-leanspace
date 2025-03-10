@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-var validWidgetTypes = []string{"TABLE", "LINE", "BAR", "AREA", "VALUE", "RESOURCES", "EARTH", "GAUGE", "ENUM"}
+var ValidWidgetTypes = []string{"TABLE", "LINE", "BAR", "AREA", "VALUE", "RESOURCES", "EARTH", "GAUGE", "ENUM"}
 var validGranularities = []string{"second", "minute", "hour", "day", "week", "month", "raw"}
 var validDatasources = []string{"metric", "raw_stream", "resources", "topology"}
 var validAggregations = []string{"avg", "count", "sum", "min", "max", "none"}
@@ -35,8 +35,8 @@ var widgetSchema = map[string]*schema.Schema{
 	"type": {
 		Type:         schema.TypeString,
 		Required:     true,
-		ValidateFunc: validation.StringInSlice(validWidgetTypes, false),
-		Description:  helper.AllowedValuesToDescription(validWidgetTypes),
+		ValidateFunc: validation.StringInSlice(ValidWidgetTypes, false),
+		Description:  helper.AllowedValuesToDescription(ValidWidgetTypes),
 	},
 	"granularity": {
 		Type:         schema.TypeString,
@@ -209,8 +209,8 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 		Optional: true,
 		Elem: &schema.Schema{
 			Type:         schema.TypeString,
-			ValidateFunc: validation.StringInSlice(validWidgetTypes, false),
-			Description:  helper.AllowedValuesToDescription(validWidgetTypes),
+			ValidateFunc: validation.StringInSlice(ValidWidgetTypes, false),
+			Description:  helper.AllowedValuesToDescription(ValidWidgetTypes),
 		},
 	},
 	"tags": {

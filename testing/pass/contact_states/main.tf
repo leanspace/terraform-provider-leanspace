@@ -11,7 +11,7 @@ data "leanspace_contact_states" "all" {
 }
 
 resource "leanspace_contact_states" "created" {
-  name = "MY_TEST"
+  name = "TERRAFORM_STATE"
 }
 
 output "created" {

@@ -1,4 +1,4 @@
-package leaf_space_connections
+package connections
 
 func (leafSpaceConnectionIntegration *LeafSpaceConnection) ToMap() map[string]any {
 	leafSpaceConnectionIntegrationStateMap := make(map[string]any)

@@ -15,11 +15,11 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/commands/release_queues"
 	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/dashboards"
 	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/widgets"
-	"github.com/leanspace/terraform-provider-leanspace/services/events/events_definitions"
+	"github.com/leanspace/terraform-provider-leanspace/services/events/event_definitions"
+	"github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/connections"
 	"github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/contact_reservation_status_mappings"
-	"github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/leaf_space_connections"
-	"github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/link/groundstation"
-	"github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/link/satellite"
+	groundstation_links "github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/link/ground_station"
+	satellite_links "github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/link/satellite"
 	"github.com/leanspace/terraform-provider-leanspace/services/metrics/metrics"
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/action_templates"
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/monitors"
@@ -81,12 +81,12 @@ func AddDataTypes() {
 	routes.RouteDataType.Subscribe()
 	processors.ProcessorDataType.Subscribe()
 	orbits.OrbitDataType.Subscribe()
-	leaf_space_connections.LeafSpaceConnectionDataType.Subscribe()
-	leaf_space_groundstation_links.LeafSpaceGroundStationLinkDataType.Subscribe()
-	leaf_space_satellite_links.LeafSpaceSatellitesLinkDataType.Subscribe()
-	leaf_space_contact_reservation_status_mappings.LeafSpaceContactReservationStatusMappingDataType.Subscribe()
+	connections.LeafSpaceConnectionDataType.Subscribe()
+	groundstation_links.LeafSpaceGroundStationLinkDataType.Subscribe()
+	satellite_links.LeafSpaceSatellitesLinkDataType.Subscribe()
+	contact_reservation_status_mappings.LeafSpaceContactReservationStatusMappingDataType.Subscribe()
 	resources.ResourceDataType.Subscribe()
-	events_definitions.EventsDefinitionDataType.Subscribe()
+	event_definitions.EventsDefinitionDataType.Subscribe()
 	feasibility_constraint_definitions.FeasibilityConstraintDefinitionDataType.Subscribe()
 	request_definitions.RequestDefinitionDataType.Subscribe()
 	request_states.RequestStateDataType.Subscribe()

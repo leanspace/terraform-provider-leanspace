@@ -24,7 +24,6 @@ resource "leanspace_dashboards" "test" {
   node_ids    = var.attached_node_ids
   widget_info {
     id    = var.value_widget_id
-    type  = "VALUE"
     x     = 0
     y     = 0
     w     = 1
@@ -34,7 +33,6 @@ resource "leanspace_dashboards" "test" {
   }
   widget_info {
     id    = var.line_widget_id
-    type  = "LINE"
     x     = 1
     y     = 0
     w     = 2
@@ -44,7 +42,6 @@ resource "leanspace_dashboards" "test" {
   }
   widget_info {
     id    = var.table_widget_id
-    type  = "TABLE"
     x     = 0
     y     = 1
     w     = 3

@@ -2,14 +2,13 @@ package dashboards
 
 import (
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/widgets"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 )
-
-var validWidgetTypes = []string{"TABLE", "LINE", "BAR", "AREA", "VALUE", "RESOURCES"}
 
 var dashboardSchema = map[string]*schema.Schema{
 	"id": {
@@ -76,10 +75,9 @@ var widgetInfoSchema = map[string]*schema.Schema{
 		ValidateFunc: validation.IsUUID,
 	},
 	"type": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validWidgetTypes, false),
-		Description:  helper.AllowedValuesToDescription(validWidgetTypes),
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: helper.AllowedValuesToDescription(widgets.ValidWidgetTypes),
 	},
 	"w": {
 		Type:         schema.TypeInt,

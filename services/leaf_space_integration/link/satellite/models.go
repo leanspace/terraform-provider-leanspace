@@ -1,4 +1,4 @@
-package leaf_space_satellite_links
+package satellite_links
 
 type LeafSpaceSatelliteLink struct {
 	ID                     string `json:"id"`

@@ -2,10 +2,11 @@ package provider
 
 import (
 	"context"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"strconv"
 	"time"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
@@ -38,6 +39,9 @@ func (dataSourceType DataSourceType[T, PT]) read(ctx context.Context, d *schema.
 		diags = dataSourceType.setUniqueFilter(genericClient, d, diags)
 	} else {
 		values, err := genericClient.GetAll(filters)
+		if err != nil {
+			return diag.FromErr(err)
+		}
 		err = dataSourceType.setData(values, d)
 		if err != nil {
 			return diag.FromErr(err)
@@ -54,6 +58,9 @@ func (dataSourceType DataSourceType[T, PT]) read(ctx context.Context, d *schema.
 
 func (dataSourceType DataSourceType[T, PT]) setUniqueFilter(genericClient GenericClient[T, PT], d *schema.ResourceData, diags diag.Diagnostics) diag.Diagnostics {
 	value, err := genericClient.GetUnique()
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	if value != nil {
 		storedData := value.ToMap()
 		for _, key := range dataSourceType.getFilterSchemaKeys() {

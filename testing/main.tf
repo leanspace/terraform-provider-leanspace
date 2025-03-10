@@ -25,6 +25,31 @@ module "properties" {
   ]
 }
 
+module "event_definitions" {
+  source = "./events/event_definitions"
+}
+
+module "command_states" {
+  source = "./commands/command_states"
+}
+
+module "pass_contact_states" {
+  source = "./pass/contact_states"
+}
+
+module "pass_states" {
+  source = "./pass/pass_states"
+}
+
+module "leaf_space_connection" {
+  source = "./leaf_space_integration/connections"
+}
+
+module "leaf_space_contact_reservation_status_mappings" {
+  source = "./leaf_space_integration/contact_reservation_status_mappings"
+  contact_state_id = module.pass_contact_states.created.id
+}
+
 module "command_definitions" {
   source  = "./commands/command_definitions"
   node_id = module.nodes.satellite_node.id
@@ -131,7 +156,7 @@ module "access_policies" {
 
 module "members" {
   source          = "./teams/members"
-  usernames       = ["TerraPaul", "TerraCotta", "TerraKium"]
+  usernames       = ["TerraformPaul", "TerraformCotta", "TerraformKium"]
   access_policies = [module.access_policies.test_access_policy.id]
   depends_on = [
     module.access_policies
@@ -140,7 +165,7 @@ module "members" {
 
 module "service_accounts" {
   source          = "./teams/service_accounts"
-  usernames       = ["TerraBot 1", "TerraBot 2", "TerraBot 3"]
+  usernames       = ["TerraformBot 1", "TerraformBot 2", "TerraformBot 3"]
   access_policies = [module.access_policies.test_access_policy.id]
   depends_on = [
     module.access_policies
@@ -214,6 +239,7 @@ module "plan_templates" {
 module "routes" {
   source        = "./routes/routes"
   processor_ids = [module.processors.test_create_processor.id]
+  service_account_id = values(module.service_accounts.test_service_accounts)[0].id
 }
 
 module "processors" {

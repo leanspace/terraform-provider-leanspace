@@ -70,7 +70,6 @@ resource "leanspace_dashboards" "test" {
   node_ids    = var.attached_node_ids
   widget_info {
     id    = var.value_widget_id
-    type  = "VALUE"
     x     = 0
     y     = 0
     w     = 1
@@ -80,7 +79,6 @@ resource "leanspace_dashboards" "test" {
   }
   widget_info {
     id    = var.line_widget_id
-    type  = "LINE"
     x     = 1
     y     = 0
     w     = 2
@@ -90,7 +88,6 @@ resource "leanspace_dashboards" "test" {
   }
   widget_info {
     id    = var.table_widget_id
-    type  = "TABLE"
     x     = 0
     y     = 1
     w     = 3
@@ -100,7 +97,6 @@ resource "leanspace_dashboards" "test" {
   }
   widget_info {
     id    = var.enum_widget_id
-    type  = "TABLE"
     x     = 0
     y     = 2
     w     = 1
@@ -110,7 +106,6 @@ resource "leanspace_dashboards" "test" {
   }
   widget_info {
     id    = var.earth_widget_id
-    type  = "TABLE"
     x     = 1
     y     = 2
     w     = 1
@@ -120,7 +115,6 @@ resource "leanspace_dashboards" "test" {
   }
   widget_info {
     id    = var.gauge_widget_id
-    type  = "TABLE"
     x     = 2
     y     = 2
     w     = 1
@@ -130,7 +124,6 @@ resource "leanspace_dashboards" "test" {
   }
   widget_info {
     id    = var.bar_widget_id
-    type  = "TABLE"
     x     = 0
     y     = 3
     w     = 1
@@ -140,7 +133,6 @@ resource "leanspace_dashboards" "test" {
   }
   widget_info {
     id    = var.area_widget_id
-    type  = "TABLE"
     x     = 1
     y     = 3
     w     = 1

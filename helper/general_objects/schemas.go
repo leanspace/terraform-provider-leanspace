@@ -190,14 +190,13 @@ var PageableSchema = map[string]*schema.Schema{
 }
 
 func createGeoPointFieldsSchema(isValueField bool) map[string]*schema.Schema {
-	fieldSchema := baseAttributeFieldSchema(isValueField)
 	return map[string]*schema.Schema{
 		"latitude": {
 			Type:     schema.TypeList,
 			MaxItems: 1,
 			Required: true,
 			Elem: &schema.Resource{
-				Schema: fieldSchema,
+				Schema: baseAttributeFieldSchema(isValueField, true),
 			},
 		},
 		"longitude": {
@@ -205,7 +204,7 @@ func createGeoPointFieldsSchema(isValueField bool) map[string]*schema.Schema {
 			MaxItems: 1,
 			Required: true,
 			Elem: &schema.Resource{
-				Schema: fieldSchema,
+				Schema: baseAttributeFieldSchema(isValueField, true),
 			},
 		},
 		"elevation": {
@@ -213,7 +212,7 @@ func createGeoPointFieldsSchema(isValueField bool) map[string]*schema.Schema {
 			MaxItems: 1,
 			Required: true,
 			Elem: &schema.Resource{
-				Schema: fieldSchema,
+				Schema: baseAttributeFieldSchema(isValueField, false),
 			},
 		},
 	}
@@ -222,7 +221,7 @@ func createGeoPointFieldsSchema(isValueField bool) map[string]*schema.Schema {
 var geoPointFieldsDefSchema = createGeoPointFieldsSchema(false)
 var geoPointFieldsSchema = createGeoPointFieldsSchema(true)
 
-func baseAttributeFieldSchema(isValueField bool) map[string]*schema.Schema {
+func baseAttributeFieldSchema(isValueField bool, isGeoPoint bool) map[string]*schema.Schema {
 	baseSchema := map[string]*schema.Schema{
 		"scale": {
 			Type:        schema.TypeInt,
@@ -237,7 +236,6 @@ func baseAttributeFieldSchema(isValueField bool) map[string]*schema.Schema {
 		},
 		"min": {
 			Type:        schema.TypeFloat,
-			Optional:    true,
 			Description: "Property field with numeric type only: the minimum value allowed.",
 		},
 		"precision": {
@@ -247,7 +245,6 @@ func baseAttributeFieldSchema(isValueField bool) map[string]*schema.Schema {
 		},
 		"max": {
 			Type:        schema.TypeFloat,
-			Optional:    true,
 			Description: "Property field with numeric type only: the maximum value allowed.",
 		},
 	}
@@ -261,6 +258,14 @@ func baseAttributeFieldSchema(isValueField bool) map[string]*schema.Schema {
 			Type:     schema.TypeString,
 			Optional: true,
 		}
+	}
+
+	if isGeoPoint == true {
+		baseSchema["min"].Computed = true
+		baseSchema["max"].Computed = true
+	} else {
+		baseSchema["min"].Optional = true
+		baseSchema["max"].Optional = true
 	}
 	return baseSchema
 }

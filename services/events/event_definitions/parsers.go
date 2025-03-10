@@ -1,10 +1,11 @@
-package events_definitions
+package event_definitions
 
 import (
+	"strconv"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
-	"strconv"
 )
 
 func (eventDefinition *EventsDefinition) ToMap() map[string]any {

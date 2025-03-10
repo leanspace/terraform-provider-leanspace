@@ -31,14 +31,14 @@ data "leanspace_activity_definitions" "all" {
 }
 
 resource "leanspace_plan_templates" "created" {
-  name        = "marcPlanTemplateTerraform"
+  name        = "Terraform PlanTemplateTerraform"
   asset_id    = var.asset_id
-  description = "marcDescriptionTerraform"
+  description = "terraform DescriptionTerraform"
   activity_configs {
     activity_definition_id = var.activity_definition_id
     position               = 0
     delay_in_seconds       = 5
-    name                   = "marcActivityDefinitionTerraformFromPlanTemplate"
+    name                   = "terraform ActivityDefinitionTerraformFromPlanTemplate"
     arguments {
       name = "ActivityArgumentNumeric"
       attributes {

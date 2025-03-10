@@ -29,6 +29,40 @@ jobs:
         run: |
           export VERSION=100.0.0
           make install
+      - name: Verify presence of examples and tests for each resource
+        id: file_errors
+        run: |
+          set +e
+          errors=''
+          resource_names=$(find ./services -type f -name "main.go" -exec sed -nE 's/\tResourceIdentifier: +"([a-z_]+)",/\1/p' {} \;)
+          for resource_name in $resource_names
+          do
+            ls "./examples/data_sources/$resource_name.tf" >/dev/null
+            if [ $? -ne 0 ]; then
+              errors+="\nexamples/data_source/$resource_name"
+            fi
+            ls "./examples/resources/$resource_name.tf" >/dev/null
+            if [ $? -ne 0 ]; then
+              errors+="\nexamples/resource/$resource_name"
+            fi
+          done
+
+          service_pathes=$(find ./services -type f -name "main.go" | sed -nE 's/.\/services\/([a-z_-]+\/[a-z_-]+)\/main.go/\1/p')
+          for service_path in $service_pathes
+          do
+            ls "./testing/$service_path" >/dev/null
+            if [ $? -ne 0 ]; then
+              errors+="\ntesting/$service_path"
+            fi
+
+            cat "./testing/main.tf" | grep -E "source += +\"./$service_path/?\"" >/dev/null
+            if [ $? -ne 0 ]; then
+              errors+="\ntesting/main.tf/$service_path"
+            fi
+          done
+
+          echo "errors=$errors" >> $GITHUB_OUTPUT
+          set -e
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -42,17 +76,17 @@ jobs:
 
       - name: Set env variables
         run: |
-          echo "TF_VAR_tenant=vostok" | tee -a $GITHUB_ENV
+          echo "TF_VAR_tenant=buzz" | tee -a $GITHUB_ENV
           echo "TF_VAR_env=develop" | tee -a $GITHUB_ENV
-          echo "TF_VAR_client_id=${{ secrets.VOSTOK_CLIENTID_DEV }}" | tee -a $GITHUB_ENV
-          echo "TF_VAR_client_secret=${{ secrets.VOSTOK_CLIENTSECRET_DEV }}" | tee -a $GITHUB_ENV
+          echo "TF_VAR_client_id=${{ secrets.BUZZ_CLIENTID_DEV }}" | tee -a $GITHUB_ENV
+          echo "TF_VAR_client_secret=${{ secrets.BUZZ_CLIENTSECRET_DEV }}" | tee -a $GITHUB_ENV
 
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
         working-directory: ./testing
         run: |
-            summary_line=$(terraform plan -no-color -input=false | tail -n 6 | head -n 1)
+            summary_line=$(terraform plan -no-color -input=false -out=tfplan | grep --color=never "Plan: ")
 
             to_add=$(echo "$summary_line" | awk '{print $2}')
             to_change=$(echo "$summary_line" | awk '{print $5}')
@@ -66,10 +100,24 @@ jobs:
         id: apply-create
         working-directory: ./testing
         run: |
-            summary_line=$(terraform apply -no-color -auto-approve -input=false)
-            if [ $? -eq 0 ]; then
+            set +e
+            stdout_file=$(mktemp)
+            stderr_file=$(mktemp)
+
+            terraform apply -no-color -auto-approve -input=false tfplan > "$stdout_file" 2> "$stderr_file"
+            exit_code=$?
+
+            summary_line=$(cat "$stdout_file")
+            error_lines=$(cat "$stderr_file")
+            rm -f "$stdout_file" "$stderr_file"
+
+            if [ $exit_code -eq 0 ]; then
               summary_line=$(echo "$summary_line" | tail -n 1)
             else
+              echo $error_lines
+              echo "errors<<EOF" >> $GITHUB_OUTPUT
+              echo "$error_lines" >> $GITHUB_OUTPUT
+              echo "EOF" >> $GITHUB_OUTPUT
               exit 1
             fi
 
@@ -80,6 +128,7 @@ jobs:
             echo "added=$added" >> $GITHUB_OUTPUT
             echo "changed=$changed" >> $GITHUB_OUTPUT
             echo "destroyed=$destroyed" >> $GITHUB_OUTPUT
+            set -e
 
       - name: Terraform Apply (update)
         id: apply-modify
@@ -87,6 +136,10 @@ jobs:
         run: |
             summary_line=$(terraform apply -no-color -auto-approve -input=false)
             if [ $? -eq 0 ]; then
+              changes=$(echo "$summary_line" | sed -nE 's/(.*)resource \"([a-z_-]+)\" +\"([a-z_-]+)\" +\{/\2 \3<br>/p' | sort | uniq)
+              echo "changes<<EOF" >> $GITHUB_OUTPUT
+              echo "$changes" >> $GITHUB_OUTPUT
+              echo "EOF" >> $GITHUB_OUTPUT
               summary_line=$(echo "$summary_line" | tail -n 6)
             else
               exit 1
@@ -119,22 +172,25 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const correct = "${{ steps.plan.outcome }}" === "success" && "${{ steps.apply-create.outcome }}" === "success" && "${{ steps.apply-modify.outcome }}" === "success" && "${{ steps.destroy.outcome }}" === "success" &&
-              ${{ steps.plan.outputs.to_add }} === parseInt("${{ steps.apply-create.outputs.added }}") && parseInt("${{ steps.apply-create.outputs.added }}") === ${{ steps.destroy.outputs.actually_destroyed }} && "${{steps.apply-modify.outputs.no_change}}" === "true";
+            const correct = "${{ steps.file_errors.outcome }}" === "success" && "${{ steps.plan.outcome }}" === "success" && "${{ steps.apply-create.outcome }}" === "success" && "${{ steps.apply-modify.outcome }}" === "success" && "${{ steps.destroy.outcome }}" === "success" &&
+            "${{ steps.file_errors.outputs.errors }}" === "" && ${{ steps.plan.outputs.to_add }} === parseInt("${{ steps.apply-create.outputs.added }}") && parseInt("${{ steps.apply-create.outputs.added }}") === ${{ steps.destroy.outputs.actually_destroyed }} && "${{steps.apply-modify.outputs.no_change}}" === "true";
             // parseInt is used so that it works even with empty values
 
             const status = correct ? "🟢 Success" : "🔴 Problem";
+            const file_status = "${{ steps.file_errors.outputs.errors }}" ? "🔴 Missing \n${{ steps.file_errors.outputs.errors }}" : "🟢 Success";
             const plan_status = ("${{ steps.plan.outcome }}" === "success") ? "🟢 Success" : "🔴 ${{ steps.plan.outcome }}";
             const apply_create_status = ("${{ steps.apply-create.outcome }}" === "success") ? "🟢 Success" : "🔴 ${{ steps.apply-create.outcome }}";
             const apply_modify_status = ("${{ steps.apply-modify.outcome }}" === "success") ? "🟢 Success" : "🔴 ${{ steps.apply-modify.outcome }}";
-            const apply_modify_result = ("${{steps.apply-modify.outputs.no_change}}" === "true") ? "🟢 No change detected" : "🔴 Changes were detected (Added ${{ steps.apply-modify.outputs.re_added }}, changed ${{ steps.apply-modify.outputs.re_changed }}, destroyed ${{ steps.apply-modify.outputs.re_destroyed }})";
+            const apply_modify_result = ("${{steps.apply-modify.outputs.no_change}}" === "") ? "Not run because of create failure" : (("${{steps.apply-modify.outputs.no_change}}" === "true") ? "🟢 No change detected" : `🔴 Changes were detected (Added ${{ steps.apply-modify.outputs.re_added }}, changed ${{ steps.apply-modify.outputs.re_changed }}, destroyed ${{ steps.apply-modify.outputs.re_destroyed }}): \n${{ steps.apply-modify.outputs.changes }}`);
             const destroy_status = ("${{ steps.destroy.outcome }}" === "success") ? "🟢 Success" : "🔴 ${{ steps.destroy.outcome }}";
+            const apply_create_errors = `${{ steps.apply-create.outputs.errors }}`;
             
             const output = `<details><summary>${status}</summary>
-            1. Plan was ${plan_status}:  To add ${{ steps.plan.outputs.to_add }}, to change ${{ steps.plan.outputs.to_change }}, to destroy ${{ steps.plan.outputs.to_destroy }}<br>
-            2. Apply Create was ${apply_create_status}: Added ${{ steps.apply-create.outputs.added }}, changed ${{ steps.apply-create.outputs.changed }}, destroyed ${{ steps.apply-create.outputs.destroyed }}<br>
-            3. Apply Modify was ${apply_modify_status}: ${apply_modify_result}<br>
-            4. Destroy was ${destroy_status}: Destroyed ${{ steps.destroy.outputs.actually_destroyed }}
+            1. Testing files: ${file_status}<br>
+            2. Plan was ${plan_status}:  To add ${{ steps.plan.outputs.to_add }}, to change ${{ steps.plan.outputs.to_change }}, to destroy ${{ steps.plan.outputs.to_destroy }}<br>
+            3. Apply Create was ${apply_create_status}: ${ apply_create_errors ? apply_create_errors : "Added ${{ steps.apply-create.outputs.added }}, changed ${{ steps.apply-create.outputs.changed }}, destroyed ${{ steps.apply-create.outputs.destroyed }}" }<br>
+            4. Apply Modify was ${apply_modify_status}: ${apply_modify_result}<br>
+            5. Destroy was ${destroy_status}: Destroyed ${{ steps.destroy.outputs.actually_destroyed }}
             </details>`
 
             github.rest.issues.createComment({

@@ -391,6 +391,9 @@ func (constraint *ArrayConstraint[T]) ToMap() map[string]any {
 		constraintMap["min_length"] = constraint.MinLength
 		constraintMap["max_length"] = constraint.MaxLength
 		constraintMap["pattern"] = constraint.Pattern
+	case "BINARY":
+		constraintMap["min_length"] = constraint.MinLength
+		constraintMap["max_length"] = constraint.MaxLength
 	case "NUMERIC":
 		constraintMap["min"] = constraint.Min
 		constraintMap["max"] = constraint.Max

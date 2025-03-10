@@ -1,4 +1,4 @@
-package leaf_space_satellite_links
+package satellite_links
 
 func (leafSpaceSatelliteLink *LeafSpaceSatelliteLink) ToMap() map[string]any {
 	leafSpaceSatelliteStateMap := make(map[string]any)

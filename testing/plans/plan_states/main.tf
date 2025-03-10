@@ -11,7 +11,7 @@ data "leanspace_plan_states" "all" {
 }
 
 resource "leanspace_plan_states" "created" {
-  name = "MY_TEST"
+  name = "TERRAFORM_STATE"
 }
 
 output "created" {
