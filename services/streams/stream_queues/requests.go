@@ -1,6 +1,7 @@
 package stream_queues
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -152,16 +153,19 @@ func performStreamUpdate(client *provider.Client, streamQueueId string, updatedS
 func waitForStreamQueueCompletion(streamQueueId string, client *provider.Client) (string, error) {
 	var streamQueueInfo *apiStreamQueueResponse
 	var err error
+	var originalByteData *[]byte
 	for {
 		time.Sleep(1 * time.Second)
-		streamQueueInfo, err = getStreamQueue(streamQueueId, client)
+		originalByteData, streamQueueInfo, err = getStreamQueue(streamQueueId, client)
 		if err != nil {
 			return "", err
 		}
 		if streamQueueInfo.Status == "SUCCEEDED" {
 			return streamQueueInfo.StreamId, nil
 		} else if streamQueueInfo.Status == "FAILED" {
-			return "", fmt.Errorf("stream queue processing failed for stream queue ID %s", streamQueueId)
+			var jsonValue bytes.Buffer
+			json.Indent(&jsonValue, *originalByteData, "", "    ")
+			return "", fmt.Errorf("stream queue processing failed for stream queue ID %s with errors %s", streamQueueId, jsonValue.String())
 		}
 	}
 
@@ -193,23 +197,23 @@ func updateStreamFields(stream *streams.Stream, streamInfo *streams.Stream) {
 	stream.LastModifiedBy = streamInfo.LastModifiedBy
 }
 
-func getStreamQueue(streamQueueId string, client *provider.Client) (*apiStreamQueueResponse, error) {
+func getStreamQueue(streamQueueId string, client *provider.Client) (*[]byte, *apiStreamQueueResponse, error) {
 	path := fmt.Sprintf("%s/streams-repository/stream-queues/%s", client.HostURL, streamQueueId)
 	req, err := http.NewRequest("GET", path, nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	data, err, _ := client.DoRequest(req, &client.Token)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var streamQueue apiStreamQueueResponse
 	if err := json.Unmarshal(data, &streamQueue); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return &streamQueue, nil
+	return &data, &streamQueue, nil
 }
 
 func getStream(streamId string, client *provider.Client) (*streams.Stream, error) {
