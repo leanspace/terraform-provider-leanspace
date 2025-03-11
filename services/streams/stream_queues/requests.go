@@ -153,10 +153,10 @@ func performStreamUpdate(client *provider.Client, streamQueueId string, updatedS
 func waitForStreamQueueCompletion(streamQueueId string, client *provider.Client) (string, error) {
 	var streamQueueInfo *apiStreamQueueResponse
 	var err error
-	var originalByteData *[]byte
+	var originalResponseData []byte
 	for {
 		time.Sleep(1 * time.Second)
-		originalByteData, streamQueueInfo, err = getStreamQueue(streamQueueId, client)
+		originalResponseData, streamQueueInfo, err = getStreamQueue(streamQueueId, client)
 		if err != nil {
 			return "", err
 		}
@@ -164,7 +164,7 @@ func waitForStreamQueueCompletion(streamQueueId string, client *provider.Client)
 			return streamQueueInfo.StreamId, nil
 		} else if streamQueueInfo.Status == "FAILED" {
 			var jsonValue bytes.Buffer
-			json.Indent(&jsonValue, *originalByteData, "", "    ")
+			json.Indent(&jsonValue, originalResponseData, "", "    ")
 			return "", fmt.Errorf("stream queue processing failed for stream queue ID %s with errors %s", streamQueueId, jsonValue.String())
 		}
 	}
@@ -197,7 +197,7 @@ func updateStreamFields(stream *streams.Stream, streamInfo *streams.Stream) {
 	stream.LastModifiedBy = streamInfo.LastModifiedBy
 }
 
-func getStreamQueue(streamQueueId string, client *provider.Client) (*[]byte, *apiStreamQueueResponse, error) {
+func getStreamQueue(streamQueueId string, client *provider.Client) ([]byte, *apiStreamQueueResponse, error) {
 	path := fmt.Sprintf("%s/streams-repository/stream-queues/%s", client.HostURL, streamQueueId)
 	req, err := http.NewRequest("GET", path, nil)
 	if err != nil {
@@ -213,7 +213,7 @@ func getStreamQueue(streamQueueId string, client *provider.Client) (*[]byte, *ap
 	if err := json.Unmarshal(data, &streamQueue); err != nil {
 		return nil, nil, err
 	}
-	return &data, &streamQueue, nil
+	return data, &streamQueue, nil
 }
 
 func getStream(streamId string, client *provider.Client) (*streams.Stream, error) {
