@@ -164,7 +164,9 @@ func waitForStreamQueueCompletion(streamQueueId string, client *provider.Client)
 			return streamQueueInfo.StreamId, nil
 		} else if streamQueueInfo.Status == "FAILED" {
 			var jsonValue bytes.Buffer
-			json.Indent(&jsonValue, originalResponseData, "", "    ")
+			if err := json.Indent(&jsonValue, originalResponseData, "", "    "); err != nil {
+				return "", fmt.Errorf("failed to format JSON response for stream queue ID %s: %v", streamQueueId, err)
+			}
 			return "", fmt.Errorf("stream queue processing failed for stream queue ID %s with errors %s", streamQueueId, jsonValue.String())
 		}
 	}
