@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strings"
 	"time"
 )
 
@@ -99,13 +98,13 @@ func (c *Client) SignIn() (*AuthResponse, error) {
 
 	tokenUrl := fmt.Sprintf("%s/teams-repository/oauth2/token?tenant=%s", c.HostURL, c.Auth.Tenant)
 
-	payload := strings.NewReader(fmt.Sprintf("client_id=%s&client_secret=%s&grant_type=client_credentials", c.Auth.ClientId, c.Auth.ClientSecret))
-
-	req, err := http.NewRequest("POST", tokenUrl, payload)
+	req, err := http.NewRequest("POST", tokenUrl, nil)
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req.SetBasicAuth(c.Auth.ClientId, c.Auth.ClientSecret)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("X-LS-Application", "terraform-provider-leanspace")
 
 	body, err, _ := c.DoRequest(req, nil)
 	if err != nil {
