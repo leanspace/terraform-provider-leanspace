@@ -104,7 +104,6 @@ func (c *Client) SignIn() (*AuthResponse, error) {
 	}
 	req.SetBasicAuth(c.Auth.ClientId, c.Auth.ClientSecret)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("X-LS-Application", "terraform-provider-leanspace")
 
 	body, err, _ := c.DoRequest(req, nil)
 	if err != nil {
