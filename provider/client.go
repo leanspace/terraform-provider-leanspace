@@ -85,13 +85,13 @@ func NewClient(host, env, tenant, clientId, clientSecret, region *string) (*Clie
 			if err != nil {
 				errorCount++
 				if errorCount > 5 {
-					panic(err) // avoid infinite loop
+					panic("Token couldn't be refreshed") // avoid infinite loop
 				}
 				ticker.Reset(scheduledTimeIfError) // call sign in earlier in case of error
 				continue
 			} else {
-				ticker.Reset(scheduledTime) // reset to original scheduled time in case it was changed
 				errorCount = 0
+				ticker.Reset(scheduledTime) // reset to original scheduled time in case it was changed
 			}
 			c.Token = authResponse.Token
 		}
