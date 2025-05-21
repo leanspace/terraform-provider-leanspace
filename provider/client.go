@@ -2,7 +2,6 @@ package provider
 
 import (
 	"bytes"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -75,13 +74,24 @@ func NewClient(host, env, tenant, clientId, clientSecret, region *string) (*Clie
 
 	c.Token = ar.Token
 	scheduledTime := time.Duration(ar.ExpiresIn)*time.Second - 2*time.Minute // schedule token refresh before expiration to avoid 401 while the token refreshes
+	scheduledTimeIfError := 5 * time.Second
+	errorCount := 0
+
 	go func(scheduledTime time.Duration) {
 		ticker := time.NewTicker(scheduledTime)
 		defer ticker.Stop()  // should never be called as we never exit the function
 		for range ticker.C { // enters at each scheduledTime
 			authResponse, err := c.SignIn()
 			if err != nil {
-				return
+				errorCount++
+				if errorCount > 5 {
+					panic(err) // avoid infinite loop
+				}
+				ticker.Reset(scheduledTimeIfError) // call sign in earlier in case of error
+				continue
+			} else {
+				ticker.Reset(scheduledTime) // reset to original scheduled time in case it was changed
+				errorCount = 0
 			}
 			c.Token = authResponse.Token
 		}
@@ -187,9 +197,4 @@ func (c *Client) DoRequest(req *http.Request, authToken *string) ([]byte, error,
 	}
 
 	return body, err, res.StatusCode
-}
-
-func basicAuth(username, password string) string {
-	auth := username + ":" + password
-	return base64.StdEncoding.EncodeToString([]byte(auth))
 }
