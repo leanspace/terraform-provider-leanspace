@@ -15,3 +15,7 @@ variable "client_secret" {
 variable "env" {
   type    = string
 }
+
+variable "leaf_space_password" {
+  type    = string
+}
