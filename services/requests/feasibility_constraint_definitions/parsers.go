@@ -21,7 +21,6 @@ func (feasibilityConstraintDefinition *FeasibilityConstraintDefinition) ToMap() 
 	feasibilityConstraintDefinitionMap["last_modified_at"] = feasibilityConstraintDefinition.LastModifiedAt
 	feasibilityConstraintDefinitionMap["last_modified_by"] = feasibilityConstraintDefinition.LastModifiedBy
 
-	helper.Logger.Printf("%s", feasibilityConstraintDefinitionMap)
 	return feasibilityConstraintDefinitionMap
 }
 

@@ -30,7 +30,6 @@ func (requestDefinition *RequestDefinition) ToMap() map[string]any {
 	requestDefinitionMap["last_modified_at"] = requestDefinition.LastModifiedAt
 	requestDefinitionMap["last_modified_by"] = requestDefinition.LastModifiedBy
 
-	helper.Logger.Printf("%s", requestDefinitionMap)
 	return requestDefinitionMap
 }
 
@@ -50,7 +49,6 @@ func (feasibilityConstraintDefinition *FeasibilityConstraintDefinition) ToMap() 
 	feasibilityConstraintDefinitionMap["last_modified_at"] = feasibilityConstraintDefinition.LastModifiedAt
 	feasibilityConstraintDefinitionMap["last_modified_by"] = feasibilityConstraintDefinition.LastModifiedBy
 
-	helper.Logger.Printf("%s", feasibilityConstraintDefinitionMap)
 	return feasibilityConstraintDefinitionMap
 }
 
