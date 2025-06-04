@@ -12,9 +12,9 @@ module.exports = async (service_list, tenant, client_id, client_secret) => {
 	}
 	const token_request = await fetch(`https://api.develop.leanspace.io/teams-repository/oauth2/token?tenant=${tenant}`, {
 		method: "POST",
-		body: `client_id=${client_id}&client_secret=${client_secret}&grant_type=client_credentials`,
 		headers: {
-		"Content-type": "application/x-www-form-urlencoded",
+			"Content-type": "application/x-www-form-urlencoded",
+			"Authorization": `Basic ${Buffer.from(`${client_id}:${client_secret}`).toString('base64')}`
 		}
 	});
 
@@ -27,7 +27,6 @@ module.exports = async (service_list, tenant, client_id, client_secret) => {
 
 	for (const service of services) {
 		const endpoint = encodeURI(`https://api.develop.leanspace.io/${service}`);
-		const get_all_endpoint = encodeURI(`https://api.develop.leanspace.io/${service.split('?')[0]}/${item.id}`);
 		const get_all = await fetch(endpoint, {
 		method: "GET",
 		headers
@@ -45,6 +44,7 @@ module.exports = async (service_list, tenant, client_id, client_secret) => {
 					console.log("Ignoring terraform auto checker");
 					continue;
 				}
+				const get_all_endpoint = encodeURI(`https://api.develop.leanspace.io/${service.split('?')[0]}/${item.id}`);
 				delete_resource(get_all_endpoint, headers);
 			}
 		} else {
