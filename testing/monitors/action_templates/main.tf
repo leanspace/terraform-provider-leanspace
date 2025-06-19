@@ -18,7 +18,7 @@ data "leanspace_action_templates" "all" {
   }
 }
 
-resource "leanspace_action_templates" "test" {
+resource "leanspace_action_templates" "webhook" {
   name = "Terraform Action Template"
   type = "WEBHOOK"
   url  = "https://my-custom-webhook.com"
@@ -32,6 +32,11 @@ resource "leanspace_action_templates" "test" {
   }
 }
 
+resource "leanspace_action_templates" "leanspace_event" {
+  name = "Terraform Action Template for LEANSPACE_EVENT"
+  type = "LEANSPACE_EVENT"
+}
+
 output "test_action_template" {
-  value = leanspace_action_templates.test
+  value = leanspace_action_templates.webhook
 }

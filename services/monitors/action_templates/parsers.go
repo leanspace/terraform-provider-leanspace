@@ -7,6 +7,7 @@ func (actionTemplate *ActionTemplate) ToMap() map[string]any {
 	actionTemplateMap["type"] = actionTemplate.Type
 	actionTemplateMap["url"] = actionTemplate.URL
 	actionTemplateMap["payload"] = actionTemplate.Payload
+	actionTemplateMap["content"] = actionTemplate.Content
 	actionTemplateMap["headers"] = actionTemplate.Headers
 	actionTemplateMap["created_at"] = actionTemplate.CreatedAt
 	actionTemplateMap["created_by"] = actionTemplate.CreatedBy
@@ -21,6 +22,7 @@ func (actionTemplate *ActionTemplate) FromMap(actionTemplateMap map[string]any) 
 	actionTemplate.Type = actionTemplateMap["type"].(string)
 	actionTemplate.URL = actionTemplateMap["url"].(string)
 	actionTemplate.Payload = actionTemplateMap["payload"].(string)
+	actionTemplate.Content = actionTemplateMap["content"].(string)
 	actionTemplate.Headers = make(map[string]string, len(actionTemplateMap["headers"].(map[string]any)))
 	for key, value := range actionTemplateMap["headers"].(map[string]any) {
 		actionTemplate.Headers[key] = value.(string)
