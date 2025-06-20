@@ -11,3 +11,8 @@ resource "leanspace_action_templates" "action_template" {
     "Content-Type" : "application/json",
   }
 }
+
+resource "leanspace_action_templates" "leanspace_event" {
+  name = "Terraform Action Template for LEANSPACE_EVENT"
+  type = "LEANSPACE_EVENT"
+}

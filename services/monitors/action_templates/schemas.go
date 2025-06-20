@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-var validTypes = []string{"WEBHOOK"}
+var validTypes = []string{"WEBHOOK", "LEANSPACE_EVENT"}
 
 var ValidTriggeredOn = []string{
 	"TRIGGERED",
@@ -35,12 +35,16 @@ func MakeActionTemplateSchema(includeTriggeredOn bool) map[string]*schema.Schema
 		},
 		"url": {
 			Type:         schema.TypeString,
-			Required:     true,
+			Optional:     true,
 			ValidateFunc: validation.IsURLWithHTTPorHTTPS,
 		},
 		"payload": {
 			Type:     schema.TypeString,
-			Required: true,
+			Optional: true,
+		},
+		"content": {
+			Type:     schema.TypeString,
+			Computed: true,
 		},
 		"headers": {
 			Type:     schema.TypeMap,
