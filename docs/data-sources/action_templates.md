@@ -66,6 +66,7 @@ Optional:
 
 Read-Only:
 
+- `content` (String)
 - `created_at` (String)
 - `created_by` (String)
 - `headers` (Map of String)
