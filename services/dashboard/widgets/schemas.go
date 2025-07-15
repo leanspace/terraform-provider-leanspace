@@ -11,9 +11,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-var ValidWidgetTypes = []string{"TABLE", "LINE", "BAR", "AREA", "VALUE", "RESOURCES", "EARTH", "GAUGE", "ENUM"}
+var ValidWidgetTypes = []string{"TABLE", "LINE", "BAR", "AREA", "VALUE", "RESOURCES", "EARTH", "GAUGE", "ENUM", "ORBITAL_VIEW"}
 var validGranularities = []string{"second", "minute", "hour", "day", "week", "month", "raw"}
-var validDatasources = []string{"metric", "raw_stream", "resources", "topology"}
+var validDatasources = []string{"metric", "raw_stream", "resources", "topology", "orbits", "ground_stations", "areas_of_interest"}
 var validAggregations = []string{"avg", "count", "sum", "min", "max", "none"}
 var validFilterOperators = []string{"gt", "lt", "equals", "notEquals"}
 
