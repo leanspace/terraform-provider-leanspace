@@ -123,7 +123,7 @@ Optional:
 Read-Only:
 
 - `id` (String) The ID of this resource.
-- `type` (String) it must be one of these values: TABLE, LINE, BAR, AREA, VALUE, RESOURCES, EARTH, GAUGE, ENUM
+- `type` (String) it must be one of these values: TABLE, LINE, BAR, AREA, VALUE, RESOURCES, EARTH, GAUGE, ENUM, ORBITAL_VIEW
 
 
 <a id="nestedatt--widgets"></a>

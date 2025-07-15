@@ -248,7 +248,7 @@ resource "leanspace_widgets" "test_resources" {
 - `granularity` (String) it must be one of these values: second, minute, hour, day, week, month, raw
 - `name` (String)
 - `series` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--series))
-- `type` (String) it must be one of these values: TABLE, LINE, BAR, AREA, VALUE, RESOURCES, EARTH, GAUGE, ENUM
+- `type` (String) it must be one of these values: TABLE, LINE, BAR, AREA, VALUE, RESOURCES, EARTH, GAUGE, ENUM, ORBITAL_VIEW
 
 ### Optional
 
@@ -271,7 +271,7 @@ resource "leanspace_widgets" "test_resources" {
 Required:
 
 - `aggregation` (String) it must be one of these values: avg, count, sum, min, max, none
-- `datasource` (String) it must be one of these values: metric, raw_stream, resources, topology
+- `datasource` (String) it must be one of these values: metric, raw_stream, resources, topology, orbits, ground_stations, areas_of_interest
 
 Optional:
 
