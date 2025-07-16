@@ -42,12 +42,12 @@ module "pass_states" {
 }
 
 module "leaf_space_connection" {
-  source = "./leaf_space_integration/connections"
+  source   = "./leaf_space_integration/connections"
   password = var.leaf_space_password
 }
 
 module "leaf_space_contact_reservation_status_mappings" {
-  source = "./leaf_space_integration/contact_reservation_status_mappings"
+  source           = "./leaf_space_integration/contact_reservation_status_mappings"
   contact_state_id = module.pass_contact_states.created.id
 }
 
@@ -238,8 +238,8 @@ module "plan_templates" {
 }
 
 module "routes" {
-  source        = "./routes/routes"
-  processor_ids = [module.processors.test_create_processor.id]
+  source             = "./routes/routes"
+  processor_ids      = [module.processors.test_create_processor.id]
   service_account_id = values(module.service_accounts.test_service_accounts)[0].id
 }
 

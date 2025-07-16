@@ -6,7 +6,7 @@ terraform {
   }
 }
 
-variable password {
+variable "password" {
   description = "Password for the Leafspace account"
   type        = string
 }

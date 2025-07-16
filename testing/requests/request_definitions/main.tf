@@ -45,6 +45,43 @@ resource "leanspace_request_definitions" "created" {
       required      = false
     }
   }
+  configuration_argument_definitions {
+    name        = "TextConfigurationArgumentDefinition"
+    description = "A text input"
+    attributes {
+      default_value = "Read boooy"
+      type          = "TEXT"
+      required      = false
+    }
+  }
+  configuration_argument_definitions {
+    name        = "TimeArgumentDefinition"
+    description = "A time input"
+    attributes {
+      default_value = "10:37:19.000"
+      type          = "TIME"
+      required      = true
+    }
+  }
+  configuration_argument_definitions {
+    name        = "GeoPointArgumentDefinition"
+    description = "A geopoint input"
+    attributes {
+      type = "GEOPOINT"
+      fields {
+        elevation {
+          default_value = 141.0
+        }
+        latitude {
+          default_value = 48.5
+        }
+        longitude {
+          default_value = 7.7
+        }
+      }
+      required = true
+    }
+  }
   configuration_argument_mappings {
     plan_template_id                             = var.plan_template_id
     activity_definition_position                 = 0

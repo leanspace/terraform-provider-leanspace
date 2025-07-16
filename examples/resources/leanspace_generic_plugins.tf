@@ -4,9 +4,9 @@ variable "source_code_path" {
 }
 
 resource "leanspace_generic_plugins" "test" {
-  name                                 = "Terraform Generic Plugin"
-  description                          = "This is a generic plugin created through terraform!"
-  type                                 = "CHECKSUM_FUNCTION"
-  language                             = "JAVA"
-  source_code_path                     = var.source_code_path
+  name             = "Terraform Generic Plugin"
+  description      = "This is a generic plugin created through terraform!"
+  type             = "CHECKSUM_FUNCTION"
+  language         = "JAVA"
+  source_code_path = var.source_code_path
 }

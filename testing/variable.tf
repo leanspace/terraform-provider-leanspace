@@ -1,21 +1,21 @@
 
 
 variable "tenant" {
-  type    = string
+  type = string
 }
 
 variable "client_id" {
-  type    = string
+  type = string
 }
 
 variable "client_secret" {
-  type    = string
+  type = string
 }
 
 variable "env" {
-  type    = string
+  type = string
 }
 
 variable "leaf_space_password" {
-  type    = string
+  type = string
 }
