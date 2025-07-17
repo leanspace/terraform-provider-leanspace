@@ -42,7 +42,7 @@ resource "leanspace_request_definitions" "created" {
     attributes {
       default_value = 2
       type          = "NUMERIC"
-      required      = false
+      required      = true
     }
   }
   configuration_argument_mappings {

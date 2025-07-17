@@ -25,11 +25,11 @@ data "leanspace_generic_plugins" "all" {
 }
 
 resource "leanspace_generic_plugins" "test" {
-  source_code_path                     = var.path
-  name                                 = "Terraform Generic Plugin"
-  description                          = "This is a generic plugin created through terraform!"
-  type                                 = "CHECKSUM_FUNCTION"
-  language                             = "JAVA"
+  source_code_path = var.path
+  name             = "Terraform Generic Plugin"
+  description      = "This is a generic plugin created through terraform!"
+  type             = "CHECKSUM_FUNCTION"
+  language         = "JAVA"
 }
 
 output "all_generic_plugins" {

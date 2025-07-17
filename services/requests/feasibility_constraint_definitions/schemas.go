@@ -62,7 +62,7 @@ var argumentDefinitionSchema = map[string]*schema.Schema{
 		MaxItems: 1,
 		Elem: &schema.Resource{
 			Schema: general_objects.DefinitionAttributeSchema(
-				[]string{"TEXT", "BINARY", "BOOLEAN", "ENUM", "TIMESTAMP", "DATE", "ARRAY", "STRUCTURE", "TLE"}, // attribute types not allowed in command definition attributes
+				[]string{"BINARY", "BOOLEAN", "ENUM", "TIMESTAMP", "DATE", "ARRAY", "STRUCTURE", "TLE"}, // attribute types not allowed in command definition attributes
 				nil,   // All fields are used
 				false, // Does not force recreation if the type changes
 			),
