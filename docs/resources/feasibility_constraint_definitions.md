@@ -92,7 +92,7 @@ Optional:
 
 Required:
 
-- `type` (String) it must be one of these values: NUMERIC, TIME, GEOPOINT
+- `type` (String) it must be one of these values: NUMERIC, TEXT, TIME, GEOPOINT
 
 Optional:
 
