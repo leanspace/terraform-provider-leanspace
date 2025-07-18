@@ -156,6 +156,7 @@ resource "leanspace_stream_queues" "stream" {
 
 - `description` (String)
 - `mappings` (Block Set) (see [below for nested schema](#nestedblock--mappings))
+- `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
 
 ### Read-Only
 
@@ -1316,3 +1317,15 @@ Required:
 
 - `expression` (String)
 - `metric_id` (String)
+
+
+<a id="nestedblock--tags"></a>
+### Nested Schema for `tags`
+
+Required:
+
+- `key` (String)
+
+Optional:
+
+- `value` (String)

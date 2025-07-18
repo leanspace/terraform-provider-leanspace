@@ -74,6 +74,7 @@ Read-Only:
 - `last_modified_by` (String)
 - `mappings` (Set of Object) (see [below for nested schema](#nestedobjatt--content--mappings))
 - `name` (String)
+- `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
 - `version` (Number)
 
 <a id="nestedobjatt--content--configuration"></a>
@@ -1085,6 +1086,15 @@ Read-Only:
 
 - `expression` (String)
 - `metric_id` (String)
+
+
+<a id="nestedobjatt--content--tags"></a>
+### Nested Schema for `content.tags`
+
+Read-Only:
+
+- `key` (String)
+- `value` (String)
 
 
 
