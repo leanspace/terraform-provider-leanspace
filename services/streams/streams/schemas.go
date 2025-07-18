@@ -2,6 +2,7 @@ package streams
 
 import (
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -51,6 +52,7 @@ var StreamSchema = map[string]*schema.Schema{
 		ForceNew:     true,
 		ValidateFunc: validation.IsUUID,
 	},
+	"tags": general_objects.KeyValuesSchema,
 	"configuration": {
 		Type:     schema.TypeList,
 		Required: true,
