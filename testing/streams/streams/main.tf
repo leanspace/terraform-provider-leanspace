@@ -31,6 +31,10 @@ resource "leanspace_streams" "test" {
   name        = "Terraform Stream"
   description = "A complex stream, entirely created under terraform."
   asset_id    = var.asset_id
+  tags {
+      key   = "CreatedBy"
+      value = "Terraform"
+  }
   configuration {
     endianness = "BE"
     structure {

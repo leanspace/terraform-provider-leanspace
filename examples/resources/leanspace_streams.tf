@@ -11,6 +11,10 @@ variable "numeric_metric_id" {
 resource "leanspace_streams" "stream" {
   name     = "Terraform Stream"
   asset_id = var.asset_id
+  tags {
+      key   = "CreatedBy"
+      value = "Terraform"
+  }
 
   configuration {
     endianness = "BE"

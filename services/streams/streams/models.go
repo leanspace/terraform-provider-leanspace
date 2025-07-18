@@ -1,19 +1,21 @@
 package streams
 
 import "github.com/leanspace/terraform-provider-leanspace/helper"
+import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 type Stream struct {
-	ID             string        `json:"id"`
-	Version        int           `json:"version"`
-	Name           string        `json:"name"`
-	Description    string        `json:"description"`
-	AssetId        string        `json:"assetId"`
-	Configuration  Configuration `json:"configuration"`
-	Mappings       []Mapping     `json:"mappings"`
-	CreatedAt      string        `json:"createdAt"`
-	CreatedBy      string        `json:"createdBy"`
-	LastModifiedAt string        `json:"lastModifiedAt"`
-	LastModifiedBy string        `json:"lastModifiedBy"`
+	ID             string                     `json:"id"`
+	Version        int                        `json:"version"`
+	Name           string                     `json:"name"`
+	Description    string                     `json:"description"`
+	Tags           []general_objects.KeyValue `json:"tags,omitempty"`
+	AssetId        string                     `json:"assetId"`
+	Configuration  Configuration              `json:"configuration"`
+	Mappings       []Mapping                  `json:"mappings"`
+	CreatedAt      string                     `json:"createdAt"`
+	CreatedBy      string                     `json:"createdBy"`
+	LastModifiedAt string                     `json:"lastModifiedAt"`
+	LastModifiedBy string                     `json:"lastModifiedBy"`
 }
 
 func (stream *Stream) GetID() string { return stream.ID }

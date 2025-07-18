@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -15,6 +16,7 @@ func (stream *Stream) ToMap() map[string]any {
 	streamMap["version"] = stream.Version
 	streamMap["name"] = stream.Name
 	streamMap["description"] = stream.Description
+	streamMap["tags"] = helper.ParseToMaps(stream.Tags)
 	streamMap["asset_id"] = stream.AssetId
 	streamMap["configuration"] = []any{stream.Configuration.ToMap()}
 	streamMap["mappings"] = helper.ParseToMaps(stream.Mappings)
@@ -156,6 +158,11 @@ func (stream *Stream) FromMap(streamMap map[string]any) error {
 	stream.Version = streamMap["version"].(int)
 	stream.Name = streamMap["name"].(string)
 	stream.Description = streamMap["description"].(string)
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](streamMap["tags"].(*schema.Set).List()); err != nil {
+		return err
+	} else {
+		stream.Tags = tags
+	}
 	stream.AssetId = streamMap["asset_id"].(string)
 	if len(streamMap["configuration"].([]any)) > 0 {
 		if err := stream.Configuration.FromMap(streamMap["configuration"].([]any)[0].(map[string]any)); err != nil {
