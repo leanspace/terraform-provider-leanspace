@@ -47,6 +47,15 @@ resource "leanspace_feasibility_constraint_definitions" "created" {
     }
   }
   argument_definitions {
+    name        = "TimestampArgumentDefinition"
+    description = "A timestamp input"
+    attributes {
+      default_value = "2025-07-22T14:54:52.298Z"
+      type          = "TIMESTAMP"
+      required      = true
+    }
+  }
+  argument_definitions {
     name        = "GeoPointArgumentDefinition"
     description = "A geopoint input"
     attributes {
