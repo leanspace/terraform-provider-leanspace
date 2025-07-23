@@ -212,7 +212,7 @@ Optional:
 
 Required:
 
-- `type` (String) it must be one of these values: NUMERIC, TEXT, TIME, GEOPOINT
+- `type` (String) it must be one of these values: NUMERIC, TEXT, TIME, TIMESTAMP, GEOPOINT
 
 Optional:
 

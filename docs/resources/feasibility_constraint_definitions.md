@@ -16,6 +16,15 @@ resource "leanspace_feasibility_constraint_definitions" "a_feasibility_constrain
   name        = "feasibilityConstraintDefinitionFromTerraform"
   description = "feasibilityConstraintDefinitionTerraformDescription"
   argument_definitions {
+    name        = "TextArgumentDefinition"
+    description = "A text input"
+    attributes {
+      default_value = "hello"
+      type          = "TEXT"
+      required      = true
+    }
+  }
+  argument_definitions {
     name        = "NumericArgumentDefinition"
     description = "A numeric input"
     attributes {
@@ -30,6 +39,15 @@ resource "leanspace_feasibility_constraint_definitions" "a_feasibility_constrain
     attributes {
       default_value = "10:37:19.000"
       type          = "TIME"
+      required      = true
+    }
+  }
+  argument_definitions {
+    name        = "TimestampArgumentDefinition"
+    description = "A timestamp input"
+    attributes {
+      default_value = "2025-07-22T14:54:52.298Z"
+      type          = "TIMESTAMP"
       required      = true
     }
   }
@@ -92,7 +110,7 @@ Optional:
 
 Required:
 
-- `type` (String) it must be one of these values: NUMERIC, TEXT, TIME, GEOPOINT
+- `type` (String) it must be one of these values: NUMERIC, TEXT, TIME, TIMESTAMP, GEOPOINT
 
 Optional:
 
