@@ -25,6 +25,8 @@ func (aoi *AreaOfInterest) ToMap() map[string]any {
 func (shape *AreaOfInterestShape) ToMap() map[string]any {
 	shapeMap := make(map[string]any)
 
+	shapeMap["type"] = shape.Type
+
 	if shape.Type == "POINT" {
 		if shape.Geolocation != nil {
 			shapeMap["geolocation"] = []map[string]any{shape.Geolocation.ToMap()}

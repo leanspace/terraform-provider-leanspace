@@ -26,6 +26,8 @@ func (sensor *Sensor) ToMap() map[string]any {
 func (shape *ApertureShape) ToMap() map[string]any {
 	shapeMap := make(map[string]any)
 
+	shapeMap["type"] = shape.Type
+
 	if shape.ApertureCenter != nil {
 		shapeMap["aperture_center"] = []map[string]any{shape.ApertureCenter.ToMap()}
 	}

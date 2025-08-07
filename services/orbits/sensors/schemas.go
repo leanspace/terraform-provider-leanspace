@@ -62,7 +62,7 @@ var sensorSchema = map[string]*schema.Schema{
 var apertureShapeSchema = map[string]*schema.Schema{
 	"type": {
 		Type:         schema.TypeString,
-		Required:     true, // actually computed, but to create the request, we need it for the validation and parsing
+		Required:     true,
 		ValidateFunc: validation.StringInSlice(validShapeTypes, false),
 	},
 	"aperture_center": {
