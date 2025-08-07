@@ -1,4 +1,4 @@
-package areas_of_interest
+package sensors
 
 import (
 	"github.com/leanspace/terraform-provider-leanspace/helper"
@@ -9,26 +9,31 @@ import (
 )
 
 var validShapeTypes = []string{
-	"POINT", "CIRCLE", "POLYGON",
+	"CIRCULAR", "RECTANGULAR",
 }
 
-var areaOfInterestSchema = map[string]*schema.Schema{
+var sensorSchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
 		Computed: true,
+	},
+	"satellite_id": {
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.IsUUID,
 	},
 	"name": {
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: helper.IsValidName,
 	},
-	"shape": {
+	"aperture_shape": {
 		Type:     schema.TypeList,
 		Required: true,
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: areaOfInterestShapeSchema,
+			Schema: apertureShapeSchema,
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
@@ -54,63 +59,109 @@ var areaOfInterestSchema = map[string]*schema.Schema{
 	},
 }
 
-var areaOfInterestShapeSchema = map[string]*schema.Schema{
+var apertureShapeSchema = map[string]*schema.Schema{
 	"type": {
 		Type:         schema.TypeString,
 		Required:     true, // actually computed, but to create the request, we need it for the validation and parsing
 		ValidateFunc: validation.StringInSlice(validShapeTypes, false),
 	},
-	"geolocation": {
+	"aperture_center": {
 		Type:     schema.TypeList,
 		Optional: true,
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: geoPointSchema,
+			Schema: vector3DSchema,
 		},
 	},
-	"center_geolocation": {
+	"half_aperture_angle": {
 		Type:     schema.TypeList,
 		Optional: true,
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: geoPointSchema,
+			Schema: circularHalfApertureAngleSchema,
 		},
 	},
-	"radius_in_meters": {
-		Type:     schema.TypeFloat,
+	"first_axis_vector": {
+		Type:     schema.TypeList,
 		Optional: true,
-	},
-	"vertices_geolocation": {
-		Type:     schema.TypeSet,
-		Optional: true,
+		MinItems: 1,
+		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: geoPointSchema,
+			Schema: vector3DSchema,
+		},
+	},
+	"first_axis_half_aperture_angle": {
+		Type:     schema.TypeList,
+		Optional: true,
+		MinItems: 1,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: rectangularHalfApertureAngleSchema,
+		},
+	},
+	"second_axis_vector": {
+		Type:     schema.TypeList,
+		Optional: true,
+		MinItems: 1,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: vector3DSchema,
+		},
+	},
+	"second_axis_half_aperture_angle": {
+		Type:     schema.TypeList,
+		Optional: true,
+		MinItems: 1,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: rectangularHalfApertureAngleSchema,
 		},
 	},
 }
 
-var geoPointSchema = map[string]*schema.Schema{
-	"latitude": {
+var vector3DSchema = map[string]*schema.Schema{
+	"x": {
+		Type:     schema.TypeFloat,
+		Required: true,
+	},
+	"y": {
+		Type:     schema.TypeFloat,
+		Required: true,
+	},
+	"z": {
+		Type:     schema.TypeFloat,
+		Required: true,
+	},
+}
+
+var circularHalfApertureAngleSchema = map[string]*schema.Schema{
+	"degrees": {
 		Type:         schema.TypeFloat,
 		Required:     true,
-		ValidateFunc: validation.FloatBetween(-90.0, 90.0),
+		ValidateFunc: validation.FloatBetween(0, 180),
 	},
-	"longitude": {
+}
+
+var rectangularHalfApertureAngleSchema = map[string]*schema.Schema{
+	"degrees": {
 		Type:         schema.TypeFloat,
 		Required:     true,
-		ValidateFunc: validation.FloatBetween(-180.0, 180),
-	},
-	"altitude": {
-		Type:         schema.TypeFloat,
-		Optional:     true,
-		ValidateFunc: validation.FloatAtLeast(0),
+		ValidateFunc: validation.FloatBetween(0, 90),
 	},
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{
-	"types": {
+	"satellite_ids": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"aperture_shape_types": {
 		Type:     schema.TypeList,
 		Optional: true,
 		Elem: &schema.Schema{

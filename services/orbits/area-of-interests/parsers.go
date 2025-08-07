@@ -58,10 +58,6 @@ func (aoi *AreaOfInterest) FromMap(aoiMap map[string]any) error {
 	aoi.ID = aoiMap["id"].(string)
 	aoi.Name = aoiMap["name"].(string)
 
-	if aoi.Shape != nil {
-		aoiMap["shape"] = []map[string]any{aoi.Shape.ToMap()}
-	}
-
 	if len(aoiMap["shape"].([]any)) > 0 && aoiMap["shape"].([]any)[0] != nil {
 		aoi.Shape = new(AreaOfInterestShape)
 		if err := aoi.Shape.FromMap(aoiMap["shape"].([]any)[0].(map[string]any)); err != nil {

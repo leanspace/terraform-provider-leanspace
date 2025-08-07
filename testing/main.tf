@@ -315,3 +315,8 @@ module "leanspace_pass_delay_configuration" {
 module "leanspace_areas_of_interest" {
   source = "./orbits/areas_of_interest"
 }
+
+module "leanspace_sensors" {
+  source       = "./orbits/sensors"
+  satellite_id = module.nodes.satellite_node.id
+}

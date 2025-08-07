@@ -1,8 +1,7 @@
 terraform {
   required_providers {
     leanspace = {
-      source  = "leanspace/leanspace"
-      version = "20.4.0"
+      source = "leanspace/leanspace"
     }
   }
 }
@@ -19,7 +18,7 @@ data "leanspace_areas_of_interest" "points" {
   }
 }
 
-resource "leanspace_areas_of_interest" "pointAoi" {
+resource "leanspace_areas_of_interest" "pointAoI" {
   name = "Terraform Point AoI"
   shape {
     type = "POINT"
@@ -78,7 +77,7 @@ resource "leanspace_areas_of_interest" "polygonAoI" {
 }
 
 output "pointAoI" {
-  value = leanspace_areas_of_interest.pointAoi
+  value = leanspace_areas_of_interest.pointAoI
 }
 
 output "circleAoI" {
