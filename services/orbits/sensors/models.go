@@ -17,13 +17,13 @@ type Sensor struct {
 func (areaOfInterest *Sensor) GetID() string { return areaOfInterest.ID }
 
 type ApertureShape struct {
-	Type                        string                        `json:"type"` // CIRCULAR, RECTANGULAR
-	ApertureCenter              *Vector3D                     `json:"apertureCenter,omitempty"`
-	HalfApertureAngle           *CircularHalfApertureAngle    `json:"halfApertureAngle,omitempty"`
-	FirstAxisVector             *Vector3D                     `json:"firstAxisVector,omitempty"`
-	FirstAxisHalfApertureAngle  *RectangularHalfApertureAngle `json:"firstAxisHalfApertureAngle,omitempty"`
-	SecondAxisVector            *Vector3D                     `json:"secondAxisVector,omitempty"`
-	SecondAxisHalfApertureAngle *RectangularHalfApertureAngle `json:"secondAxisHalfApertureAngle,omitempty"`
+	Type                        string             `json:"type"` // CIRCULAR, RECTANGULAR
+	ApertureCenter              *Vector3D          `json:"apertureCenter,omitempty"`
+	HalfApertureAngle           *HalfApertureAngle `json:"halfApertureAngle,omitempty"`
+	FirstAxisVector             *Vector3D          `json:"firstAxisVector,omitempty"`
+	FirstAxisHalfApertureAngle  *HalfApertureAngle `json:"firstAxisHalfApertureAngle,omitempty"`
+	SecondAxisVector            *Vector3D          `json:"secondAxisVector,omitempty"`
+	SecondAxisHalfApertureAngle *HalfApertureAngle `json:"secondAxisHalfApertureAngle,omitempty"`
 }
 
 type Vector3D struct {
@@ -32,10 +32,6 @@ type Vector3D struct {
 	Z float64 `json:"z"`
 }
 
-type CircularHalfApertureAngle struct {
-	Degrees float64 `json:"degrees"`
-}
-
-type RectangularHalfApertureAngle struct {
+type HalfApertureAngle struct {
 	Degrees float64 `json:"degrees"`
 }

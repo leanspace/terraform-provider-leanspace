@@ -81,7 +81,7 @@ var apertureShapeSchema = map[string]*schema.Schema{
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: circularHalfApertureAngleSchema,
+			Schema: halfApertureAngleSchema(180),
 		},
 	},
 	"first_axis_vector": {
@@ -99,7 +99,7 @@ var apertureShapeSchema = map[string]*schema.Schema{
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: rectangularHalfApertureAngleSchema,
+			Schema: halfApertureAngleSchema(90),
 		},
 	},
 	"second_axis_vector": {
@@ -117,7 +117,7 @@ var apertureShapeSchema = map[string]*schema.Schema{
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: rectangularHalfApertureAngleSchema,
+			Schema: halfApertureAngleSchema(90),
 		},
 	},
 }
@@ -137,20 +137,14 @@ var vector3DSchema = map[string]*schema.Schema{
 	},
 }
 
-var circularHalfApertureAngleSchema = map[string]*schema.Schema{
-	"degrees": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: validation.FloatBetween(0, 180),
-	},
-}
-
-var rectangularHalfApertureAngleSchema = map[string]*schema.Schema{
-	"degrees": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: validation.FloatBetween(0, 90),
-	},
+func halfApertureAngleSchema(maximum float64) map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"degrees": {
+			Type:         schema.TypeFloat,
+			Required:     true,
+			ValidateFunc: validateMax(maximum),
+		},
+	}
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{

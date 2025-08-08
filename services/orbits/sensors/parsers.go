@@ -64,13 +64,7 @@ func (vector *Vector3D) ToMap() map[string]any {
 	return vector3DMap
 }
 
-func (halfApertureAngle *CircularHalfApertureAngle) ToMap() map[string]any {
-	hapfApertureAngleMap := make(map[string]any)
-	hapfApertureAngleMap["degrees"] = halfApertureAngle.Degrees
-	return hapfApertureAngleMap
-}
-
-func (halfApertureAngle *RectangularHalfApertureAngle) ToMap() map[string]any {
+func (halfApertureAngle *HalfApertureAngle) ToMap() map[string]any {
 	hapfApertureAngleMap := make(map[string]any)
 	hapfApertureAngleMap["degrees"] = halfApertureAngle.Degrees
 	return hapfApertureAngleMap
@@ -108,7 +102,7 @@ func (shape *ApertureShape) FromMap(shapeMap map[string]any) error {
 
 	if shape.Type == "CIRCULAR" {
 		if len(shapeMap["half_aperture_angle"].([]any)) > 0 && shapeMap["half_aperture_angle"].([]any)[0] != nil {
-			shape.HalfApertureAngle = new(CircularHalfApertureAngle)
+			shape.HalfApertureAngle = new(HalfApertureAngle)
 			if err := shape.HalfApertureAngle.FromMap(shapeMap["half_aperture_angle"].([]any)[0].(map[string]any)); err != nil {
 				return err
 			}
@@ -125,7 +119,7 @@ func (shape *ApertureShape) FromMap(shapeMap map[string]any) error {
 		}
 
 		if len(shapeMap["first_axis_half_aperture_angle"].([]any)) > 0 && shapeMap["first_axis_half_aperture_angle"].([]any)[0] != nil {
-			shape.FirstAxisHalfApertureAngle = new(RectangularHalfApertureAngle)
+			shape.FirstAxisHalfApertureAngle = new(HalfApertureAngle)
 			if err := shape.FirstAxisHalfApertureAngle.FromMap(shapeMap["first_axis_half_aperture_angle"].([]any)[0].(map[string]any)); err != nil {
 				return err
 			}
@@ -139,7 +133,7 @@ func (shape *ApertureShape) FromMap(shapeMap map[string]any) error {
 		}
 
 		if len(shapeMap["second_axis_half_aperture_angle"].([]any)) > 0 && shapeMap["second_axis_half_aperture_angle"].([]any)[0] != nil {
-			shape.SecondAxisHalfApertureAngle = new(RectangularHalfApertureAngle)
+			shape.SecondAxisHalfApertureAngle = new(HalfApertureAngle)
 			if err := shape.SecondAxisHalfApertureAngle.FromMap(shapeMap["second_axis_half_aperture_angle"].([]any)[0].(map[string]any)); err != nil {
 				return err
 			}
@@ -156,12 +150,7 @@ func (vector *Vector3D) FromMap(vectorMap map[string]any) error {
 	return nil
 }
 
-func (halfApertureAngle *CircularHalfApertureAngle) FromMap(halfApertureAngleMap map[string]any) error {
-	halfApertureAngle.Degrees = halfApertureAngleMap["degrees"].(float64)
-	return nil
-}
-
-func (halfApertureAngle *RectangularHalfApertureAngle) FromMap(halfApertureAngleMap map[string]any) error {
+func (halfApertureAngle *HalfApertureAngle) FromMap(halfApertureAngleMap map[string]any) error {
 	halfApertureAngle.Degrees = halfApertureAngleMap["degrees"].(float64)
 	return nil
 }
