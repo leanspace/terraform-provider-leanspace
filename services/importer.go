@@ -23,7 +23,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/metrics/metrics"
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/action_templates"
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/monitors"
-	areas_of_interest "github.com/leanspace/terraform-provider-leanspace/services/orbits/areas-of-interest"
+	"github.com/leanspace/terraform-provider-leanspace/services/orbits/areas_of_interest"
 	"github.com/leanspace/terraform-provider-leanspace/services/orbits/orbits"
 	"github.com/leanspace/terraform-provider-leanspace/services/orbits/sensors"
 	"github.com/leanspace/terraform-provider-leanspace/services/pass/contact_states"
