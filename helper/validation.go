@@ -460,7 +460,7 @@ func IsValidName(i interface{}, k string) (warnings []string, errors []error) {
 	}
 
 	if !nameRegex.Match([]byte(v)) {
-		errors = append(errors, fmt.Errorf("expected %q to be a valid state name, got %v.\nValid state name follows the regex: %v", k, v, stateNameRegexStr))
+		errors = append(errors, fmt.Errorf("expected %q to be a valid name, got %v.\nValid name follows the regex: %v", k, v, nameRegex))
 	}
 
 	return warnings, errors
