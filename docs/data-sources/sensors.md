@@ -1,27 +1,27 @@
 ---
-page_title: "leanspace_orbits Data Source - terraform-provider-leanspace"
+page_title: "leanspace_sensors Data Source - terraform-provider-leanspace"
 subcategory: ""
 description: |-
   
 ---
 
-# leanspace_orbits (Data Source)
+# leanspace_sensors (Data Source)
 
 
 
 ## Example Usage
 
 ```terraform
-data "leanspace_orbits" "all" {
+data "leanspace_sensors" "circulars" {
   filters {
-    satellite_ids = [var.satellite_id]
-    ids           = []
-    data_sources  = []
-    tags          = []
-    query         = ""
-    page          = 0
-    size          = 10
-    sort          = ["name,asc"]
+    ids                  = []
+    satellite_ids        = []
+    query                = ""
+    aperture_shape_types = ["CIRCULAR"]
+    tags                 = []
+    page                 = 0
+    size                 = 10
+    sort                 = ["name,asc"]
   }
 }
 ```
@@ -53,6 +53,7 @@ data "leanspace_orbits" "all" {
 
 Optional:
 
+- `aperture_shape_types` (List of String)
 - `created_bys` (List of String) Filter on the user who created the entry. If you have no wish to use this field as a filter, either provide a null value or remove the field.
 - `from_created_at` (String) Filter on the creation date. Entries with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
 - `from_last_modified_at` (String) Filter on the last modification date. Entries with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
@@ -73,72 +74,82 @@ Optional:
 
 Read-Only:
 
+- `aperture_shape` (List of Object) (see [below for nested schema](#nestedobjatt--content--aperture_shape))
 - `created_at` (String)
 - `created_by` (String)
-- `gps_configuration` (List of Object) (see [below for nested schema](#nestedobjatt--content--gps_configuration))
 - `id` (String)
-- `ideal_orbit` (List of Object) (see [below for nested schema](#nestedobjatt--content--ideal_orbit))
 - `last_modified_at` (String)
 - `last_modified_by` (String)
 - `name` (String)
-- `satellite_configuration` (List of Object) (see [below for nested schema](#nestedobjatt--content--satellite_configuration))
 - `satellite_id` (String)
 - `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
 
-<a id="nestedobjatt--content--gps_configuration"></a>
-### Nested Schema for `content.gps_configuration`
+<a id="nestedobjatt--content--aperture_shape"></a>
+### Nested Schema for `content.aperture_shape`
 
 Read-Only:
 
-- `gps_metrics` (List of Object) (see [below for nested schema](#nestedobjatt--content--gps_configuration--gps_metrics))
-- `standard_deviations` (List of Object) (see [below for nested schema](#nestedobjatt--content--gps_configuration--standard_deviations))
-
-<a id="nestedobjatt--content--gps_configuration--gps_metrics"></a>
-### Nested Schema for `content.gps_configuration.gps_metrics`
-
-Read-Only:
-
-- `metric_id_for_altitude` (String)
-- `metric_id_for_ground_speed` (String)
-- `metric_id_for_latitude` (String)
-- `metric_id_for_longitude` (String)
-
-
-<a id="nestedobjatt--content--gps_configuration--standard_deviations"></a>
-### Nested Schema for `content.gps_configuration.standard_deviations`
-
-Read-Only:
-
-- `altitude` (Number)
-- `ground_speed` (Number)
-- `latitude` (Number)
-- `longitude` (Number)
-
-
-
-<a id="nestedobjatt--content--ideal_orbit"></a>
-### Nested Schema for `content.ideal_orbit`
-
-Read-Only:
-
-- `altitude_in_meters` (Number)
-- `apogee_altitude_in_meters` (Number)
-- `argument_of_perigee` (Number)
-- `eccentricity` (Number)
-- `inclination` (Number)
-- `perigee_altitude_in_meters` (Number)
-- `right_ascension_of_ascending_node` (Number)
-- `semi_major_axis` (Number)
+- `aperture_center` (List of Object) (see [below for nested schema](#nestedobjatt--content--aperture_shape--aperture_center))
+- `first_axis_half_aperture_angle` (List of Object) (see [below for nested schema](#nestedobjatt--content--aperture_shape--first_axis_half_aperture_angle))
+- `first_axis_vector` (List of Object) (see [below for nested schema](#nestedobjatt--content--aperture_shape--first_axis_vector))
+- `half_aperture_angle` (List of Object) (see [below for nested schema](#nestedobjatt--content--aperture_shape--half_aperture_angle))
+- `second_axis_half_aperture_angle` (List of Object) (see [below for nested schema](#nestedobjatt--content--aperture_shape--second_axis_half_aperture_angle))
+- `second_axis_vector` (List of Object) (see [below for nested schema](#nestedobjatt--content--aperture_shape--second_axis_vector))
 - `type` (String)
 
-
-<a id="nestedobjatt--content--satellite_configuration"></a>
-### Nested Schema for `content.satellite_configuration`
+<a id="nestedobjatt--content--aperture_shape--aperture_center"></a>
+### Nested Schema for `content.aperture_shape.aperture_center`
 
 Read-Only:
 
-- `drag_cross_section` (Number)
-- `radiation_cross_section` (Number)
+- `x` (Number)
+- `y` (Number)
+- `z` (Number)
+
+
+<a id="nestedobjatt--content--aperture_shape--first_axis_half_aperture_angle"></a>
+### Nested Schema for `content.aperture_shape.first_axis_half_aperture_angle`
+
+Read-Only:
+
+- `degrees` (Number)
+
+
+<a id="nestedobjatt--content--aperture_shape--first_axis_vector"></a>
+### Nested Schema for `content.aperture_shape.first_axis_vector`
+
+Read-Only:
+
+- `x` (Number)
+- `y` (Number)
+- `z` (Number)
+
+
+<a id="nestedobjatt--content--aperture_shape--half_aperture_angle"></a>
+### Nested Schema for `content.aperture_shape.half_aperture_angle`
+
+Read-Only:
+
+- `degrees` (Number)
+
+
+<a id="nestedobjatt--content--aperture_shape--second_axis_half_aperture_angle"></a>
+### Nested Schema for `content.aperture_shape.second_axis_half_aperture_angle`
+
+Read-Only:
+
+- `degrees` (Number)
+
+
+<a id="nestedobjatt--content--aperture_shape--second_axis_vector"></a>
+### Nested Schema for `content.aperture_shape.second_axis_vector`
+
+Read-Only:
+
+- `x` (Number)
+- `y` (Number)
+- `z` (Number)
+
 
 
 <a id="nestedobjatt--content--tags"></a>

@@ -1,27 +1,26 @@
 ---
-page_title: "leanspace_orbits Data Source - terraform-provider-leanspace"
+page_title: "leanspace_areas_of_interest Data Source - terraform-provider-leanspace"
 subcategory: ""
 description: |-
   
 ---
 
-# leanspace_orbits (Data Source)
+# leanspace_areas_of_interest (Data Source)
 
 
 
 ## Example Usage
 
 ```terraform
-data "leanspace_orbits" "all" {
+data "leanspace_areas_of_interest" "points" {
   filters {
-    satellite_ids = [var.satellite_id]
-    ids           = []
-    data_sources  = []
-    tags          = []
-    query         = ""
-    page          = 0
-    size          = 10
-    sort          = ["name,asc"]
+    ids   = []
+    query = ""
+    types = ["POINT"]
+    tags  = []
+    page  = 0
+    size  = 10
+    sort  = ["name,asc"]
   }
 }
 ```
@@ -60,12 +59,12 @@ Optional:
 - `last_modified_bys` (List of String) Filter on the user who last modified the entry. If you have no wish to use this field as a filter, either provide a null value or remove the field.
 - `page` (Number)
 - `query` (String)
-- `satellite_ids` (List of String)
 - `size` (Number)
 - `sort` (List of String)
 - `tags` (List of String)
 - `to_created_at` (String) Filter on the creation date. Entries with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
 - `to_last_modified_at` (String) Filter on the last modification date. Entries with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
+- `types` (List of String)
 
 
 <a id="nestedatt--content"></a>
@@ -75,70 +74,53 @@ Read-Only:
 
 - `created_at` (String)
 - `created_by` (String)
-- `gps_configuration` (List of Object) (see [below for nested schema](#nestedobjatt--content--gps_configuration))
 - `id` (String)
-- `ideal_orbit` (List of Object) (see [below for nested schema](#nestedobjatt--content--ideal_orbit))
 - `last_modified_at` (String)
 - `last_modified_by` (String)
 - `name` (String)
-- `satellite_configuration` (List of Object) (see [below for nested schema](#nestedobjatt--content--satellite_configuration))
-- `satellite_id` (String)
+- `shape` (List of Object) (see [below for nested schema](#nestedobjatt--content--shape))
 - `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
 
-<a id="nestedobjatt--content--gps_configuration"></a>
-### Nested Schema for `content.gps_configuration`
+<a id="nestedobjatt--content--shape"></a>
+### Nested Schema for `content.shape`
 
 Read-Only:
 
-- `gps_metrics` (List of Object) (see [below for nested schema](#nestedobjatt--content--gps_configuration--gps_metrics))
-- `standard_deviations` (List of Object) (see [below for nested schema](#nestedobjatt--content--gps_configuration--standard_deviations))
+- `center_geolocation` (List of Object) (see [below for nested schema](#nestedobjatt--content--shape--center_geolocation))
+- `geolocation` (List of Object) (see [below for nested schema](#nestedobjatt--content--shape--geolocation))
+- `radius_in_meters` (Number)
+- `type` (String)
+- `vertices_geolocation` (Set of Object) (see [below for nested schema](#nestedobjatt--content--shape--vertices_geolocation))
 
-<a id="nestedobjatt--content--gps_configuration--gps_metrics"></a>
-### Nested Schema for `content.gps_configuration.gps_metrics`
-
-Read-Only:
-
-- `metric_id_for_altitude` (String)
-- `metric_id_for_ground_speed` (String)
-- `metric_id_for_latitude` (String)
-- `metric_id_for_longitude` (String)
-
-
-<a id="nestedobjatt--content--gps_configuration--standard_deviations"></a>
-### Nested Schema for `content.gps_configuration.standard_deviations`
+<a id="nestedobjatt--content--shape--center_geolocation"></a>
+### Nested Schema for `content.shape.center_geolocation`
 
 Read-Only:
 
 - `altitude` (Number)
-- `ground_speed` (Number)
 - `latitude` (Number)
 - `longitude` (Number)
 
 
-
-<a id="nestedobjatt--content--ideal_orbit"></a>
-### Nested Schema for `content.ideal_orbit`
-
-Read-Only:
-
-- `altitude_in_meters` (Number)
-- `apogee_altitude_in_meters` (Number)
-- `argument_of_perigee` (Number)
-- `eccentricity` (Number)
-- `inclination` (Number)
-- `perigee_altitude_in_meters` (Number)
-- `right_ascension_of_ascending_node` (Number)
-- `semi_major_axis` (Number)
-- `type` (String)
-
-
-<a id="nestedobjatt--content--satellite_configuration"></a>
-### Nested Schema for `content.satellite_configuration`
+<a id="nestedobjatt--content--shape--geolocation"></a>
+### Nested Schema for `content.shape.geolocation`
 
 Read-Only:
 
-- `drag_cross_section` (Number)
-- `radiation_cross_section` (Number)
+- `altitude` (Number)
+- `latitude` (Number)
+- `longitude` (Number)
+
+
+<a id="nestedobjatt--content--shape--vertices_geolocation"></a>
+### Nested Schema for `content.shape.vertices_geolocation`
+
+Read-Only:
+
+- `altitude` (Number)
+- `latitude` (Number)
+- `longitude` (Number)
+
 
 
 <a id="nestedobjatt--content--tags"></a>
