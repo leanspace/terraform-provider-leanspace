@@ -20,6 +20,7 @@ var sensorSchema = map[string]*schema.Schema{
 	"satellite_id": {
 		Type:         schema.TypeString,
 		Required:     true,
+		ForceNew:     true,
 		ValidateFunc: validation.IsUUID,
 	},
 	"name": {
