@@ -23,7 +23,9 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/metrics/metrics"
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/action_templates"
 	"github.com/leanspace/terraform-provider-leanspace/services/monitors/monitors"
+	"github.com/leanspace/terraform-provider-leanspace/services/orbits/areas_of_interest"
 	"github.com/leanspace/terraform-provider-leanspace/services/orbits/orbits"
+	"github.com/leanspace/terraform-provider-leanspace/services/orbits/sensors"
 	"github.com/leanspace/terraform-provider-leanspace/services/pass/contact_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/pass/pass_delay_configuration"
 	"github.com/leanspace/terraform-provider-leanspace/services/pass/pass_states"
@@ -90,4 +92,6 @@ func AddDataTypes() {
 	feasibility_constraint_definitions.FeasibilityConstraintDefinitionDataType.Subscribe()
 	request_definitions.RequestDefinitionDataType.Subscribe()
 	request_states.RequestStateDataType.Subscribe()
+	areas_of_interest.AreaOfInterestDataType.Subscribe()
+	sensors.SensorDataType.Subscribe()
 }

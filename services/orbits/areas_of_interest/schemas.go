@@ -1,55 +1,34 @@
-package orbits
+package areas_of_interest
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-var validIdealOrbitTypes = []string{"SSO", "POLAR", "LEO", "GEO", "MEO", "OTHER"}
+var validShapeTypes = []string{
+	"POINT", "CIRCLE", "POLYGON",
+}
 
-var orbitSchema = map[string]*schema.Schema{
+var areaOfInterestSchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
 		Computed: true,
 	},
-	"satellite_id": {
+	"name": {
 		Type:         schema.TypeString,
 		Required:     true,
-		ForceNew:     true,
-		ValidateFunc: validation.IsUUID,
+		ValidateFunc: helper.IsValidName,
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"shape": {
+		Type:     schema.TypeList,
 		Required: true,
-	},
-	"ideal_orbit": {
-		Type:     schema.TypeList,
-		Optional: true,
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: idealOrbitSchema,
-		},
-	},
-	"gps_configuration": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: gpsConfigurationSchema,
-		},
-	},
-	"satellite_configuration": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: satelliteConfigurationSchema,
+			Schema: areaOfInterestShapeSchema,
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
@@ -75,139 +54,68 @@ var orbitSchema = map[string]*schema.Schema{
 	},
 }
 
-var idealOrbitSchema = map[string]*schema.Schema{
+var areaOfInterestShapeSchema = map[string]*schema.Schema{
 	"type": {
 		Type:         schema.TypeString,
 		Required:     true,
-		ValidateFunc: validation.StringInSlice(validIdealOrbitTypes, false),
-		Description:  helper.AllowedValuesToDescription(validIdealOrbitTypes),
+		ValidateFunc: validation.StringInSlice(validShapeTypes, false),
 	},
-	"inclination": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: validation.FloatBetween(0.0, 180.0),
-	},
-	"right_ascension_of_ascending_node": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: validation.FloatBetween(0.0, 360.0),
-	},
-	"argument_of_perigee": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: validation.FloatBetween(0.0, 360.0),
-	},
-	"altitude_in_meters": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: validation.FloatAtLeast(0.0),
-	},
-	"eccentricity": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: helper.FloatAtLeastAndLessThan(0.0, 1.0),
-	},
-	"perigee_altitude_in_meters": {
-		Type:     schema.TypeFloat,
-		Computed: true,
-	},
-	"apogee_altitude_in_meters": {
-		Type:     schema.TypeFloat,
-		Computed: true,
-	},
-	"semi_major_axis": {
-		Type:     schema.TypeFloat,
-		Computed: true,
-	},
-}
-
-var gpsConfigurationSchema = map[string]*schema.Schema{
-	"gps_metrics": {
+	"geolocation": {
 		Type:     schema.TypeList,
 		Optional: true,
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: gpsMetricsSchema,
+			Schema: geoPointSchema,
 		},
 	},
-	"standard_deviations": {
+	"center_geolocation": {
 		Type:     schema.TypeList,
 		Optional: true,
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: standardDeviationsSchema,
+			Schema: geoPointSchema,
+		},
+	},
+	"radius_in_meters": {
+		Type:     schema.TypeFloat,
+		Optional: true,
+	},
+	"vertices_geolocation": {
+		Type:     schema.TypeSet,
+		Optional: true,
+		Elem: &schema.Resource{
+			Schema: geoPointSchema,
 		},
 	},
 }
 
-var gpsMetricsSchema = map[string]*schema.Schema{
-	"metric_id_for_latitude": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.IsUUID,
-	},
-	"metric_id_for_longitude": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.IsUUID,
-	},
-	"metric_id_for_altitude": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.IsUUID,
-	},
-	"metric_id_for_ground_speed": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.IsUUID,
-	},
-}
-
-var standardDeviationsSchema = map[string]*schema.Schema{
+var geoPointSchema = map[string]*schema.Schema{
 	"latitude": {
 		Type:         schema.TypeFloat,
 		Required:     true,
-		ValidateFunc: helper.FloatAtLeastAndLessThan(0.01, 1.0),
+		ValidateFunc: validation.FloatBetween(-90.0, 90.0),
 	},
 	"longitude": {
 		Type:         schema.TypeFloat,
 		Required:     true,
-		ValidateFunc: helper.FloatAtLeastAndLessThan(0.01, 1.0),
+		ValidateFunc: validation.FloatBetween(-180.0, 180),
 	},
 	"altitude": {
 		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: helper.FloatAtLeastAndLessThan(0.0, 5000.1),
-	},
-	"ground_speed": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: helper.FloatAtLeastAndLessThan(0.0, 5000.1),
-	},
-}
-
-var satelliteConfigurationSchema = map[string]*schema.Schema{
-	"drag_cross_section": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: validation.FloatAtLeast(0.01),
-	},
-	"radiation_cross_section": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: validation.FloatAtLeast(0.01),
+		Optional:     true,
+		ValidateFunc: validation.FloatAtLeast(0),
 	},
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{
-	"satellite_ids": {
+	"types": {
 		Type:     schema.TypeList,
 		Optional: true,
 		Elem: &schema.Schema{
 			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
+			ValidateFunc: validation.StringInSlice(validShapeTypes, false),
 		},
 	},
 	"tags": {

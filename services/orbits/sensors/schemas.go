@@ -1,16 +1,18 @@
-package orbits
+package sensors
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-var validIdealOrbitTypes = []string{"SSO", "POLAR", "LEO", "GEO", "MEO", "OTHER"}
+var validShapeTypes = []string{
+	"CIRCULAR", "RECTANGULAR",
+}
 
-var orbitSchema = map[string]*schema.Schema{
+var sensorSchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
 		Computed: true,
@@ -22,34 +24,17 @@ var orbitSchema = map[string]*schema.Schema{
 		ValidateFunc: validation.IsUUID,
 	},
 	"name": {
-		Type:     schema.TypeString,
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: helper.IsValidName,
+	},
+	"aperture_shape": {
+		Type:     schema.TypeList,
 		Required: true,
-	},
-	"ideal_orbit": {
-		Type:     schema.TypeList,
-		Optional: true,
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: idealOrbitSchema,
-		},
-	},
-	"gps_configuration": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: gpsConfigurationSchema,
-		},
-	},
-	"satellite_configuration": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: satelliteConfigurationSchema,
+			Schema: apertureShapeSchema,
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
@@ -75,130 +60,91 @@ var orbitSchema = map[string]*schema.Schema{
 	},
 }
 
-var idealOrbitSchema = map[string]*schema.Schema{
+var apertureShapeSchema = map[string]*schema.Schema{
 	"type": {
 		Type:         schema.TypeString,
 		Required:     true,
-		ValidateFunc: validation.StringInSlice(validIdealOrbitTypes, false),
-		Description:  helper.AllowedValuesToDescription(validIdealOrbitTypes),
+		ValidateFunc: validation.StringInSlice(validShapeTypes, false),
 	},
-	"inclination": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: validation.FloatBetween(0.0, 180.0),
-	},
-	"right_ascension_of_ascending_node": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: validation.FloatBetween(0.0, 360.0),
-	},
-	"argument_of_perigee": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: validation.FloatBetween(0.0, 360.0),
-	},
-	"altitude_in_meters": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: validation.FloatAtLeast(0.0),
-	},
-	"eccentricity": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: helper.FloatAtLeastAndLessThan(0.0, 1.0),
-	},
-	"perigee_altitude_in_meters": {
-		Type:     schema.TypeFloat,
-		Computed: true,
-	},
-	"apogee_altitude_in_meters": {
-		Type:     schema.TypeFloat,
-		Computed: true,
-	},
-	"semi_major_axis": {
-		Type:     schema.TypeFloat,
-		Computed: true,
-	},
-}
-
-var gpsConfigurationSchema = map[string]*schema.Schema{
-	"gps_metrics": {
+	"aperture_center": {
 		Type:     schema.TypeList,
 		Optional: true,
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: gpsMetricsSchema,
+			Schema: vector3DSchema,
 		},
 	},
-	"standard_deviations": {
+	"half_aperture_angle": {
 		Type:     schema.TypeList,
 		Optional: true,
 		MinItems: 1,
 		MaxItems: 1,
 		Elem: &schema.Resource{
-			Schema: standardDeviationsSchema,
+			Schema: halfApertureAngleSchema(180),
+		},
+	},
+	"first_axis_vector": {
+		Type:     schema.TypeList,
+		Optional: true,
+		MinItems: 1,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: vector3DSchema,
+		},
+	},
+	"first_axis_half_aperture_angle": {
+		Type:     schema.TypeList,
+		Optional: true,
+		MinItems: 1,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: halfApertureAngleSchema(90),
+		},
+	},
+	"second_axis_vector": {
+		Type:     schema.TypeList,
+		Optional: true,
+		MinItems: 1,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: vector3DSchema,
+		},
+	},
+	"second_axis_half_aperture_angle": {
+		Type:     schema.TypeList,
+		Optional: true,
+		MinItems: 1,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: halfApertureAngleSchema(90),
 		},
 	},
 }
 
-var gpsMetricsSchema = map[string]*schema.Schema{
-	"metric_id_for_latitude": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.IsUUID,
+var vector3DSchema = map[string]*schema.Schema{
+	"x": {
+		Type:     schema.TypeFloat,
+		Required: true,
 	},
-	"metric_id_for_longitude": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.IsUUID,
+	"y": {
+		Type:     schema.TypeFloat,
+		Required: true,
 	},
-	"metric_id_for_altitude": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.IsUUID,
-	},
-	"metric_id_for_ground_speed": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.IsUUID,
+	"z": {
+		Type:     schema.TypeFloat,
+		Required: true,
 	},
 }
 
-var standardDeviationsSchema = map[string]*schema.Schema{
-	"latitude": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: helper.FloatAtLeastAndLessThan(0.01, 1.0),
-	},
-	"longitude": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: helper.FloatAtLeastAndLessThan(0.01, 1.0),
-	},
-	"altitude": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: helper.FloatAtLeastAndLessThan(0.0, 5000.1),
-	},
-	"ground_speed": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: helper.FloatAtLeastAndLessThan(0.0, 5000.1),
-	},
-}
-
-var satelliteConfigurationSchema = map[string]*schema.Schema{
-	"drag_cross_section": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: validation.FloatAtLeast(0.01),
-	},
-	"radiation_cross_section": {
-		Type:         schema.TypeFloat,
-		Required:     true,
-		ValidateFunc: validation.FloatAtLeast(0.01),
-	},
+func halfApertureAngleSchema(maximum float64) map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"degrees": {
+			Type:         schema.TypeFloat,
+			Required:     true,
+			ValidateFunc: validateMax(maximum),
+		},
+	}
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{
@@ -208,6 +154,14 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 		Elem: &schema.Schema{
 			Type:         schema.TypeString,
 			ValidateFunc: validation.IsUUID,
+		},
+	},
+	"aperture_shape_types": {
+		Type:     schema.TypeList,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringInSlice(validShapeTypes, false),
 		},
 	},
 	"tags": {

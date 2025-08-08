@@ -434,6 +434,10 @@ const stateNameRegexStr = `^[A-Z](?:[A-Z_]*[A-Z])?$`
 
 var stateNameRegex = regexp.MustCompile(stateNameRegexStr)
 
+const nameRegexStr = `^[ a-zA-Z0-9_-]*$`
+
+var nameRegex = regexp.MustCompile(nameRegexStr)
+
 func IsValidStateName(i interface{}, k string) (warnings []string, errors []error) {
 	v, ok := i.(string)
 	if !ok {
@@ -443,6 +447,20 @@ func IsValidStateName(i interface{}, k string) (warnings []string, errors []erro
 
 	if !stateNameRegex.Match([]byte(v)) {
 		errors = append(errors, fmt.Errorf("expected %q to be a valid state name, got %v.\nValid state name follows the regex: %v", k, v, stateNameRegexStr))
+	}
+
+	return warnings, errors
+}
+
+func IsValidName(i interface{}, k string) (warnings []string, errors []error) {
+	v, ok := i.(string)
+	if !ok {
+		errors = append(errors, fmt.Errorf("expected type of %q to be string", k))
+		return
+	}
+
+	if !nameRegex.Match([]byte(v)) {
+		errors = append(errors, fmt.Errorf("expected %q to be a valid name, got %v.\nValid name follows the regex: %v", k, v, nameRegex))
 	}
 
 	return warnings, errors
