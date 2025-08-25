@@ -237,6 +237,10 @@ func (attribute *DefinitionAttribute[T]) FromMap(attributeMap map[string]any) er
 
 func (constraint *ArrayConstraint[T]) FromMap(constraintMap map[string]any) error {
 	constraint.Type = constraintMap["type"].(string)
+	if value, ok := constraintMap["required"]; ok {
+		b := value.(bool)
+		constraint.Required = &b
+	}
 	switch constraint.Type {
 	case "NUMERIC":
 		constraint.Min = constraintMap["min"].(float64)
