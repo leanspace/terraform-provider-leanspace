@@ -15,6 +15,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/commands/release_queues"
 	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/dashboards"
 	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/widgets"
+	"github.com/leanspace/terraform-provider-leanspace/services/events/event_criticalities"
 	"github.com/leanspace/terraform-provider-leanspace/services/events/event_definitions"
 	"github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/connections"
 	"github.com/leanspace/terraform-provider-leanspace/services/leaf_space_integration/contact_reservation_status_mappings"
@@ -89,6 +90,7 @@ func AddDataTypes() {
 	contact_reservation_status_mappings.LeafSpaceContactReservationStatusMappingDataType.Subscribe()
 	resources.ResourceDataType.Subscribe()
 	event_definitions.EventsDefinitionDataType.Subscribe()
+	event_criticalities.EventsCriticalitiesDataType.Subscribe()
 	feasibility_constraint_definitions.FeasibilityConstraintDefinitionDataType.Subscribe()
 	request_definitions.RequestDefinitionDataType.Subscribe()
 	request_states.RequestStateDataType.Subscribe()
