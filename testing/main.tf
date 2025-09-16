@@ -29,8 +29,8 @@ module "event_definitions" {
   source = "./events/event_definitions"
 }
 
-module "event_criticality" {
-  source = "./events/event_criticality"
+module "event_criticalities" {
+  source = "events/event_criticalities"
 }
 module "command_states" {
   source = "./commands/command_states"
