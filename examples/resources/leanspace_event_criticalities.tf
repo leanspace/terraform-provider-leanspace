@@ -1,5 +1,5 @@
 
 resource "leanspace_events_criticalities" "event" {
-  name        = "EVENT_CRITICALITY"
+  name = "EVENT_CRITICALITY"
 
 }
