@@ -1,8 +1,6 @@
 package event_criticalities
 
 import (
-	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -36,7 +34,11 @@ var EventsCriticalitiesSchema = map[string]*schema.Schema{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
-	"tags": general_objects.KeyValuesSchema,
+	"read_only": {
+		Type:        schema.TypeBool,
+		Computed:    true,
+		Description: "Indicates if the object is read-only",
+	},
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{

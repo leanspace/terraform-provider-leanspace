@@ -7,6 +7,7 @@ type EventsCriticalities struct {
 	CreatedBy      string `json:"createdBy"`
 	LastModifiedAt string `json:"lastModifiedAt"`
 	LastModifiedBy string `json:"lastModifiedBy"`
+	ReadOnly       bool   `json:"readOnly"`
 }
 
 func (eventCriticalities *EventsCriticalities) GetID() string { return eventCriticalities.ID }

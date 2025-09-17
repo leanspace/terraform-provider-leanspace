@@ -8,6 +8,7 @@ func (eventCriticality *EventsCriticalities) ToMap() map[string]any {
 	eventCriticalityMap["created_by"] = eventCriticality.CreatedBy
 	eventCriticalityMap["last_modified_at"] = eventCriticality.LastModifiedAt
 	eventCriticalityMap["last_modified_by"] = eventCriticality.LastModifiedBy
+	eventCriticalityMap["read_only"] = eventCriticality.ReadOnly
 	return eventCriticalityMap
 }
 
@@ -18,5 +19,6 @@ func (eventCriticality *EventsCriticalities) FromMap(eventCriticalityMap map[str
 	eventCriticality.CreatedBy = eventCriticalityMap["created_by"].(string)
 	eventCriticality.LastModifiedAt = eventCriticalityMap["last_modified_at"].(string)
 	eventCriticality.LastModifiedBy = eventCriticalityMap["last_modified_by"].(string)
+	eventCriticality.ReadOnly = eventCriticalityMap["read_only"].(bool)
 	return nil
 }

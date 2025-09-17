@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     leanspace = {
-      source  = "leanspace/leanspace"
+      source = "leanspace/leanspace"
     }
   }
 }
@@ -73,8 +73,8 @@ module "metrics" {
 }
 
 module "command_queues" {
-  source   = "./commands/command_queues"
-  asset_id = module.nodes.satellite_node.id
+  source             = "./commands/command_queues"
+  asset_id           = module.nodes.satellite_node.id
   ground_station_ids = [module.nodes.groundstation_node.id]
   depends_on = [
     module.nodes
@@ -126,15 +126,15 @@ module "widgets" {
 }
 
 module "dashboards" {
-  source          = "./dashboard/dashboards"
-  table_widget_id = module.widgets.test_table_widget.id
-  value_widget_id = module.widgets.test_value_widget.id
-  line_widget_id  = module.widgets.test_line_widget.id
-  enum_widget_id  = module.widgets.test_enum_widget.id
-  earth_widget_id = module.widgets.test_earth_widget.id
-  gauge_widget_id = module.widgets.test_gauge_widget.id
-  bar_widget_id   = module.widgets.test_bar_widget.id
-  area_widget_id  = module.widgets.test_area_widget.id
+  source            = "./dashboard/dashboards"
+  table_widget_id   = module.widgets.test_table_widget.id
+  value_widget_id   = module.widgets.test_value_widget.id
+  line_widget_id    = module.widgets.test_line_widget.id
+  enum_widget_id    = module.widgets.test_enum_widget.id
+  earth_widget_id   = module.widgets.test_earth_widget.id
+  gauge_widget_id   = module.widgets.test_gauge_widget.id
+  bar_widget_id     = module.widgets.test_bar_widget.id
+  area_widget_id    = module.widgets.test_area_widget.id
   attached_node_ids = [module.nodes.satellite_node.id]
   depends_on = [
     module.widgets,
@@ -159,8 +159,8 @@ module "access_policies" {
 }
 
 module "members" {
-  source = "./teams/members"
-  usernames = ["TerraformPaul", "TerraformCotta", "TerraformKium"]
+  source          = "./teams/members"
+  usernames       = ["TerraformPaul", "TerraformCotta", "TerraformKium"]
   access_policies = [module.access_policies.test_access_policy.id]
   depends_on = [
     module.access_policies
@@ -168,8 +168,8 @@ module "members" {
 }
 
 module "service_accounts" {
-  source = "./teams/service_accounts"
-  usernames = ["TerraformBot 1", "TerraformBot 2", "TerraformBot 3"]
+  source          = "./teams/service_accounts"
+  usernames       = ["TerraformBot 1", "TerraformBot 2", "TerraformBot 3"]
   access_policies = [module.access_policies.test_access_policy.id]
   depends_on = [
     module.access_policies
@@ -177,8 +177,8 @@ module "service_accounts" {
 }
 
 module "teams" {
-  source  = "./teams/teams"
-  members = [for member in module.members.test_members : member.id]
+  source          = "./teams/teams"
+  members         = [for member in module.members.test_members : member.id]
   access_policies = [module.access_policies.test_access_policy.id]
   depends_on = [
     module.access_policies,
@@ -202,12 +202,12 @@ module "activity_states" {
 
 module "generic_plugins" {
   source = "./plugins/generic_plugins"
-  path = abspath("./plugins/generic_plugins/checksum_function.jar")
+  path   = abspath("./plugins/generic_plugins/checksum_function.jar")
 }
 
 module "plugins" {
   source = "./plugins/plugins"
-  path = abspath("./plugins/plugins/my_plugin.jar")
+  path   = abspath("./plugins/plugins/my_plugin.jar")
 }
 
 module "action_templates" {
@@ -215,8 +215,8 @@ module "action_templates" {
 }
 
 module "monitors" {
-  source    = "./monitors/monitors/"
-  metric_id = module.metrics.test_numeric_metric.id
+  source              = "./monitors/monitors/"
+  metric_id           = module.metrics.test_numeric_metric.id
   action_template_ids = [module.action_templates.test_action_template.id]
 }
 
@@ -242,13 +242,13 @@ module "plan_templates" {
 
 module "routes" {
   source             = "./routes/routes"
-  processor_ids = [module.processors.test_create_processor.id]
+  processor_ids      = [module.processors.test_create_processor.id]
   service_account_id = values(module.service_accounts.test_service_accounts)[0].id
 }
 
 module "processors" {
   source = "./routes/processors"
-  path = abspath("./routes/processors/processor.jar")
+  path   = abspath("./routes/processors/processor.jar")
 }
 
 module "orbits" {
