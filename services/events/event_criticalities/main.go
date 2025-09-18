@@ -5,6 +5,6 @@ import "github.com/leanspace/terraform-provider-leanspace/provider"
 var EventCriticalitiesDataType = provider.DataSourceType[EventCriticalities, *EventCriticalities]{
 	ResourceIdentifier: "leanspace_event_criticalities",
 	Path:               "events/event-criticalities",
-	Schema:             EventsCriticalitiesSchema,
+	Schema:             EventCriticalitiesSchema,
 	FilterSchema:       dataSourceFilterSchema,
 }
