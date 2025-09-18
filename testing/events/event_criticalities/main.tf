@@ -6,6 +6,6 @@ terraform {
   }
 }
 
-resource "leanspace_events_criticalities" "test" {
-  name = "TERRAFORM_CRITICALITY"
+resource "leanspace_event_criticalities" "test" {
+  name        = "TERRAFORM_CRITICALITYT"
 }

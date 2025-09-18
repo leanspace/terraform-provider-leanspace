@@ -30,7 +30,7 @@ module "event_definitions" {
 }
 
 module "event_criticalities" {
-  source = "events/event_criticalities"
+  source = "./events/event_criticalities"
 }
 module "command_states" {
   source = "./commands/command_states"

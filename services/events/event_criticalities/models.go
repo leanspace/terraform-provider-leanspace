@@ -1,6 +1,6 @@
 package event_criticalities
 
-type EventsCriticalities struct {
+type EventCriticalities struct {
 	ID             string `json:"id"`
 	Name           string `json:"name"`
 	CreatedAt      string `json:"createdAt"`
@@ -10,4 +10,4 @@ type EventsCriticalities struct {
 	ReadOnly       bool   `json:"readOnly"`
 }
 
-func (eventCriticalities *EventsCriticalities) GetID() string { return eventCriticalities.ID }
+func (eventCriticalities *EventCriticalities) GetID() string { return eventCriticalities.ID }
