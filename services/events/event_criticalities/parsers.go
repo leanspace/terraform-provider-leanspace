@@ -1,6 +1,6 @@
 package event_criticalities
 
-func (eventCriticality *EventsCriticalities) ToMap() map[string]any {
+func (eventCriticality *EventCriticalities) ToMap() map[string]any {
 	eventCriticalityMap := make(map[string]any)
 	eventCriticalityMap["id"] = eventCriticality.ID
 	eventCriticalityMap["name"] = eventCriticality.Name
@@ -12,7 +12,7 @@ func (eventCriticality *EventsCriticalities) ToMap() map[string]any {
 	return eventCriticalityMap
 }
 
-func (eventCriticality *EventsCriticalities) FromMap(eventCriticalityMap map[string]any) error {
+func (eventCriticality *EventCriticalities) FromMap(eventCriticalityMap map[string]any) error {
 	eventCriticality.ID = eventCriticalityMap["id"].(string)
 	eventCriticality.Name = eventCriticalityMap["name"].(string)
 	eventCriticality.CreatedAt = eventCriticalityMap["created_at"].(string)

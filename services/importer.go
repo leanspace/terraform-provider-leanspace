@@ -90,7 +90,7 @@ func AddDataTypes() {
 	contact_reservation_status_mappings.LeafSpaceContactReservationStatusMappingDataType.Subscribe()
 	resources.ResourceDataType.Subscribe()
 	event_definitions.EventsDefinitionDataType.Subscribe()
-	event_criticalities.EventsCriticalitiesDataType.Subscribe()
+	event_criticalities.EventCriticalitiesDataType.Subscribe()
 	feasibility_constraint_definitions.FeasibilityConstraintDefinitionDataType.Subscribe()
 	request_definitions.RequestDefinitionDataType.Subscribe()
 	request_states.RequestStateDataType.Subscribe()

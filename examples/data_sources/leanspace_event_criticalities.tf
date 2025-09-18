@@ -1,5 +1,5 @@
 
-data "leanspace_events_criticalities" "all" {
+data "leanspace_event_criticalities" "all" {
   filters {
     ids   = []
     query = ""
