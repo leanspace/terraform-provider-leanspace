@@ -3,6 +3,7 @@ package command_states
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 var commandStateSchema = map[string]*schema.Schema{
@@ -39,4 +40,5 @@ var commandStateSchema = map[string]*schema.Schema{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
+	"tags": general_objects.KeyValuesSchema,
 }
