@@ -1,18 +1,18 @@
 ---
-page_title: "leanspace_command_states Data Source - terraform-provider-leanspace"
+page_title: "leanspace_event_criticalities Data Source - terraform-provider-leanspace"
 subcategory: ""
 description: |-
   
 ---
 
-# leanspace_command_states (Data Source)
+# leanspace_event_criticalities (Data Source)
 
 
 
 ## Example Usage
 
 ```terraform
-data "leanspace_command_states" "all" {
+data "leanspace_event_criticalities" "all" {
   filters {
     ids   = []
     query = ""
@@ -55,6 +55,7 @@ Optional:
 - `query` (String)
 - `size` (Number)
 - `sort` (List of String)
+- `tags` (List of String)
 
 
 <a id="nestedatt--content"></a>
@@ -69,16 +70,6 @@ Read-Only:
 - `last_modified_by` (String)
 - `name` (String)
 - `read_only` (Boolean)
-- `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
-
-<a id="nestedobjatt--content--tags"></a>
-### Nested Schema for `content.tags`
-
-Read-Only:
-
-- `key` (String)
-- `value` (String)
-
 
 
 <a id="nestedatt--pageable"></a>

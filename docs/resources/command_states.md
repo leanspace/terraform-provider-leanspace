@@ -24,6 +24,10 @@ resource "leanspace_command_states" "state" {
 
 - `name` (String)
 
+### Optional
+
+- `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
+
 ### Read-Only
 
 - `created_at` (String) When it was created
@@ -32,3 +36,14 @@ resource "leanspace_command_states" "state" {
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
 - `read_only` (Boolean)
+
+<a id="nestedblock--tags"></a>
+### Nested Schema for `tags`
+
+Required:
+
+- `key` (String)
+
+Optional:
+
+- `value` (String)
