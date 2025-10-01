@@ -31,6 +31,10 @@ resource "leanspace_teams" "test" {
   name       = "Terraform Team"
   policy_ids = var.access_policies
   members    = var.members
+  tags {
+    key   = "CreatedBy"
+    value = "Terraform"
+  }
 }
 
 

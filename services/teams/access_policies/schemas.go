@@ -1,6 +1,7 @@
 package access_policies
 
 import (
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -31,6 +32,7 @@ var accessPolicySchema = map[string]*schema.Schema{
 			Schema: statementSchema,
 		},
 	},
+	"tags": general_objects.KeyValuesSchema,
 	"created_at": {
 		Type:        schema.TypeString,
 		Computed:    true,

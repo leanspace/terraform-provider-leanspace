@@ -35,7 +35,10 @@ resource "leanspace_access_policies" "test" {
       "monitors:searchMonitorTags"
     ]
   }
-
+  tags {
+    key   = "CreatedBy"
+    value = "Terraform"
+  }
 }
 
 output "test_access_policy" {

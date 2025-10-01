@@ -3,6 +3,7 @@ package service_accounts
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 var serviceAccountSchema = map[string]*schema.Schema{
@@ -29,6 +30,7 @@ var serviceAccountSchema = map[string]*schema.Schema{
 			Schema: credentialSchema,
 		},
 	},
+	"tags": general_objects.KeyValuesSchema,
 	"created_at": {
 		Type:        schema.TypeString,
 		Computed:    true,
