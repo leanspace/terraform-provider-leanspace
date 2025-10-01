@@ -1,6 +1,10 @@
 package teams
 
-import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+import (
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+)
 
 func (team *Team) ToMap() map[string]any {
 	teamMap := make(map[string]any)
@@ -8,6 +12,7 @@ func (team *Team) ToMap() map[string]any {
 	teamMap["name"] = team.Name
 	teamMap["policy_ids"] = team.PolicyIds
 	teamMap["members"] = team.Members
+	teamMap["tags"] = helper.ParseToMaps(team.Tags)
 	teamMap["created_at"] = team.CreatedAt
 	teamMap["created_by"] = team.CreatedBy
 	teamMap["last_modified_at"] = team.LastModifiedAt
@@ -22,6 +27,11 @@ func (team *Team) FromMap(teamMap map[string]any) error {
 	team.PolicyIds = make([]string, teamMap["policy_ids"].(*schema.Set).Len())
 	for i, value := range teamMap["policy_ids"].(*schema.Set).List() {
 		team.PolicyIds[i] = value.(string)
+	}
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](teamMap["tags"].(*schema.Set).List()); err != nil {
+		return err
+	} else {
+		team.Tags = tags
 	}
 	team.Members = make([]string, teamMap["members"].(*schema.Set).Len())
 	for i, value := range teamMap["members"].(*schema.Set).List() {

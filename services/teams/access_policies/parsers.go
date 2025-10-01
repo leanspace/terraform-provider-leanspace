@@ -3,6 +3,7 @@ package access_policies
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 func (policy *AccessPolicy) ToMap() map[string]any {
@@ -12,6 +13,7 @@ func (policy *AccessPolicy) ToMap() map[string]any {
 	policyMap["description"] = policy.Description
 	policyMap["read_only"] = policy.ReadOnly
 	policyMap["statements"] = helper.ParseToMaps(policy.Statements)
+	policyMap["tags"] = helper.ParseToMaps(policy.Tags)
 	policyMap["created_at"] = policy.CreatedAt
 	policyMap["created_by"] = policy.CreatedBy
 	policyMap["last_modified_at"] = policy.LastModifiedAt
@@ -36,6 +38,11 @@ func (policy *AccessPolicy) FromMap(policyMap map[string]any) error {
 		return err
 	} else {
 		policy.Statements = statements
+	}
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](policyMap["tags"].(*schema.Set).List()); err != nil {
+		return err
+	} else {
+		policy.Tags = tags
 	}
 	policy.CreatedAt = policyMap["created_at"].(string)
 	policy.CreatedBy = policyMap["created_by"].(string)

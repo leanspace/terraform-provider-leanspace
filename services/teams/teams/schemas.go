@@ -3,6 +3,7 @@ package teams
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 var teamSchema = map[string]*schema.Schema{
@@ -30,6 +31,7 @@ var teamSchema = map[string]*schema.Schema{
 			ValidateFunc: validation.IsUUID,
 		},
 	},
+	"tags": general_objects.KeyValuesSchema,
 	"created_at": {
 		Type:        schema.TypeString,
 		Computed:    true,

@@ -30,6 +30,10 @@ resource "leanspace_service_accounts" "test" {
   for_each   = var.usernames
   name       = each.value
   policy_ids = var.access_policies
+  tags {
+    key   = "CreatedBy"
+    value = "Terraform"
+  }
 }
 
 output "test_service_accounts" {

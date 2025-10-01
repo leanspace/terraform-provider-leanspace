@@ -2,6 +2,8 @@ package service_accounts
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 func (serviceAccount *ServiceAccount) ToMap() map[string]any {
@@ -10,6 +12,7 @@ func (serviceAccount *ServiceAccount) ToMap() map[string]any {
 	serviceAccountMap["name"] = serviceAccount.Name
 	serviceAccountMap["policy_ids"] = serviceAccount.PolicyIds
 	serviceAccountMap["credentials"] = []any{serviceAccount.Credentials.ToMap()}
+	serviceAccountMap["tags"] = helper.ParseToMaps(serviceAccount.Tags)
 	serviceAccountMap["created_at"] = serviceAccount.CreatedAt
 	serviceAccountMap["created_by"] = serviceAccount.CreatedBy
 	serviceAccountMap["last_modified_at"] = serviceAccount.LastModifiedAt
@@ -37,7 +40,11 @@ func (serviceAccount *ServiceAccount) FromMap(serviceAccountMap map[string]any) 
 	for i, value := range serviceAccountMap["policy_ids"].(*schema.Set).List() {
 		serviceAccount.PolicyIds[i] = value.(string)
 	}
-
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](serviceAccountMap["tags"].(*schema.Set).List()); err != nil {
+		return err
+	} else {
+		serviceAccount.Tags = tags
+	}
 	if len(serviceAccountMap["credentials"].([]any)) > 0 {
 		if err := serviceAccount.Credentials.FromMap(serviceAccountMap["credentials"].([]any)[0].(map[string]any)); err != nil {
 			return err
