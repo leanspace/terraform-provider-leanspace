@@ -6,7 +6,12 @@ terraform {
   }
 }
 
-variable "resource_id" {
+variable "resource1_id" {
+  type        = string
+  description = "The ID of the resource to which the resource function is attached."
+}
+
+variable "resource2_id" {
   type        = string
   description = "The ID of the resource to which the resource function is attached."
 }
@@ -20,7 +25,7 @@ data "leanspace_resource_functions" "all" {
   filters {
     ids                     = []
     activity_definition_ids = [var.activity_definition_id]
-    resource_ids            = [var.resource_id]
+    resource_ids            = [var.resource1_id, var.resource2_id]
     page                    = 0
     size                    = 10
     sort                    = ["name,asc"]
@@ -29,7 +34,7 @@ data "leanspace_resource_functions" "all" {
 
 resource "leanspace_resource_functions" "a_linear_resource_function" {
   name                   = "Terraform Linear Resource Function"
-  resource_id            = var.resource_id
+  resource_id            = var.resource1_id
   activity_definition_id = var.activity_definition_id
   formula {
     constant  = 5.0
@@ -41,7 +46,7 @@ resource "leanspace_resource_functions" "a_linear_resource_function" {
 
 resource "leanspace_resource_functions" "a_rectangular_resource_function" {
   name                   = "Terraform Rectangular Resource Function"
-  resource_id            = var.resource_id
+  resource_id            = var.resource2_id
   activity_definition_id = var.activity_definition_id
   formula {
     type      = "RECTANGULAR"

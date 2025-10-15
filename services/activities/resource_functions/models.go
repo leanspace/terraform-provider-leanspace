@@ -6,6 +6,7 @@ type ResourceFunction struct {
 	ResourceId           string                   `json:"resourceId"`
 	Name                 string                   `json:"name"`
 	Formula              *ResourceFunctionFormula `json:"formula"`
+	TimeUnit             string                   `json:"timeUnit,omitempty"`
 	CreatedAt            string                   `json:"createdAt"`
 	CreatedBy            string                   `json:"createdBy"`
 	LastModifiedAt       string                   `json:"lastModifiedAt"`
@@ -16,8 +17,8 @@ func (resourceFunction *ResourceFunction) GetID() string { return resourceFuncti
 
 type ResourceFunctionFormula struct {
 	Type      string  `json:"type"`
-	Amplitude float64 `json:"amplitude"`
-	Constant  float64 `json:"constant"`
-	Rate      float64 `json:"rate"`
-	TimeUnit  string  `json:"timeUnit"`
+	Amplitude float64 `json:"amplitude,omitempty"`
+	Constant  float64 `json:"constant,omitempty"`
+	Rate      float64 `json:"rate,omitempty"`
+	TimeUnit  string  `json:"timeUnit,omitempty"`
 }

@@ -7,6 +7,7 @@ func (resourceFunction *ResourceFunction) ToMap() map[string]any {
 	resourceFunctionMap["resource_id"] = resourceFunction.ResourceId
 	resourceFunctionMap["name"] = resourceFunction.Name
 	resourceFunctionMap["formula"] = []map[string]any{resourceFunction.Formula.ToMap()}
+	resourceFunctionMap["time_unit"] = resourceFunction.TimeUnit
 	resourceFunctionMap["created_at"] = resourceFunction.CreatedAt
 	resourceFunctionMap["created_by"] = resourceFunction.CreatedBy
 	resourceFunctionMap["last_modified_at"] = resourceFunction.LastModifiedAt
@@ -37,6 +38,7 @@ func (resourceFunction *ResourceFunction) FromMap(resourceFunctionMap map[string
 	resourceFunction.ActivityDefinitionId = resourceFunctionMap["activity_definition_id"].(string)
 	resourceFunction.ResourceId = resourceFunctionMap["resource_id"].(string)
 	resourceFunction.Name = resourceFunctionMap["name"].(string)
+	resourceFunction.TimeUnit = resourceFunctionMap["time_unit"].(string)
 	if len(resourceFunctionMap["formula"].([]any)) > 0 && resourceFunctionMap["formula"].([]any)[0] != nil {
 		resourceFunction.Formula = new(ResourceFunctionFormula)
 		if err := resourceFunction.Formula.FromMap(resourceFunctionMap["formula"].([]any)[0].(map[string]any)); err != nil {

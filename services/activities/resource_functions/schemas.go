@@ -40,6 +40,12 @@ var resourceFunctionSchema = map[string]*schema.Schema{
 			Schema: formulaSchema,
 		},
 	},
+	"time_unit": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: validation.StringInSlice(validResourceFunctionTimeUnits, false),
+		Description:  helper.AllowedValuesToDescription(validResourceFunctionTimeUnits),
+	},
 	"created_at": {
 		Type:        schema.TypeString,
 		Computed:    true,

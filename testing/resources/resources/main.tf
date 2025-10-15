@@ -58,6 +58,41 @@ resource "leanspace_resources" "a_resource" {
   }
 }
 
+resource "leanspace_resources" "a_second_resource" {
+  name      = "Terraform Resource 2"
+  asset_id  = var.asset_id
+  metric_id = var.metric_id
+  constraints {
+    type  = "LIMIT"
+    kind  = "UPPER"
+    value = 50.0
+  }
+  constraints {
+    type  = "THRESHOLD"
+    kind  = "UPPER"
+    value = 35.0
+  }
+  constraints {
+    type  = "LIMIT"
+    kind  = "LOWER"
+    value = 0.0
+  }
+  constraints {
+    type  = "THRESHOLD"
+    kind  = "LOWER"
+    value = 10.0
+  }
+  tags {
+    key   = "Mission"
+    value = "Terraform"
+  }
+}
+
+
 output "a_resource" {
   value = leanspace_resources.a_resource
+}
+
+output "a_second_resource" {
+  value = leanspace_resources.a_second_resource
 }
