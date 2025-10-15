@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     leanspace = {
-      source = "leanspace/leanspace"
+      source  = "leanspace/leanspace"
     }
   }
 }
@@ -232,7 +232,7 @@ module "plan_templates" {
   source                 = "./plans/plan_templates"
   asset_id               = module.nodes.satellite_node.id
   activity_definition_id = module.activity_definitions.test_activity_definition.id
-  resource_function_id   = module.resource_functions.a_resource_function.id
+  resource_function_id   = module.resource_functions.a_linear_resource_function.id
   depends_on = [
     module.nodes,
     module.activity_definitions,
