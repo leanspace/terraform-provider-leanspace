@@ -8,7 +8,7 @@ import (
 )
 
 var validResourceFunctionTimeUnits = []string{"SECONDS", "MINUTES", "HOURS", "DAYS"}
-var validFormulaTypes = []string{"LINEAR"}
+var validFormulaTypes = []string{"LINEAR", "RECTANGULAR"}
 
 var resourceFunctionSchema = map[string]*schema.Schema{
 	"id": {
@@ -31,12 +31,6 @@ var resourceFunctionSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Optional: true,
 	},
-	"time_unit": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validResourceFunctionTimeUnits, false),
-		Description:  helper.AllowedValuesToDescription(validResourceFunctionTimeUnits),
-	},
 	"formula": {
 		Type:     schema.TypeList,
 		Required: true,
@@ -45,6 +39,12 @@ var resourceFunctionSchema = map[string]*schema.Schema{
 		Elem: &schema.Resource{
 			Schema: formulaSchema,
 		},
+	},
+	"time_unit": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: validation.StringInSlice(validResourceFunctionTimeUnits, false),
+		Description:  helper.AllowedValuesToDescription(validResourceFunctionTimeUnits),
 	},
 	"created_at": {
 		Type:        schema.TypeString,
@@ -69,19 +69,29 @@ var resourceFunctionSchema = map[string]*schema.Schema{
 }
 
 var formulaSchema = map[string]*schema.Schema{
-	"constant": {
-		Type:     schema.TypeFloat,
-		Required: true,
-	},
-	"rate": {
-		Type:     schema.TypeFloat,
-		Required: true,
-	},
 	"type": {
 		Type:         schema.TypeString,
 		Required:     true,
 		ValidateFunc: validation.StringInSlice(validFormulaTypes, false),
 		Description:  helper.AllowedValuesToDescription(validFormulaTypes),
+	},
+	"amplitude": {
+		Type:     schema.TypeFloat,
+		Optional: true,
+	},
+	"constant": {
+		Type:     schema.TypeFloat,
+		Optional: true,
+	},
+	"rate": {
+		Type:     schema.TypeFloat,
+		Optional: true,
+	},
+	"time_unit": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: validation.StringInSlice(validResourceFunctionTimeUnits, false),
+		Description:  helper.AllowedValuesToDescription(validResourceFunctionTimeUnits),
 	},
 }
 
