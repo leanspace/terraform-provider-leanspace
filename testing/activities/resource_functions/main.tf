@@ -16,6 +16,16 @@ variable "resource2_id" {
   description = "The ID of the resource to which the resource function is attached."
 }
 
+variable "resource3_id" {
+  type        = string
+  description = "The ID of the resource to which the resource function is attached."
+}
+
+variable "resource4_id" {
+  type        = string
+  description = "The ID of the resource to which the resource function is attached."
+}
+
 variable "activity_definition_id" {
   type        = string
   description = "The ID of the activity definition to which the resource function is attached."
@@ -39,6 +49,32 @@ resource "leanspace_resource_functions" "a_linear_resource_function" {
   formula {
     constant  = 5.0
     rate      = 2.5
+    type      = "LINEAR"
+    time_unit = "SECONDS"
+  }
+}
+
+// omitempty on the model removes it, provoking 400s
+resource "leanspace_resource_functions" "a_linear_resource_function_with_0_constant" {
+  name                   = "Terraform Linear Resource Function With Constant At Zero"
+  resource_id            = var.resource3_id
+  activity_definition_id = var.activity_definition_id
+  formula {
+    constant  = 0.0
+    rate      = 2.5
+    type      = "LINEAR"
+    time_unit = "SECONDS"
+  }
+}
+
+// omitempty on the model removes it, provoking 400s
+resource "leanspace_resource_functions" "a_linear_resource_function_with_0_rate" {
+  name                   = "Terraform Linear Resource Function With Rate At Zero"
+  resource_id            = var.resource4_id
+  activity_definition_id = var.activity_definition_id
+  formula {
+    constant  = 5.0
+    rate      = 0.0
     type      = "LINEAR"
     time_unit = "SECONDS"
   }

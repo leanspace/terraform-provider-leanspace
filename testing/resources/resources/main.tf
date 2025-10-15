@@ -68,20 +68,40 @@ resource "leanspace_resources" "a_second_resource" {
     value = 50.0
   }
   constraints {
-    type  = "THRESHOLD"
+    type  = "LIMIT"
+    kind  = "LOWER"
+    value = 0.0
+  }
+  tags {
+    key   = "Mission"
+    value = "Terraform"
+  }
+}
+
+resource "leanspace_resources" "a_third_resource" {
+  name      = "Terraform Resource 3"
+  asset_id  = var.asset_id
+  metric_id = var.metric_id
+  constraints {
+    type  = "LIMIT"
     kind  = "UPPER"
-    value = 35.0
+    value = 50.0
   }
   constraints {
     type  = "LIMIT"
     kind  = "LOWER"
     value = 0.0
   }
-  constraints {
-    type  = "THRESHOLD"
-    kind  = "LOWER"
-    value = 10.0
+  tags {
+    key   = "Mission"
+    value = "Terraform"
   }
+}
+
+resource "leanspace_resources" "a_fourth_resource" {
+  name      = "Terraform Resource 4"
+  asset_id  = var.asset_id
+  metric_id = var.metric_id
   tags {
     key   = "Mission"
     value = "Terraform"
@@ -95,4 +115,12 @@ output "a_resource" {
 
 output "a_second_resource" {
   value = leanspace_resources.a_second_resource
+}
+
+output "a_third_resource" {
+  value = leanspace_resources.a_third_resource
+}
+
+output "a_fourth_resource" {
+  value = leanspace_resources.a_fourth_resource
 }
