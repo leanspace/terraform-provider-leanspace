@@ -43,6 +43,7 @@ resource "leanspace_access_policies" "access_policy" {
 
 - `description` (String)
 - `statements` (Block Set) (see [below for nested schema](#nestedblock--statements))
+- `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
 
 ### Read-Only
 
@@ -60,3 +61,15 @@ Required:
 
 - `actions` (Set of String)
 - `name` (String)
+
+
+<a id="nestedblock--tags"></a>
+### Nested Schema for `tags`
+
+Required:
+
+- `key` (String)
+
+Optional:
+
+- `value` (String)

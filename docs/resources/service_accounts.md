@@ -26,6 +26,10 @@ resource "leanspace_service_accounts" "service_account" {
 - `name` (String)
 - `policy_ids` (Set of String)
 
+### Optional
+
+- `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
+
 ### Read-Only
 
 - `created_at` (String) When it was created
@@ -34,6 +38,18 @@ resource "leanspace_service_accounts" "service_account" {
 - `id` (String) The ID of this resource.
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
+
+<a id="nestedblock--tags"></a>
+### Nested Schema for `tags`
+
+Required:
+
+- `key` (String)
+
+Optional:
+
+- `value` (String)
+
 
 <a id="nestedatt--credentials"></a>
 ### Nested Schema for `credentials`

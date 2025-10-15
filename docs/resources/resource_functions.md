@@ -22,15 +22,26 @@ variable "activity_definition_id" {
   description = "The ID of the activity definition to which the resource function is attached."
 }
 
-resource "leanspace_resource_functions" "a_resource_function" {
-  name                   = "Terraform Resource Function"
+
+resource "leanspace_resource_functions" "a_linear_resource_function" {
+  name                   = "Terraform Linear Resource Function"
   resource_id            = var.resource_id
   activity_definition_id = var.activity_definition_id
-  time_unit              = "SECONDS"
   formula {
-    constant = 5.0
-    rate     = 2.5
-    type     = "LINEAR"
+    constant  = 5.0
+    rate      = 2.5
+    type      = "LINEAR"
+    time_unit = "SECONDS"
+  }
+}
+
+resource "leanspace_resource_functions" "a_rectangular_resource_function" {
+  name                   = "Terraform Rectangular Resource Function"
+  resource_id            = var.resource_id
+  activity_definition_id = var.activity_definition_id
+  formula {
+    type      = "RECTANGULAR"
+    amplitude = 5.0
   }
 }
 ```
@@ -43,11 +54,11 @@ resource "leanspace_resource_functions" "a_resource_function" {
 - `activity_definition_id` (String)
 - `formula` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--formula))
 - `resource_id` (String)
-- `time_unit` (String) it must be one of these values: SECONDS, MINUTES, HOURS, DAYS
 
 ### Optional
 
 - `name` (String)
+- `time_unit` (String) it must be one of these values: SECONDS, MINUTES, HOURS, DAYS
 
 ### Read-Only
 
@@ -62,6 +73,11 @@ resource "leanspace_resource_functions" "a_resource_function" {
 
 Required:
 
+- `type` (String) it must be one of these values: LINEAR, RECTANGULAR
+
+Optional:
+
+- `amplitude` (Number)
 - `constant` (Number)
 - `rate` (Number)
-- `type` (String) it must be one of these values: LINEAR
+- `time_unit` (String) it must be one of these values: SECONDS, MINUTES, HOURS, DAYS

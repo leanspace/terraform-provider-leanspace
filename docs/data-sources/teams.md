@@ -72,6 +72,16 @@ Read-Only:
 - `members` (Set of String)
 - `name` (String)
 - `policy_ids` (Set of String)
+- `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
+
+<a id="nestedobjatt--content--tags"></a>
+### Nested Schema for `content.tags`
+
+Read-Only:
+
+- `key` (String)
+- `value` (String)
+
 
 
 <a id="nestedatt--pageable"></a>

@@ -75,6 +75,7 @@ Read-Only:
 - `name` (String)
 - `read_only` (Boolean)
 - `statements` (Set of Object) (see [below for nested schema](#nestedobjatt--content--statements))
+- `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
 
 <a id="nestedobjatt--content--statements"></a>
 ### Nested Schema for `content.statements`
@@ -83,6 +84,15 @@ Read-Only:
 
 - `actions` (Set of String)
 - `name` (String)
+
+
+<a id="nestedobjatt--content--tags"></a>
+### Nested Schema for `content.tags`
+
+Read-Only:
+
+- `key` (String)
+- `value` (String)
 
 
 
