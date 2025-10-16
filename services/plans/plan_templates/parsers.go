@@ -82,9 +82,19 @@ func (resourceFunctionFormulaOverload *ResourceFunctionFormulaOverload) ToMap() 
 
 func (formula *ResourceFunctionFormula) ToMap() map[string]any {
 	formulaMap := make(map[string]any)
+
 	formulaMap["type"] = formula.Type
-	formulaMap["constant"] = formula.Constant
-	formulaMap["rate"] = formula.Rate
+
+	if formula.Type == "LINEAR" {
+		formulaMap["constant"] = formula.Constant
+		formulaMap["rate"] = formula.Rate
+		formulaMap["time_unit"] = formula.TimeUnit
+	}
+
+	if formula.Type == "RECTANGULAR" {
+		formulaMap["amplitude"] = formula.Amplitude
+	}
+
 	return formulaMap
 }
 
@@ -213,8 +223,17 @@ func (resourceFunctionFormulaOverload *ResourceFunctionFormulaOverload) FromMap(
 
 func (formula *ResourceFunctionFormula) FromMap(formulaMap map[string]any) error {
 	formula.Type = formulaMap["type"].(string)
-	formula.Constant = formulaMap["constant"].(float64)
-	formula.Rate = formulaMap["rate"].(float64)
+
+	if formula.Type == "LINEAR" {
+		formula.Constant = formulaMap["constant"].(float64)
+		formula.Rate = formulaMap["rate"].(float64)
+		formula.TimeUnit = formulaMap["time_unit"].(string)
+	}
+
+	if formula.Type == "RECTANGULAR" {
+		formula.Amplitude = formulaMap["amplitude"].(float64)
+	}
+
 	return nil
 }
 
