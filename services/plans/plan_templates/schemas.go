@@ -3,12 +3,17 @@ package plan_templates
 import (
 	"regexp"
 
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 var nameRegex = regexp.MustCompile(`^[ a-zA-Z0-9_-]*$`)
+
+var validResourceFunctionTimeUnits = []string{"SECONDS", "MINUTES", "HOURS", "DAYS"}
+var validFormulaTypes = []string{"LINEAR", "RECTANGULAR"}
 
 var planTemplateSchema = map[string]*schema.Schema{
 	"id": {
@@ -187,16 +192,28 @@ var resourceFunctionFormulaOverloadSchema = map[string]*schema.Schema{
 
 var resourceFunctionFormulaSchema = map[string]*schema.Schema{
 	"type": {
-		Type:     schema.TypeString,
-		Required: true,
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.StringInSlice(validFormulaTypes, false),
+		Description:  helper.AllowedValuesToDescription(validFormulaTypes),
+	},
+	"amplitude": {
+		Type:     schema.TypeFloat,
+		Optional: true,
 	},
 	"constant": {
 		Type:     schema.TypeFloat,
-		Required: true,
+		Optional: true,
 	},
 	"rate": {
 		Type:     schema.TypeFloat,
-		Required: true,
+		Optional: true,
+	},
+	"time_unit": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: validation.StringInSlice(validResourceFunctionTimeUnits, false),
+		Description:  helper.AllowedValuesToDescription(validResourceFunctionTimeUnits),
 	},
 }
 
