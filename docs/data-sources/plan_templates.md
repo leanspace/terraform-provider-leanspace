@@ -184,8 +184,10 @@ Read-Only:
 
 Read-Only:
 
+- `amplitude` (Number)
 - `constant` (Number)
 - `rate` (Number)
+- `time_unit` (String)
 - `type` (String)
 
 
