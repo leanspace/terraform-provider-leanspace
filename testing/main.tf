@@ -287,6 +287,15 @@ module "resource_functions" {
   ]
 }
 
+module "passive_resource_functions" {
+  source                 = "./resources/passive_resource_functions"
+  resource1_id            = module.resources.a_resource.id
+  resource2_id            = module.resources.a_second_resource.id
+  depends_on = [
+    module.resources
+  ]
+}
+
 module "record_templates" {
   source  = "./records/record_templates"
   node_id = module.nodes.satellite_node.id

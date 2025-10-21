@@ -38,6 +38,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/requests/feasibility_constraint_definitions"
 	"github.com/leanspace/terraform-provider-leanspace/services/requests/request_definitions"
 	"github.com/leanspace/terraform-provider-leanspace/services/requests/request_states"
+	"github.com/leanspace/terraform-provider-leanspace/services/resources/passive_resource_functions"
 	"github.com/leanspace/terraform-provider-leanspace/services/resources/resources"
 	"github.com/leanspace/terraform-provider-leanspace/services/routes/processors"
 	"github.com/leanspace/terraform-provider-leanspace/services/routes/routes"
