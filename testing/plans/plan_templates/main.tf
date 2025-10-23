@@ -56,9 +56,9 @@ resource "leanspace_plan_templates" "created" {
 
     resource_function_formulas {
       formula {
-        type     = "LINEAR"
-        constant = 5
-        rate     = 12
+        type      = "LINEAR"
+        constant  = 5
+        rate      = 12
         time_unit = "HOURS"
       }
       resource_function_id = var.resource_function_id

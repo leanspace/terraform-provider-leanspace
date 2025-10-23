@@ -4,9 +4,9 @@ variable "resource_id" {
 }
 
 resource "leanspace_passive_resource_functions" "a_linear_passive_resource_function" {
-  name                   = "Terraform Linear Passive Resource Function"
-  resource_id            = var.resource_id
-  control_bound  = 100.0
+  name          = "Terraform Linear Passive Resource Function"
+  resource_id   = var.resource_id
+  control_bound = 100.0
   formula {
     constant  = 5.0
     rate      = 2.5
