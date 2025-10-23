@@ -90,6 +90,7 @@ func AddDataTypes() {
 	satellite_links.LeafSpaceSatellitesLinkDataType.Subscribe()
 	contact_reservation_status_mappings.LeafSpaceContactReservationStatusMappingDataType.Subscribe()
 	resources.ResourceDataType.Subscribe()
+	passive_resource_functions.PassiveResourceFunctionDataType.Subscribe()
 	event_definitions.EventsDefinitionDataType.Subscribe()
 	event_criticalities.EventCriticalitiesDataType.Subscribe()
 	feasibility_constraint_definitions.FeasibilityConstraintDefinitionDataType.Subscribe()

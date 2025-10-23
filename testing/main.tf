@@ -290,7 +290,7 @@ module "resource_functions" {
 module "passive_resource_functions" {
   source                 = "./resources/passive_resource_functions"
   resource1_id            = module.resources.a_resource.id
-  resource2_id            = module.resources.a_second_resource.id
+  resource2_id            = module.resources.a_fourth_resource.id
   depends_on = [
     module.resources
   ]

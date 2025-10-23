@@ -27,8 +27,11 @@ var passiveResourceFunctionSchema = map[string]*schema.Schema{
 		Optional: true,
 	},
 	"control_bound": {
-		Type:     schema.TypeFloat,
-		Optional: true,
+		Type:        schema.TypeList,
+		Optional:    true,
+		MaxItems:    1,
+		Elem:        &schema.Schema{Type: schema.TypeFloat},
+		Description: "The function stops impacting the resource level once the controlBound is reached",
 	},
 	"formula": {
 		Type:     schema.TypeList,

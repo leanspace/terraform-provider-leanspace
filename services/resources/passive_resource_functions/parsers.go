@@ -11,7 +11,9 @@ func (passiveResourceFunction *PassiveResourceFunction) ToMap() map[string]any {
 	passiveResourceFunctionMap["id"] = passiveResourceFunction.ID
 	passiveResourceFunctionMap["resource_id"] = passiveResourceFunction.ResourceId
 	passiveResourceFunctionMap["name"] = passiveResourceFunction.Name
-	passiveResourceFunctionMap["control_bound"] = passiveResourceFunction.ControlBound
+	if passiveResourceFunction.ControlBound != nil {
+		passiveResourceFunctionMap["control_bound"] = []any{float64(*passiveResourceFunction.ControlBound)}
+	}
 	passiveResourceFunctionMap["formula"] = []map[string]any{passiveResourceFunction.Formula.ToMap()}
 	passiveResourceFunctionMap["tags"] = helper.ParseToMaps(passiveResourceFunction.Tags)
 	passiveResourceFunctionMap["created_at"] = passiveResourceFunction.CreatedAt
@@ -40,7 +42,15 @@ func (passiveResourceFunction *PassiveResourceFunction) FromMap(passiveResourceF
 	passiveResourceFunction.ID = passiveResourceFunctionMap["id"].(string)
 	passiveResourceFunction.ResourceId = passiveResourceFunctionMap["resource_id"].(string)
 	passiveResourceFunction.Name = passiveResourceFunctionMap["name"].(string)
-	passiveResourceFunction.ControlBound = passiveResourceFunctionMap["control_bound"].(float64)
+
+	if v, ok := passiveResourceFunctionMap["control_bound"]; ok && v != nil {
+		if list, ok := v.([]interface{}); ok && len(list) > 0 {
+			if floatVal, ok := list[0].(float64); ok {
+				passiveResourceFunction.ControlBound = &floatVal
+			}
+		}
+	}
+
 	if len(passiveResourceFunctionMap["formula"].([]any)) > 0 && passiveResourceFunctionMap["formula"].([]any)[0] != nil {
 		passiveResourceFunction.Formula = new(PassiveResourceFunctionFormula)
 		if err := passiveResourceFunction.Formula.FromMap(passiveResourceFunctionMap["formula"].([]any)[0].(map[string]any)); err != nil {
