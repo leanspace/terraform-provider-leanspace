@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     leanspace = {
-      source  = "leanspace/leanspace"
+      source = "leanspace/leanspace"
     }
   }
 }
@@ -276,13 +276,22 @@ module "resources" {
 
 module "resource_functions" {
   source                 = "./activities/resource_functions"
-  resource1_id            = module.resources.a_resource.id
-  resource2_id            = module.resources.a_second_resource.id
-  resource3_id            = module.resources.a_third_resource.id
-  resource4_id            = module.resources.a_fourth_resource.id
+  resource1_id           = module.resources.a_resource.id
+  resource2_id           = module.resources.a_second_resource.id
+  resource3_id           = module.resources.a_third_resource.id
+  resource4_id           = module.resources.a_fourth_resource.id
   activity_definition_id = module.activity_definitions.test_activity_definition.id
   depends_on = [
     module.activity_definitions,
+    module.resources
+  ]
+}
+
+module "passive_resource_functions" {
+  source       = "./resources/passive_resource_functions"
+  resource1_id = module.resources.a_resource.id
+  resource2_id = module.resources.a_fourth_resource.id
+  depends_on = [
     module.resources
   ]
 }

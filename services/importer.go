@@ -38,6 +38,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/requests/feasibility_constraint_definitions"
 	"github.com/leanspace/terraform-provider-leanspace/services/requests/request_definitions"
 	"github.com/leanspace/terraform-provider-leanspace/services/requests/request_states"
+	"github.com/leanspace/terraform-provider-leanspace/services/resources/passive_resource_functions"
 	"github.com/leanspace/terraform-provider-leanspace/services/resources/resources"
 	"github.com/leanspace/terraform-provider-leanspace/services/routes/processors"
 	"github.com/leanspace/terraform-provider-leanspace/services/routes/routes"
@@ -89,6 +90,7 @@ func AddDataTypes() {
 	satellite_links.LeafSpaceSatellitesLinkDataType.Subscribe()
 	contact_reservation_status_mappings.LeafSpaceContactReservationStatusMappingDataType.Subscribe()
 	resources.ResourceDataType.Subscribe()
+	passive_resource_functions.PassiveResourceFunctionDataType.Subscribe()
 	event_definitions.EventsDefinitionDataType.Subscribe()
 	event_criticalities.EventCriticalitiesDataType.Subscribe()
 	feasibility_constraint_definitions.FeasibilityConstraintDefinitionDataType.Subscribe()
