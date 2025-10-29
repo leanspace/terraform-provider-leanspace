@@ -2,6 +2,7 @@ package event_criticalities
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 var EventCriticalitiesSchema = map[string]*schema.Schema{
@@ -39,6 +40,7 @@ var EventCriticalitiesSchema = map[string]*schema.Schema{
 		Computed:    true,
 		Description: "Indicates if the object is read-only",
 	},
+	"tags": general_objects.KeyValuesSchema,
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{
