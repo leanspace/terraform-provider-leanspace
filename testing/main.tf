@@ -13,7 +13,6 @@ provider "leanspace" {
   client_secret = var.client_secret
 }
 
-
 module "nodes" {
   source = "./asset/nodes"
 }
@@ -45,7 +44,10 @@ module "pass_states" {
   source = "./pass/pass_states"
 }
 
-
+module "leaf_space_connection" {
+  source   = "./leaf_space_integration/connections"
+  password = var.leaf_space_password
+}
 
 module "leaf_space_contact_reservation_status_mappings" {
   source           = "./leaf_space_integration/contact_reservation_status_mappings"
