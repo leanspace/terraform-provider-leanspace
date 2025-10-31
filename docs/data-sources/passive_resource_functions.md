@@ -88,7 +88,6 @@ Read-Only:
 
 Read-Only:
 
-- `constant` (Number)
 - `rate` (Number)
 - `time_unit` (String)
 - `type` (String)

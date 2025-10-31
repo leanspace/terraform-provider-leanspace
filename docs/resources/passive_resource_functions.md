@@ -22,7 +22,6 @@ resource "leanspace_passive_resource_functions" "a_linear_passive_resource_funct
   resource_id   = var.resource_id
   control_bound = 100.0
   formula {
-    constant  = 5.0
     rate      = 2.5
     type      = "LINEAR"
     time_unit = "SECONDS"
@@ -61,7 +60,6 @@ resource "leanspace_passive_resource_functions" "a_linear_passive_resource_funct
 
 Required:
 
-- `constant` (Number)
 - `rate` (Number)
 - `time_unit` (String) it must be one of these values: SECONDS, MINUTES, HOURS, DAYS
 - `type` (String) it must be one of these values: LINEAR
