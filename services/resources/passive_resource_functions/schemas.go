@@ -66,10 +66,6 @@ var passiveResourceFunctionSchema = map[string]*schema.Schema{
 }
 
 var formulaSchema = map[string]*schema.Schema{
-	"constant": {
-		Type:     schema.TypeFloat,
-		Required: true,
-	},
 	"rate": {
 		Type:     schema.TypeFloat,
 		Required: true,

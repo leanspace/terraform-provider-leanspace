@@ -30,7 +30,6 @@ func (formula *PassiveResourceFunctionFormula) ToMap() map[string]any {
 	formulaMap["type"] = formula.Type
 
 	if formula.Type == "LINEAR" {
-		formulaMap["constant"] = formula.Constant
 		formulaMap["rate"] = formula.Rate
 		formulaMap["time_unit"] = formula.TimeUnit
 	}
@@ -73,7 +72,6 @@ func (formula *PassiveResourceFunctionFormula) FromMap(formulaMap map[string]any
 	formula.Type = formulaMap["type"].(string)
 
 	if formula.Type == "LINEAR" {
-		formula.Constant = formulaMap["constant"].(float64)
 		formula.Rate = formulaMap["rate"].(float64)
 		formula.TimeUnit = formulaMap["time_unit"].(string)
 	}

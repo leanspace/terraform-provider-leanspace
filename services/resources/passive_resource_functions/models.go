@@ -21,7 +21,6 @@ func (passiveResourceFunction *PassiveResourceFunction) GetID() string {
 
 type PassiveResourceFunctionFormula struct {
 	Type     string  `json:"type"`
-	Constant float64 `json:"constant"`
 	Rate     float64 `json:"rate"`
 	TimeUnit string  `json:"timeUnit"`
 }
