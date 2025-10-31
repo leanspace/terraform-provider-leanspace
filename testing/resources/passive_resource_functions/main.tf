@@ -33,7 +33,6 @@ resource "leanspace_passive_resource_functions" "a_linear_resource_function" {
   resource_id   = var.resource1_id
   control_bound = [25.0]
   formula {
-    constant  = 5.0
     rate      = 2.5
     type      = "LINEAR"
     time_unit = "SECONDS"
@@ -44,22 +43,10 @@ resource "leanspace_passive_resource_functions" "a_linear_resource_function" {
   }
 }
 
-resource "leanspace_passive_resource_functions" "a_linear_resource_function_with_0_constant" {
-  name        = "Terraform Linear Passive Resource Function With Constant At Zero"
-  resource_id = var.resource2_id
-  formula {
-    constant  = 0.0
-    rate      = 2.5
-    type      = "LINEAR"
-    time_unit = "SECONDS"
-  }
-}
-
 resource "leanspace_passive_resource_functions" "a_linear_resource_function_with_0_rate" {
   name        = "Terraform Linear Passive Resource Function With Rate At Zero"
   resource_id = var.resource2_id
   formula {
-    constant  = 5.0
     rate      = 0.0
     type      = "LINEAR"
     time_unit = "SECONDS"
@@ -71,7 +58,6 @@ resource "leanspace_passive_resource_functions" "a_linear_resource_function_with
   resource_id   = var.resource2_id
   control_bound = [0.0]
   formula {
-    constant  = 5.0
     rate      = 1.0
     type      = "LINEAR"
     time_unit = "SECONDS"
