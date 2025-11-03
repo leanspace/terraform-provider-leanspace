@@ -7,5 +7,9 @@ terraform {
 }
 
 resource "leanspace_event_criticalities" "test" {
-  name = "TERRAFORM_CRITICALITYT"
+  name = "TERRAFORM_CRITICALITY"
+  tags {
+    key   = "Mission"
+    value = "Terraform"
+  }
 }

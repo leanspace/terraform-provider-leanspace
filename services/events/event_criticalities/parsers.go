@@ -1,5 +1,11 @@
 package event_criticalities
 
+import (
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+)
+
 func (eventCriticality *EventCriticalities) ToMap() map[string]any {
 	eventCriticalityMap := make(map[string]any)
 	eventCriticalityMap["id"] = eventCriticality.ID
@@ -9,6 +15,7 @@ func (eventCriticality *EventCriticalities) ToMap() map[string]any {
 	eventCriticalityMap["last_modified_at"] = eventCriticality.LastModifiedAt
 	eventCriticalityMap["last_modified_by"] = eventCriticality.LastModifiedBy
 	eventCriticalityMap["read_only"] = eventCriticality.ReadOnly
+	eventCriticalityMap["tags"] = helper.ParseToMaps(eventCriticality.Tags)
 	return eventCriticalityMap
 }
 
@@ -20,5 +27,10 @@ func (eventCriticality *EventCriticalities) FromMap(eventCriticalityMap map[stri
 	eventCriticality.LastModifiedAt = eventCriticalityMap["last_modified_at"].(string)
 	eventCriticality.LastModifiedBy = eventCriticalityMap["last_modified_by"].(string)
 	eventCriticality.ReadOnly = eventCriticalityMap["read_only"].(bool)
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](eventCriticalityMap["tags"].(*schema.Set).List()); err != nil {
+		return err
+	} else {
+		eventCriticality.Tags = tags
+	}
 	return nil
 }
