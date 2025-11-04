@@ -17,6 +17,7 @@ resource "leanspace_events_definitions" "event" {
   source      = "STREAM_DECODED"
   state       = "ACTIVE"
   description = "A complex event definition, entirely created under terraform."
+  # criticality = "HIGH"  # Optional: Define the criticality level
   rules {
     operator = "EQUAL_TO"
     path     = "test"
@@ -45,6 +46,7 @@ resource "leanspace_events_definitions" "event" {
 
 ### Optional
 
+- `criticality` (String)
 - `description` (String)
 - `rules` (Block Set) (see [below for nested schema](#nestedblock--rules))
 - `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
