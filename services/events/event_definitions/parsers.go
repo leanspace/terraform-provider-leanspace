@@ -14,6 +14,9 @@ func (eventDefinition *EventsDefinition) ToMap() map[string]any {
 	eventDefinitionMap["name"] = eventDefinition.Name
 	eventDefinitionMap["description"] = eventDefinition.Description
 	eventDefinitionMap["source"] = eventDefinition.Source
+	if eventDefinition.Criticality != "" {
+		eventDefinitionMap["criticality"] = eventDefinition.Criticality
+	}
 	eventDefinitionMap["state"] = eventDefinition.State
 	if eventDefinition.Rules != nil {
 		eventDefinitionMap["rules"] = helper.ParseToMaps(eventDefinition.Rules)
@@ -59,6 +62,9 @@ func (eventDefinition *EventsDefinition) FromMap(eventDefinitionMap map[string]a
 	eventDefinition.Name = eventDefinitionMap["name"].(string)
 	eventDefinition.Source = eventDefinitionMap["source"].(string)
 	eventDefinition.State = eventDefinitionMap["state"].(string)
+	if criticality, ok := eventDefinitionMap["criticality"].(string); ok {
+		eventDefinition.Criticality = criticality
+	}
 	eventDefinition.Description = eventDefinitionMap["description"].(string)
 	eventDefinition.CreatedAt = eventDefinitionMap["created_at"].(string)
 	eventDefinition.CreatedBy = eventDefinitionMap["created_by"].(string)

@@ -8,6 +8,7 @@ type EventsDefinition struct {
 	Source         string                     `json:"source"`
 	State          string                     `json:"state"`
 	Description    string                     `json:"description,omitempty"`
+	Criticality    string                     `json:"criticality,omitempty"`
 	Rules          []Rules[any]               `json:"rules,omitempty"`
 	CreatedAt      string                     `json:"createdAt"`
 	CreatedBy      string                     `json:"createdBy"`

@@ -45,6 +45,7 @@ resource "leanspace_events_definitions" "event" {
 
 ### Optional
 
+- `criticality` (String)
 - `description` (String)
 - `rules` (Block Set) (see [below for nested schema](#nestedblock--rules))
 - `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
