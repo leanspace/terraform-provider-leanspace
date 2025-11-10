@@ -32,7 +32,7 @@ module "event_criticalities" {
 
 module "event_definitions" {
   depends_on = [module.event_criticalities]
-  source = "./events/event_definitions"
+  source     = "./events/event_definitions"
 }
 module "command_states" {
   source = "./commands/command_states"
