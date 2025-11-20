@@ -14,6 +14,10 @@ description: |-
 ```terraform
 resource "leanspace_event_criticalities" "event" {
   name = "EVENT_CRITICALITY"
+  tags {
+    key   = "Mission"
+    value = "Terraform"
+  }
 
 }
 ```
@@ -25,6 +29,10 @@ resource "leanspace_event_criticalities" "event" {
 
 - `name` (String)
 
+### Optional
+
+- `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
+
 ### Read-Only
 
 - `created_at` (String) When it was created
@@ -33,3 +41,14 @@ resource "leanspace_event_criticalities" "event" {
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
 - `read_only` (Boolean) Indicates if the object is read-only
+
+<a id="nestedblock--tags"></a>
+### Nested Schema for `tags`
+
+Required:
+
+- `key` (String)
+
+Optional:
+
+- `value` (String)

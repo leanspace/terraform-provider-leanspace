@@ -65,6 +65,7 @@ Read-Only:
 
 - `created_at` (String)
 - `created_by` (String)
+- `criticality` (String)
 - `description` (String)
 - `id` (String)
 - `last_modified_at` (String)
