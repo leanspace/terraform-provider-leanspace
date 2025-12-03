@@ -61,33 +61,29 @@ func (resource *Resource) FromMap(resourceMap map[string]any) error {
 	resource.DefaultLevel = resourceMap["default_level"].(float64)
 
 	if resourceMap["constraints"] != nil {
-		if constraints, err := helper.ParseFromMaps[ResourceConstraints](
-			resourceMap["constraints"].(*schema.Set).List(),
-		); err != nil {
+		constraints, err := helper.ParseFromMaps[ResourceConstraints](resourceMap["constraints"].(*schema.Set).List())
+		if err != nil {
 			return err
-		} else {
-			resource.Constraints = constraints
 		}
+		resource.Constraints = constraints
 	}
 
 	resource.LowerLimit = resourceMap["lower_limit"].(float64)
 	resource.UpperLimit = resourceMap["upper_limit"].(float64)
 
 	if resourceMap["thresholds"] != nil {
-		if thresholds, err := helper.ParseFromMaps[ResourceThreshold](
-			resourceMap["thresholds"].(*schema.Set).List(),
-		); err != nil {
+		thresholds, err := helper.ParseFromMaps[ResourceThreshold](resourceMap["thresholds"].(*schema.Set).List())
+		if err != nil {
 			return err
-		} else {
-			resource.Thresholds = thresholds
 		}
+		resource.Thresholds = thresholds
 	}
 
-	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](resourceMap["tags"].(*schema.Set).List()); err != nil {
+	tags, err := helper.ParseFromMaps[general_objects.KeyValue](resourceMap["tags"].(*schema.Set).List())
+	if err != nil {
 		return err
-	} else {
-		resource.Tags = tags
 	}
+	resource.Tags = tags
 
 	resource.CreatedAt = resourceMap["created_at"].(string)
 	resource.CreatedBy = resourceMap["created_by"].(string)
