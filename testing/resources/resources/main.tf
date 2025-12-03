@@ -29,19 +29,19 @@ data "leanspace_resources" "all" {
 }
 
 resource "leanspace_resources" "a_resource" {
-  name      = "Terraform Resource"
-  asset_id  = var.asset_id
-  metric_id = var.metric_id
+  name        = "Terraform Resource"
+  asset_id    = var.asset_id
+  metric_id   = var.metric_id
   upper_limit = 50.0
   lower_limit = 0.0
   thresholds {
-    kind  = "UPPER"
-    value = 35.0
+    kind                   = "UPPER"
+    value                  = 35.0
     violation_when_reached = true
   }
   thresholds {
-    kind  = "LOWER"
-    value = 10.0
+    kind                   = "LOWER"
+    value                  = 10.0
     violation_when_reached = true
   }
   tags {
@@ -51,9 +51,9 @@ resource "leanspace_resources" "a_resource" {
 }
 
 resource "leanspace_resources" "a_second_resource" {
-  name      = "Terraform Resource 2"
-  asset_id  = var.asset_id
-  metric_id = var.metric_id
+  name        = "Terraform Resource 2"
+  asset_id    = var.asset_id
+  metric_id   = var.metric_id
   upper_limit = 50.0
   lower_limit = 0.0
   tags {
@@ -63,9 +63,9 @@ resource "leanspace_resources" "a_second_resource" {
 }
 
 resource "leanspace_resources" "a_third_resource" {
-  name      = "Terraform Resource 3"
-  asset_id  = var.asset_id
-  metric_id = var.metric_id
+  name        = "Terraform Resource 3"
+  asset_id    = var.asset_id
+  metric_id   = var.metric_id
   upper_limit = 50.0
   lower_limit = 0.0
   tags {
@@ -85,33 +85,33 @@ resource "leanspace_resources" "a_fourth_resource" {
 }
 
 resource "leanspace_resources" "a_resource_with_lower_limit_upper_limit_and_thresholds" {
-  name      = "Terraform Resource 5"
-  asset_id  = var.asset_id
-  metric_id = var.metric_id
+  name          = "Terraform Resource 5"
+  asset_id      = var.asset_id
+  metric_id     = var.metric_id
   default_level = 10.0
-  lower_limit = 5.0
-  upper_limit = 15.0
+  lower_limit   = 5.0
+  upper_limit   = 15.0
   thresholds {
-    name = "lower threshold not causing violation"
+    name  = "lower threshold not causing violation"
     value = 9.0
-    kind = "LOWER"
+    kind  = "LOWER"
   }
   thresholds {
-    name = "lower threshold causing violation"
-    value = 6.0
+    name                   = "lower threshold causing violation"
+    value                  = 6.0
     violation_when_reached = true
-    kind = "LOWER"
+    kind                   = "LOWER"
   }
   thresholds {
-    name = "upper threshold not causing violation"
+    name  = "upper threshold not causing violation"
     value = 11.0
-    kind = "UPPER"
+    kind  = "UPPER"
   }
   thresholds {
-    name = "upper threshold causing violation"
-    value = 14.0
+    name                   = "upper threshold causing violation"
+    value                  = 14.0
     violation_when_reached = true
-    kind = "UPPER"
+    kind                   = "UPPER"
   }
   tags {
     key   = "Mission"
