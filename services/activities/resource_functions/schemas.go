@@ -43,7 +43,7 @@ var resourceFunctionSchema = map[string]*schema.Schema{
 	"time_unit": {
 		Type:         schema.TypeString,
 		Optional:     true,
-		Deprecated: "This is replaced by the field time_unit in the formula",
+		Deprecated:   "Prefer using the time_unit field in the formula instead",
 		ValidateFunc: validation.StringInSlice(validResourceFunctionTimeUnits, false),
 		Description:  helper.AllowedValuesToDescription(validResourceFunctionTimeUnits),
 	},
