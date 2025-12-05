@@ -32,8 +32,8 @@ resource "leanspace_resources" "a_resource" {
   name        = "Terraform Resource"
   asset_id    = var.asset_id
   metric_id   = var.metric_id
-  upper_limit = 50.0
-  lower_limit = 0.0
+  upper_limit = [50.0]
+  lower_limit = [0.0]
   thresholds {
     kind                   = "UPPER"
     value                  = 35.0
@@ -54,8 +54,8 @@ resource "leanspace_resources" "a_second_resource" {
   name        = "Terraform Resource 2"
   asset_id    = var.asset_id
   metric_id   = var.metric_id
-  upper_limit = 50.0
-  lower_limit = 0.0
+  upper_limit = [50.0]
+  lower_limit = [0.0]
   tags {
     key   = "Mission"
     value = "Terraform"
@@ -66,8 +66,8 @@ resource "leanspace_resources" "a_third_resource" {
   name        = "Terraform Resource 3"
   asset_id    = var.asset_id
   metric_id   = var.metric_id
-  upper_limit = 50.0
-  lower_limit = 0.0
+  upper_limit = [50.0]
+  lower_limit = [0.0]
   tags {
     key   = "Mission"
     value = "Terraform"
@@ -87,10 +87,9 @@ resource "leanspace_resources" "a_fourth_resource" {
 resource "leanspace_resources" "a_resource_with_lower_limit_upper_limit_and_thresholds" {
   name          = "Terraform Resource 5"
   asset_id      = var.asset_id
-  metric_id     = var.metric_id
   default_level = 10.0
-  lower_limit   = 5.0
-  upper_limit   = 15.0
+  lower_limit   = [5.0]
+  upper_limit   = [15.0]
   thresholds {
     name  = "lower threshold not causing violation"
     value = 9.0

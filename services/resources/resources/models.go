@@ -13,8 +13,8 @@ type Resource struct {
 	Description    string                     `json:"description"`
 	DefaultLevel   float64                    `json:"defaultLevel"`
 	Constraints    []ResourceConstraints      `json:"constraints,omitempty"`
-	LowerLimit     float64                    `json:"lowerLimit,omitempty"`
-	UpperLimit     float64                    `json:"upperLimit,omitempty"`
+	LowerLimit     *float64                   `json:"lowerLimit"`
+	UpperLimit     *float64                   `json:"upperLimit"`
 	Thresholds     []ResourceThreshold        `json:"thresholds,omitempty"`
 	Tags           []general_objects.KeyValue `json:"tags,omitempty"`
 	CreatedAt      string                     `json:"createdAt"`
@@ -29,12 +29,12 @@ type ResourceConstraints struct {
 	Type  string  `json:"type"`
 	Kind  string  `json:"kind"`
 	Value float64 `json:"value"`
-	Name  string  `json:"name"`
+	Name  string  `json:"name,omitempty"`
 }
 
 type ResourceThreshold struct {
 	Kind                 string  `json:"kind"`
-	Name                 string  `json:"name"`
+	Name                 string  `json:"name,omitempty"`
 	ViolationWhenReached bool    `json:"violationWhenReached"`
 	Value                float64 `json:"value"`
 }

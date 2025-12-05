@@ -55,12 +55,16 @@ var resourceSchema = map[string]*schema.Schema{
 		},
 	},
 	"lower_limit": {
-		Type:     schema.TypeFloat,
+		Type:     schema.TypeList,
 		Optional: true,
+		MaxItems: 1,
+		Elem:     &schema.Schema{Type: schema.TypeFloat},
 	},
 	"upper_limit": {
-		Type:     schema.TypeFloat,
+		Type:     schema.TypeList,
 		Optional: true,
+		MaxItems: 1,
+		Elem:     &schema.Schema{Type: schema.TypeFloat},
 	},
 	"thresholds": {
 		Type:        schema.TypeSet,

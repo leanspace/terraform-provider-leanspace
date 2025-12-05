@@ -19,8 +19,14 @@ func (resource *Resource) ToMap() map[string]any {
 	if resource.Constraints != nil {
 		resourceMap["constraints"] = helper.ParseToMaps(resource.Constraints)
 	}
-	resourceMap["upper_limit"] = resource.UpperLimit
-	resourceMap["lower_limit"] = resource.LowerLimit
+
+	if resource.UpperLimit != nil {
+		resourceMap["upper_limit"] = []any{float64(*resource.UpperLimit)}
+	}
+	if resource.LowerLimit != nil {
+		resourceMap["lower_limit"] = []any{float64(*resource.LowerLimit)}
+	}
+
 	if resource.Thresholds != nil {
 		resourceMap["thresholds"] = helper.ParseToMaps(resource.Thresholds)
 	}
@@ -33,12 +39,12 @@ func (resource *Resource) ToMap() map[string]any {
 	return resourceMap
 }
 
-func (thresholds *ResourceConstraints) ToMap() map[string]any {
+func (constraints *ResourceConstraints) ToMap() map[string]any {
 	constraintsMap := make(map[string]any)
-	constraintsMap["type"] = thresholds.Type
-	constraintsMap["kind"] = thresholds.Kind
-	constraintsMap["name"] = thresholds.Name
-	constraintsMap["value"] = thresholds.Value
+	constraintsMap["type"] = constraints.Type
+	constraintsMap["kind"] = constraints.Kind
+	constraintsMap["name"] = constraints.Name
+	constraintsMap["value"] = constraints.Value
 	return constraintsMap
 }
 
@@ -68,8 +74,20 @@ func (resource *Resource) FromMap(resourceMap map[string]any) error {
 		resource.Constraints = constraints
 	}
 
-	resource.LowerLimit = resourceMap["lower_limit"].(float64)
-	resource.UpperLimit = resourceMap["upper_limit"].(float64)
+	if v, ok := resourceMap["lower_limit"]; ok && v != nil {
+		if list, ok := v.([]interface{}); ok && len(list) > 0 {
+			if floatVal, ok := list[0].(float64); ok {
+				resource.LowerLimit = &floatVal
+			}
+		}
+	}
+	if v, ok := resourceMap["upper_limit"]; ok && v != nil {
+		if list, ok := v.([]interface{}); ok && len(list) > 0 {
+			if floatVal, ok := list[0].(float64); ok {
+				resource.UpperLimit = &floatVal
+			}
+		}
+	}
 
 	if resourceMap["thresholds"] != nil {
 		thresholds, err := helper.ParseFromMaps[ResourceThreshold](resourceMap["thresholds"].(*schema.Set).List())
@@ -93,11 +111,11 @@ func (resource *Resource) FromMap(resourceMap map[string]any) error {
 	return nil
 }
 
-func (thresholds *ResourceConstraints) FromMap(constraintsMap map[string]any) error {
-	thresholds.Type = constraintsMap["type"].(string)
-	thresholds.Kind = constraintsMap["kind"].(string)
-	thresholds.Value = constraintsMap["value"].(float64)
-	thresholds.Name = constraintsMap["name"].(string)
+func (constraints *ResourceConstraints) FromMap(constraintsMap map[string]any) error {
+	constraints.Type = constraintsMap["type"].(string)
+	constraints.Kind = constraintsMap["kind"].(string)
+	constraints.Value = constraintsMap["value"].(float64)
+	constraints.Name = constraintsMap["name"].(string)
 	return nil
 }
 
