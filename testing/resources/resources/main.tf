@@ -92,7 +92,7 @@ resource "leanspace_resources" "a_fourth_resource" {
 resource "leanspace_resources" "a_resource_with_lower_limit_upper_limit_and_thresholds" {
   name          = "Terraform Resource 5"
   asset_id      = var.asset_id
-  unit_id = var.unit_id
+  unit_id       = var.unit_id
   default_level = 10.0
   lower_limit   = [5.0]
   upper_limit   = [15.0]
