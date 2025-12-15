@@ -84,10 +84,13 @@ Read-Only:
 - `id` (String)
 - `last_modified_at` (String)
 - `last_modified_by` (String)
+- `lower_limit` (List of Number)
 - `metric_id` (String)
 - `name` (String)
 - `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
+- `thresholds` (Set of Object) (see [below for nested schema](#nestedobjatt--content--thresholds))
 - `unit_id` (String)
+- `upper_limit` (List of Number)
 
 <a id="nestedobjatt--content--constraints"></a>
 ### Nested Schema for `content.constraints`
@@ -95,6 +98,7 @@ Read-Only:
 Read-Only:
 
 - `kind` (String)
+- `name` (String)
 - `type` (String)
 - `value` (Number)
 
@@ -106,6 +110,17 @@ Read-Only:
 
 - `key` (String)
 - `value` (String)
+
+
+<a id="nestedobjatt--content--thresholds"></a>
+### Nested Schema for `content.thresholds`
+
+Read-Only:
+
+- `kind` (String)
+- `name` (String)
+- `value` (Number)
+- `violation_when_reached` (Boolean)
 
 
 
