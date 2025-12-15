@@ -8,8 +8,8 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var validIdealResourceConstraintTypes = []string{"LIMIT", "THRESHOLD"}
-var validIdealResourceConstraintKinds = []string{"UPPER", "LOWER"}
+var validResourceConstraintTypes = []string{"LIMIT", "THRESHOLD"}
+var validResourceConstraintKinds = []string{"UPPER", "LOWER"}
 
 var resourceSchema = map[string]*schema.Schema{
 	"id": {
@@ -47,10 +47,31 @@ var resourceSchema = map[string]*schema.Schema{
 		Optional: true,
 	},
 	"constraints": {
-		Type:     schema.TypeSet,
-		Optional: true,
+		Type:       schema.TypeSet,
+		Deprecated: "Prefer using the lowerLimit, upperLimit and thresholds fields",
+		Optional:   true,
 		Elem: &schema.Resource{
 			Schema: resourceConstraintsSchema,
+		},
+	},
+	"lower_limit": {
+		Type:     schema.TypeList,
+		Optional: true,
+		MaxItems: 1,
+		Elem:     &schema.Schema{Type: schema.TypeFloat},
+	},
+	"upper_limit": {
+		Type:     schema.TypeList,
+		Optional: true,
+		MaxItems: 1,
+		Elem:     &schema.Schema{Type: schema.TypeFloat},
+	},
+	"thresholds": {
+		Type:        schema.TypeSet,
+		Optional:    true,
+		Description: "Currently, at most three LOWER and three UPPER thresholds can be set",
+		Elem: &schema.Resource{
+			Schema: resourceThresholdSchema,
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
@@ -80,14 +101,41 @@ var resourceConstraintsSchema = map[string]*schema.Schema{
 	"type": {
 		Type:         schema.TypeString,
 		Required:     true,
-		ValidateFunc: validation.StringInSlice(validIdealResourceConstraintTypes, false),
-		Description:  helper.AllowedValuesToDescription(validIdealResourceConstraintTypes),
+		ValidateFunc: validation.StringInSlice(validResourceConstraintTypes, false),
+		Description:  helper.AllowedValuesToDescription(validResourceConstraintTypes),
 	},
 	"kind": {
 		Type:         schema.TypeString,
 		Required:     true,
-		ValidateFunc: validation.StringInSlice(validIdealResourceConstraintKinds, false),
-		Description:  helper.AllowedValuesToDescription(validIdealResourceConstraintKinds),
+		ValidateFunc: validation.StringInSlice(validResourceConstraintKinds, false),
+		Description:  helper.AllowedValuesToDescription(validResourceConstraintKinds),
+	},
+	"value": {
+		Type:     schema.TypeFloat,
+		Required: true,
+	},
+	"name": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: helper.IsValidName,
+	},
+}
+
+var resourceThresholdSchema = map[string]*schema.Schema{
+	"kind": {
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.StringInSlice(validResourceConstraintKinds, false),
+		Description:  helper.AllowedValuesToDescription(validResourceConstraintKinds),
+	},
+	"name": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: helper.IsValidName,
+	},
+	"violation_when_reached": {
+		Type:     schema.TypeBool,
+		Optional: true,
 	},
 	"value": {
 		Type:     schema.TypeFloat,

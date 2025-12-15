@@ -270,6 +270,7 @@ module "resources" {
   source    = "./resources/resources"
   asset_id  = module.nodes.satellite_node.id
   metric_id = module.metrics.test_numeric_metric.id
+  unit_id   = module.units.test_units.k.id
   depends_on = [
     module.nodes,
     module.metrics
