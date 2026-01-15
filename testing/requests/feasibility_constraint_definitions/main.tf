@@ -17,7 +17,7 @@ data "leanspace_feasibility_constraint_definitions" "all" {
 }
 
 resource "leanspace_feasibility_constraint_definitions" "created" {
-  name        = "feasibilityConstraintDefinitionFromTerraform"
+  name        = "Terraform FeasibilityConstraintDefinition"
   description = "feasibilityConstraintDefinitionTerraformDescription"
   argument_definitions {
     name        = "TextArgumentDefinition"
