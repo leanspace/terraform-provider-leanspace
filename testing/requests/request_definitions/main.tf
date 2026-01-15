@@ -29,7 +29,7 @@ data "leanspace_request_definitions" "all" {
 }
 
 resource "leanspace_request_definitions" "created" {
-  name              = "requestDefinitionFromTerraform"
+  name              = "Terraform RequestDefinition"
   description       = "requestDefinitionTerraformDescription"
   plan_template_ids = [var.plan_template_id]
   feasibility_constraint_definitions {
