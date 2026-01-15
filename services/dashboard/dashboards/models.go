@@ -33,19 +33,21 @@ type WidgetInfo struct {
 }
 
 type DashboardWidget struct {
-	ID             string                     `json:"id"`
-	Name           string                     `json:"name"`
-	Description    string                     `json:"description,omitempty"`
-	Type           string                     `json:"type"`
-	Granularity    string                     `json:"granularity"`
-	Series         []widgets.Series           `json:"series"`
-	Metadata       widgets.Metadata           `json:"metadata"`
-	View           WidgetView                 `json:"view"`
-	Tags           []general_objects.KeyValue `json:"tags,omitempty"`
-	CreatedAt      string                     `json:"createdAt"`
-	CreatedBy      string                     `json:"createdBy"`
-	LastModifiedAt string                     `json:"lastModifiedAt"`
-	LastModifiedBy string                     `json:"lastModifiedBy"`
+	ID                   string                     `json:"id"`
+	Name                 string                     `json:"name"`
+	Description          string                     `json:"description,omitempty"`
+	Type                 string                     `json:"type"`
+	Granularity          string                     `json:"granularity"`
+	QueryTimeDimension   string                     `json:"queryTimeDimension"`
+	DisplayTimeDimension string                     `json:"displayTimeDimension"`
+	Series               []widgets.Series           `json:"series"`
+	Metadata             widgets.Metadata           `json:"metadata"`
+	View                 WidgetView                 `json:"view"`
+	Tags                 []general_objects.KeyValue `json:"tags,omitempty"`
+	CreatedAt            string                     `json:"createdAt"`
+	CreatedBy            string                     `json:"createdBy"`
+	LastModifiedAt       string                     `json:"lastModifiedAt"`
+	LastModifiedBy       string                     `json:"lastModifiedBy"`
 }
 
 type WidgetView struct {

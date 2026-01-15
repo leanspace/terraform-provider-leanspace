@@ -132,6 +132,14 @@ var dashboardWidgetSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Computed: true,
 	},
+	"query_time_dimension": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"display_time_dimension": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
 	"series": {
 		Type:     schema.TypeList,
 		Computed: true,
@@ -178,6 +186,10 @@ var dashboardWidgetSchema = map[string]*schema.Schema{
 
 var seriesSchema = map[string]*schema.Schema{
 	"id": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"name": {
 		Type:     schema.TypeString,
 		Computed: true,
 	},
