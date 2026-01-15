@@ -76,12 +76,14 @@ Read-Only:
 - `created_by` (String)
 - `dashboards` (Set of Object) (see [below for nested schema](#nestedobjatt--content--dashboards))
 - `description` (String)
+- `display_time_dimension` (String)
 - `granularity` (String)
 - `id` (String)
 - `last_modified_at` (String)
 - `last_modified_by` (String)
 - `metadata` (List of Object) (see [below for nested schema](#nestedobjatt--content--metadata))
 - `name` (String)
+- `query_time_dimension` (String)
 - `series` (Set of Object) (see [below for nested schema](#nestedobjatt--content--series))
 - `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
 - `type` (String)
@@ -125,6 +127,7 @@ Read-Only:
 - `datasource` (String)
 - `filters` (Set of Object) (see [below for nested schema](#nestedobjatt--content--series--filters))
 - `id` (String)
+- `name` (String)
 
 <a id="nestedobjatt--content--series--filters"></a>
 ### Nested Schema for `content.series.filters`
