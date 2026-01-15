@@ -16,6 +16,7 @@ var validGranularities = []string{"second", "minute", "hour", "day", "week", "mo
 var validDatasources = []string{"metric", "raw_stream", "resources", "topology", "orbits", "ground_stations", "areas_of_interest"}
 var validAggregations = []string{"avg", "count", "sum", "min", "max", "none"}
 var validFilterOperators = []string{"gt", "lt", "equals", "notEquals"}
+var validTimeDimensions = []string{"timestamp", "received_at", "ingested_at"}
 
 var colorRegex = regexp.MustCompile(`^#(?:[0-9a-fA-F]{3}){1,2}$`)
 
@@ -43,6 +44,20 @@ var widgetSchema = map[string]*schema.Schema{
 		Required:     true,
 		ValidateFunc: validation.StringInSlice(validGranularities, false),
 		Description:  helper.AllowedValuesToDescription(validGranularities),
+	},
+	"query_time_dimension": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		Default:      "timestamp",
+		ValidateFunc: validation.StringInSlice(validTimeDimensions, false),
+		Description:  helper.AllowedValuesToDescription(validTimeDimensions),
+	},
+	"display_time_dimension": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		Default:      "timestamp",
+		ValidateFunc: validation.StringInSlice(validTimeDimensions, false),
+		Description:  helper.AllowedValuesToDescription(validTimeDimensions),
 	},
 	"series": {
 		Type:     schema.TypeSet,
@@ -94,6 +109,11 @@ var seriesSchema = map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
 		Required: true,
+	},
+	"name": {
+		Type:     schema.TypeString,
+		Optional: true,
+		Default:  "The datasource's name",
 	},
 	"datasource": {
 		Type:         schema.TypeString,

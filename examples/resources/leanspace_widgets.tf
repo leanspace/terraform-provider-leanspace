@@ -28,8 +28,11 @@ resource "leanspace_widgets" "test_table" {
   description = "A table widget created with Terraform"
   type        = "TABLE"
   granularity = "raw"
+  query_time_dimension = "received_at"
+  display_time_dimension = "timestamp"
   series {
     id          = var.text_metric_id
+    name        = "Text Metric Series"
     datasource  = "metric"
     aggregation = "none"
   }
@@ -44,8 +47,11 @@ resource "leanspace_widgets" "test_line" {
   description = "A line widget created with Terraform"
   type        = "LINE"
   granularity = "second"
+  query_time_dimension = "timestamp"
+  display_time_dimension = "timestamp"
   series {
     id          = var.numeric_metric_id
+    name        = "Numeric Metric Series"
     datasource  = "metric"
     aggregation = "avg"
     filters {
@@ -69,8 +75,11 @@ resource "leanspace_widgets" "test_enum" {
   description = "An enum widget created with Terraform"
   type        = "ENUM"
   granularity = "second"
+  query_time_dimension = "received_at"
+  display_time_dimension = "ingested_at"
   series {
     id          = var.enum_metric_id
+    name        = "Enum Metric Series"
     datasource  = "metric"
     aggregation = "avg"
     filters {
@@ -114,8 +123,11 @@ resource "leanspace_widgets" "test_gauge" {
   description = "A gauge widget created with Terraform"
   type        = "GAUGE"
   granularity = "second"
+  query_time_dimension = "ingested_at"
+  display_time_dimension = "ingested_at"
   series {
     id          = var.numeric_metric_id
+    name        = "Numeric Metric Series"
     datasource  = "metric"
     aggregation = "avg"
   }
@@ -147,8 +159,11 @@ resource "leanspace_widgets" "test_bar" {
   description = "A bar widget created with Terraform"
   type        = "BAR"
   granularity = "hour"
+  query_time_dimension = "received_at"
+  display_time_dimension = "timestamp"
   series {
     id          = "error_code"
+    name        = "Error Code Series"
     datasource  = "raw_stream"
     aggregation = "count"
     filters {
@@ -172,8 +187,11 @@ resource "leanspace_widgets" "test_area" {
   description = "An area widget created with Terraform"
   type        = "AREA"
   granularity = "day"
+  query_time_dimension = "timestamp"
+  display_time_dimension = "timestamp"
   series {
     id          = var.numeric_metric_id
+    name        = "Numeric Metric Series"
     datasource  = "metric"
     aggregation = "max"
     filters {
@@ -198,8 +216,11 @@ resource "leanspace_widgets" "test_value" {
   description = "A value widget created with Terraform"
   type        = "VALUE"
   granularity = "minute"
+  query_time_dimension = "received_at"
+  display_time_dimension = "timestamp"
   series {
     id          = var.text_metric_id
+    name        = "Text Metric Series"
     datasource  = "metric"
     aggregation = "max"
   }

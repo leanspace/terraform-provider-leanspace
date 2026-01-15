@@ -16,6 +16,8 @@ func (widget *Widget) ToMap() map[string]any {
 	widgetMap["description"] = widget.Description
 	widgetMap["type"] = widget.Type
 	widgetMap["granularity"] = widget.Granularity
+	widgetMap["query_time_dimension"] = widget.QueryTimeDimension
+	widgetMap["display_time_dimension"] = widget.DisplayTimeDimension
 	widgetMap["series"] = helper.ParseToMaps(widget.Series)
 	if metadataMap := widget.Metadata.ToMap(); metadataMap != nil {
 		widgetMap["metadata"] = []any{metadataMap}
@@ -32,6 +34,7 @@ func (widget *Widget) ToMap() map[string]any {
 func (series *Series) ToMap() map[string]any {
 	seriesMap := make(map[string]any)
 	seriesMap["id"] = series.ID
+	seriesMap["name"] = series.Name
 	seriesMap["datasource"] = series.Datasource
 	seriesMap["aggregation"] = series.Aggregation
 	seriesMap["filters"] = helper.ParseToMaps(series.Filters)
@@ -96,6 +99,8 @@ func (widget *Widget) FromMap(widgetMap map[string]any) error {
 	widget.Description = widgetMap["description"].(string)
 	widget.Type = widgetMap["type"].(string)
 	widget.Granularity = widgetMap["granularity"].(string)
+	widget.QueryTimeDimension = widgetMap["query_time_dimension"].(string)
+	widget.DisplayTimeDimension = widgetMap["display_time_dimension"].(string)
 	if series, err := helper.ParseFromMaps[Series](widgetMap["series"].(*schema.Set).List()); err != nil {
 		return err
 	} else {
@@ -125,6 +130,7 @@ func (widget *Widget) FromMap(widgetMap map[string]any) error {
 
 func (series *Series) FromMap(seriesMap map[string]any) error {
 	series.ID = seriesMap["id"].(string)
+	series.Name = seriesMap["name"].(string)
 	series.Datasource = seriesMap["datasource"].(string)
 	series.Aggregation = seriesMap["aggregation"].(string)
 	if filters, err := helper.ParseFromMaps[Filter](seriesMap["filters"].(*schema.Set).List()); err != nil {
