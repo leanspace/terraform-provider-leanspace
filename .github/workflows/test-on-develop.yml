@@ -137,7 +137,8 @@ jobs:
         run: |
             summary_line=$(terraform apply -no-color -auto-approve -input=false)
             if [ $? -eq 0 ]; then
-              changes=$(echo "$summary_line" | sed -nE 's/(.*)resource \"([a-z_-]+)\" +\"([a-z_-]+)\" +\{/\2 \3<br>/p' | sort | uniq)
+              content_after_actions=$(echo "$summary_line" | sed -n '/Terraform will perform the following actions:/,$p')
+              changes=$(echo "$content_after_actions" | sed -nE 's/(.*)resource \"([a-z_-]+)\" +\"([a-z_A-Z0-9-]+)\" +\{/\2 \3<br>/p' | sort | uniq)
               echo "changes<<EOF" >> $GITHUB_OUTPUT
               echo "$changes" >> $GITHUB_OUTPUT
               echo "EOF" >> $GITHUB_OUTPUT
