@@ -111,9 +111,9 @@ var seriesSchema = map[string]*schema.Schema{
 		Required: true,
 	},
 	"name": {
-		Type:     schema.TypeString,
-		Optional: true,
-		Default:  "The datasource's name",
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: "The datasource's name",
 	},
 	"datasource": {
 		Type:         schema.TypeString,
