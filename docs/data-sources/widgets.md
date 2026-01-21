@@ -84,7 +84,7 @@ Read-Only:
 - `metadata` (List of Object) (see [below for nested schema](#nestedobjatt--content--metadata))
 - `name` (String)
 - `query_time_dimension` (String)
-- `series` (Set of Object) (see [below for nested schema](#nestedobjatt--content--series))
+- `series` (List of Object) (see [below for nested schema](#nestedobjatt--content--series))
 - `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
 - `type` (String)
 
