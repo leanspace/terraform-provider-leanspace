@@ -145,7 +145,7 @@ var geoPointFieldsSchema = map[string]*schema.Schema{
 		MaxItems: 1,
 		Required: true,
 		Elem: &schema.Resource{
-			Schema: propertyFieldSchema,
+			Schema: propertyFieldSchema(true),
 		},
 	},
 	"longitude": {
@@ -153,7 +153,7 @@ var geoPointFieldsSchema = map[string]*schema.Schema{
 		MaxItems: 1,
 		Required: true,
 		Elem: &schema.Resource{
-			Schema: propertyFieldSchema,
+			Schema: propertyFieldSchema(true),
 		},
 	},
 	"elevation": {
@@ -161,44 +161,59 @@ var geoPointFieldsSchema = map[string]*schema.Schema{
 		MaxItems: 1,
 		Required: true,
 		Elem: &schema.Resource{
-			Schema: propertyFieldSchema,
+			Schema: propertyFieldSchema(false),
 		},
 	},
 }
 
-var propertyFieldSchema = map[string]*schema.Schema{
-	"value": {
-		Type:     schema.TypeString,
-		Optional: true,
-	},
-
-	// Numeric only
-	"scale": {
-		Type:        schema.TypeInt,
-		Optional:    true,
-		Description: "Property field with numeric type only: the scale required.",
-	},
-	"unit_id": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.IsUUID,
-		Description:  "Property field with numeric type only",
-	},
-	"min": {
+func propertyFieldSchema(computedMinMax bool) map[string]*schema.Schema {
+	minField := &schema.Schema{
 		Type:        schema.TypeFloat,
-		Optional:    true,
 		Description: "Property field with numeric type only: the minimum value allowed.",
-	},
-	"precision": {
-		Type:        schema.TypeInt,
-		Optional:    true,
-		Description: "Property field with numeric type only: How many values after the comma should be accepted",
-	},
-	"max": {
+	}
+	if computedMinMax {
+		minField.Computed = true
+	} else {
+		minField.Optional = true
+	}
+
+	maxField := &schema.Schema{
 		Type:        schema.TypeFloat,
 		Optional:    true,
 		Description: "Property field with numeric type only: the maximum value allowed.",
-	},
+	}
+	if computedMinMax {
+		maxField.Computed = true
+	} else {
+		maxField.Optional = true
+	}
+
+	return map[string]*schema.Schema{
+		"value": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+
+		// Numeric only
+		"scale": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Property field with numeric type only: the scale required.",
+		},
+		"unit_id": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: validation.IsUUID,
+			Description:  "Property field with numeric type only",
+		},
+		"min": minField,
+		"precision": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Property field with numeric type only: How many values after the comma should be accepted",
+		},
+		"max": maxField,
+	}
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{

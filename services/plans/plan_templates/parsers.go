@@ -92,7 +92,7 @@ func (formula *ResourceFunctionFormula) ToMap() map[string]any {
 	}
 
 	if formula.Type == "RECTANGULAR" {
-		formulaMap["amplitude"] = formula.Amplitude
+		formulaMap["amplitude"] = *formula.Amplitude
 	}
 
 	return formulaMap
@@ -231,7 +231,10 @@ func (formula *ResourceFunctionFormula) FromMap(formulaMap map[string]any) error
 	}
 
 	if formula.Type == "RECTANGULAR" {
-		formula.Amplitude = formulaMap["amplitude"].(float64)
+		if amplitude := formulaMap["amplitude"]; amplitude != nil {
+			amp := amplitude.(float64)
+			formula.Amplitude = &amp
+		}
 	}
 
 	return nil

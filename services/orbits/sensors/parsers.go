@@ -100,6 +100,13 @@ func (shape *ApertureShape) FromMap(shapeMap map[string]any) error {
 
 	shape.Type = shapeMap["type"].(string)
 
+	if len(shapeMap["aperture_center"].([]any)) > 0 && shapeMap["aperture_center"].([]any)[0] != nil {
+		shape.ApertureCenter = new(Vector3D)
+		if err := shape.ApertureCenter.FromMap(shapeMap["aperture_center"].([]any)[0].(map[string]any)); err != nil {
+			return err
+		}
+	}
+
 	if shape.Type == "CIRCULAR" {
 		if len(shapeMap["half_aperture_angle"].([]any)) > 0 && shapeMap["half_aperture_angle"].([]any)[0] != nil {
 			shape.HalfApertureAngle = new(HalfApertureAngle)
