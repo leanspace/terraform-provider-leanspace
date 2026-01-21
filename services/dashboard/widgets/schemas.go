@@ -60,7 +60,7 @@ var widgetSchema = map[string]*schema.Schema{
 		Description:  helper.AllowedValuesToDescription(validTimeDimensions),
 	},
 	"series": {
-		Type:     schema.TypeSet,
+		Type:     schema.TypeList,
 		Required: true,
 		Elem: &schema.Resource{
 			Schema: seriesSchema,

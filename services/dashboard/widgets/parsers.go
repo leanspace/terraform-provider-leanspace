@@ -101,7 +101,7 @@ func (widget *Widget) FromMap(widgetMap map[string]any) error {
 	widget.Granularity = widgetMap["granularity"].(string)
 	widget.QueryTimeDimension = widgetMap["query_time_dimension"].(string)
 	widget.DisplayTimeDimension = widgetMap["display_time_dimension"].(string)
-	if series, err := helper.ParseFromMaps[Series](widgetMap["series"].(*schema.Set).List()); err != nil {
+	if series, err := helper.ParseFromMaps[Series](widgetMap["series"].([]any)); err != nil {
 		return err
 	} else {
 		widget.Series = series
