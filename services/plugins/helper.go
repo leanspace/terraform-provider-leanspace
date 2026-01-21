@@ -22,7 +22,7 @@ func CalculateFileSha(sourceCodePath string) (string, error) {
 	}
 	fileData, err := os.ReadFile(sourceCodePath)
 	if err != nil {
-		return "", err
+		return "absent", nil
 	}
 	hasher := sha256.New()
 	hasher.Write(fileData)
@@ -35,8 +35,14 @@ func DoPostCreateProcess[P AbstractPlugin](client *provider.Client, currentPlugi
 	createdPlugin := destPluginRaw.(AbstractPlugin)
 
 	pluginRetrieved, err := createdPlugin.CallGetPlugin(client)
-	currentPlugin.PersistFileSha(createdPlugin)
-	currentPlugin.PersistFilePath(createdPlugin)
+	if err != nil {
+		return err
+	}
+	err = currentPlugin.PersistFileSha(createdPlugin)
+	if err != nil {
+		return err
+	}
+	err = currentPlugin.PersistFilePath(createdPlugin)
 	if err != nil {
 		return err
 	}
@@ -81,13 +87,16 @@ func GetPlugin[P any](id string, requestPath string, extraPath string, client *p
 
 func DoPostReadProcess[P AbstractPlugin](client *provider.Client, currentPlugin AbstractPlugin, destPluginRaw any) error {
 	createdPlugin := destPluginRaw.(AbstractPlugin)
-	currentPlugin.PersistFilePath(createdPlugin)
+	err := currentPlugin.PersistFilePath(createdPlugin)
+	if err != nil {
+		return err
+	}
 	sourceCodeSha, _ := CalculateFileSha(currentPlugin.GetFilePath())
 	currentPlugin.SetFileSha(sourceCodeSha)
 
-	body, error := currentPlugin.CallReadProcess(client)
-	if error != nil {
-		return error
+	body, err := currentPlugin.CallReadProcess(client)
+	if err != nil {
+		return err
 	}
 
 	hasher := sha256.New()
