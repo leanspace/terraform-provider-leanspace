@@ -18,12 +18,16 @@ var leafSpaceConnectionSchema = map[string]*schema.Schema{
 		Required: true,
 	},
 	"password": {
-		Type:     schema.TypeString,
-		Optional: true,
+		Type:      schema.TypeString,
+		Optional:  true,
+		Computed:  true,
+		Sensitive: true,
 	},
 	"username": {
-		Type:     schema.TypeString,
-		Optional: true,
+		Type:      schema.TypeString,
+		Optional:  true,
+		Computed:  true,
+		Sensitive: true,
 	},
 	"authentication_token": {
 		Type:     schema.TypeString,

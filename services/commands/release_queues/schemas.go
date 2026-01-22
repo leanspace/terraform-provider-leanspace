@@ -70,6 +70,7 @@ var releaseQueueSchema = map[string]*schema.Schema{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
+	"tags": general_objects.KeyValuesSchema,
 }
 
 var dataSourceFilterSchema = map[string]*schema.Schema{

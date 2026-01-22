@@ -11,4 +11,9 @@ resource "leanspace_release_queues" "test" {
     key   = "mykey"
     value = "myvalue"
   }
+
+  tags {
+    key   = "Key1"
+    value = "Value1"
+  }
 }

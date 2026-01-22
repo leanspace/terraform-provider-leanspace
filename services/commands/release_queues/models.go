@@ -18,6 +18,7 @@ type ReleaseQueue struct {
 	CreatedBy                                 string                     `json:"createdBy"`
 	LastModifiedAt                            string                     `json:"lastModifiedAt"`
 	LastModifiedBy                            string                     `json:"lastModifiedBy"`
+	Tags                                      []general_objects.KeyValue `json:"tags,omitempty"`
 }
 
 func (queue *ReleaseQueue) GetID() string { return queue.ID }

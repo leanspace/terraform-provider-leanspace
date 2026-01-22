@@ -284,6 +284,11 @@ resource "leanspace_activity_definitions" "test" {
     command_definition_id = var.command_definition.id
     delay_in_milliseconds = 30
   }
+
+  tags {
+    key   = "Mission"
+    value = "Terraform"
+  }
 }
 
 output "test_activity_definition" {
