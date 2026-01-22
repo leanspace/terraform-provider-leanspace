@@ -54,7 +54,8 @@ func (processor *Processor) FromMap(processorMap map[string]any) error {
 func (processor *Processor) SetFileSha() error {
 	fileData, err := os.ReadFile(processor.FilePath)
 	if err != nil {
-		return err
+		processor.FileSha = "absent"
+		return nil
 	}
 	hasher := sha256.New()
 	hasher.Write(fileData)
@@ -72,14 +73,20 @@ func (processor *Processor) persistFilePath(destProcessor *Processor) error {
 }
 
 func (processor *Processor) persistFileSha(destProcessor *Processor) error {
-	processor.SetFileSha()
+	err := processor.SetFileSha()
+	if err != nil {
+		return err
+	}
 	destProcessor.FileSha = processor.FileSha
 	return nil
 }
 
 func (processor *Processor) PostCreateProcess(_ *provider.Client, destProcessorRaw any) error {
 	createdProcessor := destProcessorRaw.(*Processor)
-	processor.persistFilePath(createdProcessor)
+	err := processor.persistFilePath(createdProcessor)
+	if err != nil {
+		return err
+	}
 	return processor.persistFileSha(createdProcessor)
 }
 
@@ -123,12 +130,19 @@ func (processor *Processor) PreDeleteProcess(client *provider.Client, destProces
 	return nil
 }
 func (processor *Processor) PostUpdateProcess(_ *provider.Client, destProcessorRaw any) error {
-	return processor.PostCreateProcess(nil, destProcessorRaw)
+	// No post update process needed, only delete and create and implemented
+	return nil
 }
 func (processor *Processor) PostReadProcess(client *provider.Client, destProcessorRaw any) error {
 	createdProcessor := destProcessorRaw.(*Processor)
-	processor.persistFilePath(createdProcessor)
-	processor.persistFileSha(createdProcessor)
+	err := processor.persistFilePath(createdProcessor)
+	if err != nil {
+		return err
+	}
+	err = processor.persistFileSha(createdProcessor)
+	if err != nil {
+		return err
+	}
 
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/routes-repository/processors/%s/generate-download-link", client.HostURL, createdProcessor.ID), nil)
 	if err != nil {
