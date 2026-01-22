@@ -24,10 +24,9 @@ var leafSpaceConnectionSchema = map[string]*schema.Schema{
 		Sensitive: true,
 	},
 	"username": {
-		Type:      schema.TypeString,
-		Optional:  true,
-		Computed:  true,
-		Sensitive: true,
+		Type:     schema.TypeString,
+		Optional: true,
+		Computed: true,
 	},
 	"authentication_token": {
 		Type:     schema.TypeString,
