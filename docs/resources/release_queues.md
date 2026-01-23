@@ -25,6 +25,11 @@ resource "leanspace_release_queues" "test" {
     key   = "mykey"
     value = "myvalue"
   }
+
+  tags {
+    key   = "Key1"
+    value = "Value1"
+  }
 }
 ```
 
@@ -43,6 +48,7 @@ resource "leanspace_release_queues" "test" {
 - `command_transformer_plugin_id` (String) The Id of the Command Transformer Plugin
 - `description` (String)
 - `global_transmission_metadata` (Block Set) (see [below for nested schema](#nestedblock--global_transmission_metadata))
+- `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
 
 ### Read-Only
 
@@ -55,6 +61,18 @@ resource "leanspace_release_queues" "test" {
 
 <a id="nestedblock--global_transmission_metadata"></a>
 ### Nested Schema for `global_transmission_metadata`
+
+Required:
+
+- `key` (String)
+
+Optional:
+
+- `value` (String)
+
+
+<a id="nestedblock--tags"></a>
+### Nested Schema for `tags`
 
 Required:
 

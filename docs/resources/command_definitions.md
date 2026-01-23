@@ -51,7 +51,7 @@ resource "leanspace_command_definitions" "test" {
     name        = "TestMetadataTimestamp"
     description = "A timestamp metadata value"
     attributes {
-      value = "2022-06-30T13:57:23Z"
+      value = "2022-06-30T13:57:23.000Z"
       type  = "TIMESTAMP"
     }
   }
@@ -106,7 +106,7 @@ resource "leanspace_command_definitions" "test" {
     identifier  = "TIMESTAMP"
     description = "A timestamp input"
     attributes {
-      default_value = "2022-06-30T13:57:23Z"
+      default_value = "2022-06-30T13:57:23.000Z"
       type          = "TIMESTAMP"
       required      = true
     }
@@ -139,6 +139,16 @@ resource "leanspace_command_definitions" "test" {
       default_value = 1
       options       = { 1 = "test" }
       type          = "ENUM"
+      required      = true
+    }
+  }
+  arguments {
+    name        = "TestArgumentBinary"
+    identifier  = "BINARY"
+    description = "A binary input"
+    attributes {
+      default_value = "62696e617279"
+      type          = "BINARY"
       required      = true
     }
   }
@@ -207,8 +217,8 @@ resource "leanspace_command_definitions" "test" {
       default_value = "08:37:19.000,10:37:19.000,15:37:19.000"
       constraint {
         type   = "TIME"
-        before = "20:00:00"
-        after  = "07:00:00"
+        before = "20:00:00.000"
+        after  = "07:00:00.000"
       }
     }
   }
@@ -240,11 +250,11 @@ resource "leanspace_command_definitions" "test" {
       min_size      = 1
       max_size      = 4
       unique        = true
-      default_value = "2023-01-30T13:00:00Z,2023-01-29T01:00:00Z,2023-01-31T19:57:23Z"
+      default_value = "2023-01-30T13:00:00.000Z,2023-01-29T01:00:00.000Z,2023-01-31T19:57:23.000Z"
       constraint {
         type   = "TIMESTAMP"
-        before = "2023-01-31T20:00:00Z"
-        after  = "2023-01-29T00:00:00Z"
+        before = "2023-01-31T20:00:00.000Z"
+        after  = "2023-01-29T00:00:00.000Z"
       }
     }
   }
@@ -262,6 +272,24 @@ resource "leanspace_command_definitions" "test" {
       constraint {
         type    = "ENUM"
         options = { 1 = "value1", 2 = "value2", 3 = "value3" }
+      }
+    }
+  }
+  arguments {
+    name        = "TestArgumentBinaryArray"
+    identifier  = "Binary ARRAY"
+    description = "A binary array"
+    attributes {
+      type          = "ARRAY"
+      required      = true
+      min_size      = 1
+      max_size      = 4
+      unique        = true
+      default_value = "62696e617279"
+      constraint {
+        type       = "BINARY"
+        min_length = 1
+        max_length = 10
       }
     }
   }

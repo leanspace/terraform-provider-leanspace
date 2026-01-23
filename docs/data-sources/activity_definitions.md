@@ -77,6 +77,7 @@ Read-Only:
 - `metadata` (Set of Object) (see [below for nested schema](#nestedobjatt--content--metadata))
 - `name` (String)
 - `node_id` (String)
+- `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
 
 <a id="nestedobjatt--content--argument_definitions"></a>
 ### Nested Schema for `content.argument_definitions`
@@ -284,6 +285,15 @@ Read-Only:
 
 
 
+
+
+<a id="nestedobjatt--content--tags"></a>
+### Nested Schema for `content.tags`
+
+Read-Only:
+
+- `key` (String)
+- `value` (String)
 
 
 

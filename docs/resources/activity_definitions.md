@@ -173,6 +173,11 @@ resource "leanspace_activity_definitions" "activity_definition" {
       command_definition_argument_name  = "CommandArgumentEnum"
     }
   }
+
+  tags {
+    key   = "Key1"
+    value = "Value1"
+  }
 }
 ```
 
@@ -191,6 +196,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
 - `description` (String)
 - `estimated_duration` (Number)
 - `metadata` (Block Set) (see [below for nested schema](#nestedblock--metadata))
+- `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
 
 ### Read-Only
 
@@ -443,3 +449,18 @@ Read-Only:
 
 - `max` (Number) Property field with numeric type only: the maximum value allowed.
 - `min` (Number) Property field with numeric type only: the minimum value allowed.
+
+
+
+
+
+<a id="nestedblock--tags"></a>
+### Nested Schema for `tags`
+
+Required:
+
+- `key` (String)
+
+Optional:
+
+- `value` (String)

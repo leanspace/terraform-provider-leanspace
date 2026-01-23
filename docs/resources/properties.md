@@ -82,9 +82,9 @@ resource "leanspace_properties" "timestamp_node_property" {
   description = "TestTerraformTimestampDescription"
   node_id     = var.node_id
   type        = "TIMESTAMP"
-  value       = "2023-01-30T00:00:00Z"
-  before      = "2023-01-31T20:00:00Z"
-  after       = "2023-01-29T00:00:00Z"
+  value       = "2023-01-30T00:00:00.000Z"
+  before      = "2023-01-31T20:00:00.000Z"
+  after       = "2023-01-29T00:00:00.000Z"
   tags {
     key   = "Key1"
     value = "Value1"
@@ -118,9 +118,9 @@ resource "leanspace_properties" "time_node_property" {
   description = "TestTerraformTimeDescription"
   node_id     = var.node_id
   type        = "TIME"
-  value       = "10:00:00"
-  before      = "20:00:00"
-  after       = "08:00:00"
+  value       = "10:00:00.000"
+  before      = "20:00:00.000"
+  after       = "08:00:00.000"
   tags {
     key   = "Key1"
     value = "Value1"
@@ -238,11 +238,14 @@ Optional:
 Optional:
 
 - `max` (Number) Property field with numeric type only: the maximum value allowed.
-- `min` (Number) Property field with numeric type only: the minimum value allowed.
 - `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
 - `scale` (Number) Property field with numeric type only: the scale required.
 - `unit_id` (String) Property field with numeric type only
 - `value` (String)
+
+Read-Only:
+
+- `min` (Number) Property field with numeric type only: the minimum value allowed.
 
 
 <a id="nestedblock--fields--longitude"></a>
@@ -251,11 +254,14 @@ Optional:
 Optional:
 
 - `max` (Number) Property field with numeric type only: the maximum value allowed.
-- `min` (Number) Property field with numeric type only: the minimum value allowed.
 - `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
 - `scale` (Number) Property field with numeric type only: the scale required.
 - `unit_id` (String) Property field with numeric type only
 - `value` (String)
+
+Read-Only:
+
+- `min` (Number) Property field with numeric type only: the minimum value allowed.
 
 
 

@@ -81,9 +81,19 @@ Read-Only:
 - `last_modified_by` (String)
 - `logical_lock` (Boolean)
 - `name` (String)
+- `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
 
 <a id="nestedobjatt--content--global_transmission_metadata"></a>
 ### Nested Schema for `content.global_transmission_metadata`
+
+Read-Only:
+
+- `key` (String)
+- `value` (String)
+
+
+<a id="nestedobjatt--content--tags"></a>
+### Nested Schema for `content.tags`
 
 Read-Only:
 
