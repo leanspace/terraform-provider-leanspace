@@ -2,6 +2,7 @@ package activity_definitions
 
 import (
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -18,6 +19,7 @@ func (activityDefinition *ActivityDefinition) ToMap() map[string]any {
 	actDefinitionMap["created_by"] = activityDefinition.CreatedBy
 	actDefinitionMap["last_modified_at"] = activityDefinition.LastModifiedAt
 	actDefinitionMap["last_modified_by"] = activityDefinition.LastModifiedBy
+	actDefinitionMap["tags"] = helper.ParseToMaps(activityDefinition.Tags)
 	if activityDefinition.Metadata != nil {
 		actDefinitionMap["metadata"] = helper.ParseToMaps(activityDefinition.Metadata)
 	}
@@ -81,6 +83,11 @@ func (activityDefinition *ActivityDefinition) FromMap(actDefinitionMap map[strin
 	activityDefinition.CreatedBy = actDefinitionMap["created_by"].(string)
 	activityDefinition.LastModifiedAt = actDefinitionMap["last_modified_at"].(string)
 	activityDefinition.LastModifiedBy = actDefinitionMap["last_modified_by"].(string)
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](actDefinitionMap["tags"].(*schema.Set).List()); err != nil {
+		return err
+	} else {
+		activityDefinition.Tags = tags
+	}
 	if actDefinitionMap["metadata"] != nil {
 		if metadata, err := helper.ParseFromMaps[Metadata[any]](
 			actDefinitionMap["metadata"].(*schema.Set).List(),

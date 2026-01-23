@@ -22,6 +22,7 @@ func (queue *ReleaseQueue) ToMap() map[string]any {
 	queueMap["created_by"] = queue.CreatedBy
 	queueMap["last_modified_at"] = queue.LastModifiedAt
 	queueMap["last_modified_by"] = queue.LastModifiedBy
+	queueMap["tags"] = helper.ParseToMaps(queue.Tags)
 
 	return queueMap
 }
@@ -44,6 +45,11 @@ func (queue *ReleaseQueue) FromMap(queueMap map[string]any) error {
 	queue.CreatedBy = queueMap["created_by"].(string)
 	queue.LastModifiedAt = queueMap["last_modified_at"].(string)
 	queue.LastModifiedBy = queueMap["last_modified_by"].(string)
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](queueMap["tags"].(*schema.Set).List()); err != nil {
+		return err
+	} else {
+		queue.Tags = tags
+	}
 
 	return nil
 }

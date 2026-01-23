@@ -159,4 +159,9 @@ resource "leanspace_activity_definitions" "activity_definition" {
       command_definition_argument_name  = "CommandArgumentEnum"
     }
   }
+
+  tags {
+    key   = "Key1"
+    value = "Value1"
+  }
 }
