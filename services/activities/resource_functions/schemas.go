@@ -40,13 +40,6 @@ var resourceFunctionSchema = map[string]*schema.Schema{
 			Schema: formulaSchema,
 		},
 	},
-	"time_unit": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		Deprecated:   "Prefer using the time_unit field in the formula instead",
-		ValidateFunc: validation.StringInSlice(validResourceFunctionTimeUnits, false),
-		Description:  helper.AllowedValuesToDescription(validResourceFunctionTimeUnits),
-	},
 	"created_at": {
 		Type:        schema.TypeString,
 		Computed:    true,
