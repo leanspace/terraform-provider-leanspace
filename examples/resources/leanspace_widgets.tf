@@ -24,11 +24,11 @@ variable "topology_id" {
 }
 
 resource "leanspace_widgets" "test_table" {
-  name        = "Terraform Table Widget"
-  description = "A table widget created with Terraform"
-  type        = "TABLE"
-  granularity = "raw"
-  query_time_dimension = "received_at"
+  name                   = "Terraform Table Widget"
+  description            = "A table widget created with Terraform"
+  type                   = "TABLE"
+  granularity            = "raw"
+  query_time_dimension   = "received_at"
   display_time_dimension = "timestamp"
   series {
     id          = var.text_metric_id
@@ -43,11 +43,11 @@ resource "leanspace_widgets" "test_table" {
 }
 
 resource "leanspace_widgets" "test_line" {
-  name        = "Terraform Line Widget"
-  description = "A line widget created with Terraform"
-  type        = "LINE"
-  granularity = "second"
-  query_time_dimension = "timestamp"
+  name                   = "Terraform Line Widget"
+  description            = "A line widget created with Terraform"
+  type                   = "LINE"
+  granularity            = "second"
+  query_time_dimension   = "timestamp"
   display_time_dimension = "timestamp"
   series {
     id          = var.numeric_metric_id
@@ -71,11 +71,11 @@ resource "leanspace_widgets" "test_line" {
 }
 
 resource "leanspace_widgets" "test_enum" {
-  name        = "Terraform Enum Widget"
-  description = "An enum widget created with Terraform"
-  type        = "ENUM"
-  granularity = "second"
-  query_time_dimension = "received_at"
+  name                   = "Terraform Enum Widget"
+  description            = "An enum widget created with Terraform"
+  type                   = "ENUM"
+  granularity            = "second"
+  query_time_dimension   = "received_at"
   display_time_dimension = "ingested_at"
   series {
     id          = var.enum_metric_id
@@ -119,11 +119,11 @@ resource "leanspace_widgets" "test_earth" {
 }
 
 resource "leanspace_widgets" "test_gauge" {
-  name        = "Terraform Gauge Widget"
-  description = "A gauge widget created with Terraform"
-  type        = "GAUGE"
-  granularity = "second"
-  query_time_dimension = "ingested_at"
+  name                   = "Terraform Gauge Widget"
+  description            = "A gauge widget created with Terraform"
+  type                   = "GAUGE"
+  granularity            = "second"
+  query_time_dimension   = "ingested_at"
   display_time_dimension = "ingested_at"
   series {
     id          = var.numeric_metric_id
@@ -155,11 +155,11 @@ resource "leanspace_widgets" "test_gauge" {
 }
 
 resource "leanspace_widgets" "test_bar" {
-  name        = "Terraform Bar Widget"
-  description = "A bar widget created with Terraform"
-  type        = "BAR"
-  granularity = "hour"
-  query_time_dimension = "received_at"
+  name                   = "Terraform Bar Widget"
+  description            = "A bar widget created with Terraform"
+  type                   = "BAR"
+  granularity            = "hour"
+  query_time_dimension   = "received_at"
   display_time_dimension = "timestamp"
   series {
     id          = "error_code"
@@ -183,11 +183,11 @@ resource "leanspace_widgets" "test_bar" {
 }
 
 resource "leanspace_widgets" "test_area" {
-  name        = "Terraform Area Widget"
-  description = "An area widget created with Terraform"
-  type        = "AREA"
-  granularity = "day"
-  query_time_dimension = "timestamp"
+  name                   = "Terraform Area Widget"
+  description            = "An area widget created with Terraform"
+  type                   = "AREA"
+  granularity            = "day"
+  query_time_dimension   = "timestamp"
   display_time_dimension = "timestamp"
   series {
     id          = var.numeric_metric_id
@@ -212,11 +212,11 @@ resource "leanspace_widgets" "test_area" {
 }
 
 resource "leanspace_widgets" "test_value" {
-  name        = "Terraform Value Widget"
-  description = "A value widget created with Terraform"
-  type        = "VALUE"
-  granularity = "minute"
-  query_time_dimension = "received_at"
+  name                   = "Terraform Value Widget"
+  description            = "A value widget created with Terraform"
+  type                   = "VALUE"
+  granularity            = "minute"
+  query_time_dimension   = "received_at"
   display_time_dimension = "timestamp"
   series {
     id          = var.text_metric_id

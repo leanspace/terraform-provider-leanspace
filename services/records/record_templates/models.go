@@ -8,9 +8,6 @@ type RecordTemplate struct {
 	ID                   string                     `json:"id"`
 	Name                 string                     `json:"name"`
 	Description          string                     `json:"description"`
-	State                string                     `json:"state"`
-	StartDateTime        string                     `json:"startDateTime"`
-	StopDateTime         string                     `json:"stopDateTime"`
 	StreamId             string                     `json:"streamId"`
 	DefaultParsers       []DefaultParser            `json:"defaultParsers"`
 	NodeIds              []string                   `json:"nodeIds"`
