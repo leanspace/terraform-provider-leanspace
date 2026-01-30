@@ -19,6 +19,6 @@ resource "leanspace_leaf_space_integrations" "integration_Connection" {
   domain_url = "apiv2.sandbox.leaf.space"
 
   lifecycle {
-    ignore_changes = [ username, password ]
+    ignore_changes = [username, password]
   }
 }
