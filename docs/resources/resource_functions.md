@@ -58,7 +58,6 @@ resource "leanspace_resource_functions" "a_rectangular_resource_function" {
 ### Optional
 
 - `name` (String)
-- `time_unit` (String, Deprecated) it must be one of these values: SECONDS, MINUTES, HOURS, DAYS
 
 ### Read-Only
 

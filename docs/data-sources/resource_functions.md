@@ -81,7 +81,6 @@ Read-Only:
 - `last_modified_by` (String)
 - `name` (String)
 - `resource_id` (String)
-- `time_unit` (String)
 
 <a id="nestedobjatt--content--formula"></a>
 ### Nested Schema for `content.formula`
