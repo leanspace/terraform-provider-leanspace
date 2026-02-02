@@ -12,9 +12,6 @@ func (recordTemplate *RecordTemplate) ToMap() map[string]any {
 	resourceMap["id"] = recordTemplate.ID
 	resourceMap["name"] = recordTemplate.Name
 	resourceMap["description"] = recordTemplate.Description
-	resourceMap["state"] = recordTemplate.State
-	resourceMap["start_date_time"] = recordTemplate.StartDateTime
-	resourceMap["stop_date_time"] = recordTemplate.StopDateTime
 	resourceMap["stream_id"] = recordTemplate.StreamId
 	if recordTemplate.DefaultParsers != nil {
 		resourceMap["default_parsers"] = helper.ParseToMaps(recordTemplate.DefaultParsers)
@@ -52,9 +49,6 @@ func (recordTemplate *RecordTemplate) FromMap(resourceMap map[string]any) error 
 	recordTemplate.ID = resourceMap["id"].(string)
 	recordTemplate.Name = resourceMap["name"].(string)
 	recordTemplate.Description = resourceMap["description"].(string)
-	recordTemplate.State = resourceMap["state"].(string)
-	recordTemplate.StartDateTime = resourceMap["start_date_time"].(string)
-	recordTemplate.StopDateTime = resourceMap["stop_date_time"].(string)
 	if resourceMap["default_parsers"] != nil {
 		if defaultParsers, err := helper.ParseFromMaps[DefaultParser](
 			resourceMap["default_parsers"].(*schema.Set).List(),
@@ -64,13 +58,18 @@ func (recordTemplate *RecordTemplate) FromMap(resourceMap map[string]any) error 
 			recordTemplate.DefaultParsers = defaultParsers
 		}
 	}
+	recordTemplate.StreamId = resourceMap["stream_id"].(string)
 	recordTemplate.NodeIds = make([]string, resourceMap["node_ids"].(*schema.Set).Len())
-	for index, node := range resourceMap["node_ids"].(*schema.Set).List() {
-		recordTemplate.NodeIds[index] = node.(string)
+	for index, value := range resourceMap["node_ids"].(*schema.Set).List() {
+		recordTemplate.NodeIds[index] = value.(string)
 	}
 	recordTemplate.MetricIds = make([]string, resourceMap["metric_ids"].(*schema.Set).Len())
-	for index, node := range resourceMap["metric_ids"].(*schema.Set).List() {
-		recordTemplate.MetricIds[index] = node.(string)
+	for index, value := range resourceMap["metric_ids"].(*schema.Set).List() {
+		recordTemplate.MetricIds[index] = value.(string)
+	}
+	recordTemplate.CommandDefinitionIds = make([]string, resourceMap["command_definition_ids"].(*schema.Set).Len())
+	for index, value := range resourceMap["command_definition_ids"].(*schema.Set).List() {
+		recordTemplate.CommandDefinitionIds[index] = value.(string)
 	}
 	if resourceMap["properties"] != nil {
 		if properties, err := helper.ParseFromMaps[Property[any]](

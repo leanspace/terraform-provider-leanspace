@@ -300,11 +300,16 @@ module "passive_resource_functions" {
 }
 
 module "record_templates" {
-  source  = "./records/record_templates"
-  node_id = module.nodes.satellite_node.id
+  source                = "./records/record_templates"
+  stream_id             = module.streams.test_stream.id
+  node_id               = module.nodes.satellite_node.id
+  metric_id             = module.metrics.test_numeric_metric.id
+  command_definition_id = module.command_definitions.test_command_definition.id
   depends_on = [
+    module.streams,
     module.nodes,
-    module.metrics
+    module.metrics,
+    module.command_definitions
   ]
 }
 
