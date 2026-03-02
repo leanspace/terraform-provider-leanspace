@@ -14,14 +14,21 @@ description: |-
 ```terraform
 data "leanspace_record_templates" "all" {
   filters {
-    related_asset_ids = []
-    ids               = []
-    names             = []
-    query             = ""
-    tags              = []
-    page              = 0
-    size              = 10
-    sort              = ["name,asc"]
+    ids                   = []
+    names                 = []
+    node_ids              = []
+    metric_ids            = []
+    query                 = ""
+    created_by            = []
+    last_modified_by      = []
+    from_created_at       = []
+    to_created_at         = []
+    from_last_modified_at = []
+    to_last_modified_at   = []
+    tags                  = []
+    page                  = 0
+    size                  = 10
+    sort                  = ["name,asc"]
   }
 }
 ```
@@ -53,14 +60,21 @@ data "leanspace_record_templates" "all" {
 
 Optional:
 
+- `created_by` (List of String) Filter on the user who created the RecordTemplate. If you have no wish to use this field as a filter, either provide a null value or remove the field.
+- `from_created_at` (String) Filter on the RecordTemplate creation date. RecordTemplates with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
+- `from_last_modified_at` (String) Filter on the RecordTemplate last modification date. RecordTemplates with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
 - `ids` (List of String)
-- `names` (List of String)
+- `last_modified_by` (List of String) Filter on the user who last modified the RecordTemplate. If you have no wish to use this field as a filter, either provide a null value or remove the field.
+- `metric_ids` (List of String) Only returns Record Templates with at least one metricId that matches one of the provided values.
+- `names` (List of String) Only returns Record Templates who's name matches one of the provided values.
+- `node_ids` (List of String) Only returns Record Templates with at least one nodeId that matches one of the provided values.
 - `page` (Number)
 - `query` (String)
-- `related_asset_ids` (List of String)
 - `size` (Number)
 - `sort` (List of String)
 - `tags` (List of String)
+- `to_created_at` (String) Filter on the RecordTemplate creation date. RecordTemplates with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
+- `to_last_modified_at` (String) Filter on the RecordTemplate last modification date. RecordTemplates with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.
 
 
 <a id="nestedatt--content"></a>
@@ -80,9 +94,6 @@ Read-Only:
 - `name` (String)
 - `node_ids` (Set of String)
 - `properties` (Set of Object) (see [below for nested schema](#nestedobjatt--content--properties))
-- `start_date_time` (String)
-- `state` (String)
-- `stop_date_time` (String)
 - `stream_id` (String)
 - `tags` (Set of Object) (see [below for nested schema](#nestedobjatt--content--tags))
 

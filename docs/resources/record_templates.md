@@ -12,6 +12,11 @@ description: |-
 ## Example Usage
 
 ```terraform
+variable "rt_stream_id" {
+  type        = string
+  description = "The ID of a Stream to which the Record Template will be linked."
+}
+
 variable "rt_node_id" {
   type        = string
   description = "The ID of a Node to which the Record Template will be linked."
@@ -22,10 +27,30 @@ variable "rt_metric_id" {
   description = "The ID of a Metric to which the Record Template will be linked."
 }
 
+variable "rt_command_definition_id" {
+  type        = string
+  description = "The ID of a Command Definition to which the Record Template will be linked."
+}
+
 resource "leanspace_record_templates" "record_template" {
-  name       = "TERRAFORM_RECORD_TEMPLATE"
-  node_ids   = [var.rt_node_id]
-  metric_ids = [var.rt_metric_id]
+  name                   = "My Record Template"
+  description            = "Example of Record Template"
+  stream_id              = var.rt_stream_id
+  node_ids               = [var.rt_node_id]
+  metric_ids             = [var.rt_metric_id]
+  command_definition_ids = [var.rt_command_definition_id]
+  properties {
+    name = "Template Numeric"
+    attributes {
+      type          = "NUMERIC"
+      required      = true
+      default_value = 1
+    }
+  }
+  tags {
+    key   = "My Tag key"
+    value = "My Tag value"
+  }
 }
 ```
 
@@ -54,9 +79,6 @@ resource "leanspace_record_templates" "record_template" {
 - `id` (String) The ID of this resource.
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
-- `start_date_time` (String)
-- `state` (String)
-- `stop_date_time` (String)
 
 <a id="nestedblock--properties"></a>
 ### Nested Schema for `properties`
@@ -71,7 +93,7 @@ Required:
 
 Required:
 
-- `type` (String) it must be one of these values: NUMERIC, BOOLEAN, TEXT, STRUCTURE
+- `type` (String) it must be one of these values: NUMERIC, BOOLEAN, TEXT, DATE, TIME, TIMESTAMP, ENUM, ARRAY, STRUCTURE
 
 Optional:
 
