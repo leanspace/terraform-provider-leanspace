@@ -31,6 +31,7 @@ var eventsDefinitions = map[string]*schema.Schema{
 	"criticality": {
 		Type:     schema.TypeString,
 		Optional: true,
+		Default:  "NORMAL",
 	},
 	"rules": {
 		Type:     schema.TypeSet,
