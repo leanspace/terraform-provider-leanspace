@@ -24,7 +24,6 @@ type AuthStruct struct {
 	Tenant       string `json:"tenant"`
 	ClientId     string `json:"client_id"`
 	ClientSecret string `json:"client_secret"`
-	Region       string `json:"region"`
 }
 
 // AuthResponse -
@@ -34,7 +33,7 @@ type AuthResponse struct {
 	Token     string `json:"access_token"`
 }
 
-func NewClient(host, env, tenant, clientId, clientSecret, region *string) (*Client, error) {
+func NewClient(host, env, tenant, clientId, clientSecret *string) (*Client, error) {
 	hostUrl := "https://api.leanspace.io"
 	switch *env {
 	case "prod":
@@ -64,7 +63,6 @@ func NewClient(host, env, tenant, clientId, clientSecret, region *string) (*Clie
 		Tenant:       *tenant,
 		ClientId:     *clientId,
 		ClientSecret: *clientSecret,
-		Region:       *region,
 	}
 
 	ar, err := c.SignIn()
