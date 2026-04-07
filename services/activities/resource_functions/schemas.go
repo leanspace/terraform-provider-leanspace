@@ -1,166 +1,118 @@
 package resource_functions
 
 import (
-	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 )
 
 var validResourceFunctionTimeUnits = []string{"SECONDS", "MINUTES", "HOURS", "DAYS"}
 var validFormulaTypes = []string{"LINEAR", "RECTANGULAR"}
 
-var resourceFunctionSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var resourceFunctionSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"activity_definition_id": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ForceNew:     true,
-		ValidateFunc: validation.IsUUID,
+	"activity_definition_id": resourceschema.StringAttribute{
+		Required:      true,
+		Validators:    helper.ValidUUID(),
+		PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 	},
-	"resource_id": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ForceNew:     true,
-		ValidateFunc: validation.IsUUID,
+	"resource_id": resourceschema.StringAttribute{
+		Required:      true,
+		Validators:    helper.ValidUUID(),
+		PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"formula": {
-		Type:     schema.TypeList,
-		Required: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: formulaSchema,
-		},
+	"formula": resourceschema.SingleNestedAttribute{
+		Required:   true,
+		Attributes: formulaSchema,
 	},
-	"created_at": {
-		Type:        schema.TypeString,
+	"created_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was created",
 	},
-	"created_by": {
-		Type:        schema.TypeString,
+	"created_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who created it",
 	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
+	"last_modified_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was last modified",
 	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
+	"last_modified_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
 }
 
-var formulaSchema = map[string]*schema.Schema{
-	"type": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validFormulaTypes, false),
-		Description:  helper.AllowedValuesToDescription(validFormulaTypes),
+var formulaSchema = map[string]resourceschema.Attribute{
+	"type": resourceschema.StringAttribute{
+		Required:    true,
+		Description: helper.AllowedValuesToDescription(validFormulaTypes),
+		Validators:  []validator.String{stringvalidator.OneOf(validFormulaTypes...)},
 	},
-	"amplitude": {
-		Type:     schema.TypeFloat,
+	"amplitude": resourceschema.Float64Attribute{
 		Optional: true,
 	},
-	"constant": {
-		Type:     schema.TypeFloat,
+	"constant": resourceschema.Float64Attribute{
 		Optional: true,
 	},
-	"rate": {
-		Type:     schema.TypeFloat,
+	"rate": resourceschema.Float64Attribute{
 		Optional: true,
 	},
-	"time_unit": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.StringInSlice(validResourceFunctionTimeUnits, false),
-		Description:  helper.AllowedValuesToDescription(validResourceFunctionTimeUnits),
+	"time_unit": resourceschema.StringAttribute{
+		Optional:    true,
+		Description: helper.AllowedValuesToDescription(validResourceFunctionTimeUnits),
+		Validators:  []validator.String{stringvalidator.OneOf(validResourceFunctionTimeUnits...)},
 	},
 }
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
-	"ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+	"activity_definition_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
-	"activity_definition_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+	"resource_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
-	"resource_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+	"tags": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
-	"tags": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
-	},
-	"created_bys": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+	"created_bys": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 		Description: "Filter on the user who created the Resource Function. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
-	"last_modified_bys": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+	"last_modified_bys": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 		Description: "Filter on the user who last modified the Resource Function. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
-	"from_created_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Resource Function creation date. Resource Functions with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	"from_created_at": datasourceschema.StringAttribute{
+		Optional:    true,
+		Description: "Filter on the Resource Function creation date. Resource Functions with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
-	"from_last_modified_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Resource Function last modification date. Resource Functions with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	"from_last_modified_at": datasourceschema.StringAttribute{
+		Optional:    true,
+		Description: "Filter on the Resource Function last modification date. Resource Functions with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
-	"to_created_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Resource Function creation date. Resource Functions with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	"to_created_at": datasourceschema.StringAttribute{
+		Optional:    true,
+		Description: "Filter on the Resource Function creation date. Resource Functions with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
-	"to_last_modified_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Resource Function last modification date. Resource Functions with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	"to_last_modified_at": datasourceschema.StringAttribute{
+		Optional:    true,
+		Description: "Filter on the Resource Function last modification date. Resource Functions with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
 }

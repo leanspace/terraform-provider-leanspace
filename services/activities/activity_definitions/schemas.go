@@ -1,200 +1,168 @@
 package activity_definitions
 
 import (
-	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var activityDefinitionSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var activityDefinitionSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"node_id": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ForceNew:     true,
-		ValidateFunc: validation.IsUUID,
+	"node_id": resourceschema.StringAttribute{
+		Required:      true,
+		Validators:    helper.ValidUUID(),
+		PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"mapping_status": {
-		Type:        schema.TypeString,
+	"mapping_status": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Mapping status with Command definition arguments. Can be IN_SYNC or OUT_OF_SYNC",
 	},
-	"estimated_duration": {
-		Type:         schema.TypeInt,
-		Optional:     true,
-		ValidateFunc: validation.IntAtLeast(0),
+	"estimated_duration": resourceschema.Int64Attribute{
+		Optional:   true,
+		Validators: []validator.Int64{int64validator.AtLeast(0)},
 	},
-	"metadata": {
-		Type:     schema.TypeSet,
+	"metadata": resourceschema.SetNestedAttribute{
 		Optional: true,
-		Elem: &schema.Resource{
-			Schema: metadataSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: metadataSchema,
 		},
 	},
-	"argument_definitions": {
-		Type:     schema.TypeSet,
+	"argument_definitions": resourceschema.SetNestedAttribute{
 		Optional: true,
-		Elem: &schema.Resource{
-			Schema: argumentDefinitionSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: argumentDefinitionSchema,
 		},
 	},
-	"command_mappings": {
-		Type:     schema.TypeList,
+	"command_mappings": resourceschema.ListNestedAttribute{
 		Optional: true,
-		Elem: &schema.Resource{
-			Schema: commandMappingSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: commandMappingSchema,
 		},
 	},
-	"created_at": {
-		Type:        schema.TypeString,
+	"created_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was created",
 	},
-	"created_by": {
-		Type:        schema.TypeString,
+	"created_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who created it",
 	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
+	"last_modified_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was last modified",
 	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
+	"last_modified_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
 	"tags": general_objects.KeyValuesSchema,
 }
 
-var metadataSchema = map[string]*schema.Schema{
-	"name": {
-		Type:     schema.TypeString,
+var metadataSchema = map[string]resourceschema.Attribute{
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"attributes": {
-		Type:     schema.TypeList,
-		Required: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: general_objects.ValueAttributeSchema([]string{"ENUM", "STRUCTURE", "TLE"}),
-		},
+	"attributes": resourceschema.SingleNestedAttribute{
+		Required:   true,
+		Attributes: general_objects.ValueAttributeSchema([]string{"ENUM", "STRUCTURE", "TLE"}),
 	},
 }
 
-var argumentDefinitionSchema = map[string]*schema.Schema{
-	"name": {
-		Type:     schema.TypeString,
+var argumentDefinitionSchema = map[string]resourceschema.Attribute{
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"attributes": {
-		Type:     schema.TypeList,
+	"attributes": resourceschema.SingleNestedAttribute{
 		Required: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: general_objects.DefinitionAttributeSchema(
-				[]string{"STRUCTURE", "TLE"}, // attribute types not allowed in command definition attributes
-				nil,                          // All fields are used
-				false,                        // Does not force recreation if the type changes
-			),
-		},
+		Attributes: general_objects.DefinitionAttributeSchema(
+			[]string{"STRUCTURE", "TLE"}, // attribute types not allowed in command definition attributes
+			nil,                          // All fields are used
+			false,                        // Does not force recreation if the type changes
+		),
 	},
 }
 
-var commandMappingSchema = map[string]*schema.Schema{
-	"command_definition_id": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.IsUUID,
+var commandMappingSchema = map[string]resourceschema.Attribute{
+	"command_definition_id": resourceschema.StringAttribute{
+		Required:   true,
+		Validators: helper.ValidUUID(),
 	},
-	"position": {
-		Type:     schema.TypeInt,
+	"position": resourceschema.Int64Attribute{
 		Computed: true,
 	},
-	"delay_in_milliseconds": {
-		Type:         schema.TypeInt,
-		Required:     true,
-		ValidateFunc: validation.IntAtLeast(0),
-		Description:  "Delay to execute this command",
+	"delay_in_milliseconds": resourceschema.Int64Attribute{
+		Required:    true,
+		Description: "Delay to execute this command",
+		Validators:  []validator.Int64{int64validator.AtLeast(0)},
 	},
-	"argument_mappings": {
-		Type:     schema.TypeSet,
+	"argument_mappings": resourceschema.SetNestedAttribute{
 		Optional: true,
-		Elem: &schema.Resource{
-			Schema: argumentMappingSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: argumentMappingSchema,
 		},
 	},
-	"metadata_mappings": {
-		Type:     schema.TypeSet,
+	"metadata_mappings": resourceschema.SetNestedAttribute{
 		Optional: true,
-		Elem: &schema.Resource{
-			Schema: metadataMappingSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: metadataMappingSchema,
 		},
 	},
 }
 
-var argumentMappingSchema = map[string]*schema.Schema{
-	"activity_definition_argument_name": {
-		Type:     schema.TypeString,
+var argumentMappingSchema = map[string]resourceschema.Attribute{
+	"activity_definition_argument_name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"command_definition_argument_name": {
-		Type:     schema.TypeString,
+	"command_definition_argument_name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"mapping_status": {
-		Type:        schema.TypeString,
+	"mapping_status": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Mapping status with the Command definition argument. Can be IN_SYNC or OUT_OF_SYNC",
 	},
 }
 
-var metadataMappingSchema = map[string]*schema.Schema{
-	"activity_definition_metadata_name": {
-		Type:     schema.TypeString,
+var metadataMappingSchema = map[string]resourceschema.Attribute{
+	"activity_definition_metadata_name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"command_definition_argument_name": {
-		Type:     schema.TypeString,
+	"command_definition_argument_name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"mapping_status": {
-		Type:        schema.TypeString,
+	"mapping_status": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Mapping status with the Command definition argument. Can be IN_SYNC or OUT_OF_SYNC",
 	},
 }
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
-	"node_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
+var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+	"node_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators: []validator.List{
+			listvalidator.ValueStringsAre(helper.ValidUUID()...),
 		},
 	},
 }

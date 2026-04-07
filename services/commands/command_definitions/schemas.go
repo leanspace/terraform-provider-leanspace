@@ -1,176 +1,126 @@
 package command_definitions
 
 import (
-	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var commandDefinitionSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var commandDefinitionSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"node_id": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ForceNew:     true,
-		ValidateFunc: validation.IsUUID,
+	"node_id": resourceschema.StringAttribute{
+		Required:      true,
+		Validators:    helper.ValidUUID(),
+		PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"identifier": {
-		Type:     schema.TypeString,
+	"identifier": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"metadata": {
-		Type:     schema.TypeSet,
+	"metadata": resourceschema.SetNestedAttribute{
 		Optional: true,
-		Elem: &schema.Resource{
-			Schema: metadataSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: metadataSchema,
 		},
 	},
-	"arguments": {
-		Type:     schema.TypeSet,
+	"arguments": resourceschema.SetNestedAttribute{
 		Optional: true,
-		Elem: &schema.Resource{
-			Schema: argumentSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: argumentSchema,
 		},
 	},
-	"created_at": {
-		Type:        schema.TypeString,
+	"created_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was created",
 	},
-	"created_by": {
-		Type:        schema.TypeString,
+	"created_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who created it",
 	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
+	"last_modified_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was last modified",
 	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
+	"last_modified_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
 }
 
-var metadataSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var metadataSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"attributes": {
-		Type:     schema.TypeList,
+	"attributes": resourceschema.ListNestedAttribute{
 		Required: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: general_objects.ValueAttributeSchema([]string{"ENUM", "STRUCTURE", "GEOPOINT", "TLE", "BINARY", "ARRAY"}),
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: general_objects.ValueAttributeSchema([]string{"ENUM", "STRUCTURE", "GEOPOINT", "TLE", "BINARY", "ARRAY"}),
 		},
 	},
 }
 
-var argumentSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var argumentSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"identifier": {
-		Type:     schema.TypeString,
+	"identifier": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"attributes": {
-		Type:     schema.TypeList,
+	"attributes": resourceschema.SingleNestedAttribute{
 		Required: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: general_objects.DefinitionAttributeSchema(
-				[]string{"STRUCTURE", "GEOPOINT", "TLE"}, // attribute types not allowed in command definition attributes
-				nil,                                      // All fields are used
-				false,                                    // Does not force recreation if the type changes
-			),
-		},
+		Attributes: general_objects.DefinitionAttributeSchema(
+			[]string{"STRUCTURE", "GEOPOINT", "TLE"}, // attribute types not allowed in command definition attributes
+			nil,                                      // All fields are used
+			false,                                    // Does not force recreation if the type changes
+		),
 	},
 }
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
-	"ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+	"node_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
-	"node_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-	},
-	"node_types": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
+	"node_types": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 		Description: "Filter on the Node type. Allowed values : GROUP, ASSET, COMPONENT",
 	},
-	"node_kinds": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
+	"node_kinds": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 		Description: "Filter on the Node kind. Allowed values : GENERIC, SATELLITE, GROUND_STATION",
 	},
-	"with_arguments_and_metadata": {
-		Type:     schema.TypeBool,
+	"with_arguments_and_metadata": datasourceschema.BoolAttribute{
 		Optional: true,
 	},
-	"query": {
-		Type:        schema.TypeString,
+	"created_bys": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
 		Optional:    true,
-		Description: "Search by name or description",
-	},
-	"created_bys": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
 		Description: "Filter on the user who created the Node. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
 }

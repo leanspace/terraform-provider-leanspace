@@ -1,41 +1,37 @@
 package activity_states
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"regexp"
+
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 )
 
-var activityStateSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var activityStateSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"name": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: helper.IsValidStateName,
+	"name": resourceschema.StringAttribute{
+		Required:   true,
+		Validators: helper.ValidStateName(),
 	},
-	"read_only": {
-		Type:     schema.TypeBool,
+	"read_only": resourceschema.BoolAttribute{
 		Computed: true,
 	},
-	"created_at": {
-		Type:        schema.TypeString,
+	"created_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was created",
 	},
-	"created_by": {
-		Type:        schema.TypeString,
+	"created_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who created it",
 	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
+	"last_modified_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was last modified",
 	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
+	"last_modified_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},

@@ -1,13 +1,15 @@
 package helper
 
 import (
+	"context"
 	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 )
 
 // A condition is an interface that can be used to evaluate a map[string]any,
@@ -259,10 +261,7 @@ func (c hasLengthCondition) eval(v map[string]any) bool {
 	if map_, isMap := v[c.key].(map[string]any); isMap {
 		return len(map_) == c.length
 	}
-	if set, isSet := v[c.key].(*schema.Set); isSet {
-		return set.Len() == c.length
-	}
-	panic(fmt.Sprintf("Tried checking length of %#v (only accepts lists, maps and sets)", v[c.key]))
+	panic(fmt.Sprintf("Tried checking length of %#v (only accepts lists and maps)", v[c.key]))
 }
 func (c hasLengthCondition) printExpected() string {
 	return fmt.Sprintf("length(%q) = %v", c.key, c.length)
@@ -357,78 +356,119 @@ func GreaterThanEq[T Number](key string, value T) Condition {
 	return compareCondition[T]{key, value, ">="}
 }
 
-func IsValidTimeDateOrTimestamp(i interface{}, k string) (warnings []string, errorsOnField []error) {
-	v, ok := i.(string)
-	if !ok {
-		errorsOnField = append(errorsOnField, fmt.Errorf("expected type of %q to be string", k))
-		return warnings, errorsOnField
+type timeDateOrTimestampValidator struct{}
+
+func (v timeDateOrTimestampValidator) Description(_ context.Context) string {
+	return "must be a valid date (2006-01-02), time (15:04:05), or RFC3339 timestamp"
+}
+
+func (v timeDateOrTimestampValidator) MarkdownDescription(ctx context.Context) string {
+	return v.Description(ctx)
+}
+
+func (v timeDateOrTimestampValidator) ValidateString(_ context.Context, req validator.StringRequest, resp *validator.StringResponse) {
+	if req.ConfigValue.IsNull() || req.ConfigValue.IsUnknown() {
+		return
 	}
+	value := req.ConfigValue.ValueString()
 	const dateLayoutReference = "2006-01-02"
 	const timeLayoutReference = "15:04:05"
 	const timestampLayoutReference = time.RFC3339
 
-	_, errTimestamp := time.Parse(timestampLayoutReference, v)
-	_, errDate := time.Parse(dateLayoutReference, v)
-	_, errTime := time.Parse(timeLayoutReference, v)
+	_, errTimestamp := time.Parse(timestampLayoutReference, value)
+	_, errDate := time.Parse(dateLayoutReference, value)
+	_, errTime := time.Parse(timeLayoutReference, value)
 
 	if errTimestamp != nil && errDate != nil && errTime != nil {
-		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to be a valid date, time or timestamp, got %q: \n %+v \n %+v \n %+v", k, i, errTimestamp, errDate, errTime))
+		resp.Diagnostics.AddAttributeError(
+			req.Path,
+			"Invalid date, time, or timestamp",
+			fmt.Sprintf("expected a valid date, time or timestamp, got %q:\n %+v\n %+v\n %+v", value, errTimestamp, errDate, errTime),
+		)
 	}
-	return warnings, errorsOnField
 }
 
-func IsValidSemVer(i interface{}, fieldName string) (warnings []string, errorsOnField []error) {
-	var semVerValues []string = strings.Split(i.(string), ".")
-
-	if len(semVerValues) != 3 {
-		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to be a valid semantic version MAJOR.MINOR.PATCH, got %q", fieldName, i.(string)))
-		return warnings, errorsOnField
-	}
-
-	if major, ok := isValidVersion(semVerValues[0]); !ok {
-		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to have minor version between 0 and 9, got %q", fieldName, strconv.FormatInt(major, 10)))
-	}
-
-	if minor, ok := isValidVersion(semVerValues[1]); !ok {
-		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to have minor version between 0 and 9, got %q", fieldName, strconv.FormatInt(minor, 10)))
-	}
-
-	if patch, ok := isValidVersion(semVerValues[2]); !ok {
-		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to have patch version between 0 and 9, got %q", fieldName, strconv.FormatInt(patch, 10)))
-	}
-
-	return warnings, errorsOnField
+func IsValidTimeDateOrTimestamp() []validator.String {
+	return []validator.String{timeDateOrTimestampValidator{}}
 }
 
-func isValidVersion(value string) (v int64, ok bool) {
-	if version, err := strconv.ParseInt(value, 10, 64); err == nil {
-		ok = true
-		if version < 0 || version > 9 {
-			ok = false
-		}
-		return version, ok
-	}
-	return 0, false
+type semVerValidator struct{}
+
+func (v semVerValidator) Description(_ context.Context) string {
+	return "must be a valid semantic version in MAJOR.MINOR.PATCH format (each part 0-9)"
 }
 
-func FloatAtLeastAndLessThan(min, maxExclusive float64) schema.SchemaValidateFunc {
-	return func(i interface{}, k string) (s []string, es []error) {
-		v, ok := i.(float64)
-		if !ok {
-			es = append(es, fmt.Errorf("expected type of %s to be float64", k))
-			return
-		}
+func (v semVerValidator) MarkdownDescription(ctx context.Context) string {
+	return v.Description(ctx)
+}
 
-		if v < min || v >= maxExclusive {
-			es = append(es, fmt.Errorf("expected %s to be at equal or greater than %f and strictly less than %f, got %f", k, min, maxExclusive, v))
-			return
-		}
-
+func (v semVerValidator) ValidateString(_ context.Context, req validator.StringRequest, resp *validator.StringResponse) {
+	if req.ConfigValue.IsNull() || req.ConfigValue.IsUnknown() {
 		return
 	}
+	value := req.ConfigValue.ValueString()
+	semVerValues := strings.Split(value, ".")
+	if len(semVerValues) != 3 {
+		resp.Diagnostics.AddAttributeError(
+			req.Path,
+			"Invalid semantic version",
+			fmt.Sprintf("expected a valid semantic version MAJOR.MINOR.PATCH, got %q", value),
+		)
+		return
+	}
+	for _, part := range semVerValues {
+		if _, ok := isValidVersion(part); !ok {
+			resp.Diagnostics.AddAttributeError(
+				req.Path,
+				"Invalid semantic version",
+				fmt.Sprintf("expected each part to be between 0 and 9, got %q", part),
+			)
+		}
+	}
 }
 
-// --- State name validation ---
+func IsValidSemVer() []validator.String {
+	return []validator.String{semVerValidator{}}
+}
+
+func isValidVersion(value string) (int64, bool) {
+	version, err := strconv.ParseInt(value, 10, 64)
+	if err != nil {
+		return 0, false
+	}
+	return version, version >= 0 && version <= 9
+}
+
+type floatAtLeastAndLessThanValidator struct {
+	min          float64
+	maxExclusive float64
+}
+
+func (v floatAtLeastAndLessThanValidator) Description(_ context.Context) string {
+	return fmt.Sprintf("must be at least %g and strictly less than %g", v.min, v.maxExclusive)
+}
+
+func (v floatAtLeastAndLessThanValidator) MarkdownDescription(ctx context.Context) string {
+	return v.Description(ctx)
+}
+
+func (v floatAtLeastAndLessThanValidator) ValidateFloat64(_ context.Context, req validator.Float64Request, resp *validator.Float64Response) {
+	if req.ConfigValue.IsNull() || req.ConfigValue.IsUnknown() {
+		return
+	}
+	val := req.ConfigValue.ValueFloat64()
+	if val < v.min || val >= v.maxExclusive {
+		resp.Diagnostics.AddAttributeError(
+			req.Path,
+			"Invalid float value",
+			fmt.Sprintf("expected value to be at least %g and strictly less than %g, got %g", v.min, v.maxExclusive, val),
+		)
+	}
+}
+
+func FloatAtLeastAndLessThan(min, maxExclusive float64) []validator.Float64 {
+	return []validator.Float64{floatAtLeastAndLessThanValidator{min, maxExclusive}}
+}
 
 const stateNameRegexStr = `^[A-Z](?:[A-Z_]*[A-Z])?$`
 
@@ -438,30 +478,18 @@ const nameRegexStr = `^[ a-zA-Z0-9_-]*$`
 
 var nameRegex = regexp.MustCompile(nameRegexStr)
 
-func IsValidStateName(i interface{}, k string) (warnings []string, errors []error) {
-	v, ok := i.(string)
-	if !ok {
-		errors = append(errors, fmt.Errorf("expected type of %q to be string", k))
-		return
-	}
-
-	if !stateNameRegex.Match([]byte(v)) {
-		errors = append(errors, fmt.Errorf("expected %q to be a valid state name, got %v.\nValid state name follows the regex: %v", k, v, stateNameRegexStr))
-	}
-
-	return warnings, errors
+func ValidStateName() []validator.String {
+	return []validator.String{stringvalidator.RegexMatches(stateNameRegex, "")}
 }
 
-func IsValidName(i interface{}, k string) (warnings []string, errors []error) {
-	v, ok := i.(string)
-	if !ok {
-		errors = append(errors, fmt.Errorf("expected type of %q to be string", k))
-		return
-	}
+func ValidName() []validator.String {
+	return []validator.String{stringvalidator.RegexMatches(nameRegex, "")}
+}
 
-	if !nameRegex.Match([]byte(v)) {
-		errors = append(errors, fmt.Errorf("expected %q to be a valid name, got %v.\nValid name follows the regex: %v", k, v, nameRegex))
-	}
+const uuidRegexStr = `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`
 
-	return warnings, errors
+var uuidRegex = regexp.MustCompile(uuidRegexStr)
+
+func ValidUUID() []validator.String {
+	return []validator.String{stringvalidator.RegexMatches(uuidRegex, "must be a valid UUID")}
 }

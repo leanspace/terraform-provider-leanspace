@@ -1,73 +1,54 @@
 package request_states
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 )
 
-var requestStateSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var requestStateSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"name": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: helper.IsValidStateName,
+	"name": resourceschema.StringAttribute{
+		Required:   true,
+		Validators: helper.ValidStateName(),
 	},
-	"created_at": {
-		Type:        schema.TypeString,
+	"created_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was created",
 	},
-	"created_by": {
-		Type:        schema.TypeString,
+	"created_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who created it",
 	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
+	"last_modified_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was last modified",
 	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
+	"last_modified_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
 }
 
-var requestStateFilterSchema = map[string]*schema.Schema{
-	"created_bys": {
-		Type:     schema.TypeList,
+var requestStateFilterSchema = map[string]datasourceschema.Attribute{
+	"created_bys": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+	},
+	"to_created_at": datasourceschema.StringAttribute{
 		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
 	},
-	"to_created_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+	"last_modified_bys": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
-	"last_modified_bys": {
-		Type:     schema.TypeList,
+	"from_last_modified_at": datasourceschema.StringAttribute{
 		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
 	},
-	"from_last_modified_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-	},
-	"to_last_modified_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
+	"to_last_modified_at": datasourceschema.StringAttribute{
+		Optional: true,
 	},
 }

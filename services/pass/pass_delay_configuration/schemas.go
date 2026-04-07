@@ -1,24 +1,20 @@
 package pass_delay_configuration
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 )
 
-var passDelayConfigurationSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var passDelayConfigurationSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"aos_delay_in_millisecond": {
-		Type:     schema.TypeFloat,
+	"aos_delay_in_millisecond": resourceschema.Float64Attribute{
 		Required: true,
 	},
-	"los_delay_in_millisecond": {
-		Type:     schema.TypeFloat,
+	"los_delay_in_millisecond": resourceschema.Float64Attribute{
 		Required: true,
 	},
 }

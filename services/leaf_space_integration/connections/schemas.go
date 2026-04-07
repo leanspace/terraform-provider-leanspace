@@ -1,94 +1,77 @@
 package connections
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 )
 
-var leafSpaceConnectionSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var leafSpaceConnectionSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"domain_url": {
-		Type:     schema.TypeString,
+	"domain_url": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"password": {
-		Type:      schema.TypeString,
+	"password": resourceschema.StringAttribute{
 		Optional:  true,
 		Computed:  true,
 		Sensitive: true,
 	},
-	"username": {
-		Type:     schema.TypeString,
+	"username": resourceschema.StringAttribute{
 		Optional: true,
 		Computed: true,
 	},
-	"authentication_token": {
-		Type:     schema.TypeString,
+	"authentication_token": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"status": {
-		Type:     schema.TypeString,
+	"status": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"created_at": {
-		Type:        schema.TypeString,
+	"created_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was created",
 	},
-	"created_by": {
-		Type:        schema.TypeString,
+	"created_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who created it",
 	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
+	"last_modified_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was last modified",
 	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
+	"last_modified_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
 }
 
-var leafSpaceConnectionFilterSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var leafSpaceConnectionFilterSchema = map[string]datasourceschema.Attribute{
+	"id": datasourceschema.StringAttribute{
 		Computed: true,
 	},
-	"created_at": {
-		Type:        schema.TypeString,
+	"created_at": datasourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was created",
 	},
-	"created_by": {
-		Type:        schema.TypeString,
+	"created_by": datasourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who created it",
 	},
-	"domain_url": {
-		Type:     schema.TypeString,
+	"domain_url": datasourceschema.StringAttribute{
 		Computed: true,
 	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
+	"last_modified_at": datasourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was last modified",
 	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
+	"last_modified_by": datasourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
-	"status": {
-		Type:     schema.TypeString,
+	"status": datasourceschema.StringAttribute{
 		Computed: true,
 	},
 }

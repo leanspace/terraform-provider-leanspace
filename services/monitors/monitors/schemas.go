@@ -1,13 +1,18 @@
 package monitors
 
 import (
-	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
-	"github.com/leanspace/terraform-provider-leanspace/services/monitors/action_templates"
+	"github.com/hashicorp/terraform-plugin-framework-validators/float64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+	"github.com/leanspace/terraform-provider-leanspace/services/monitors/action_templates"
 )
 
 var validComparisonOperators = []string{
@@ -21,161 +26,119 @@ var validComparisonOperators = []string{
 
 var actionTemplateSchema = action_templates.MakeActionTemplateSchema(true)
 
-var monitorSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var monitorSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"status": {
-		Type:     schema.TypeString,
+	"status": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"metric_id": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.IsUUID,
+	"metric_id": resourceschema.StringAttribute{
+		Required:   true,
+		Validators: helper.ValidUUID(),
 	},
-	"node_id": {
-		Type:     schema.TypeString,
+	"node_id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"rule": {
-		Type:     schema.TypeList,
-		Required: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: ruleSchema,
+	"rule": resourceschema.SingleNestedAttribute{
+		Required:   true,
+		Attributes: ruleSchema,
+	},
+	"action_templates": resourceschema.SetNestedAttribute{
+		Computed: true,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: actionTemplateSchema,
 		},
 	},
-	"action_templates": {
-		Type:     schema.TypeSet,
-		Computed: true,
-		Elem: &schema.Resource{
-			Schema: actionTemplateSchema,
-		},
-	},
-	"action_template_links": {
-		Type:     schema.TypeSet,
+	"action_template_links": resourceschema.SetNestedAttribute{
 		Optional: true,
-		Elem: &schema.Resource{
-			Schema: actionTemplateLinkSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: actionTemplateLinkSchema,
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": {
-		Type:        schema.TypeString,
+	"created_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was created",
 	},
-	"created_by": {
-		Type:        schema.TypeString,
+	"created_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who created it",
 	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
+	"last_modified_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was last modified",
 	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
+	"last_modified_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
-	"type": {
-		Type:        schema.TypeString,
+	"type": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Represent the type of the monitor. This field is deprecated and it will be removed soon. Please use only this type: REALTIME.",
 	},
 }
 
-var ruleSchema = map[string]*schema.Schema{ // ruleSchema
-	"comparison_operator": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validComparisonOperators, false),
-		Description:  helper.AllowedValuesToDescription(validComparisonOperators),
+var ruleSchema = map[string]resourceschema.Attribute{ // ruleSchema
+	"comparison_operator": resourceschema.StringAttribute{
+		Required:    true,
+		Description: helper.AllowedValuesToDescription(validComparisonOperators),
+		Validators:  []validator.String{stringvalidator.OneOf(validComparisonOperators...)},
 	},
-	"comparison_value": {
-		Type:     schema.TypeFloat,
+	"comparison_value": resourceschema.Float64Attribute{
 		Required: true,
 	},
-	"tolerance": {
-		Type:         schema.TypeFloat,
-		Optional:     true,
-		ValidateFunc: validation.FloatAtLeast(0),
-		Description:  "Only valid for EQUAL_TO or NOT_EQUAL_TO comparison operator",
+	"tolerance": resourceschema.Float64Attribute{
+		Optional:    true,
+		Description: "Only valid for EQUAL_TO or NOT_EQUAL_TO comparison operator",
+		Validators:  []validator.Float64{float64validator.AtLeast(0)},
 	},
 }
 
-var actionTemplateLinkSchema = map[string]*schema.Schema{
-	"id": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.IsUUID,
-		Description:  "Identifier of the Action Template",
+var actionTemplateLinkSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
+		Required:    true,
+		Description: "Identifier of the Action Template",
+		Validators:  helper.ValidUUID(),
 	},
-	"triggered_on": {
-		Type:     schema.TypeSet,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.StringInSlice(action_templates.ValidTriggeredOn, false),
-			Description:  helper.AllowedValuesToDescription(action_templates.ValidTriggeredOn),
-		},
+	"triggered_on": resourceschema.SetAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.Set{setvalidator.ValueStringsAre(stringvalidator.OneOf(action_templates.ValidTriggeredOn...))},
 	},
 }
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
-	"metric_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+	"metric_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": datasourceschema.StringAttribute{
 		Optional: true,
 	},
-	"node_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+	"node_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
-	"statuses": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
+	"statuses": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
-	"tags": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
+	"tags": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
-	"action_template_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+	"action_template_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
 }

@@ -3,114 +3,97 @@ package general_objects
 import (
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 )
 
-func PaginatedListSchema(content map[string]*schema.Schema, filters map[string]*schema.Schema) map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"content": {
-			Type:     schema.TypeList,
+func PaginatedListSchemaDS(content map[string]datasourceschema.Attribute, filters map[string]datasourceschema.Attribute) map[string]datasourceschema.Attribute {
+	return map[string]datasourceschema.Attribute{
+		"id": datasourceschema.StringAttribute{
 			Computed: true,
-			Elem: &schema.Resource{
-				Schema: content,
+		},
+		"content": datasourceschema.ListNestedAttribute{
+			Computed: true,
+			NestedObject: datasourceschema.NestedAttributeObject{
+				Attributes: content,
 			},
 		},
-		"total_elements": {
-			Type:        schema.TypeInt,
+		"total_elements": datasourceschema.Int64Attribute{
 			Computed:    true,
 			Description: "Number of elements in total",
 		},
-		"total_pages": {
-			Type:        schema.TypeInt,
+		"total_pages": datasourceschema.Int64Attribute{
 			Computed:    true,
 			Description: "Number of pages in total",
 		},
-		"number_of_elements": {
-			Type:        schema.TypeInt,
+		"number_of_elements": datasourceschema.Int64Attribute{
 			Computed:    true,
 			Description: "Number of elements fetched in this page",
 		},
-		"number": {
-			Type:        schema.TypeInt,
+		"number": datasourceschema.Int64Attribute{
 			Computed:    true,
 			Description: "Page number",
 		},
-		"size": {
-			Type:        schema.TypeInt,
+		"size": datasourceschema.Int64Attribute{
 			Computed:    true,
 			Description: "Size of this page",
 		},
-		"sort": {
-			Type:     schema.TypeList,
+		"sort": datasourceschema.ListNestedAttribute{
 			Computed: true,
-			Elem: &schema.Resource{
-				Schema: SortSchema,
+			NestedObject: datasourceschema.NestedAttributeObject{
+				Attributes: SortSchemaDS,
 			},
 		},
-		"first": {
-			Type:        schema.TypeBool,
+		"first": datasourceschema.BoolAttribute{
 			Computed:    true,
 			Description: "True if this is the first page",
 		},
-		"last": {
-			Type:        schema.TypeBool,
+		"last": datasourceschema.BoolAttribute{
 			Computed:    true,
 			Description: "True if this is the last page",
 		},
-		"empty": {
-			Type:        schema.TypeBool,
+		"empty": datasourceschema.BoolAttribute{
 			Computed:    true,
 			Description: "True if the content is empty",
 		},
-		"pageable": {
-			Type:     schema.TypeList,
+		"pageable": datasourceschema.ListNestedAttribute{
 			Computed: true,
-			Elem: &schema.Resource{
-				Schema: PageableSchema,
+			NestedObject: datasourceschema.NestedAttributeObject{
+				Attributes: PageableSchemaDS,
 			},
 		},
-		"filters": {
-			Type:     schema.TypeList,
-			MinItems: 1,
-			MaxItems: 1,
-			Optional: true,
-			Elem: &schema.Resource{
-				Schema: FilterSchema(filters),
-			},
+		"filters": datasourceschema.SingleNestedAttribute{
+			Optional:   true,
+			Attributes: FilterSchemaDS(filters),
 		},
 	}
 }
 
-func FilterSchema(filters map[string]*schema.Schema) map[string]*schema.Schema {
-	baseFilter := map[string]*schema.Schema{
-		"ids": {
-			Type:     schema.TypeList,
-			Optional: true,
-			Elem: &schema.Schema{
-				Type: schema.TypeString,
-			},
+func FilterSchemaDS(filters map[string]datasourceschema.Attribute) map[string]datasourceschema.Attribute {
+	baseFilter := map[string]datasourceschema.Attribute{
+		"ids": datasourceschema.ListAttribute{
+			Optional:    true,
+			ElementType: types.StringType,
 		},
-		"query": {
-			Type:     schema.TypeString,
+		"query": datasourceschema.StringAttribute{
 			Optional: true,
 		},
-		"page": {
-			Type:     schema.TypeInt,
+		"page": datasourceschema.Int64Attribute{
 			Optional: true,
-			Default:  0,
 		},
-		"size": {
-			Type:     schema.TypeInt,
+		"size": datasourceschema.Int64Attribute{
 			Optional: true,
-			Default:  100,
 		},
-		"sort": {
-			Type:     schema.TypeList,
-			Optional: true,
-			Elem: &schema.Schema{
-				Type: schema.TypeString,
-			},
+		"sort": datasourceschema.ListAttribute{
+			Optional:    true,
+			ElementType: types.StringType,
 		},
 	}
 
@@ -121,167 +104,259 @@ func FilterSchema(filters map[string]*schema.Schema) map[string]*schema.Schema {
 	return baseFilter
 }
 
-var SortSchema = map[string]*schema.Schema{
-	"direction": {
-		Type:        schema.TypeString,
+var SortSchemaDS = map[string]datasourceschema.Attribute{
+	"direction": datasourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Direction of the sorting, either DESC or ASC",
 	},
-	"property": {
-		Type:        schema.TypeString,
+	"property": datasourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Property used to sort by",
 	},
-	"ignore_case": {
-		Type:        schema.TypeBool,
+	"ignore_case": datasourceschema.BoolAttribute{
 		Computed:    true,
 		Description: "True if the search ignores case",
 	},
-	"null_handling": {
-		Type:        schema.TypeString,
+	"null_handling": datasourceschema.StringAttribute{
 		Computed:    true,
 		Description: "How null values are handled",
 	},
-	"ascending": {
-		Type:        schema.TypeBool,
+	"ascending": datasourceschema.BoolAttribute{
 		Computed:    true,
 		Description: "True if the direction of the sorting is ascending",
 	},
-	"descending": {
-		Type:        schema.TypeBool,
+	"descending": datasourceschema.BoolAttribute{
 		Computed:    true,
 		Description: "True if the direction of the sorting is descending",
 	},
 }
 
-var PageableSchema = map[string]*schema.Schema{
-	"sort": {
-		Type:     schema.TypeList,
+var PageableSchemaDS = map[string]datasourceschema.Attribute{
+	"sort": datasourceschema.ListNestedAttribute{
 		Computed: true,
-		Elem: &schema.Resource{
-			Schema: SortSchema,
+		NestedObject: datasourceschema.NestedAttributeObject{
+			Attributes: SortSchemaDS,
 		},
 	},
-	"offset": {
-		Type:        schema.TypeInt,
+	"offset": datasourceschema.Int64Attribute{
 		Computed:    true,
 		Description: "Number of elements in previous pages",
 	},
-	"page_number": {
-		Type:        schema.TypeInt,
+	"page_number": datasourceschema.Int64Attribute{
 		Computed:    true,
 		Description: "Page number",
 	},
-	"page_size": {
-		Type:        schema.TypeInt,
+	"page_size": datasourceschema.Int64Attribute{
 		Computed:    true,
 		Description: "Size of this page",
 	},
-	"paged": {
-		Type:        schema.TypeBool,
+	"paged": datasourceschema.BoolAttribute{
 		Computed:    true,
 		Description: "True if this query is paged",
 	},
-	"unpaged": {
-		Type:        schema.TypeBool,
+	"unpaged": datasourceschema.BoolAttribute{
 		Computed:    true,
 		Description: "True if this query is unpaged",
 	},
 }
 
-func createGeoPointFieldsSchema(isValueField bool) map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"latitude": {
-			Type:     schema.TypeList,
-			MaxItems: 1,
-			Required: true,
-			Elem: &schema.Resource{
-				Schema: baseAttributeFieldSchema(isValueField, true),
-			},
+var SortSchemaR = map[string]resourceschema.Attribute{
+	"direction": resourceschema.StringAttribute{
+		Computed:    true,
+		Description: "Direction of the sorting, either DESC or ASC",
+	},
+	"property": resourceschema.StringAttribute{
+		Computed:    true,
+		Description: "Property used to sort by",
+	},
+	"ignore_case": resourceschema.BoolAttribute{
+		Computed:    true,
+		Description: "True if the search ignores case",
+	},
+	"null_handling": resourceschema.StringAttribute{
+		Computed:    true,
+		Description: "How null values are handled",
+	},
+	"ascending": resourceschema.BoolAttribute{
+		Computed:    true,
+		Description: "True if the direction of the sorting is ascending",
+	},
+	"descending": resourceschema.BoolAttribute{
+		Computed:    true,
+		Description: "True if the direction of the sorting is descending",
+	},
+}
+
+var PageableSchemaR = map[string]resourceschema.Attribute{
+	"sort": resourceschema.ListNestedAttribute{
+		Computed: true,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: SortSchemaR,
 		},
-		"longitude": {
-			Type:     schema.TypeList,
-			MaxItems: 1,
-			Required: true,
-			Elem: &schema.Resource{
-				Schema: baseAttributeFieldSchema(isValueField, true),
-			},
+	},
+	"offset": resourceschema.Int64Attribute{
+		Computed:    true,
+		Description: "Number of elements in previous pages",
+	},
+	"page_number": resourceschema.Int64Attribute{
+		Computed:    true,
+		Description: "Page number",
+	},
+	"page_size": resourceschema.Int64Attribute{
+		Computed:    true,
+		Description: "Size of this page",
+	},
+	"paged": resourceschema.BoolAttribute{
+		Computed:    true,
+		Description: "True if this query is paged",
+	},
+	"unpaged": resourceschema.BoolAttribute{
+		Computed:    true,
+		Description: "True if this query is unpaged",
+	},
+}
+
+func createGeoPointFieldsSchema(isValueField bool) map[string]resourceschema.Attribute {
+	return map[string]resourceschema.Attribute{
+		"latitude": resourceschema.SingleNestedAttribute{
+			Required:   true,
+			Attributes: baseAttributeFieldSchema(isValueField, true),
 		},
-		"elevation": {
-			Type:     schema.TypeList,
-			MaxItems: 1,
-			Required: true,
-			Elem: &schema.Resource{
-				Schema: baseAttributeFieldSchema(isValueField, false),
-			},
+		"longitude": resourceschema.SingleNestedAttribute{
+			Required:   true,
+			Attributes: baseAttributeFieldSchema(isValueField, true),
+		},
+		"elevation": resourceschema.SingleNestedAttribute{
+			Required:   true,
+			Attributes: baseAttributeFieldSchema(isValueField, true),
+		},
+	}
+}
+
+func createGeoPointFieldsSchemaDS(isValueField bool) map[string]datasourceschema.Attribute {
+	return map[string]datasourceschema.Attribute{
+		"latitude": datasourceschema.SingleNestedAttribute{
+			Computed:   true,
+			Attributes: baseAttributeFieldSchemaDS(isValueField),
+		},
+		"longitude": datasourceschema.SingleNestedAttribute{
+			Computed:   true,
+			Attributes: baseAttributeFieldSchemaDS(isValueField),
+		},
+		"elevation": datasourceschema.SingleNestedAttribute{
+			Computed:   true,
+			Attributes: baseAttributeFieldSchemaDS(isValueField),
 		},
 	}
 }
 
 var geoPointFieldsDefSchema = createGeoPointFieldsSchema(false)
 var geoPointFieldsSchema = createGeoPointFieldsSchema(true)
+var geoPointFieldsDefSchemaDS = createGeoPointFieldsSchemaDS(false)
+var geoPointFieldsSchemaDS = createGeoPointFieldsSchemaDS(true)
 
-func baseAttributeFieldSchema(isValueField bool, isGeoPoint bool) map[string]*schema.Schema {
-	baseSchema := map[string]*schema.Schema{
-		"scale": {
-			Type:        schema.TypeInt,
+func baseAttributeFieldSchema(isValueField bool, isGeoPoint bool) map[string]resourceschema.Attribute {
+	baseSchema := map[string]resourceschema.Attribute{
+		"scale": resourceschema.Int64Attribute{
 			Optional:    true,
 			Description: "Property field with numeric type only: the scale required.",
 		},
-		"unit_id": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: validation.IsUUID,
-			Description:  "Property field with numeric type only",
+		"unit_id": resourceschema.StringAttribute{
+			Optional:    true,
+			Description: "Property field with numeric type only",
+			Validators:  helper.ValidUUID(),
 		},
-		"min": {
-			Type:        schema.TypeFloat,
+		"min": resourceschema.Float64Attribute{
+			Computed:    isGeoPoint,
+			Optional:    !isGeoPoint,
 			Description: "Property field with numeric type only: the minimum value allowed.",
 		},
-		"precision": {
-			Type:        schema.TypeInt,
+		"precision": resourceschema.Int64Attribute{
 			Optional:    true,
 			Description: "Property field with numeric type only: How many values after the comma should be accepted",
 		},
-		"max": {
-			Type:        schema.TypeFloat,
+		"max": resourceschema.Float64Attribute{
+			Computed:    isGeoPoint,
+			Optional:    !isGeoPoint,
 			Description: "Property field with numeric type only: the maximum value allowed.",
 		},
 	}
+
 	if isValueField {
-		baseSchema["value"] = &schema.Schema{
-			Type:     schema.TypeString,
+		baseSchema["value"] = resourceschema.StringAttribute{
 			Optional: true,
 		}
 	} else {
-		baseSchema["default_value"] = &schema.Schema{
-			Type:     schema.TypeString,
+		baseSchema["default_value"] = resourceschema.StringAttribute{
 			Optional: true,
 		}
 	}
 
-	if isGeoPoint == true {
-		baseSchema["min"].Computed = true
-		baseSchema["max"].Computed = true
-	} else {
-		baseSchema["min"].Optional = true
-		baseSchema["max"].Optional = true
-	}
 	return baseSchema
 }
 
-var KeyValuesSchema = &schema.Schema{
-	Type:     schema.TypeSet,
+func baseAttributeFieldSchemaDS(isValueField bool) map[string]datasourceschema.Attribute {
+	baseSchema := map[string]datasourceschema.Attribute{
+		"scale": datasourceschema.Int64Attribute{
+			Computed:    true,
+			Description: "Property field with numeric type only: the scale required.",
+		},
+		"unit_id": datasourceschema.StringAttribute{
+			Computed:    true,
+			Description: "Property field with numeric type only",
+		},
+		"precision": datasourceschema.Int64Attribute{
+			Computed:    true,
+			Description: "Property field with numeric type only: How many values after the comma should be accepted",
+		},
+		"min": datasourceschema.Float64Attribute{
+			Computed:    true,
+			Description: "Property field with numeric type only: the minimum value allowed.",
+		},
+		"max": datasourceschema.Float64Attribute{
+			Computed:    true,
+			Description: "Property field with numeric type only: the maximum value allowed.",
+		},
+	}
+
+	if isValueField {
+		baseSchema["value"] = datasourceschema.StringAttribute{
+			Computed: true,
+		}
+	} else {
+		baseSchema["default_value"] = datasourceschema.StringAttribute{
+			Computed: true,
+		}
+	}
+
+	return baseSchema
+}
+
+// KeyValuesSchema returns a SetNestedAttribute for key-value tags (resource schema).
+var KeyValuesSchema = resourceschema.SetNestedAttribute{
 	Optional: true,
-	Elem: &schema.Resource{
-		Schema: map[string]*schema.Schema{
-			"key": {
-				Type:     schema.TypeString,
+	NestedObject: resourceschema.NestedAttributeObject{
+		Attributes: map[string]resourceschema.Attribute{
+			"key": resourceschema.StringAttribute{
 				Required: true,
 			},
-			"value": {
-				Type:     schema.TypeString,
+			"value": resourceschema.StringAttribute{
 				Optional: true,
+			},
+		},
+	},
+}
+
+// KeyValuesSchemaDS returns a SetNestedAttribute for key-value tags (data source schema).
+var KeyValuesSchemaDS = datasourceschema.SetNestedAttribute{
+	Computed: true,
+	NestedObject: datasourceschema.NestedAttributeObject{
+		Attributes: map[string]datasourceschema.Attribute{
+			"key": datasourceschema.StringAttribute{
+				Computed: true,
+			},
+			"value": datasourceschema.StringAttribute{
+				Computed: true,
 			},
 		},
 	},
@@ -300,7 +375,7 @@ func contains(slice []string, value string) bool {
 	return false
 }
 
-func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string, forceNew bool) map[string]*schema.Schema {
+func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string, forceNew bool) map[string]resourceschema.Attribute {
 	validTypes := []string{}
 	for _, value := range ValidAttributeSchemaTypes {
 		if contains(excludeTypes, value) {
@@ -309,150 +384,161 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string, fo
 		validTypes = append(validTypes, value)
 	}
 
-	schema := map[string]*schema.Schema{
+	var typePlanModifiers []planmodifier.String
+	if forceNew {
+		typePlanModifiers = []planmodifier.String{stringplanmodifier.RequiresReplace()}
+	}
+
+	attribute := map[string]resourceschema.Attribute{
 		// Common fields
-		"type": {
-			Type:         schema.TypeString,
-			Required:     true,
-			ValidateFunc: validation.StringInSlice(validTypes, false),
-			Description:  helper.AllowedValuesToDescription(validTypes),
+		"type": resourceschema.StringAttribute{
+			Required:      true,
+			Description:   helper.AllowedValuesToDescription(validTypes),
+			Validators:    []validator.String{stringvalidator.OneOf(validTypes...)},
+			PlanModifiers: typePlanModifiers,
 		},
-		"required": {
-			Type:     schema.TypeBool,
+		"required": resourceschema.BoolAttribute{
 			Optional: true,
 		},
-		"default_value": {
-			Type:        schema.TypeString,
+		"default_value": resourceschema.StringAttribute{
 			Optional:    true,
 			Description: "The default value can be of any type. In case of an array type, please surround the list values with double quotes and use the comma separator.",
 		},
 		// Text & Binary
-		"min_length": {
-			Type:         schema.TypeInt,
-			Optional:     true,
-			ValidateFunc: validation.IntAtLeast(1),
-			Description:  "Text only: Minimum length of this text (at least 1)",
+		"min_length": resourceschema.Int64Attribute{
+			Optional:    true,
+			Description: "Text only: Minimum length of this text (at least 1)",
+			Validators:  []validator.Int64{int64validator.AtLeast(1)},
 		},
-		"max_length": {
-			Type:         schema.TypeInt,
-			Optional:     true,
-			ValidateFunc: validation.IntAtLeast(1),
-			Description:  "Text only: Maximum length of this text (at least 1)",
+		"max_length": resourceschema.Int64Attribute{
+			Optional:    true,
+			Description: "Text only: Maximum length of this text (at least 1)",
+			Validators:  []validator.Int64{int64validator.AtLeast(1)},
 		},
-
 		// Text only
-		"pattern": {
-			Type:        schema.TypeString,
+		"pattern": resourceschema.StringAttribute{
 			Optional:    true,
 			Description: "Text only: Regex defined the allowed pattern of this text",
 		},
-
 		// Numeric only
-		"min": {
-			Type:        schema.TypeFloat,
+		"min": resourceschema.Float64Attribute{
 			Optional:    true,
 			Description: "Numeric only",
 		},
-		"max": {
-			Type:        schema.TypeFloat,
+		"max": resourceschema.Float64Attribute{
 			Optional:    true,
 			Description: "Numeric only",
 		},
-		"scale": {
-			Type:        schema.TypeInt,
+		"scale": resourceschema.Int64Attribute{
 			Optional:    true,
 			Description: "Numeric only",
 		},
-		"precision": {
-			Type:        schema.TypeInt,
+		"precision": resourceschema.Int64Attribute{
 			Optional:    true,
 			Description: "Numeric only: How many values after the comma should be accepted",
 		},
-		"unit_id": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: validation.IsUUID,
-			Description:  "Numeric only",
+		"unit_id": resourceschema.StringAttribute{
+			Optional:    true,
+			Description: "Numeric only",
+			Validators:  helper.ValidUUID(),
 		},
-
 		// Time, date, timestamp only
-		"before": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-			Description:  "Time/date/timestamp only: Maximum date allowed",
+		"before": resourceschema.StringAttribute{
+			Optional:    true,
+			Description: "Time/date/timestamp only: Maximum date allowed",
+			Validators:  helper.IsValidTimeDateOrTimestamp(),
 		},
-		"after": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-			Description:  "Time/date/timestamp only: Minimum date allowed",
+		"after": resourceschema.StringAttribute{
+			Optional:    true,
+			Description: "Time/date/timestamp only: Minimum date allowed",
+			Validators:  helper.IsValidTimeDateOrTimestamp(),
 		},
-
 		// Enum only
-		"options": {
-			Type: schema.TypeMap,
-			Elem: &schema.Schema{
-				Type: schema.TypeString,
-			},
+		"options": resourceschema.MapAttribute{
+			ElementType: types.StringType,
 			Optional:    true,
 			Description: "Enum only: The allowed values for the enum in the format 1 = \"value\"",
 		},
-
 		// Geopoint only
-		"fields": {
-			Type:     schema.TypeList,
-			MaxItems: 1,
-			Optional: true,
-			Elem: &schema.Resource{
-				Schema: geoPointFieldsDefSchema,
-			},
+		"fields": resourceschema.SingleNestedAttribute{
+			Optional:    true,
+			Attributes:  geoPointFieldsDefSchema,
 			Description: "Geopoint only",
 		},
-
 		// Array
-		"min_size": {
-			Type:        schema.TypeInt,
+		"min_size": resourceschema.Int64Attribute{
 			Optional:    true,
 			Description: "Array only: The minimum number of elements allowed",
 		},
-		"max_size": {
-			Type:        schema.TypeInt,
+		"max_size": resourceschema.Int64Attribute{
 			Optional:    true,
 			Description: "Array only: The maximum number of elements allowed",
 		},
-		"unique": {
-			Type:        schema.TypeBool,
+		"unique": resourceschema.BoolAttribute{
 			Optional:    true,
 			Description: "Array only: No duplicated elements are allowed",
 		},
-		"constraint": {
-			Type:        schema.TypeList,
+		"constraint": resourceschema.SingleNestedAttribute{
 			Optional:    true,
 			Description: "Array only: Constraint applied to all elements in the array",
-			MaxItems:    1,
-			MinItems:    1,
-			Elem: &schema.Resource{
-				Schema: DefinitionAttributeArrayConstraintSchema(
-					[]string{"ARRAY", "STRUCTURE", "GEOPOINT", "TLE"}, // element types not allowed in array
-					[]string{"default_value"},                         // Field unused as only the default value of the array is taken into account
-				),
-			},
+			Attributes: DefinitionAttributeArrayConstraintSchema(
+				[]string{"ARRAY", "STRUCTURE", "GEOPOINT", "TLE"},
+				[]string{"default_value"},
+			),
 		},
 	}
 
-	if forceNew {
-		schema["type"].ForceNew = true
+	for _, field := range excludeFields {
+		delete(attribute, field)
+	}
+
+	return attribute
+}
+
+// DefinitionAttributeSchemaDS generates the datasource schema for typed definition attributes (all computed).
+func DefinitionAttributeSchemaDS(excludeTypes []string, excludeFields []string) map[string]datasourceschema.Attribute {
+	s := map[string]datasourceschema.Attribute{
+		"type":          datasourceschema.StringAttribute{Computed: true},
+		"required":      datasourceschema.BoolAttribute{Computed: true},
+		"default_value": datasourceschema.StringAttribute{Computed: true},
+		"min_length":    datasourceschema.Int64Attribute{Computed: true},
+		"max_length":    datasourceschema.Int64Attribute{Computed: true},
+		"pattern":       datasourceschema.StringAttribute{Computed: true},
+		"min":           datasourceschema.Float64Attribute{Computed: true},
+		"max":           datasourceschema.Float64Attribute{Computed: true},
+		"scale":         datasourceschema.Int64Attribute{Computed: true},
+		"precision":     datasourceschema.Int64Attribute{Computed: true},
+		"unit_id":       datasourceschema.StringAttribute{Computed: true},
+		"before":        datasourceschema.StringAttribute{Computed: true},
+		"after":         datasourceschema.StringAttribute{Computed: true},
+		"options": datasourceschema.MapAttribute{
+			ElementType: types.StringType,
+			Computed:    true,
+		},
+		"fields": datasourceschema.SingleNestedAttribute{
+			Computed:   true,
+			Attributes: geoPointFieldsDefSchemaDS,
+		},
+		"min_size": datasourceschema.Int64Attribute{Computed: true},
+		"max_size": datasourceschema.Int64Attribute{Computed: true},
+		"unique":   datasourceschema.BoolAttribute{Computed: true},
+		"constraint": datasourceschema.SingleNestedAttribute{
+			Computed: true,
+			Attributes: DefinitionAttributeArrayConstraintSchemaDS(
+				[]string{"ARRAY", "STRUCTURE", "GEOPOINT", "TLE"},
+				[]string{"default_value"},
+			),
+		},
 	}
 
 	for _, field := range excludeFields {
-		delete(schema, field)
+		delete(s, field)
 	}
 
-	return schema
+	return s
 }
 
-func DefinitionAttributeArrayConstraintSchema(excludeTypes []string, excludeFields []string) map[string]*schema.Schema {
+func DefinitionAttributeArrayConstraintSchema(excludeTypes []string, excludeFields []string) map[string]resourceschema.Attribute {
 	validTypes := []string{}
 	for _, value := range ValidAttributeSchemaTypes {
 		if contains(excludeTypes, value) {
@@ -461,97 +547,99 @@ func DefinitionAttributeArrayConstraintSchema(excludeTypes []string, excludeFiel
 		validTypes = append(validTypes, value)
 	}
 
-	schema := map[string]*schema.Schema{
-		// Common fields
-		"type": {
-			Type:         schema.TypeString,
-			Required:     true,
-			ValidateFunc: validation.StringInSlice(validTypes, false),
-			Description:  helper.AllowedValuesToDescription(validTypes),
+	attribute := map[string]resourceschema.Attribute{
+		"type": resourceschema.StringAttribute{
+			Required:    true,
+			Description: helper.AllowedValuesToDescription(validTypes),
+			Validators:  []validator.String{stringvalidator.OneOf(validTypes...)},
 		},
-		"required": {
-			Type:     schema.TypeBool,
+		"required": resourceschema.BoolAttribute{
 			Optional: true,
 		},
-		// Text & Binary
-		"max_length": {
-			Type:         schema.TypeInt,
-			Optional:     true,
-			ValidateFunc: validation.IntAtLeast(1),
-			Description:  "Only array elements with text type: Maximum length of this text (at least 1)",
+		"max_length": resourceschema.Int64Attribute{
+			Optional:    true,
+			Description: "Only array elements with text type: Maximum length of this text (at least 1)",
+			Validators:  []validator.Int64{int64validator.AtLeast(1)},
 		},
-		"min_length": {
-			Type:         schema.TypeInt,
-			Optional:     true,
-			ValidateFunc: validation.IntAtLeast(1),
-			Description:  "Only array elements with text type: Minimum length of this text (at least 1)",
+		"min_length": resourceschema.Int64Attribute{
+			Optional:    true,
+			Description: "Only array elements with text type: Minimum length of this text (at least 1)",
+			Validators:  []validator.Int64{int64validator.AtLeast(1)},
 		},
-
-		// Text only
-		"pattern": {
-			Type:        schema.TypeString,
+		"pattern": resourceschema.StringAttribute{
 			Optional:    true,
 			Description: "Only array elements with text type: Regex defined the allowed pattern of this text",
 		},
-
-		// Numeric only
-		"max": {
-			Type:        schema.TypeFloat,
+		"max": resourceschema.Float64Attribute{
 			Optional:    true,
 			Description: "Only array elements with numeric type : maximum value allowed",
 		},
-		"precision": {
-			Type:        schema.TypeInt,
+		"precision": resourceschema.Int64Attribute{
 			Optional:    true,
 			Description: "Only array elements with numeric type : how many values after the comma should be accepted",
 		},
-		"min": {
-			Type:        schema.TypeFloat,
+		"min": resourceschema.Float64Attribute{
 			Optional:    true,
 			Description: "Only array elements with numeric type : minimum value allowed",
 		},
-		"unit_id": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: validation.IsUUID,
-			Description:  "Only array elements with numeric type",
+		"unit_id": resourceschema.StringAttribute{
+			Optional:    true,
+			Description: "Only array elements with numeric type",
+			Validators:  helper.ValidUUID(),
 		},
-		"scale": {
-			Type:        schema.TypeInt,
+		"scale": resourceschema.Int64Attribute{
 			Optional:    true,
 			Description: "Only array elements with numeric type",
 		},
-
-		// Enum only
-		"options": {
-			Type: schema.TypeMap,
-			Elem: &schema.Schema{
-				Type: schema.TypeString,
-			},
+		"options": resourceschema.MapAttribute{
+			ElementType: types.StringType,
 			Optional:    true,
 			Description: "Only array elements with enum type : The allowed values for the enum in the format 1 = \"value\"",
 		},
-
-		// Time, date, timestamp only
-		"after": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-			Description:  "Only array elements with time/date/timestamp type : Minimum date allowed",
+		"after": resourceschema.StringAttribute{
+			Optional:    true,
+			Description: "Only array elements with time/date/timestamp type : Minimum date allowed",
+			Validators:  helper.IsValidTimeDateOrTimestamp(),
 		},
-		"before": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-			Description:  "Only array elements with time/date/timestamp type : Maximum date allowed",
+		"before": resourceschema.StringAttribute{
+			Optional:    true,
+			Description: "Only array elements with time/date/timestamp type : Maximum date allowed",
+			Validators:  helper.IsValidTimeDateOrTimestamp(),
 		},
 	}
 
 	for _, field := range excludeFields {
-		delete(schema, field)
+		delete(attribute, field)
 	}
 
-	return schema
+	return attribute
+}
+
+func DefinitionAttributeArrayConstraintSchemaDS(excludeTypes []string, excludeFields []string) map[string]datasourceschema.Attribute {
+	s := map[string]datasourceschema.Attribute{
+		"type":       datasourceschema.StringAttribute{Computed: true},
+		"required":   datasourceschema.BoolAttribute{Computed: true},
+		"max_length": datasourceschema.Int64Attribute{Computed: true},
+		"min_length": datasourceschema.Int64Attribute{Computed: true},
+		"pattern":    datasourceschema.StringAttribute{Computed: true},
+		"max":        datasourceschema.Float64Attribute{Computed: true},
+		"precision":  datasourceschema.Int64Attribute{Computed: true},
+		"min":        datasourceschema.Float64Attribute{Computed: true},
+		"unit_id":    datasourceschema.StringAttribute{Computed: true},
+		"scale":      datasourceschema.Int64Attribute{Computed: true},
+		"options": datasourceschema.MapAttribute{
+			ElementType: types.StringType,
+			Computed:    true,
+		},
+		"after":  datasourceschema.StringAttribute{Computed: true},
+		"before": datasourceschema.StringAttribute{Computed: true},
+	}
+
+	for _, field := range excludeFields {
+		delete(s, field)
+	}
+
+	return s
 }
 
 var validMetadataTypes = []string{
@@ -562,7 +650,7 @@ var validArraydataTypes = []string{
 	"NUMERIC", "BOOLEAN", "TEXT", "DATE", "TIME", "TIMESTAMP", "ENUM", "BINARY",
 }
 
-func ValueAttributeSchema(excludeTypes []string) map[string]*schema.Schema {
+func ValueAttributeSchema(excludeTypes []string) map[string]resourceschema.Attribute {
 	validTypes := []string{}
 	for _, value := range validMetadataTypes {
 		if contains(excludeTypes, value) {
@@ -571,40 +659,41 @@ func ValueAttributeSchema(excludeTypes []string) map[string]*schema.Schema {
 		validTypes = append(validTypes, value)
 	}
 
-	schema := map[string]*schema.Schema{
-		"value": {
-			Type:     schema.TypeString,
+	return map[string]resourceschema.Attribute{
+		"value": resourceschema.StringAttribute{
 			Optional: true,
 		},
-		"type": {
-			Type:         schema.TypeString,
-			Required:     true,
-			ValidateFunc: validation.StringInSlice(validTypes, false),
-			Description:  helper.AllowedValuesToDescription(validTypes),
+		"type": resourceschema.StringAttribute{
+			Required:    true,
+			Description: helper.AllowedValuesToDescription(validTypes),
+			Validators:  []validator.String{stringvalidator.OneOf(validTypes...)},
 		},
-		"data_type": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: validation.StringInSlice(validArraydataTypes, false),
-			Description:  helper.AllowedValuesToDescription(validArraydataTypes),
+		"data_type": resourceschema.StringAttribute{
+			Optional:    true,
+			Description: helper.AllowedValuesToDescription(validArraydataTypes),
+			Validators:  []validator.String{stringvalidator.OneOf(validArraydataTypes...)},
 		},
-		// Numeric only
-		"unit_id": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: validation.IsUUID,
+		"unit_id": resourceschema.StringAttribute{
+			Optional:   true,
+			Validators: helper.ValidUUID(),
 		},
-		// Geopoint only
-		"fields": {
-			Type:     schema.TypeList,
-			MaxItems: 1,
-			Optional: true,
-			Elem: &schema.Resource{
-				Schema: geoPointFieldsSchema,
-			},
+		"fields": resourceschema.SingleNestedAttribute{
+			Optional:    true,
+			Attributes:  geoPointFieldsSchema,
 			Description: "Geopoint only",
 		},
 	}
+}
 
-	return schema
+func ValueAttributeSchemaDS(excludeTypes []string) map[string]datasourceschema.Attribute {
+	return map[string]datasourceschema.Attribute{
+		"value":     datasourceschema.StringAttribute{Computed: true},
+		"type":      datasourceschema.StringAttribute{Computed: true},
+		"data_type": datasourceschema.StringAttribute{Computed: true},
+		"unit_id":   datasourceschema.StringAttribute{Computed: true},
+		"fields": datasourceschema.SingleNestedAttribute{
+			Computed:   true,
+			Attributes: geoPointFieldsSchemaDS,
+		},
+	}
 }

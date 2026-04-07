@@ -1,91 +1,69 @@
 package metrics
 
 import (
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-var metricSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var metricSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"node_id": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ForceNew:     true,
-		ValidateFunc: validation.IsUUID,
+	"node_id": resourceschema.StringAttribute{
+		Required:      true,
+		Validators:    helper.ValidUUID(),
+		PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"attributes": {
-		Type:     schema.TypeList,
-		MinItems: 1,
-		MaxItems: 1,
+	"attributes": resourceschema.SingleNestedAttribute{
 		Required: true,
-		Elem: &schema.Resource{
-			Schema: general_objects.DefinitionAttributeSchema(
-				[]string{"TIME", "ARRAY"},             // TIME and ARRAY type not allowed
-				[]string{"required", "default_value"}, // Fields unused
-				true,                                  // Force recreation if the type changes
-			),
-		},
+		Attributes: general_objects.DefinitionAttributeSchema(
+			[]string{"TIME", "ARRAY"},             // TIME and ARRAY type not allowed
+			[]string{"required", "default_value"}, // Fields unused
+			true,                                  // Force recreation if the type changes
+		),
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": {
-		Type:        schema.TypeString,
+	"created_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was created",
 	},
-	"created_by": {
-		Type:        schema.TypeString,
+	"created_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who created it",
 	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
+	"last_modified_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was last modified",
 	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
+	"last_modified_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
 }
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
-	"node_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+	"node_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
-	"attribute_types": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.StringInSlice(general_objects.ValidAttributeSchemaTypes, false),
-			Description:  helper.AllowedValuesToDescription(general_objects.ValidAttributeSchemaTypes),
-		},
+	"attribute_types": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
-	"tags": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
+	"tags": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
 }

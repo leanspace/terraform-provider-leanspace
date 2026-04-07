@@ -1,20 +1,17 @@
 package units
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 )
 
-var unitSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var unitSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"display_name": {
-		Type:     schema.TypeString,
+	"display_name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"symbol": {
-		Type:     schema.TypeString,
+	"symbol": resourceschema.StringAttribute{
 		Required: true,
 	},
 }

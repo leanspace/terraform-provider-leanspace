@@ -1,307 +1,246 @@
 package dashboards
 
 import (
-	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
-	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/widgets"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/widgets"
 )
 
-var dashboardSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var dashboardSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"node_ids": {
-		Type:     schema.TypeSet,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
+	"node_ids": resourceschema.SetAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators: []validator.Set{
+			setvalidator.ValueStringsAre(helper.ValidUUID()...),
 		},
 	},
-	"widget_info": {
-		Type:     schema.TypeSet,
+	"widget_info": resourceschema.SetNestedAttribute{
 		Optional: true,
-		Elem: &schema.Resource{
-			Schema: widgetInfoSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: widgetInfoSchema,
 		},
 	},
-	"widgets": {
-		Type:     schema.TypeSet,
+	"widgets": resourceschema.SetNestedAttribute{
 		Computed: true,
-		Elem: &schema.Resource{
-			Schema: dashboardWidgetSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: dashboardWidgetSchema,
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": {
-		Type:        schema.TypeString,
+	"created_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was created",
 	},
-	"created_by": {
-		Type:        schema.TypeString,
+	"created_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who created it",
 	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
+	"last_modified_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was last modified",
 	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
+	"last_modified_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
 }
 
-var widgetInfoSchema = map[string]*schema.Schema{
-	"id": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.IsUUID,
+var widgetInfoSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
+		Required:   true,
+		Validators: helper.ValidUUID(),
 	},
-	"type": {
-		Type:        schema.TypeString,
+	"type": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: helper.AllowedValuesToDescription(widgets.ValidWidgetTypes),
 	},
-	"w": {
-		Type:         schema.TypeInt,
-		Required:     true,
-		ValidateFunc: validation.IntAtLeast(1),
+	"w": resourceschema.Int64Attribute{
+		Required:   true,
+		Validators: []validator.Int64{int64validator.AtLeast(1)},
 	},
-	"h": {
-		Type:         schema.TypeInt,
-		Required:     true,
-		ValidateFunc: validation.IntAtLeast(1),
+	"h": resourceschema.Int64Attribute{
+		Required:   true,
+		Validators: []validator.Int64{int64validator.AtLeast(1)},
 	},
-	"x": {
-		Type:         schema.TypeInt,
-		Required:     true,
-		ValidateFunc: validation.IntAtLeast(0),
+	"x": resourceschema.Int64Attribute{
+		Required:   true,
+		Validators: []validator.Int64{int64validator.AtLeast(0)},
 	},
-	"y": {
-		Type:         schema.TypeInt,
-		Required:     true,
-		ValidateFunc: validation.IntAtLeast(0),
+	"y": resourceschema.Int64Attribute{
+		Required:   true,
+		Validators: []validator.Int64{int64validator.AtLeast(0)},
 	},
-	"min_w": {
-		Type:         schema.TypeInt,
-		Optional:     true,
-		ValidateFunc: validation.IntAtLeast(1),
+	"min_w": resourceschema.Int64Attribute{
+		Optional:   true,
+		Validators: []validator.Int64{int64validator.AtLeast(1)},
 	},
-	"min_h": {
-		Type:         schema.TypeInt,
-		Optional:     true,
-		ValidateFunc: validation.IntAtLeast(1),
+	"min_h": resourceschema.Int64Attribute{
+		Optional:   true,
+		Validators: []validator.Int64{int64validator.AtLeast(1)},
 	},
 }
 
-var dashboardWidgetSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var dashboardWidgetSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"type": {
-		Type:     schema.TypeString,
+	"type": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"granularity": {
-		Type:     schema.TypeString,
+	"granularity": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"query_time_dimension": {
-		Type:     schema.TypeString,
+	"query_time_dimension": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"display_time_dimension": {
-		Type:     schema.TypeString,
+	"display_time_dimension": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"series": {
-		Type:     schema.TypeList,
+	"series": resourceschema.ListNestedAttribute{
 		Computed: true,
-		Elem: &schema.Resource{
-			Schema: seriesSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: seriesSchema,
 		},
 	},
-	"metadata": {
-		Type:     schema.TypeList,
+	"metadata": resourceschema.ListNestedAttribute{
 		Computed: true,
-		Elem: &schema.Resource{
-			Schema: metadataSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: metadataSchema,
 		},
 	},
-	"view": {
-		Type:     schema.TypeList,
+	"view": resourceschema.ListNestedAttribute{
 		Computed: true,
-		Elem: &schema.Resource{
-			Schema: dashboardInfoSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: dashboardInfoSchema,
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": {
-		Type:        schema.TypeString,
+	"created_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was created",
 	},
-	"created_by": {
-		Type:        schema.TypeString,
+	"created_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who created it",
 	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
+	"last_modified_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was last modified",
 	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
+	"last_modified_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
 }
 
-var seriesSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var seriesSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"datasource": {
-		Type:     schema.TypeString,
+	"datasource": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"aggregation": {
-		Type:     schema.TypeString,
+	"aggregation": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"filters": {
-		Type:     schema.TypeSet,
+	"filters": resourceschema.SetNestedAttribute{
 		Computed: true,
-		Elem: &schema.Resource{
-			Schema: filterSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: filterSchema,
 		},
 	},
 }
 
-var filterSchema = map[string]*schema.Schema{
-	"filter_by": {
-		Type:     schema.TypeString,
+var filterSchema = map[string]resourceschema.Attribute{
+	"filter_by": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"operator": {
-		Type:     schema.TypeString,
+	"operator": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"value": {
-		Type:     schema.TypeString,
+	"value": resourceschema.StringAttribute{
 		Computed: true,
 	},
 }
 
-var metadataSchema = map[string]*schema.Schema{
-	"y_axis_label": {
-		Type:     schema.TypeString,
+var metadataSchema = map[string]resourceschema.Attribute{
+	"y_axis_label": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"y_axis_range_min": {
-		Type:     schema.TypeList,
-		Computed: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeFloat,
-		},
+	"y_axis_range_min": resourceschema.ListAttribute{
+		ElementType: types.Float64Type,
+		Computed:    true,
 	},
-	"y_axis_range_max": {
-		Type:     schema.TypeList,
-		Computed: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeFloat,
-		},
+	"y_axis_range_max": resourceschema.ListAttribute{
+		ElementType: types.Float64Type,
+		Computed:    true,
 	},
-	"thresholds": {
-		Type:        schema.TypeList,
+	"thresholds": resourceschema.ListNestedAttribute{
 		Computed:    true,
 		Description: "The threshold applies only to the Gauge widget.",
-		Elem: &schema.Resource{
-			Schema: thresholdSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: thresholdSchema,
 		},
 	},
 }
 
-var thresholdSchema = map[string]*schema.Schema{
-	"from": {
-		Type:     schema.TypeString,
+var thresholdSchema = map[string]resourceschema.Attribute{
+	"from": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"to": {
-		Type:     schema.TypeString,
+	"to": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"color": {
-		Type:     schema.TypeString,
+	"color": resourceschema.StringAttribute{
 		Computed: true,
 	},
 }
 
-var dashboardInfoSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var dashboardInfoSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Computed: true,
 	},
 }
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
-	"node_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+	"node_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
-	"widget_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+	"widget_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
-	"tags": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
+	"tags": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
 }

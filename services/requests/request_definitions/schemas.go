@@ -1,235 +1,178 @@
 package request_definitions
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var requestDefinitionSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var requestDefinitionSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"plan_template_ids": {
-		Type:     schema.TypeSet,
+	"plan_template_ids": resourceschema.SetAttribute{
+		ElementType: types.StringType,
+		Required:    true,
+		Validators:  []validator.Set{setvalidator.SizeAtMost(499), setvalidator.ValueStringsAre(helper.ValidUUID()...)},
+	},
+	"feasibility_constraint_definitions": resourceschema.SetNestedAttribute{
 		Required: true,
-		MinItems: 1,
-		MaxItems: 499,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: feasibilityConstraintDefinitionSchema,
 		},
+		Validators: []validator.Set{setvalidator.SizeAtMost(499)},
 	},
-	"feasibility_constraint_definitions": {
-		Type:     schema.TypeSet,
-		Required: true,
-		MinItems: 1,
-		MaxItems: 499,
-		Elem: &schema.Resource{
-			Schema: feasibilityConstraintDefinitionSchema,
-		},
-	},
-	"configuration_argument_definitions": {
-		Type:     schema.TypeSet,
+	"configuration_argument_definitions": resourceschema.SetNestedAttribute{
 		Optional: true,
-		MinItems: 1,
-		MaxItems: 499,
-		Elem: &schema.Resource{
-			Schema: argumentDefinitionSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: argumentDefinitionSchema,
 		},
+		Validators: []validator.Set{setvalidator.SizeAtMost(499)},
 	},
-	"configuration_argument_mappings": {
-		Type:     schema.TypeSet,
+	"configuration_argument_mappings": resourceschema.SetNestedAttribute{
 		Optional: true,
-		MinItems: 1,
-		MaxItems: 499,
-		Elem: &schema.Resource{
-			Schema: argumentMappingSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: argumentMappingSchema,
 		},
+		Validators: []validator.Set{setvalidator.SizeAtMost(499)},
 	},
-	"created_at": {
-		Type:     schema.TypeString,
+	"created_at": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"created_by": {
-		Type:     schema.TypeString,
+	"created_by": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"last_modified_at": {
-		Type:     schema.TypeString,
+	"last_modified_at": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"last_modified_by": {
-		Type:     schema.TypeString,
+	"last_modified_by": resourceschema.StringAttribute{
 		Computed: true,
 	},
 }
 
-var feasibilityConstraintDefinitionSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var feasibilityConstraintDefinitionSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"required": {
-		Type:     schema.TypeBool,
+	"required": resourceschema.BoolAttribute{
 		Required: true,
 	},
-	"argument_definitions": {
-		Type:     schema.TypeSet,
+	"argument_definitions": resourceschema.SetNestedAttribute{
 		Computed: true,
-		Elem: &schema.Resource{
-			Schema: computedArgumentDefinitionSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: computedArgumentDefinitionSchema,
 		},
 	},
-	"created_at": {
-		Type:     schema.TypeString,
+	"created_at": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"created_by": {
-		Type:     schema.TypeString,
+	"created_by": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"last_modified_at": {
-		Type:     schema.TypeString,
+	"last_modified_at": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"last_modified_by": {
-		Type:     schema.TypeString,
+	"last_modified_by": resourceschema.StringAttribute{
 		Computed: true,
 	},
 }
 
-var argumentDefinitionSchema = map[string]*schema.Schema{
-	"name": {
-		Type:     schema.TypeString,
+var argumentDefinitionSchema = map[string]resourceschema.Attribute{
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"attributes": {
-		Type:     schema.TypeList,
+	"attributes": resourceschema.SingleNestedAttribute{
 		Required: true,
-		MinItems: 1,
-		MaxItems: 499,
-		Elem: &schema.Resource{
-			Schema: general_objects.DefinitionAttributeSchema(
-				[]string{"BINARY", "BOOLEAN", "ENUM", "DATE", "ARRAY", "STRUCTURE", "TLE"}, // attribute types not allowed in command definition attributes
-				nil,   // All fields are used
-				false, // Does not force recreation if the type changes
-			),
-		},
+		Attributes: general_objects.DefinitionAttributeSchema(
+			[]string{"BINARY", "BOOLEAN", "ENUM", "DATE", "ARRAY", "STRUCTURE", "TLE"}, // attribute types not allowed in command definition attributes
+			nil,   // All fields are used
+			false, // Does not force recreation if the type changes
+		),
 	},
 }
 
-var computedArgumentDefinitionSchema = map[string]*schema.Schema{
-	"name": {
-		Type:     schema.TypeString,
+var computedArgumentDefinitionSchema = map[string]resourceschema.Attribute{
+	"name": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"attributes": {
-		Type:     schema.TypeList,
+	"attributes": resourceschema.SingleNestedAttribute{
 		Computed: true,
-		Elem: &schema.Resource{
-			Schema: general_objects.DefinitionAttributeSchema(
-				[]string{"BINARY", "BOOLEAN", "ENUM", "DATE", "ARRAY", "STRUCTURE", "TLE"}, // attribute types not allowed in command definition attributes
-				nil,   // All fields are used
-				false, // Does not force recreation if the type changes
-			),
-		},
+		Attributes: general_objects.DefinitionAttributeSchema(
+			[]string{"BINARY", "BOOLEAN", "ENUM", "DATE", "ARRAY", "STRUCTURE", "TLE"}, // attribute types not allowed in command definition attributes
+			nil,   // All fields are used
+			false, // Does not force recreation if the type changes
+		),
 	},
 }
 
-var argumentMappingSchema = map[string]*schema.Schema{
-	"plan_template_id": {
-		Type:         schema.TypeString,
-		ValidateFunc: validation.IsUUID,
-		Required:     true,
+var argumentMappingSchema = map[string]resourceschema.Attribute{
+	"plan_template_id": resourceschema.StringAttribute{
+		Required:   true,
+		Validators: helper.ValidUUID(),
 	},
-	"activity_definition_position": {
-		Type:         schema.TypeInt,
-		Required:     true,
-		ValidateFunc: validation.IntBetween(0, 499),
+	"activity_definition_position": resourceschema.Int64Attribute{
+		Required:   true,
+		Validators: []validator.Int64{int64validator.Between(0, 499)},
 	},
-	"configuration_argument_definition_name": {
-		Type:     schema.TypeString,
+	"configuration_argument_definition_name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"activity_definition_argument_definition_name": {
-		Type:     schema.TypeString,
+	"activity_definition_argument_definition_name": resourceschema.StringAttribute{
 		Required: true,
 	},
 }
 
-var requestDefinitionFilterSchema = map[string]*schema.Schema{
-	"feasibility_constraint_definition_ids": {
-		Type:     schema.TypeList,
+var requestDefinitionFilterSchema = map[string]datasourceschema.Attribute{
+	"feasibility_constraint_definition_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
+	},
+	"plan_template_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
+	},
+	"created_bys": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+	},
+	"to_created_at": datasourceschema.StringAttribute{
 		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
 	},
-	"plan_template_ids": {
-		Type:     schema.TypeList,
+	"last_modified_bys": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+	},
+	"from_last_modified_at": datasourceschema.StringAttribute{
 		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
 	},
-	"created_bys": {
-		Type:     schema.TypeList,
+	"to_last_modified_at": datasourceschema.StringAttribute{
 		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-	},
-	"to_created_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-	},
-	"last_modified_bys": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-	},
-	"from_last_modified_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-	},
-	"to_last_modified_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
 	},
 }

@@ -5,7 +5,8 @@ import (
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 )
 
 type ParseableModel[T any] interface {
@@ -129,12 +130,14 @@ type DataSourceType[T any, PT ParseableModel[T]] struct {
 	// Optional. A function that is called when an update is requested. This can be useful when the update
 	// request is different from the default Create request.
 	CreateFunction func(*Client, PT) (PT, error)
-	// The schema to represent the data
-	Schema map[string]*schema.Schema
+	// The schema to represent the data as a managed resource
+	Schema map[string]resourceschema.Attribute
+	// The schema to represent the data as a data source (derived from Schema if nil)
+	DataSourceSchema map[string]datasourceschema.Attribute
 	// The filters used for this resource's data source. The only allowed fields are primitives and lists of
 	// strings. Note that some fields are already declared and don't need to be redefined: ids, query, page, size, sort.
 	// A value of nil is treated as an empty map, and only the fields specified previously will be usable.
-	FilterSchema map[string]*schema.Schema
+	FilterSchema map[string]datasourceschema.Attribute
 	// If the filet endpoint is paginated or not. Defaults to true.
 	IsUnique bool `default:"false"`
 }

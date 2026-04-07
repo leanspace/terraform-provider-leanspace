@@ -1,171 +1,130 @@
 package routes
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 var validLogLevels = []string{"INFO", "DEBUG", "TRACE", "WARN", "ERROR"}
 
-var routeSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var routeSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
 	"tags": general_objects.KeyValuesSchema,
 
-	"definition": {
-		Type:     schema.TypeList,
-		Required: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: definitionSchema,
-		},
+	"definition": resourceschema.SingleNestedAttribute{
+		Required:   true,
+		Attributes: definitionSchema,
 	},
 
-	"route_instances": {
-		Type:     schema.TypeList,
+	"route_instances": resourceschema.ListNestedAttribute{
 		Computed: true,
-		Elem: &schema.Resource{
-			Schema: routeInstanceSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: routeInstanceSchema,
 		},
 	},
 
-	"processor_ids": {
-		Type:     schema.TypeSet,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+	"processor_ids": resourceschema.SetAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.Set{setvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
 
-	"created_at": {
-		Type:        schema.TypeString,
+	"created_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was created",
 	},
-	"created_by": {
-		Type:        schema.TypeString,
+	"created_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who created it",
 	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
+	"last_modified_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was last modified",
 	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
+	"last_modified_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
 }
 
-var definitionSchema = map[string]*schema.Schema{
-	"configuration": {
-		Type:     schema.TypeString,
+var definitionSchema = map[string]resourceschema.Attribute{
+	"configuration": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"log_level": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validLogLevels, false),
-		Description:  helper.AllowedValuesToDescription(validLogLevels),
+	"log_level": resourceschema.StringAttribute{
+		Required:    true,
+		Description: helper.AllowedValuesToDescription(validLogLevels),
+		Validators:  []validator.String{stringvalidator.OneOf(validLogLevels...)},
 	},
-	"valid": {
-		Type:     schema.TypeBool,
+	"valid": resourceschema.BoolAttribute{
 		Computed: true,
 	},
-	"service_account_id": {
-		Type:         schema.TypeString,
-		Computed:     true,
-		Optional:     true,
-		ValidateFunc: validation.IsUUID,
+	"service_account_id": resourceschema.StringAttribute{
+		Computed:   true,
+		Optional:   true,
+		Validators: helper.ValidUUID(),
 	},
-	"errors": {
-		Type:     schema.TypeSet,
+	"errors": resourceschema.SetNestedAttribute{
 		Computed: true,
-		Elem: &schema.Resource{
-			Schema: errorSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: errorSchema,
 		},
 	},
 }
 
-var errorSchema = map[string]*schema.Schema{
-	"code": {
-		Type:     schema.TypeString,
+var errorSchema = map[string]resourceschema.Attribute{
+	"code": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"message": {
-		Type:     schema.TypeString,
+	"message": resourceschema.StringAttribute{
 		Computed: true,
 	},
 }
 
-var routeInstanceSchema = map[string]*schema.Schema{
-	"status": {
-		Type:     schema.TypeString,
+var routeInstanceSchema = map[string]resourceschema.Attribute{
+	"status": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"last_status_at": {
-		Type:     schema.TypeString,
+	"last_status_at": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"container_id": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.IsUUID,
+	"container_id": resourceschema.StringAttribute{
+		Required:   true,
+		Validators: helper.ValidUUID(),
 	},
-	"last_message_start_process_at": {
-		Type:     schema.TypeString,
+	"last_message_start_process_at": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"last_message_end_process_at": {
-		Type:     schema.TypeString,
+	"last_message_end_process_at": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"number_of_messages_processed": {
-		Type:     schema.TypeInt,
+	"number_of_messages_processed": resourceschema.Int64Attribute{
 		Optional: true,
 	},
-	"camel_route_id": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.IsUUID,
+	"camel_route_id": resourceschema.StringAttribute{
+		Optional:   true,
+		Validators: helper.ValidUUID(),
 	},
 }
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
-	"ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-	},
-	"tags": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
-	},
-	"query": {
-		Type:     schema.TypeString,
-		Optional: true,
+var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+	"tags": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
 }

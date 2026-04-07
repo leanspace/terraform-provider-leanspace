@@ -3,10 +3,14 @@ package plan_templates
 import (
 	"regexp"
 
-	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
@@ -15,215 +19,178 @@ var nameRegex = regexp.MustCompile(`^[ a-zA-Z0-9_-]*$`)
 var validResourceFunctionTimeUnits = []string{"SECONDS", "MINUTES", "HOURS", "DAYS"}
 var validFormulaTypes = []string{"LINEAR", "RECTANGULAR"}
 
-var planTemplateSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var planTemplateSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"asset_id": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.IsUUID,
-		ForceNew:     true,
+	"asset_id": resourceschema.StringAttribute{
+		Required:      true,
+		Validators:    helper.ValidUUID(),
+		PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 	},
-	"name": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringMatch(nameRegex, "Must be a valid Plan Template name"),
+	"name": resourceschema.StringAttribute{
+		Required:   true,
+		Validators: []validator.String{stringvalidator.RegexMatches(nameRegex, "Must be a valid Plan Template name")},
 	},
-	"description": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.StringLenBetween(0, 2000),
+	"description": resourceschema.StringAttribute{
+		Optional:   true,
+		Validators: []validator.String{stringvalidator.LengthBetween(0, 2000)},
 	},
-	"integrity_status": {
-		Type:     schema.TypeString,
+	"integrity_status": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"activity_configs": {
-		Type:     schema.TypeList,
+	"activity_configs": resourceschema.ListNestedAttribute{
 		Optional: true,
-		Elem: &schema.Resource{
-			Schema: activityConfigResultSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: activityConfigResultSchema,
 		},
 	},
-	"estimated_duration_in_seconds": {
-		Type:     schema.TypeInt,
+	"estimated_duration_in_seconds": resourceschema.Int64Attribute{
 		Computed: true,
 	},
-	"invalid_plan_template_reasons": {
-		Type:     schema.TypeList,
+	"invalid_plan_template_reasons": resourceschema.ListNestedAttribute{
 		Computed: true,
-		Elem: &schema.Resource{
-			Schema: invalidPlanTemplateReasonSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: invalidPlanTemplateReasonSchema,
 		},
 	},
-	"created_at": {
-		Type:        schema.TypeString,
+	"created_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was created",
 	},
-	"created_by": {
-		Type:        schema.TypeString,
+	"created_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who created it",
 	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
+	"last_modified_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was last modified",
 	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
+	"last_modified_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
 }
 
-var activityConfigResultSchema = map[string]*schema.Schema{
-	"activity_definition_id": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.IsUUID,
+var activityConfigResultSchema = map[string]resourceschema.Attribute{
+	"activity_definition_id": resourceschema.StringAttribute{
+		Required:   true,
+		Validators: helper.ValidUUID(),
 	},
-	"delay_reference_on_predecessor": {
-		Type:     schema.TypeString,
+	"delay_reference_on_predecessor": resourceschema.StringAttribute{
 		Optional: true,
 	},
 
-	"position": {
-		Type:         schema.TypeInt,
-		Required:     true,
-		ValidateFunc: validation.IntBetween(0, 499),
+	"position": resourceschema.Int64Attribute{
+		Required:   true,
+		Validators: []validator.Int64{int64validator.Between(0, 499)},
 	},
 
-	"delay_in_seconds": {
-		Type:         schema.TypeInt,
-		Required:     true,
-		ValidateFunc: validation.IntBetween(0, 86400),
+	"delay_in_seconds": resourceschema.Int64Attribute{
+		Required:   true,
+		Validators: []validator.Int64{int64validator.Between(0, 86400)},
 	},
 
-	"estimated_duration_in_seconds": {
-		Type:         schema.TypeInt,
-		Optional:     true,
-		ValidateFunc: validation.IntBetween(0, 86400),
+	"estimated_duration_in_seconds": resourceschema.Int64Attribute{
+		Optional:   true,
+		Validators: []validator.Int64{int64validator.Between(0, 86400)},
 	},
 
-	"name": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.StringMatch(nameRegex, "Must be a valid name"),
+	"name": resourceschema.StringAttribute{
+		Optional:   true,
+		Validators: []validator.String{stringvalidator.RegexMatches(nameRegex, "Must be a valid name")},
 	},
 
-	"arguments": {
-		Type:     schema.TypeSet,
+	"arguments": resourceschema.SetNestedAttribute{
 		Optional: true,
-		Elem: &schema.Resource{
-			Schema: argumentSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: argumentSchema,
 		},
 	},
 
-	"resource_function_formulas": {
-		Type:     schema.TypeSet,
+	"resource_function_formulas": resourceschema.SetNestedAttribute{
 		Optional: true,
-		Elem: &schema.Resource{
-			Schema: resourceFunctionFormulaOverloadSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: resourceFunctionFormulaOverloadSchema,
 		},
 	},
 
 	"tags": general_objects.KeyValuesSchema,
 
-	"definition_link_status": {
-		Type:     schema.TypeString,
+	"definition_link_status": resourceschema.StringAttribute{
 		Computed: true,
 	},
 
-	"invalid_definition_link_reasons": {
-		Type:     schema.TypeSet,
+	"invalid_definition_link_reasons": resourceschema.SetNestedAttribute{
 		Computed: true,
-		Elem: &schema.Resource{
-			Schema: invalidDefinitionLinkReasonSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: invalidDefinitionLinkReasonSchema,
 		},
 	},
 }
 
-var invalidPlanTemplateReasonSchema = map[string]*schema.Schema{
-	"code": {
-		Type:     schema.TypeString,
+var invalidPlanTemplateReasonSchema = map[string]resourceschema.Attribute{
+	"code": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"message": {
-		Type:     schema.TypeString,
+	"message": resourceschema.StringAttribute{
 		Computed: true,
 	},
 }
 
-var argumentSchema = map[string]*schema.Schema{
-	"name": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringMatch(nameRegex, "Must be a valid name"),
+var argumentSchema = map[string]resourceschema.Attribute{
+	"name": resourceschema.StringAttribute{
+		Required:   true,
+		Validators: []validator.String{stringvalidator.RegexMatches(nameRegex, "Must be a valid name")},
 	},
-	"attributes": {
-		Type:     schema.TypeSet,
+	"attributes": resourceschema.SetNestedAttribute{
 		Required: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: general_objects.ValueAttributeSchema([]string{"TLE", "STRUCTURE"}),
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: general_objects.ValueAttributeSchema([]string{"TLE", "STRUCTURE"}),
 		},
 	},
 }
 
-var resourceFunctionFormulaOverloadSchema = map[string]*schema.Schema{
-	"resource_function_id": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.IsUUID,
+var resourceFunctionFormulaOverloadSchema = map[string]resourceschema.Attribute{
+	"resource_function_id": resourceschema.StringAttribute{
+		Required:   true,
+		Validators: helper.ValidUUID(),
 	},
-	"formula": {
-		Type:     schema.TypeSet,
+	"formula": resourceschema.SetNestedAttribute{
 		Required: true,
-		Elem: &schema.Resource{
-			Schema: resourceFunctionFormulaSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: resourceFunctionFormulaSchema,
 		},
 	},
 }
 
-var resourceFunctionFormulaSchema = map[string]*schema.Schema{
-	"type": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validFormulaTypes, false),
-		Description:  helper.AllowedValuesToDescription(validFormulaTypes),
+var resourceFunctionFormulaSchema = map[string]resourceschema.Attribute{
+	"type": resourceschema.StringAttribute{
+		Required:    true,
+		Description: helper.AllowedValuesToDescription(validFormulaTypes),
+		Validators:  []validator.String{stringvalidator.OneOf(validFormulaTypes...)},
 	},
-	"amplitude": {
-		Type:     schema.TypeFloat,
+	"amplitude": resourceschema.Float64Attribute{
 		Optional: true,
 	},
-	"constant": {
-		Type:     schema.TypeFloat,
+	"constant": resourceschema.Float64Attribute{
 		Optional: true,
 	},
-	"rate": {
-		Type:     schema.TypeFloat,
+	"rate": resourceschema.Float64Attribute{
 		Optional: true,
 	},
-	"time_unit": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.StringInSlice(validResourceFunctionTimeUnits, false),
-		Description:  helper.AllowedValuesToDescription(validResourceFunctionTimeUnits),
+	"time_unit": resourceschema.StringAttribute{
+		Optional:    true,
+		Description: helper.AllowedValuesToDescription(validResourceFunctionTimeUnits),
+		Validators:  []validator.String{stringvalidator.OneOf(validResourceFunctionTimeUnits...)},
 	},
 }
 
-var invalidDefinitionLinkReasonSchema = map[string]*schema.Schema{
-	"code": {
-		Type:     schema.TypeString,
+var invalidDefinitionLinkReasonSchema = map[string]resourceschema.Attribute{
+	"code": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"message": {
-		Type:     schema.TypeString,
+	"message": resourceschema.StringAttribute{
 		Required: true,
 	},
 }

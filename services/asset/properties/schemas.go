@@ -1,8 +1,14 @@
 package properties
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
@@ -12,299 +18,201 @@ var validPropertyTypes = []string{"NUMERIC", "ENUM", "TEXT", "TIMESTAMP", "DATE"
 var validNodeTypes = []string{"ASSET", "GROUP", "COMPONENT"}
 var validNodeKinds = []string{"GENERIC", "SATELLITE", "GROUND_STATION"}
 
-var propertySchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var propertySchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"node_id": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ForceNew:     true,
-		ValidateFunc: validation.IsUUID,
+	"node_id": resourceschema.StringAttribute{
+		Required:      true,
+		Validators:    helper.ValidUUID(),
+		PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 	},
-	"created_at": {
-		Type:        schema.TypeString,
+	"created_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was created",
 	},
-	"created_by": {
-		Type:        schema.TypeString,
+	"created_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who created it",
 	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
+	"last_modified_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was last modified",
 	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
+	"last_modified_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"min_length": {
-		Type:         schema.TypeInt,
-		Optional:     true,
-		ValidateFunc: validation.IntAtLeast(1),
-		Description:  "Text only: Minimum length of this text (at least 1)",
+	"min_length": resourceschema.Int64Attribute{
+		Optional:    true,
+		Description: "Text only: Minimum length of this text (at least 1)",
+		Validators:  []validator.Int64{int64validator.AtLeast(1)},
 	},
-	"max_length": {
-		Type:         schema.TypeInt,
-		Optional:     true,
-		ValidateFunc: validation.IntAtLeast(1),
-		Description:  "Text only: Maximum length of this text (at least 1)",
+	"max_length": resourceschema.Int64Attribute{
+		Optional:    true,
+		Description: "Text only: Maximum length of this text (at least 1)",
+		Validators:  []validator.Int64{int64validator.AtLeast(1)},
 	},
-	"pattern": {
-		Type:        schema.TypeString,
+	"pattern": resourceschema.StringAttribute{
 		Optional:    true,
 		Description: "Text only: Regex defined the allowed pattern of this text",
 	},
-	"before": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Time/date/timestamp only: Maximum date allowed",
+	"before": resourceschema.StringAttribute{
+		Optional:    true,
+		Description: "Time/date/timestamp only: Maximum date allowed",
+		Validators:  helper.IsValidTimeDateOrTimestamp(),
 	},
-	"after": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Time/date/timestamp only: Minimum date allowed",
+	"after": resourceschema.StringAttribute{
+		Optional:    true,
+		Description: "Time/date/timestamp only: Minimum date allowed",
+		Validators:  helper.IsValidTimeDateOrTimestamp(),
 	},
-	"fields": {
-		Type:     schema.TypeList,
-		MaxItems: 1,
-		Optional: true,
-		Elem: &schema.Resource{
-			Schema: geoPointFieldsSchema,
-		},
+	"fields": resourceschema.SingleNestedAttribute{
+		Optional:    true,
 		Description: "Geopoint only",
+		Attributes:  geoPointFieldsSchema,
 	},
-	"options": {
-		Type:        schema.TypeMap,
+	"options": resourceschema.MapAttribute{
+		ElementType: types.StringType,
 		Optional:    true,
 		Description: "Enum only: The allowed values for the enum in the format 1 = \"value\"",
 	},
-	"min": {
-		Type:        schema.TypeFloat,
+	"min": resourceschema.Float64Attribute{
 		Optional:    true,
 		Description: "Numeric only",
 	},
-	"max": {
-		Type:        schema.TypeFloat,
+	"max": resourceschema.Float64Attribute{
 		Optional:    true,
 		Description: "Numeric only",
 	},
-	"scale": {
-		Type:        schema.TypeInt,
+	"scale": resourceschema.Int64Attribute{
 		Optional:    true,
 		Description: "Numeric only",
 	},
-	"precision": {
-		Type:        schema.TypeInt,
+	"precision": resourceschema.Int64Attribute{
 		Optional:    true,
 		Description: "Numeric only: How many values after the comma should be accepted",
 	},
-	"unit_id": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.IsUUID,
-		Description:  "Numeric only",
+	"unit_id": resourceschema.StringAttribute{
+		Optional:    true,
+		Description: "Numeric only",
+		Validators:  helper.ValidUUID(),
 	},
-	"value": {
-		Type:     schema.TypeString,
+	"value": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"type": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ForceNew:     true,
-		ValidateFunc: validation.StringInSlice(validPropertyTypes, false),
-		Description:  helper.AllowedValuesToDescription(validPropertyTypes),
+	"type": resourceschema.StringAttribute{
+		Required:      true,
+		Description:   helper.AllowedValuesToDescription(validPropertyTypes),
+		Validators:    []validator.String{stringvalidator.OneOf(validPropertyTypes...)},
+		PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 	},
-	"built_in": {
-		Type:        schema.TypeBool,
+	"built_in": resourceschema.BoolAttribute{
 		Computed:    true,
 		Description: "Indicates if it is a build-in property.",
 	},
 }
 
-var geoPointFieldsSchema = map[string]*schema.Schema{
-	"latitude": {
-		Type:     schema.TypeList,
-		MaxItems: 1,
-		Required: true,
-		Elem: &schema.Resource{
-			Schema: propertyFieldSchema(true),
-		},
+var geoPointFieldsSchema = map[string]resourceschema.Attribute{
+	"latitude": resourceschema.SingleNestedAttribute{
+		Required:   true,
+		Attributes: propertyFieldSchema(true),
 	},
-	"longitude": {
-		Type:     schema.TypeList,
-		MaxItems: 1,
-		Required: true,
-		Elem: &schema.Resource{
-			Schema: propertyFieldSchema(true),
-		},
+	"longitude": resourceschema.SingleNestedAttribute{
+		Required:   true,
+		Attributes: propertyFieldSchema(true),
 	},
-	"elevation": {
-		Type:     schema.TypeList,
-		MaxItems: 1,
-		Required: true,
-		Elem: &schema.Resource{
-			Schema: propertyFieldSchema(false),
-		},
+	"elevation": resourceschema.SingleNestedAttribute{
+		Required:   true,
+		Attributes: propertyFieldSchema(false),
 	},
 }
 
-func propertyFieldSchema(computedMinMax bool) map[string]*schema.Schema {
-	minField := &schema.Schema{
-		Type:        schema.TypeFloat,
-		Description: "Property field with numeric type only: the minimum value allowed.",
-	}
-	if computedMinMax {
-		minField.Computed = true
-	} else {
-		minField.Optional = true
-	}
-
-	maxField := &schema.Schema{
-		Type:        schema.TypeFloat,
-		Optional:    true,
-		Description: "Property field with numeric type only: the maximum value allowed.",
-	}
-	if computedMinMax {
-		maxField.Computed = true
-	} else {
-		maxField.Optional = true
-	}
-
-	return map[string]*schema.Schema{
-		"value": {
-			Type:     schema.TypeString,
+func propertyFieldSchema(computedMinMax bool) map[string]resourceschema.Attribute {
+	return map[string]resourceschema.Attribute{
+		"value": resourceschema.StringAttribute{
 			Optional: true,
 		},
 
 		// Numeric only
-		"scale": {
-			Type:        schema.TypeInt,
+		"scale": resourceschema.Int64Attribute{
 			Optional:    true,
 			Description: "Property field with numeric type only: the scale required.",
 		},
-		"unit_id": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: validation.IsUUID,
-			Description:  "Property field with numeric type only",
+		"unit_id": resourceschema.StringAttribute{
+			Optional:    true,
+			Description: "Property field with numeric type only",
+			Validators:  helper.ValidUUID(),
 		},
-		"min": minField,
-		"precision": {
-			Type:        schema.TypeInt,
+		"min": resourceschema.Float64Attribute{
+			Computed:    computedMinMax,
+			Optional:    !computedMinMax,
+			Description: "Property field with numeric type only: the minimum value allowed.",
+		},
+		"precision": resourceschema.Int64Attribute{
 			Optional:    true,
 			Description: "Property field with numeric type only: How many values after the comma should be accepted",
 		},
-		"max": maxField,
+		"max": resourceschema.Float64Attribute{
+			Computed:    computedMinMax,
+			Optional:    !computedMinMax,
+			Description: "Property field with numeric type only: the maximum value allowed.",
+		},
 	}
 }
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
-	"category": {
-		Type:        schema.TypeString,
+var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+	"category": datasourceschema.StringAttribute{
 		Optional:    true,
 		Description: "Allowed values : BUILT_IN_PROPERTIES_ONLY, USER_PROPERTIES_ONLY, ALL_PROPERTIES",
 	},
-	"created_by": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.IsUUID,
-		Description:  "Filter on the user who created the Property. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	"created_by": datasourceschema.StringAttribute{
+		Optional:    true,
+		Description: "Filter on the user who created the Property. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
-	"from_created_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Property creation date. Properties with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	"from_created_at": datasourceschema.StringAttribute{
+		Optional:    true,
+		Description: "Filter on the Property creation date. Properties with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
-	"from_last_modified_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Property last modification date. Properties with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	"from_last_modified_at": datasourceschema.StringAttribute{
+		Optional:    true,
+		Description: "Filter on the Property last modification date. Properties with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
-	"last_modified_by": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.IsUUID,
-		Description:  "Filter on the user who modified last the Property. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	"last_modified_by": datasourceschema.StringAttribute{
+		Optional:    true,
+		Description: "Filter on the user who modified last the Property. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
-	"to_created_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Property creation date. Properties with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	"to_created_at": datasourceschema.StringAttribute{
+		Optional:    true,
+		Description: "Filter on the Property creation date. Properties with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
-	"to_last_modified_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Property last modification date. Properties with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	"to_last_modified_at": datasourceschema.StringAttribute{
+		Optional:    true,
+		Description: "Filter on the Property last modification date. Properties with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
-	"ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-		Description: "Only returns property whose id matches one of the provided values.",
-	},
-	"kinds": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.StringInSlice(validNodeKinds, false),
-			Description:  helper.AllowedValuesToDescription(validNodeKinds),
-		},
+	"kinds": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 		Description: "Allowed values : GENERIC, SATELLITE, GROUND_STATION",
 	},
-	"node_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+	"node_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 		Description: "Only returns node whose id matches one of the provided values",
 	},
-	"node_types": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.StringInSlice(validNodeTypes, false),
-			Description:  helper.AllowedValuesToDescription(validNodeTypes),
-		},
-	},
-	"query": {
-		Type:        schema.TypeString,
+	"node_types": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
 		Optional:    true,
-		Description: "Search by name or description",
 	},
-	"tags": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
+	"tags": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
 }

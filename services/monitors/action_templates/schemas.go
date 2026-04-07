@@ -1,10 +1,19 @@
 package action_templates
 
 import (
-	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"regexp"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 )
 
 var validTypes = []string{"WEBHOOK", "LEANSPACE_EVENT"}
@@ -16,97 +25,75 @@ var ValidTriggeredOn = []string{
 
 var baseActionTemplateSchema = MakeActionTemplateSchema(false)
 
-func MakeActionTemplateSchema(includeTriggeredOn bool) map[string]*schema.Schema {
-	baseSchema := map[string]*schema.Schema{
-		"id": {
-			Type:     schema.TypeString,
+func MakeActionTemplateSchema(includeTriggeredOn bool) map[string]resourceschema.Attribute {
+	baseSchema := map[string]resourceschema.Attribute{
+		"id": resourceschema.StringAttribute{
 			Computed: true,
 		},
-		"name": {
-			Type:     schema.TypeString,
+		"name": resourceschema.StringAttribute{
 			Required: true,
 		},
-		"type": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			Default:      "WEBHOOK",
-			ValidateFunc: validation.StringInSlice(validTypes, false),
-			Description:  helper.AllowedValuesToDescription(validTypes),
+		"type": resourceschema.StringAttribute{
+			Optional:    true,
+			Default:     stringdefault.StaticString("WEBHOOK"),
+			Description: helper.AllowedValuesToDescription(validTypes),
+			Validators:  []validator.String{stringvalidator.OneOf(validTypes...)},
 		},
-		"url": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: validation.IsURLWithHTTPorHTTPS,
-		},
-		"payload": {
-			Type:     schema.TypeString,
+		"url": resourceschema.StringAttribute{
 			Optional: true,
-		},
-		"content": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"headers": {
-			Type:     schema.TypeMap,
-			Optional: true,
-			Default:  make(map[string]string),
-			Elem: &schema.Schema{
-				Type: schema.TypeString,
+			Validators: []validator.String{
+				stringvalidator.RegexMatches(regexp.MustCompile(`^https?://`), "must be a valid URL starting with http:// or https://"),
 			},
 		},
-		"created_at": {
-			Type:        schema.TypeString,
+		"payload": resourceschema.StringAttribute{
+			Optional: true,
+		},
+		"content": resourceschema.StringAttribute{
+			Computed: true,
+		},
+		"headers": resourceschema.MapAttribute{
+			ElementType: types.StringType,
+			Optional:    true,
+			Default:     mapdefault.StaticValue(types.MapValueMust(types.StringType, map[string]attr.Value{})),
+		},
+		"created_at": resourceschema.StringAttribute{
 			Computed:    true,
 			Description: "When it was created",
 		},
-		"created_by": {
-			Type:        schema.TypeString,
+		"created_by": resourceschema.StringAttribute{
 			Computed:    true,
 			Description: "Who created it",
 		},
-		"last_modified_at": {
-			Type:        schema.TypeString,
+		"last_modified_at": resourceschema.StringAttribute{
 			Computed:    true,
 			Description: "When it was last modified",
 		},
-		"last_modified_by": {
-			Type:        schema.TypeString,
+		"last_modified_by": resourceschema.StringAttribute{
 			Computed:    true,
 			Description: "Who modified it the last",
 		},
 	}
 
 	if includeTriggeredOn {
-		baseSchema["triggered_on"] = &schema.Schema{
-			Type:     schema.TypeSet,
-			Optional: true,
-			Elem: &schema.Schema{
-				Type:         schema.TypeString,
-				ValidateFunc: validation.StringInSlice(ValidTriggeredOn, false),
-				Description:  helper.AllowedValuesToDescription(ValidTriggeredOn),
-			},
+		baseSchema["triggered_on"] = resourceschema.SetAttribute{
+			Optional:    true,
+			ElementType: types.StringType,
+			Description: helper.AllowedValuesToDescription(ValidTriggeredOn),
 		}
 	}
 
 	return baseSchema
 }
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
-	"types": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.StringInSlice(validTypes, false),
-			Description:  helper.AllowedValuesToDescription(validTypes),
-		},
+var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+	"types": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(stringvalidator.OneOf(validTypes...))},
 	},
-	"monitor_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+	"monitor_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
 }
