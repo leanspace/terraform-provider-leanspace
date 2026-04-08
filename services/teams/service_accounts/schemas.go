@@ -1,65 +1,57 @@
 package service_accounts
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var serviceAccountSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var serviceAccountSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"policy_ids": {
-		Type:     schema.TypeSet,
-		Required: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+	"policy_ids": resourceschema.SetAttribute{
+		ElementType: types.StringType,
+		Required:    true,
+		Validators:  []validator.Set{setvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
-	"credentials": {
-		Type:     schema.TypeList,
+	"credentials": resourceschema.ListNestedAttribute{
 		Computed: true,
-		Elem: &schema.Resource{
-			Schema: credentialSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: credentialSchema,
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": {
-		Type:        schema.TypeString,
+	"created_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was created",
 	},
-	"created_by": {
-		Type:        schema.TypeString,
+	"created_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who created it",
 	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
+	"last_modified_at": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "When it was last modified",
 	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
+	"last_modified_by": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
 }
 
-var credentialSchema = map[string]*schema.Schema{
-	"client_id": {
-		Type:     schema.TypeString,
+var credentialSchema = map[string]resourceschema.Attribute{
+	"client_id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"client_secret": {
-		Type:     schema.TypeString,
+	"client_secret": resourceschema.StringAttribute{
 		Computed: true,
 	},
 }
