@@ -19,10 +19,7 @@ var nameRegex = regexp.MustCompile(`^[ a-zA-Z0-9_-]*$`)
 var validResourceFunctionTimeUnits = []string{"SECONDS", "MINUTES", "HOURS", "DAYS"}
 var validFormulaTypes = []string{"LINEAR", "RECTANGULAR"}
 
-var planTemplateSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var planTemplateSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"asset_id": resourceschema.StringAttribute{
 		Required:      true,
 		Validators:    helper.ValidUUID(),
@@ -54,23 +51,7 @@ var planTemplateSchema = map[string]resourceschema.Attribute{
 			Attributes: invalidPlanTemplateReasonSchema,
 		},
 	},
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
+})
 
 var activityConfigResultSchema = map[string]resourceschema.Attribute{
 	"activity_definition_id": resourceschema.StringAttribute{

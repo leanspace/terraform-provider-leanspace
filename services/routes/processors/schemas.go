@@ -6,13 +6,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var processorSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var processorSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
@@ -32,24 +31,10 @@ var processorSchema = map[string]resourceschema.Attribute{
 		PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 		Validators:    []validator.String{stringvalidator.RegexMatches(helper.PathToJarFileRegex, "Must be a valid file path")},
 	},
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
 	"file_sha": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Unique identifier of the processor file",
 	},
-}
+})
+
+//var dataSourceFilterSchema = map[string]datasourceschema.Attribute{}

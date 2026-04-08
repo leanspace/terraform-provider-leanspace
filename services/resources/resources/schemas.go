@@ -17,10 +17,7 @@ import (
 var validResourceConstraintTypes = []string{"LIMIT", "THRESHOLD"}
 var validResourceConstraintKinds = []string{"UPPER", "LOWER"}
 
-var resourceSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var resourceSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"asset_id": resourceschema.StringAttribute{
 		Required:      true,
 		Validators:    helper.ValidUUID(),
@@ -59,23 +56,7 @@ var resourceSchema = map[string]resourceschema.Attribute{
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
+})
 
 var resourceConstraintsSchema = map[string]resourceschema.Attribute{
 	"type": resourceschema.StringAttribute{

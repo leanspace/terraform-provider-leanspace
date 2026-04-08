@@ -219,15 +219,15 @@ var PageableSchemaR = map[string]resourceschema.Attribute{
 func createGeoPointFieldsSchema(isValueField bool) map[string]resourceschema.Attribute {
 	return map[string]resourceschema.Attribute{
 		"latitude": resourceschema.SingleNestedAttribute{
-			Required:   true,
+			Optional:   true,
 			Attributes: baseAttributeFieldSchema(isValueField, true),
 		},
 		"longitude": resourceschema.SingleNestedAttribute{
-			Required:   true,
+			Optional:   true,
 			Attributes: baseAttributeFieldSchema(isValueField, true),
 		},
 		"elevation": resourceschema.SingleNestedAttribute{
-			Required:   true,
+			Optional:   true,
 			Attributes: baseAttributeFieldSchema(isValueField, true),
 		},
 	}
@@ -549,9 +549,12 @@ func DefinitionAttributeArrayConstraintSchema(excludeTypes []string, excludeFiel
 
 	attribute := map[string]resourceschema.Attribute{
 		"type": resourceschema.StringAttribute{
-			Required:    true,
+			Optional:    true,
 			Description: helper.AllowedValuesToDescription(validTypes),
-			Validators:  []validator.String{stringvalidator.OneOf(validTypes...)},
+			Validators: []validator.String{
+				stringvalidator.OneOf(validTypes...),
+				helper.RequiredIfParentConfigured(),
+			},
 		},
 		"required": resourceschema.BoolAttribute{
 			Optional: true,
@@ -696,4 +699,17 @@ func ValueAttributeSchemaDS(excludeTypes []string) map[string]datasourceschema.A
 			Attributes: geoPointFieldsSchemaDS,
 		},
 	}
+}
+
+func ResourceSchemaWith(fields map[string]resourceschema.Attribute) map[string]resourceschema.Attribute {
+	result := make(map[string]resourceschema.Attribute, len(fields)+5)
+	result["id"] = resourceschema.StringAttribute{Computed: true}
+	result["created_at"] = resourceschema.StringAttribute{Computed: true, Description: "When it was created"}
+	result["created_by"] = resourceschema.StringAttribute{Computed: true, Description: "Who created it"}
+	result["last_modified_at"] = resourceschema.StringAttribute{Computed: true, Description: "When it was last modified"}
+	result["last_modified_by"] = resourceschema.StringAttribute{Computed: true, Description: "Who modified it the last"}
+	for k, v := range fields {
+		result[k] = v
+	}
+	return result
 }

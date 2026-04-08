@@ -16,10 +16,7 @@ import (
 
 var validFileTypes = []string{"CSV"}
 
-var recordTemplateSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var recordTemplateSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"name": resourceschema.StringAttribute{
 		Required:      true,
 		PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
@@ -60,23 +57,7 @@ var recordTemplateSchema = map[string]resourceschema.Attribute{
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
+})
 
 var recordTemplateDefaultParserSchema = map[string]resourceschema.Attribute{
 	"id": resourceschema.StringAttribute{

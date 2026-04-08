@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 var validGenericPluginTypes = []string{
@@ -18,10 +19,7 @@ var validGenericPluginLanguages = []string{
 	"JAVA",
 }
 
-var genericPluginSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var genericPluginSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
@@ -44,22 +42,6 @@ var genericPluginSchema = map[string]resourceschema.Attribute{
 			Attributes: sourceCodeLinkSchema,
 		},
 	},
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When the plugin was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created the plugin",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified the plugin the last",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When the plugin was last modified",
-	},
 	"status": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Generic Plugin status. Can be ACTIVE, PENDING or FAILED",
@@ -73,7 +55,7 @@ var genericPluginSchema = map[string]resourceschema.Attribute{
 		Computed:    true,
 		Description: "Unique identifier of the generic plugin file",
 	},
-}
+})
 
 var sourceCodeLinkSchema = map[string]resourceschema.Attribute{
 	"expiration_time": resourceschema.StringAttribute{

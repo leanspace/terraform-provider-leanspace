@@ -13,10 +13,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/widgets"
 )
 
-var dashboardSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var dashboardSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
@@ -43,23 +40,7 @@ var dashboardSchema = map[string]resourceschema.Attribute{
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
+})
 
 var widgetInfoSchema = map[string]resourceschema.Attribute{
 	"id": resourceschema.StringAttribute{
@@ -96,10 +77,7 @@ var widgetInfoSchema = map[string]resourceschema.Attribute{
 	},
 }
 
-var dashboardWidgetSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var dashboardWidgetSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"name": resourceschema.StringAttribute{
 		Computed: true,
 	},
@@ -137,23 +115,7 @@ var dashboardWidgetSchema = map[string]resourceschema.Attribute{
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
+})
 
 var seriesSchema = map[string]resourceschema.Attribute{
 	"id": resourceschema.StringAttribute{

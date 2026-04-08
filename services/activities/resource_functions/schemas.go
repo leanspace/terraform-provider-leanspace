@@ -10,15 +10,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 var validResourceFunctionTimeUnits = []string{"SECONDS", "MINUTES", "HOURS", "DAYS"}
 var validFormulaTypes = []string{"LINEAR", "RECTANGULAR"}
 
-var resourceFunctionSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var resourceFunctionSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"activity_definition_id": resourceschema.StringAttribute{
 		Required:      true,
 		Validators:    helper.ValidUUID(),
@@ -36,23 +34,7 @@ var resourceFunctionSchema = map[string]resourceschema.Attribute{
 		Required:   true,
 		Attributes: formulaSchema,
 	},
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
+})
 
 var formulaSchema = map[string]resourceschema.Attribute{
 	"type": resourceschema.StringAttribute{

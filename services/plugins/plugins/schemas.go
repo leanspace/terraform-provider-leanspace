@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 var validPluginTypes = []string{
@@ -20,10 +21,7 @@ var validPluginTypes = []string{
 
 var classNameRegex = regexp.MustCompile(`^([a-z]+\.)+([A-Z][a-zA-Z0-9]+)$`)
 
-var pluginSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var pluginSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"type": resourceschema.StringAttribute{
 		Required:    true,
 		Description: helper.AllowedValuesToDescription(validPluginTypes),
@@ -42,28 +40,13 @@ var pluginSchema = map[string]resourceschema.Attribute{
 	},
 	"source_code_file_download_authorized": resourceschema.BoolAttribute{
 		Optional: true,
+		Computed: true,
 		Default:  booldefault.StaticBool(true),
 	},
 	"file_path": resourceschema.StringAttribute{
 		Required:    true,
 		Description: "It must be a valid path to a .jar file",
 		Validators:  []validator.String{stringvalidator.RegexMatches(helper.PathToJarFileRegex, "Must be a valid file path to a .jar file")},
-	},
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When the plugin was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created the plugin",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified the plugin the last",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When the plugin was last modified",
 	},
 	"sdk_version": resourceschema.StringAttribute{
 		Optional:    true,
@@ -82,7 +65,7 @@ var pluginSchema = map[string]resourceschema.Attribute{
 		Computed:    true,
 		Description: "Unique identifier of the plugin file",
 	},
-}
+})
 
 var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 	"types": datasourceschema.ListAttribute{

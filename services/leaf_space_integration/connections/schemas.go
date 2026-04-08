@@ -3,12 +3,10 @@ package connections
 import (
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var leafSpaceConnectionSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var leafSpaceConnectionSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
@@ -30,23 +28,7 @@ var leafSpaceConnectionSchema = map[string]resourceschema.Attribute{
 	"status": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
+})
 
 var leafSpaceConnectionFilterSchema = map[string]datasourceschema.Attribute{
 	"id": datasourceschema.StringAttribute{

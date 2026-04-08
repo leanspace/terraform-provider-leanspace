@@ -14,10 +14,7 @@ import (
 
 var validLogLevels = []string{"INFO", "DEBUG", "TRACE", "WARN", "ERROR"}
 
-var routeSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var routeSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
@@ -43,24 +40,7 @@ var routeSchema = map[string]resourceschema.Attribute{
 		Optional:    true,
 		Validators:  []validator.Set{setvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
-
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
+})
 
 var definitionSchema = map[string]resourceschema.Attribute{
 	"configuration": resourceschema.StringAttribute{

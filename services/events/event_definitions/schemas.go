@@ -19,10 +19,7 @@ var validMetadataTypes = []string{
 	"NUMERIC", "BOOLEAN", "TEXT",
 }
 
-var eventsDefinitions = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var eventsDefinitions = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
@@ -31,6 +28,7 @@ var eventsDefinitions = map[string]resourceschema.Attribute{
 	},
 	"criticality": resourceschema.StringAttribute{
 		Optional: true,
+		Computed: true,
 		Default:  stringdefault.StaticString("NORMAL"),
 	},
 	"rules": resourceschema.SetNestedAttribute{
@@ -49,24 +47,8 @@ var eventsDefinitions = map[string]resourceschema.Attribute{
 		Description: helper.AllowedValuesToDescription(state),
 		Validators:  []validator.String{stringvalidator.OneOf(state...)},
 	},
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
 	"tags": general_objects.KeyValuesSchema,
-}
+})
 
 var ruleSchema = map[string]resourceschema.Attribute{
 	"path": resourceschema.StringAttribute{

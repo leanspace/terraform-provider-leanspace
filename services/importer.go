@@ -5,7 +5,6 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/activities/activity_definitions"
 	"github.com/leanspace/terraform-provider-leanspace/services/activities/activity_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/activities/resource_functions"
-	"github.com/leanspace/terraform-provider-leanspace/services/agents/remote_agents"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/nodes"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/properties"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/units"
@@ -74,7 +73,6 @@ func RegisterDataTypes() {
 	register(&generic_plugins.GenericPluginDataType)
 	register(&plugins.PluginDataType)
 	register(&properties.PropertyDataType)
-	register(&remote_agents.RemoteAgentDataType)
 	register(&record_templates.RecordTemplateDataType)
 	register(&service_accounts.ServiceAccountDataType)
 	register(&streams.StreamDataType)

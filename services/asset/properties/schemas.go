@@ -18,10 +18,7 @@ var validPropertyTypes = []string{"NUMERIC", "ENUM", "TEXT", "TIMESTAMP", "DATE"
 var validNodeTypes = []string{"ASSET", "GROUP", "COMPONENT"}
 var validNodeKinds = []string{"GENERIC", "SATELLITE", "GROUND_STATION"}
 
-var propertySchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var propertySchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
@@ -32,22 +29,6 @@ var propertySchema = map[string]resourceschema.Attribute{
 		Required:      true,
 		Validators:    helper.ValidUUID(),
 		PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
-	},
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
 	},
 	"tags": general_objects.KeyValuesSchema,
 	"min_length": resourceschema.Int64Attribute{
@@ -118,7 +99,7 @@ var propertySchema = map[string]resourceschema.Attribute{
 		Computed:    true,
 		Description: "Indicates if it is a build-in property.",
 	},
-}
+})
 
 var geoPointFieldsSchema = map[string]resourceschema.Attribute{
 	"latitude": resourceschema.SingleNestedAttribute{

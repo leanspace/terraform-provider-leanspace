@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 var validTypes = []string{"WEBHOOK", "LEANSPACE_EVENT"}
@@ -26,15 +27,13 @@ var ValidTriggeredOn = []string{
 var baseActionTemplateSchema = MakeActionTemplateSchema(false)
 
 func MakeActionTemplateSchema(includeTriggeredOn bool) map[string]resourceschema.Attribute {
-	baseSchema := map[string]resourceschema.Attribute{
-		"id": resourceschema.StringAttribute{
-			Computed: true,
-		},
+	baseSchema := general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 		"name": resourceschema.StringAttribute{
 			Required: true,
 		},
 		"type": resourceschema.StringAttribute{
 			Optional:    true,
+			Computed:    true,
 			Default:     stringdefault.StaticString("WEBHOOK"),
 			Description: helper.AllowedValuesToDescription(validTypes),
 			Validators:  []validator.String{stringvalidator.OneOf(validTypes...)},
@@ -54,25 +53,10 @@ func MakeActionTemplateSchema(includeTriggeredOn bool) map[string]resourceschema
 		"headers": resourceschema.MapAttribute{
 			ElementType: types.StringType,
 			Optional:    true,
+			Computed:    true,
 			Default:     mapdefault.StaticValue(types.MapValueMust(types.StringType, map[string]attr.Value{})),
 		},
-		"created_at": resourceschema.StringAttribute{
-			Computed:    true,
-			Description: "When it was created",
-		},
-		"created_by": resourceschema.StringAttribute{
-			Computed:    true,
-			Description: "Who created it",
-		},
-		"last_modified_at": resourceschema.StringAttribute{
-			Computed:    true,
-			Description: "When it was last modified",
-		},
-		"last_modified_by": resourceschema.StringAttribute{
-			Computed:    true,
-			Description: "Who modified it the last",
-		},
-	}
+	})
 
 	if includeTriggeredOn {
 		baseSchema["triggered_on"] = resourceschema.SetAttribute{

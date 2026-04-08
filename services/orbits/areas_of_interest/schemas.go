@@ -17,10 +17,7 @@ var validShapeTypes = []string{
 	"POINT", "CIRCLE", "POLYGON",
 }
 
-var areaOfInterestSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var areaOfInterestSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"name": resourceschema.StringAttribute{
 		Required:   true,
 		Validators: helper.ValidName(),
@@ -30,23 +27,7 @@ var areaOfInterestSchema = map[string]resourceschema.Attribute{
 		Attributes: areaOfInterestShapeSchema,
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
+})
 
 var areaOfInterestShapeSchema = map[string]resourceschema.Attribute{
 	"type": resourceschema.StringAttribute{
@@ -74,12 +55,18 @@ var areaOfInterestShapeSchema = map[string]resourceschema.Attribute{
 
 var geoPointSchema = map[string]resourceschema.Attribute{
 	"latitude": resourceschema.Float64Attribute{
-		Required:   true,
-		Validators: []validator.Float64{float64validator.Between(-90.0, 90.0)},
+		Optional: true,
+		Validators: []validator.Float64{
+			float64validator.Between(-90.0, 90.0),
+			helper.RequiredFloat64IfParentConfigured(),
+		},
 	},
 	"longitude": resourceschema.Float64Attribute{
-		Required:   true,
-		Validators: []validator.Float64{float64validator.Between(-180.0, 180)},
+		Optional: true,
+		Validators: []validator.Float64{
+			float64validator.Between(-180.0, 180),
+			helper.RequiredFloat64IfParentConfigured(),
+		},
 	},
 	"altitude": resourceschema.Float64Attribute{
 		Optional:   true,

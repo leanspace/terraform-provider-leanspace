@@ -34,10 +34,7 @@ var validLengthTypes = []string{
 	"FIXED", "DYNAMIC",
 }
 
-var StreamSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var StreamSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"version": resourceschema.Int64Attribute{
 		Computed:    true,
 		Description: "Version of the stream, this is incremented each time the stream is updated",
@@ -64,23 +61,7 @@ var StreamSchema = map[string]resourceschema.Attribute{
 			Attributes: mappingSchema,
 		},
 	},
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
+})
 
 var configurationSchema = map[string]resourceschema.Attribute{
 	"endianness": resourceschema.StringAttribute{
@@ -177,14 +158,20 @@ var repetitiveSchema = map[string]resourceschema.Attribute{
 
 var lengthSchema = map[string]resourceschema.Attribute{
 	"type": resourceschema.StringAttribute{
-		Required:    true,
+		Optional:    true,
 		Description: "Type of the length, " + helper.AllowedValuesToDescription(validLengthTypes),
-		Validators:  []validator.String{stringvalidator.OneOf(validLengthTypes...)},
+		Validators: []validator.String{
+			stringvalidator.OneOf(validLengthTypes...),
+			helper.RequiredIfParentConfigured(),
+		},
 	},
 	"unit": resourceschema.StringAttribute{
-		Required:    true,
+		Optional:    true,
 		Description: "Unit of the length, " + helper.AllowedValuesToDescription(validLengthUnits),
-		Validators:  []validator.String{stringvalidator.OneOf(validLengthUnits...)},
+		Validators: []validator.String{
+			stringvalidator.OneOf(validLengthUnits...),
+			helper.RequiredIfParentConfigured(),
+		},
 	},
 	"value": resourceschema.Int64Attribute{
 		Optional: true,
@@ -196,11 +183,12 @@ var lengthSchema = map[string]resourceschema.Attribute{
 
 var switchExpressionSchema = map[string]resourceschema.Attribute{
 	"switch_on": resourceschema.StringAttribute{
-		Required:    true,
+		Optional:    true,
 		Description: "Path of the field that the switch will use",
+		Validators:  []validator.String{helper.RequiredIfParentConfigured()},
 	},
 	"options": resourceschema.ListNestedAttribute{
-		Required: true,
+		Optional: true,
 		NestedObject: resourceschema.NestedAttributeObject{
 			Attributes: switchOptionSchema,
 		},

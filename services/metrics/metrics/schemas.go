@@ -11,10 +11,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var metricSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var metricSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"node_id": resourceschema.StringAttribute{
 		Required:      true,
 		Validators:    helper.ValidUUID(),
@@ -35,23 +32,7 @@ var metricSchema = map[string]resourceschema.Attribute{
 		),
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
+})
 
 var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 	"node_ids": datasourceschema.ListAttribute{

@@ -26,10 +26,7 @@ var validComparisonOperators = []string{
 
 var actionTemplateSchema = action_templates.MakeActionTemplateSchema(true)
 
-var monitorSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var monitorSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
@@ -63,27 +60,11 @@ var monitorSchema = map[string]resourceschema.Attribute{
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
 	"type": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Represent the type of the monitor. This field is deprecated and it will be removed soon. Please use only this type: REALTIME.",
 	},
-}
+})
 
 var ruleSchema = map[string]resourceschema.Attribute{ // ruleSchema
 	"comparison_operator": resourceschema.StringAttribute{

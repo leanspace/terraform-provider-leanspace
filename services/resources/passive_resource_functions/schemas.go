@@ -17,10 +17,7 @@ import (
 var validPassiveResourceFunctionTimeUnits = []string{"SECONDS", "MINUTES", "HOURS", "DAYS"}
 var validPassiveResourceFunctionFormulaTypes = []string{"LINEAR"}
 
-var passiveResourceFunctionSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var passiveResourceFunctionSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"resource_id": resourceschema.StringAttribute{
 		Required:      true,
 		Validators:    helper.ValidUUID(),
@@ -38,23 +35,7 @@ var passiveResourceFunctionSchema = map[string]resourceschema.Attribute{
 		Attributes: formulaSchema,
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
+})
 
 var formulaSchema = map[string]resourceschema.Attribute{
 	"rate": resourceschema.Float64Attribute{

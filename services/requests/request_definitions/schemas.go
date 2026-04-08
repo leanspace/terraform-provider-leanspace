@@ -13,10 +13,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var requestDefinitionSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var requestDefinitionSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
@@ -49,19 +46,7 @@ var requestDefinitionSchema = map[string]resourceschema.Attribute{
 		},
 		Validators: []validator.Set{setvalidator.SizeAtMost(499)},
 	},
-	"created_at": resourceschema.StringAttribute{
-		Computed: true,
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed: true,
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed: true,
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed: true,
-	},
-}
+})
 
 var feasibilityConstraintDefinitionSchema = map[string]resourceschema.Attribute{
 	"id": resourceschema.StringAttribute{

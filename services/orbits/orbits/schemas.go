@@ -16,10 +16,7 @@ import (
 
 var validIdealOrbitTypes = []string{"SSO", "POLAR", "LEO", "GEO", "MEO", "OTHER"}
 
-var orbitSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var orbitSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"satellite_id": resourceschema.StringAttribute{
 		Required:      true,
 		Validators:    helper.ValidUUID(),
@@ -41,23 +38,7 @@ var orbitSchema = map[string]resourceschema.Attribute{
 		Attributes: satelliteConfigurationSchema,
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
+})
 
 var idealOrbitSchema = map[string]resourceschema.Attribute{
 	"type": resourceschema.StringAttribute{

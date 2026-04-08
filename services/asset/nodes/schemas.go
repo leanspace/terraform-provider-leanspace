@@ -26,8 +26,8 @@ var tle1stLineRegex = regexp.MustCompile(`^1 (?P<noradId>[ 0-9]{5})[A-Z] [ 0-9]{
 var tle2ndLineRegex = regexp.MustCompile(`^2 (?P<noradId>[ 0-9]{5}) [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{7} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{2}[.][ 0-9]{13}[ 0-9]$`)
 
 func makeNodeSchema(recursiveNodes map[string]resourceschema.Attribute) map[string]resourceschema.Attribute {
-	baseSchema := map[string]resourceschema.Attribute{
-		"id": resourceschema.StringAttribute{
+	baseSchema := general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
+		"id": resourceschema.StringAttribute{ // redefine id here to add the plan modifier
 			Computed:      true,
 			PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 		},
@@ -36,22 +36,6 @@ func makeNodeSchema(recursiveNodes map[string]resourceschema.Attribute) map[stri
 		},
 		"description": resourceschema.StringAttribute{
 			Optional: true,
-		},
-		"created_at": resourceschema.StringAttribute{
-			Computed:    true,
-			Description: "When it was created",
-		},
-		"created_by": resourceschema.StringAttribute{
-			Computed:    true,
-			Description: "Who created it",
-		},
-		"last_modified_at": resourceschema.StringAttribute{
-			Computed:    true,
-			Description: "When it was last modified",
-		},
-		"last_modified_by": resourceschema.StringAttribute{
-			Computed:    true,
-			Description: "Who modified it the last",
 		},
 		"parent_node_id": resourceschema.StringAttribute{
 			Optional:   true,
@@ -74,7 +58,7 @@ func makeNodeSchema(recursiveNodes map[string]resourceschema.Attribute) map[stri
 			Computed:    true,
 			Description: "Numeric only",
 		},
-		// The following fields are part of V1 properties in the API that have been marked as deprecated for node updates.
+		// The following fields were part of V1 properties in the API.
 		// In terraform, an update occurs when using `terraform apply` multiple times on the same resource with different field values.
 		// When these fields are deleted in the API, we suggest to follow these steps during node updates :
 		// 1- Do not change this schema so that the user is not impacted by this deprecation
@@ -109,7 +93,7 @@ func makeNodeSchema(recursiveNodes map[string]resourceschema.Attribute) map[stri
 			Optional:    true,
 			Description: "Only for ground stations",
 		},
-	}
+	})
 
 	if recursiveNodes != nil {
 		baseSchema["nodes"] = resourceschema.SetNestedAttribute{

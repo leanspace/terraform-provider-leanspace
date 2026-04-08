@@ -19,10 +19,7 @@ var validShapeTypes = []string{
 	"CIRCULAR", "RECTANGULAR",
 }
 
-var sensorSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var sensorSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"satellite_id": resourceschema.StringAttribute{
 		Required:      true,
 		Validators:    helper.ValidUUID(),
@@ -37,23 +34,7 @@ var sensorSchema = map[string]resourceschema.Attribute{
 		Attributes: apertureShapeSchema,
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
+})
 
 var apertureShapeSchema = map[string]resourceschema.Attribute{
 	"type": resourceschema.StringAttribute{
@@ -88,22 +69,27 @@ var apertureShapeSchema = map[string]resourceschema.Attribute{
 
 var vector3DSchema = map[string]resourceschema.Attribute{
 	"x": resourceschema.Float64Attribute{
-		Required: true,
+		Optional:   true,
+		Validators: []validator.Float64{helper.RequiredFloat64IfParentConfigured()},
 	},
 	"y": resourceschema.Float64Attribute{
-		Required: true,
+		Optional:   true,
+		Validators: []validator.Float64{helper.RequiredFloat64IfParentConfigured()},
 	},
 	"z": resourceschema.Float64Attribute{
-		Required: true,
+		Optional:   true,
+		Validators: []validator.Float64{helper.RequiredFloat64IfParentConfigured()},
 	},
 }
 
 func halfApertureAngleSchema(maximum float64) map[string]resourceschema.Attribute {
 	return map[string]resourceschema.Attribute{
 		"degrees": resourceschema.Float64Attribute{
-			Required: true,
+			Optional: true,
 			Validators: []validator.Float64{
-				float64validator.Between(0.0, maximum)},
+				float64validator.Between(0.0, maximum),
+				helper.RequiredFloat64IfParentConfigured(),
+			},
 		},
 	}
 }

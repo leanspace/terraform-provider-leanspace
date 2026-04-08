@@ -25,10 +25,7 @@ var validTimeDimensions = []string{"timestamp", "received_at", "ingested_at"}
 
 var colorRegex = regexp.MustCompile(`^#(?:[0-9a-fA-F]{3}){1,2}$`)
 
-var widgetSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var widgetSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
@@ -47,12 +44,14 @@ var widgetSchema = map[string]resourceschema.Attribute{
 	},
 	"query_time_dimension": resourceschema.StringAttribute{
 		Optional:    true,
+		Computed:    true,
 		Default:     stringdefault.StaticString("timestamp"),
 		Description: helper.AllowedValuesToDescription(validTimeDimensions),
 		Validators:  []validator.String{stringvalidator.OneOf(validTimeDimensions...)},
 	},
 	"display_time_dimension": resourceschema.StringAttribute{
 		Optional:    true,
+		Computed:    true,
 		Default:     stringdefault.StaticString("timestamp"),
 		Description: helper.AllowedValuesToDescription(validTimeDimensions),
 		Validators:  []validator.String{stringvalidator.OneOf(validTimeDimensions...)},
@@ -76,23 +75,7 @@ var widgetSchema = map[string]resourceschema.Attribute{
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
+})
 
 var seriesSchema = map[string]resourceschema.Attribute{
 	"id": resourceschema.StringAttribute{
@@ -185,7 +168,7 @@ var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 	"types": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
-		Validators:  []validator.List{listvalidator.ValueStringsAre(stringvalidator.OneOf(validDatasources...))},
+		Validators:  []validator.List{listvalidator.ValueStringsAre(stringvalidator.OneOf(ValidWidgetTypes...))},
 	},
 	"tags": datasourceschema.ListAttribute{
 		ElementType: types.StringType,

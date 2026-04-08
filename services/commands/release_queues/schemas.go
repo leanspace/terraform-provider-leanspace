@@ -15,10 +15,7 @@ import (
 
 var validCommandTransformationStrategies = []string{"TEST", "NO_TRANSFORMATION", "USE_PLUGIN"}
 
-var releaseQueueSchema = map[string]resourceschema.Attribute{
-	"id": resourceschema.StringAttribute{
-		Computed: true,
-	},
+var releaseQueueSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"asset_id": resourceschema.StringAttribute{
 		Required:      true,
 		Validators:    helper.ValidUUID(),
@@ -48,24 +45,8 @@ var releaseQueueSchema = map[string]resourceschema.Attribute{
 	"logical_lock": resourceschema.BoolAttribute{
 		Computed: true,
 	},
-	"created_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
 	"tags": general_objects.KeyValuesSchema,
-}
+})
 
 var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 	"asset_ids": datasourceschema.ListAttribute{
