@@ -1,18 +1,14 @@
 package resource_functions
 
+import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+
 type ResourceFunction struct {
-	ID                   string                   `json:"id"`
+	general_objects.AuditModel
 	ActivityDefinitionId string                   `json:"activityDefinitionId"`
 	ResourceId           string                   `json:"resourceId"`
 	Name                 string                   `json:"name"`
 	Formula              *ResourceFunctionFormula `json:"formula"`
-	CreatedAt            string                   `json:"createdAt"`
-	CreatedBy            string                   `json:"createdBy"`
-	LastModifiedAt       string                   `json:"lastModifiedAt"`
-	LastModifiedBy       string                   `json:"lastModifiedBy"`
 }
-
-func (resourceFunction *ResourceFunction) GetID() string { return resourceFunction.ID }
 
 type ResourceFunctionFormula struct {
 	Type      string  `json:"type"`

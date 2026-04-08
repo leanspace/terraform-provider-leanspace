@@ -4,21 +4,18 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 	"github.com/leanspace/terraform-provider-leanspace/services/plugins"
 )
 
 type GenericPlugin struct {
-	ID             string         `json:"id"`
+	general_objects.AuditModel
 	Name           string         `json:"name"`
 	Description    string         `json:"description"`
 	Type           string         `json:"type"`
 	Language       string         `json:"language"`
 	SourceCodeLink SourceCodeLink `json:"sourceCodeLink"`
-	CreatedAt      string         `json:"createdAt"`
-	CreatedBy      string         `json:"createdBy"`
-	LastModifiedAt string         `json:"lastModifiedAt"`
-	LastModifiedBy string         `json:"lastModifiedBy"`
 	Status         string         `json:"status"`
 	FilePath       string         `json:"source_code_path"`
 	FileSha        string         `json:"source_code_sha"`

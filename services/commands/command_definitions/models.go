@@ -3,20 +3,14 @@ package command_definitions
 import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 type CommandDefinition struct {
-	ID             string          `json:"id"`
-	NodeId         string          `json:"nodeId"`
-	Name           string          `json:"name"`
-	Description    string          `json:"description,omitempty"`
-	Identifier     string          `json:"identifier,omitempty"`
-	Metadata       []Metadata[any] `json:"metadata,omitempty"`
-	Arguments      []Argument[any] `json:"arguments,omitempty"`
-	CreatedAt      string          `json:"createdAt"`
-	CreatedBy      string          `json:"createdBy"`
-	LastModifiedAt string          `json:"lastModifiedAt"`
-	LastModifiedBy string          `json:"lastModifiedBy"`
+	general_objects.AuditModel
+	NodeId      string          `json:"nodeId"`
+	Name        string          `json:"name"`
+	Description string          `json:"description,omitempty"`
+	Identifier  string          `json:"identifier,omitempty"`
+	Metadata    []Metadata[any] `json:"metadata,omitempty"`
+	Arguments   []Argument[any] `json:"arguments,omitempty"`
 }
-
-func (cmdDefinition *CommandDefinition) GetID() string { return cmdDefinition.ID }
 
 type Metadata[T any] struct {
 	ID          string                            `json:"id"`

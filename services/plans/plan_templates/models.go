@@ -3,7 +3,7 @@ package plan_templates
 import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 type PlanTemplate struct {
-	ID                         string                      `json:"id"`
+	general_objects.AuditModel
 	AssetId                    string                      `json:"assetId"`
 	Name                       string                      `json:"name"`
 	Description                string                      `json:"description,omitempty"`
@@ -11,13 +11,7 @@ type PlanTemplate struct {
 	ActivityConfigs            []ActivityConfigResult      `json:"activityConfigs,omitempty"`
 	EstimatedDurationInSeconds int                         `json:"estimatedDurationInSeconds"`
 	InvalidPlanTemplateReasons []InvalidPlanTemplateReason `json:"invalidPlanTemplateReasons,omitempty"`
-	CreatedAt                  string                      `json:"createdAt"`
-	CreatedBy                  string                      `json:"createdBy"`
-	LastModifiedAt             string                      `json:"lastModifiedAt"`
-	LastModifiedBy             string                      `json:"lastModifiedBy"`
 }
-
-func (template *PlanTemplate) GetID() string { return template.ID }
 
 type ActivityConfigResult struct {
 	ActivityDefinitionId         string                            `json:"activityDefinitionId"`

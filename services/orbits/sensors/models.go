@@ -3,18 +3,12 @@ package sensors
 import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 type Sensor struct {
-	ID             string                     `json:"id"`
-	SatelliteID    string                     `json:"satelliteId"`
-	Name           string                     `json:"name"`
-	ApertureShape  *ApertureShape             `json:"apertureShape"`
-	Tags           []general_objects.KeyValue `json:"tags,omitempty"`
-	CreatedAt      string                     `json:"createdAt"`
-	CreatedBy      string                     `json:"createdBy"`
-	LastModifiedAt string                     `json:"lastModifiedAt"`
-	LastModifiedBy string                     `json:"lastModifiedBy"`
+	general_objects.AuditModel
+	SatelliteID   string                     `json:"satelliteId"`
+	Name          string                     `json:"name"`
+	ApertureShape *ApertureShape             `json:"apertureShape"`
+	Tags          []general_objects.KeyValue `json:"tags,omitempty"`
 }
-
-func (areaOfInterest *Sensor) GetID() string { return areaOfInterest.ID }
 
 type ApertureShape struct {
 	Type                        string             `json:"type"` // CIRCULAR, RECTANGULAR

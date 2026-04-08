@@ -5,7 +5,7 @@ import (
 )
 
 type RecordTemplate struct {
-	ID                   string                     `json:"id"`
+	general_objects.AuditModel
 	Name                 string                     `json:"name"`
 	Description          string                     `json:"description"`
 	StreamId             string                     `json:"streamId"`
@@ -15,13 +15,7 @@ type RecordTemplate struct {
 	CommandDefinitionIds []string                   `json:"commandDefinitionIds"`
 	Properties           []Property[any]            `json:"properties"`
 	Tags                 []general_objects.KeyValue `json:"tags,omitempty"`
-	CreatedAt            string                     `json:"createdAt"`
-	CreatedBy            string                     `json:"createdBy"`
-	LastModifiedAt       string                     `json:"lastModifiedAt"`
-	LastModifiedBy       string                     `json:"lastModifiedBy"`
 }
-
-func (recordTemplate *RecordTemplate) GetID() string { return recordTemplate.ID }
 
 type DefaultParser struct {
 	ID       string `json:"id"`

@@ -5,20 +5,14 @@ import (
 )
 
 type Orbit struct {
-	ID                     string                     `json:"id"`
+	general_objects.AuditModel
 	SatelliteId            string                     `json:"satelliteId"`
 	Name                   string                     `json:"name"`
 	IdealOrbit             *IdealOrbit                `json:"idealOrbit,omitempty"`
 	GpsConfiguration       *GpsConfiguration          `json:"gpsConfiguration,omitempty"`
 	SatelliteConfiguration *SatelliteConfiguration    `json:"satelliteConfiguration,omitempty"`
 	Tags                   []general_objects.KeyValue `json:"tags,omitempty"`
-	CreatedAt              string                     `json:"createdAt"`
-	CreatedBy              string                     `json:"createdBy"`
-	LastModifiedAt         string                     `json:"lastModifiedAt"`
-	LastModifiedBy         string                     `json:"lastModifiedBy"`
 }
-
-func (orbit *Orbit) GetID() string { return orbit.ID }
 
 type IdealOrbit struct {
 	Type                          string  `json:"type"`

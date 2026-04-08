@@ -3,17 +3,11 @@ package areas_of_interest
 import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 type AreaOfInterest struct {
-	ID             string                     `json:"id"`
-	Name           string                     `json:"name"`
-	Shape          *AreaOfInterestShape       `json:"shape"`
-	Tags           []general_objects.KeyValue `json:"tags,omitempty"`
-	CreatedAt      string                     `json:"createdAt"`
-	CreatedBy      string                     `json:"createdBy"`
-	LastModifiedAt string                     `json:"lastModifiedAt"`
-	LastModifiedBy string                     `json:"lastModifiedBy"`
+	general_objects.AuditModel
+	Name  string                     `json:"name"`
+	Shape *AreaOfInterestShape       `json:"shape"`
+	Tags  []general_objects.KeyValue `json:"tags,omitempty"`
 }
-
-func (areaOfInterest *AreaOfInterest) GetID() string { return areaOfInterest.ID }
 
 type AreaOfInterestShape struct {
 	Type                string     `json:"type"` // POINT, CIRCLE, POLYGON

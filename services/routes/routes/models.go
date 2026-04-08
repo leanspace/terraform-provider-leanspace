@@ -3,20 +3,14 @@ package routes
 import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 type Route struct {
-	ID             string                     `json:"id"`
+	general_objects.AuditModel
 	Name           string                     `json:"name"`
 	Description    string                     `json:"description,omitempty"`
 	Tags           []general_objects.KeyValue `json:"tags,omitempty"`
 	Definition     Definition                 `json:"definition"`
 	RouteInstances []RouteInstance            `json:"routeInstances,omitempty"`
 	ProcessorIds   []string                   `json:"processorIds,omitempty"`
-	CreatedAt      string                     `json:"createdAt"`
-	CreatedBy      string                     `json:"createdBy"`
-	LastModifiedAt string                     `json:"lastModifiedAt"`
-	LastModifiedBy string                     `json:"lastModifiedBy"`
 }
-
-func (route *Route) GetID() string { return route.ID }
 
 type Definition struct {
 	Configuration    string  `json:"configuration"`

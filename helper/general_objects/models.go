@@ -2,6 +2,16 @@ package general_objects
 
 import "github.com/leanspace/terraform-provider-leanspace/helper"
 
+type AuditModel struct {
+	ID             string `json:"id"`
+	CreatedAt      string `json:"createdAt"`
+	CreatedBy      string `json:"createdBy"`
+	LastModifiedAt string `json:"lastModifiedAt"`
+	LastModifiedBy string `json:"lastModifiedBy"`
+}
+
+func (a *AuditModel) GetID() string { return a.ID }
+
 type Sort struct {
 	Direction    string `json:"direction"`
 	Property     string `json:"property"`

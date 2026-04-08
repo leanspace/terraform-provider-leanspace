@@ -5,7 +5,7 @@ import (
 )
 
 type Monitor struct {
-	ID                  string                     `json:"id"`
+	general_objects.AuditModel
 	Name                string                     `json:"name"`
 	Description         string                     `json:"description"`
 	Status              string                     `json:"status"`
@@ -15,13 +15,7 @@ type Monitor struct {
 	ActionTemplates     []ActionTemplate           `json:"actionTemplates"`
 	ActionTemplateLinks []ActionTemplateLink       `json:"actionTemplateLinks"`
 	Tags                []general_objects.KeyValue `json:"tags"`
-	CreatedAt           string                     `json:"createdAt"`
-	CreatedBy           string                     `json:"createdBy"`
-	LastModifiedAt      string                     `json:"lastModifiedAt"`
-	LastModifiedBy      string                     `json:"lastModifiedBy"`
 }
-
-func (monitor *Monitor) GetID() string { return monitor.ID }
 
 type Rule struct {
 	ComparisonOperator string  `json:"comparisonOperator"`
@@ -35,15 +29,11 @@ type ActionTemplateLink struct {
 }
 
 type ActionTemplate struct {
-	ID             string            `json:"id"`
-	Name           string            `json:"name"`
-	Type           string            `json:"type"`
-	URL            string            `json:"url"`
-	Payload        string            `json:"payload"`
-	Headers        map[string]string `json:"headers"`
-	TriggeredOn    []string          `json:"triggeredOn"`
-	CreatedAt      string            `json:"createdAt"`
-	CreatedBy      string            `json:"createdBy"`
-	LastModifiedAt string            `json:"lastModifiedAt"`
-	LastModifiedBy string            `json:"lastModifiedBy"`
+	general_objects.AuditModel
+	Name        string            `json:"name"`
+	Type        string            `json:"type"`
+	URL         string            `json:"url"`
+	Payload     string            `json:"payload"`
+	Headers     map[string]string `json:"headers"`
+	TriggeredOn []string          `json:"triggeredOn"`
 }

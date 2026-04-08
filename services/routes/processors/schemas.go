@@ -36,5 +36,3 @@ var processorSchema = general_objects.ResourceSchemaWith(map[string]resourcesche
 		Description: "Unique identifier of the processor file",
 	},
 })
-
-//var dataSourceFilterSchema = map[string]datasourceschema.Attribute{}

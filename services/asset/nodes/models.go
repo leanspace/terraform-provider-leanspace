@@ -9,13 +9,9 @@ import (
 // As a consequence, properties management would be too complicated.
 // In the end, it was decided to not include a properties attribute in Node schema/struc to force the user to use the property resource.
 type Node struct {
-	ID                      string                     `json:"id"`
+	general_objects.AuditModel
 	Name                    string                     `json:"name"`
 	Description             string                     `json:"description,omitempty"`
-	CreatedAt               string                     `json:"createdAt"`
-	CreatedBy               string                     `json:"createdBy"`
-	LastModifiedAt          string                     `json:"lastModifiedAt"`
-	LastModifiedBy          string                     `json:"lastModifiedBy"`
 	ParentNodeId            string                     `json:"parentNodeId,omitempty"`
 	Tags                    []general_objects.KeyValue `json:"tags,omitempty"`
 	Nodes                   []Node                     `json:"nodes,omitempty"`

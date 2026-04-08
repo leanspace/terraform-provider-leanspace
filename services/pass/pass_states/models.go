@@ -1,13 +1,9 @@
 package pass_states
 
-type PassState struct {
-	ID             string `json:"id"`
-	Name           string `json:"name"`
-	ReadOnly       bool   `json:"readOnly"`
-	CreatedAt      string `json:"createdAt"`
-	CreatedBy      string `json:"createdBy"`
-	LastModifiedAt string `json:"lastModifiedAt"`
-	LastModifiedBy string `json:"lastModifiedBy"`
-}
+import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
-func (state *PassState) GetID() string { return state.ID }
+type PassState struct {
+	general_objects.AuditModel
+	Name     string `json:"name"`
+	ReadOnly bool   `json:"readOnly"`
+}

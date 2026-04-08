@@ -466,3 +466,21 @@ func (field *Field[T]) FromMap(fieldMap map[string]any) error {
 	field.UnitId = fieldMap["unit_id"].(string)
 	return nil
 }
+
+func (a *AuditModel) ToAuditMap() map[string]any {
+	m := make(map[string]any)
+	m["id"] = helper.NilIfEmpty(a.ID)
+	m["created_at"] = helper.NilIfEmpty(a.CreatedAt)
+	m["created_by"] = helper.NilIfEmpty(a.CreatedBy)
+	m["last_modified_at"] = helper.NilIfEmpty(a.LastModifiedAt)
+	m["last_modified_by"] = helper.NilIfEmpty(a.LastModifiedBy)
+	return m
+}
+
+func (a *AuditModel) FromAuditMap(m map[string]any) {
+	a.ID = helper.CastString(m, "id")
+	a.CreatedAt = helper.CastString(m, "created_at")
+	a.CreatedBy = helper.CastString(m, "created_by")
+	a.LastModifiedAt = helper.CastString(m, "last_modified_at")
+	a.LastModifiedBy = helper.CastString(m, "last_modified_by")
+}

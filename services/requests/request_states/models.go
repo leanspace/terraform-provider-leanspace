@@ -1,12 +1,8 @@
 package request_states
 
-type RequestState struct {
-	ID             string `json:"id"`
-	Name           string `json:"name"`
-	CreatedAt      string `json:"createdAt"`
-	CreatedBy      string `json:"createdBy"`
-	LastModifiedAt string `json:"lastModifiedAt"`
-	LastModifiedBy string `json:"lastModifiedBy"`
-}
+import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
-func (state *RequestState) GetID() string { return state.ID }
+type RequestState struct {
+	general_objects.AuditModel
+	Name string `json:"name"`
+}

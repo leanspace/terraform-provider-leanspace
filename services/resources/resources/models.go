@@ -5,25 +5,19 @@ import (
 )
 
 type Resource struct {
-	ID             string                     `json:"id"`
-	AssetId        string                     `json:"assetId"`
-	UnitId         string                     `json:"unitId"`
-	MetricId       string                     `json:"metricId"`
-	Name           string                     `json:"name"`
-	Description    string                     `json:"description"`
-	DefaultLevel   float64                    `json:"defaultLevel"`
-	Constraints    []ResourceConstraints      `json:"constraints,omitempty"`
-	LowerLimit     *float64                   `json:"lowerLimit"`
-	UpperLimit     *float64                   `json:"upperLimit"`
-	Thresholds     []ResourceThreshold        `json:"thresholds,omitempty"`
-	Tags           []general_objects.KeyValue `json:"tags,omitempty"`
-	CreatedAt      string                     `json:"createdAt"`
-	CreatedBy      string                     `json:"createdBy"`
-	LastModifiedAt string                     `json:"lastModifiedAt"`
-	LastModifiedBy string                     `json:"lastModifiedBy"`
+	general_objects.AuditModel
+	AssetId      string                     `json:"assetId"`
+	UnitId       string                     `json:"unitId"`
+	MetricId     string                     `json:"metricId"`
+	Name         string                     `json:"name"`
+	Description  string                     `json:"description"`
+	DefaultLevel float64                    `json:"defaultLevel"`
+	Constraints  []ResourceConstraints      `json:"constraints,omitempty"`
+	LowerLimit   *float64                   `json:"lowerLimit"`
+	UpperLimit   *float64                   `json:"upperLimit"`
+	Thresholds   []ResourceThreshold        `json:"thresholds,omitempty"`
+	Tags         []general_objects.KeyValue `json:"tags,omitempty"`
 }
-
-func (resource *Resource) GetID() string { return resource.ID }
 
 type ResourceConstraints struct {
 	Type  string  `json:"type"`
