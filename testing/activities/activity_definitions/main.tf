@@ -16,9 +16,9 @@ variable "command_definition" {
     id = string
     arguments = set(object({
       name = string
-      attributes = list(object({
+      attributes = object({
         type = string
-      }))
+      })
     }))
   })
   description = "The command definition that will be used for this activity definition"
@@ -269,15 +269,15 @@ resource "leanspace_activity_definitions" "test" {
     delay_in_milliseconds = 0
     metadata_mappings {
       activity_definition_metadata_name = "ActivityMetadataText"
-      command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "TEXT")].name
+      command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.type, "TEXT")].name
     }
     metadata_mappings {
       activity_definition_metadata_name = "ActivityMetadataNumeric"
-      command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "NUMERIC")].name
+      command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.type, "NUMERIC")].name
     }
     argument_mappings {
       activity_definition_argument_name = "ActivityArgumentEnum"
-      command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.0.type, "ENUM")].name
+      command_definition_argument_name  = local.arguments[index(local.arguments.*.attributes.type, "ENUM")].name
     }
   }
   command_mappings {
