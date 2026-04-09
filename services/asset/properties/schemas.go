@@ -58,7 +58,7 @@ var propertySchema = general_objects.ResourceSchemaWith(map[string]resourceschem
 	"fields": resourceschema.SingleNestedAttribute{
 		Optional:    true,
 		Description: "Geopoint only",
-		Attributes:  geoPointFieldsSchema,
+		Attributes:  general_objects.CreateGeoPointFieldsSchema(true),
 	},
 	"options": resourceschema.MapAttribute{
 		ElementType: types.StringType,
@@ -100,54 +100,6 @@ var propertySchema = general_objects.ResourceSchemaWith(map[string]resourceschem
 		Description: "Indicates if it is a build-in property.",
 	},
 })
-
-var geoPointFieldsSchema = map[string]resourceschema.Attribute{
-	"latitude": resourceschema.SingleNestedAttribute{
-		Required:   true,
-		Attributes: propertyFieldSchema(true),
-	},
-	"longitude": resourceschema.SingleNestedAttribute{
-		Required:   true,
-		Attributes: propertyFieldSchema(true),
-	},
-	"elevation": resourceschema.SingleNestedAttribute{
-		Required:   true,
-		Attributes: propertyFieldSchema(false),
-	},
-}
-
-func propertyFieldSchema(computedMinMax bool) map[string]resourceschema.Attribute {
-	return map[string]resourceschema.Attribute{
-		"value": resourceschema.StringAttribute{
-			Optional: true,
-		},
-
-		// Numeric only
-		"scale": resourceschema.Int64Attribute{
-			Optional:    true,
-			Description: "Property field with numeric type only: the scale required.",
-		},
-		"unit_id": resourceschema.StringAttribute{
-			Optional:    true,
-			Description: "Property field with numeric type only",
-			Validators:  helper.ValidUUID(),
-		},
-		"min": resourceschema.Float64Attribute{
-			Computed:    computedMinMax,
-			Optional:    !computedMinMax,
-			Description: "Property field with numeric type only: the minimum value allowed.",
-		},
-		"precision": resourceschema.Int64Attribute{
-			Optional:    true,
-			Description: "Property field with numeric type only: How many values after the comma should be accepted",
-		},
-		"max": resourceschema.Float64Attribute{
-			Computed:    computedMinMax,
-			Optional:    !computedMinMax,
-			Description: "Property field with numeric type only: the maximum value allowed.",
-		},
-	}
-}
 
 var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 	"category": datasourceschema.StringAttribute{

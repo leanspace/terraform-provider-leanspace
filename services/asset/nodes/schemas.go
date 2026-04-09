@@ -55,8 +55,7 @@ func makeNodeSchema(recursiveNodes map[string]resourceschema.Attribute) map[stri
 		},
 		"tags": general_objects.KeyValuesSchema,
 		"number_of_children": resourceschema.Int64Attribute{
-			Computed:    true,
-			Description: "Numeric only",
+			Computed: true,
 		},
 		// The following fields were part of V1 properties in the API.
 		// In terraform, an update occurs when using `terraform apply` multiple times on the same resource with different field values.

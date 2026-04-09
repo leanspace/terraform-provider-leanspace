@@ -26,5 +26,3 @@ type Node struct {
 	NumberOfChildren        int                        `json:"numberOfChildren"`
 	PropertyList            []properties.Property[any] `json:"propertiesV2,omitempty"`
 }
-
-func (node *Node) GetID() string { return node.ID }

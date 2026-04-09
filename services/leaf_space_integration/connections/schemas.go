@@ -15,12 +15,10 @@ var leafSpaceConnectionSchema = general_objects.ResourceSchemaWith(map[string]re
 	},
 	"password": resourceschema.StringAttribute{
 		Optional:  true,
-		Computed:  true,
 		Sensitive: true,
 	},
 	"username": resourceschema.StringAttribute{
 		Optional: true,
-		Computed: true,
 	},
 	"authentication_token": resourceschema.StringAttribute{
 		Optional: true,

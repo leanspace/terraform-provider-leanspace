@@ -5,6 +5,7 @@ import (
 
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -63,11 +64,9 @@ func PaginatedListSchemaDS(content map[string]datasourceschema.Attribute, filter
 			Computed:    true,
 			Description: "True if the content is empty",
 		},
-		"pageable": datasourceschema.ListNestedAttribute{
-			Computed: true,
-			NestedObject: datasourceschema.NestedAttributeObject{
-				Attributes: PageableSchemaDS,
-			},
+		"pageable": datasourceschema.SingleNestedAttribute{
+			Computed:   true,
+			Attributes: PageableSchemaDS,
 		},
 		"filters": datasourceschema.SingleNestedAttribute{
 			Optional:   true,
@@ -216,7 +215,7 @@ var PageableSchemaR = map[string]resourceschema.Attribute{
 	},
 }
 
-func createGeoPointFieldsSchema(isValueField bool) map[string]resourceschema.Attribute {
+func CreateGeoPointFieldsSchema(isValueField bool) map[string]resourceschema.Attribute {
 	return map[string]resourceschema.Attribute{
 		"latitude": resourceschema.SingleNestedAttribute{
 			Optional:   true,
@@ -250,19 +249,21 @@ func createGeoPointFieldsSchemaDS(isValueField bool) map[string]datasourceschema
 	}
 }
 
-var geoPointFieldsDefSchema = createGeoPointFieldsSchema(false)
-var geoPointFieldsSchema = createGeoPointFieldsSchema(true)
+var geoPointFieldsDefSchema = CreateGeoPointFieldsSchema(false)
+var geoPointFieldsSchema = CreateGeoPointFieldsSchema(true)
 var geoPointFieldsDefSchemaDS = createGeoPointFieldsSchemaDS(false)
 var geoPointFieldsSchemaDS = createGeoPointFieldsSchemaDS(true)
 
 func baseAttributeFieldSchema(isValueField bool, isGeoPoint bool) map[string]resourceschema.Attribute {
 	baseSchema := map[string]resourceschema.Attribute{
 		"scale": resourceschema.Int64Attribute{
-			Optional:    true,
+			Computed:    isGeoPoint,
+			Optional:    !isGeoPoint,
 			Description: "Property field with numeric type only: the scale required.",
 		},
 		"unit_id": resourceschema.StringAttribute{
-			Optional:    true,
+			Computed:    isGeoPoint,
+			Optional:    !isGeoPoint,
 			Description: "Property field with numeric type only",
 			Validators:  helper.ValidUUID(),
 		},
@@ -272,7 +273,8 @@ func baseAttributeFieldSchema(isValueField bool, isGeoPoint bool) map[string]res
 			Description: "Property field with numeric type only: the minimum value allowed.",
 		},
 		"precision": resourceschema.Int64Attribute{
-			Optional:    true,
+			Computed:    isGeoPoint,
+			Optional:    !isGeoPoint,
 			Description: "Property field with numeric type only: How many values after the comma should be accepted",
 		},
 		"max": resourceschema.Float64Attribute{
@@ -399,6 +401,8 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string, fo
 		},
 		"required": resourceschema.BoolAttribute{
 			Optional: true,
+			Computed: true,
+			Default:  booldefault.StaticBool(false),
 		},
 		"default_value": resourceschema.StringAttribute{
 			Optional:    true,
@@ -558,6 +562,8 @@ func DefinitionAttributeArrayConstraintSchema(excludeTypes []string, excludeFiel
 		},
 		"required": resourceschema.BoolAttribute{
 			Optional: true,
+			Computed: true,
+			Default:  booldefault.StaticBool(false),
 		},
 		"max_length": resourceschema.Int64Attribute{
 			Optional:    true,

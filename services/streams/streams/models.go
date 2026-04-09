@@ -1,7 +1,9 @@
 package streams
 
-import "github.com/leanspace/terraform-provider-leanspace/helper"
-import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+import (
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+)
 
 type Stream struct {
 	general_objects.AuditModel
@@ -36,7 +38,7 @@ type StreamComponent struct {
 	Endianness string  `json:"endianness,omitempty"`
 
 	// Switch only
-	Expression SwitchExpression `json:"expression,omitempty"`
+	Expression *SwitchExpression `json:"expression,omitempty"`
 
 	// Container and switch only
 	Elements []StreamComponent `json:"elements,omitempty"`

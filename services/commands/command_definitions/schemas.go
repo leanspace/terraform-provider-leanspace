@@ -50,11 +50,9 @@ var metadataSchema = map[string]resourceschema.Attribute{
 	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"attributes": resourceschema.ListNestedAttribute{
-		Required: true,
-		NestedObject: resourceschema.NestedAttributeObject{
-			Attributes: general_objects.ValueAttributeSchema([]string{"ENUM", "STRUCTURE", "GEOPOINT", "TLE", "BINARY", "ARRAY"}),
-		},
+	"attributes": resourceschema.SingleNestedAttribute{
+		Required:   true,
+		Attributes: general_objects.ValueAttributeSchema([]string{"ENUM", "STRUCTURE", "GEOPOINT", "TLE", "BINARY", "ARRAY"}),
 	},
 }
 

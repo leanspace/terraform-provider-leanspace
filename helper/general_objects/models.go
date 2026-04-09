@@ -54,16 +54,16 @@ type DefinitionAttribute[T any] struct {
 	Required     *bool  `json:"required,omitempty"`
 	DefaultValue T      `json:"defaultValue,omitempty"`
 	// Text & Binary
-	MinLength int `json:"minLength,omitempty"`
-	MaxLength int `json:"maxLength,omitempty"`
+	MinLength *int `json:"minLength,omitempty"`
+	MaxLength *int `json:"maxLength,omitempty"`
 	// Text
 	Pattern string `json:"pattern,omitempty"`
 	// Numeric
-	Min       float64 `json:"min,omitempty"`
-	Max       float64 `json:"max,omitempty"`
-	Scale     int     `json:"scale,omitempty"`
-	Precision int     `json:"precision,omitempty"`
-	UnitId    string  `json:"unitId,omitempty"`
+	Min       *float64 `json:"min,omitempty"`
+	Max       *float64 `json:"max,omitempty"`
+	Scale     *int     `json:"scale,omitempty"`
+	Precision *int     `json:"precision,omitempty"`
+	UnitId    string   `json:"unitId,omitempty"`
 	// Date, time, timestamp
 	Before string `json:"before,omitempty"`
 	After  string `json:"after,omitempty"`
@@ -72,8 +72,8 @@ type DefinitionAttribute[T any] struct {
 	// Geopoint
 	Fields *FieldsDef `json:"fields,omitempty"`
 	// Array
-	MinSize    int                  `json:"minSize,omitempty"`
-	MaxSize    int                  `json:"maxSize,omitempty"`
+	MinSize    *int                 `json:"minSize,omitempty"`
+	MaxSize    *int                 `json:"maxSize,omitempty"`
 	Unique     bool                 `json:"unique,omitempty"`
 	Constraint ArrayConstraint[any] `json:"elementConstraint,omitempty"`
 }
@@ -84,16 +84,16 @@ type ArrayConstraint[T any] struct {
 	Required     *bool  `json:"required,omitempty"`
 	DefaultValue T      `json:"defaultValue,omitempty"`
 	// Text & binary
-	MinLength int `json:"minLength,omitempty"`
-	MaxLength int `json:"maxLength,omitempty"`
+	MinLength *int `json:"minLength,omitempty"`
+	MaxLength *int `json:"maxLength,omitempty"`
 	// Text only
 	Pattern string `json:"pattern,omitempty"`
 	// Numeric
-	Min       float64 `json:"min,omitempty"`
-	Max       float64 `json:"max,omitempty"`
-	Scale     int     `json:"scale,omitempty"`
-	Precision int     `json:"precision,omitempty"`
-	UnitId    string  `json:"unitId,omitempty"`
+	Min       *float64 `json:"min,omitempty"`
+	Max       *float64 `json:"max,omitempty"`
+	Scale     *int     `json:"scale,omitempty"`
+	Precision *int     `json:"precision,omitempty"`
+	UnitId    string   `json:"unitId,omitempty"`
 	// Date, time, timestamp
 	Before string `json:"before,omitempty"`
 	After  string `json:"after,omitempty"`
@@ -119,12 +119,12 @@ type FieldsDef struct {
 }
 
 type FieldDef[T any] struct {
-	DefaultValue T       `json:"defaultValue,omitempty"`
-	Min          float64 `json:"min,omitempty"`
-	Max          float64 `json:"max,omitempty"`
-	Scale        int     `json:"scale,omitempty"`
-	Precision    int     `json:"precision,omitempty"`
-	UnitId       string  `json:"unitId,omitempty"`
+	DefaultValue T        `json:"defaultValue,omitempty"`
+	Min          *float64 `json:"min,omitempty"`
+	Max          *float64 `json:"max,omitempty"`
+	Scale        *int     `json:"scale,omitempty"`
+	Precision    *int     `json:"precision,omitempty"`
+	UnitId       string   `json:"unitId,omitempty"`
 }
 
 type Fields struct {
@@ -134,10 +134,10 @@ type Fields struct {
 }
 
 type Field[T any] struct {
-	Value     T       `json:"value,omitempty"`
-	Min       float64 `json:"min,omitempty"`
-	Max       float64 `json:"max,omitempty"`
-	Scale     int     `json:"scale,omitempty"`
-	Precision int     `json:"precision,omitempty"`
-	UnitId    string  `json:"unitId,omitempty"`
+	Value     T        `json:"value,omitempty"`
+	Min       *float64 `json:"min,omitempty"`
+	Max       *float64 `json:"max,omitempty"`
+	Scale     *int     `json:"scale,omitempty"`
+	Precision *int     `json:"precision,omitempty"`
+	UnitId    string   `json:"unitId,omitempty"`
 }

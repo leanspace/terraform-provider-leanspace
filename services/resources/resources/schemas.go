@@ -14,7 +14,6 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var validResourceConstraintTypes = []string{"LIMIT", "THRESHOLD"}
 var validResourceConstraintKinds = []string{"UPPER", "LOWER"}
 
 var resourceSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
@@ -58,26 +57,6 @@ var resourceSchema = general_objects.ResourceSchemaWith(map[string]resourceschem
 	"tags": general_objects.KeyValuesSchema,
 })
 
-var resourceConstraintsSchema = map[string]resourceschema.Attribute{
-	"type": resourceschema.StringAttribute{
-		Required:    true,
-		Description: helper.AllowedValuesToDescription(validResourceConstraintTypes),
-		Validators:  []validator.String{stringvalidator.OneOf(validResourceConstraintTypes...)},
-	},
-	"kind": resourceschema.StringAttribute{
-		Required:    true,
-		Description: helper.AllowedValuesToDescription(validResourceConstraintKinds),
-		Validators:  []validator.String{stringvalidator.OneOf(validResourceConstraintKinds...)},
-	},
-	"value": resourceschema.Float64Attribute{
-		Required: true,
-	},
-	"name": resourceschema.StringAttribute{
-		Optional:   true,
-		Validators: helper.ValidName(),
-	},
-}
-
 var resourceThresholdSchema = map[string]resourceschema.Attribute{
 	"kind": resourceschema.StringAttribute{
 		Required:    true,
@@ -105,6 +84,7 @@ var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 	"unit_ids": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
+		Computed:    true,
 		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
 	"metric_ids": datasourceschema.ListAttribute{
