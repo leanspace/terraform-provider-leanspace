@@ -103,6 +103,69 @@ func FilterSchemaDS(filters map[string]datasourceschema.Attribute) map[string]da
 	return baseFilter
 }
 
+func AuditFilterFieldsWithTagsAndSingularBy(filters map[string]datasourceschema.Attribute) map[string]datasourceschema.Attribute {
+	return AuditFilterFields(filters, true, true)
+}
+
+func AuditFilterFieldsWithTags(filters map[string]datasourceschema.Attribute) map[string]datasourceschema.Attribute {
+	return AuditFilterFields(filters, true, false)
+}
+
+// AuditFilterFields returns the standard audit filter attributes: created_bys, last_modified_bys,
+// from_created_at, to_created_at, from_last_modified_at, to_last_modified_at, and optionally tags. If singularBy is true, it returns created_by and last_modified_by instead of their plural version.
+func AuditFilterFields(filters map[string]datasourceschema.Attribute, includeTags bool, singularBy bool) map[string]datasourceschema.Attribute {
+	baseFilter := map[string]datasourceschema.Attribute{
+		"from_created_at": datasourceschema.StringAttribute{
+			Optional:    true,
+			Description: "Filter on the creation date. Entries with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+		},
+		"to_created_at": datasourceschema.StringAttribute{
+			Optional:    true,
+			Description: "Filter on the creation date. Entries with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+		},
+		"from_last_modified_at": datasourceschema.StringAttribute{
+			Optional:    true,
+			Description: "Filter on the last modification date. Entries with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+		},
+		"to_last_modified_at": datasourceschema.StringAttribute{
+			Optional:    true,
+			Description: "Filter on the last modification date. Entries with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+		},
+	}
+	if singularBy {
+		baseFilter["last_modified_by"] = datasourceschema.StringAttribute{
+			Optional:    true,
+			Description: "Filter on the user who last modified the entry. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+		}
+		baseFilter["created_by"] = datasourceschema.StringAttribute{
+			Optional:    true,
+			Description: "Filter on the user who created the Node. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+		}
+	} else {
+		baseFilter["last_modified_bys"] = datasourceschema.ListAttribute{
+			ElementType: types.StringType,
+			Optional:    true,
+			Description: "Filter on the user who last modified the entry. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+		}
+		baseFilter["created_bys"] = datasourceschema.ListAttribute{
+			ElementType: types.StringType,
+			Optional:    true,
+			Description: "Filter on the user who created the entry. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+		}
+	}
+
+	if includeTags {
+		baseFilter["tags"] = datasourceschema.ListAttribute{
+			ElementType: types.StringType,
+			Optional:    true,
+		}
+	}
+	for k, v := range filters {
+		baseFilter[k] = v
+	}
+	return baseFilter
+}
+
 var SortSchemaDS = map[string]datasourceschema.Attribute{
 	"direction": datasourceschema.StringAttribute{
 		Computed:    true,

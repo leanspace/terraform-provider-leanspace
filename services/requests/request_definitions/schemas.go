@@ -143,21 +143,4 @@ var requestDefinitionFilterSchema = map[string]datasourceschema.Attribute{
 		Optional:    true,
 		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
-	"created_bys": datasourceschema.ListAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
-	},
-	"to_created_at": datasourceschema.StringAttribute{
-		Optional: true,
-	},
-	"last_modified_bys": datasourceschema.ListAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
-	},
-	"from_last_modified_at": datasourceschema.StringAttribute{
-		Optional: true,
-	},
-	"to_last_modified_at": datasourceschema.StringAttribute{
-		Optional: true,
-	},
 }

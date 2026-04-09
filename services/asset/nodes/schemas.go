@@ -106,31 +106,7 @@ func makeNodeSchema(recursiveNodes map[string]resourceschema.Attribute) map[stri
 	return baseSchema
 }
 
-var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
-	"created_by": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the user who created the Node. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"from_created_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the Node creation date. Properties with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"from_last_modified_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the Node last modification date. Nodes with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"last_modified_by": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the user who modified last the Node. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"to_created_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the Node creation date. Nodes with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"to_last_modified_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the Node last modification date. Nodes with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
+var dataSourceFilterSchema = general_objects.AuditFilterFieldsWithTagsAndSingularBy(map[string]datasourceschema.Attribute{
 	"is_root_node": datasourceschema.BoolAttribute{
 		Optional:    true,
 		Description: "Show only Root Nodes, or hide only Root Nodes. true: select Root Nodes only - false: select Nodes with Parent only",
@@ -147,8 +123,4 @@ var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 		ElementType: types.StringType,
 		Optional:    true,
 	},
-	"tags": datasourceschema.ListAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
-	},
-}
+})

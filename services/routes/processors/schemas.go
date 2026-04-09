@@ -2,10 +2,12 @@ package processors
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
@@ -36,3 +38,16 @@ var processorSchema = general_objects.ResourceSchemaWith(map[string]resourcesche
 		Description: "Unique identifier of the processor file",
 	},
 })
+
+var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+	"created_bys": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Description: "Filter on the user who created the entry. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	},
+	"last_modified_bys": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Description: "Filter on the user who last modified the entry. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	},
+}

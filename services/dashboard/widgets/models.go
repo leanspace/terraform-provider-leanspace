@@ -11,7 +11,7 @@ type Widget struct {
 	QueryTimeDimension   string                     `json:"queryTimeDimension"`
 	DisplayTimeDimension string                     `json:"displayTimeDimension"`
 	Series               []Series                   `json:"series"`
-	Metadata             Metadata                   `json:"metadata"`
+	Metadata             *Metadata                  `json:"metadata"`
 	Dashboards           []DashboardInfo            `json:"dashboards"`
 	Tags                 []general_objects.KeyValue `json:"tags,omitempty"`
 }

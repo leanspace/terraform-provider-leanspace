@@ -101,34 +101,10 @@ var propertySchema = general_objects.ResourceSchemaWith(map[string]resourceschem
 	},
 })
 
-var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+var dataSourceFilterSchema = general_objects.AuditFilterFieldsWithTagsAndSingularBy(map[string]datasourceschema.Attribute{
 	"category": datasourceschema.StringAttribute{
 		Optional:    true,
 		Description: "Allowed values : BUILT_IN_PROPERTIES_ONLY, USER_PROPERTIES_ONLY, ALL_PROPERTIES",
-	},
-	"created_by": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the user who created the Property. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"from_created_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the Property creation date. Properties with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"from_last_modified_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the Property last modification date. Properties with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"last_modified_by": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the user who modified last the Property. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"to_created_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the Property creation date. Properties with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"to_last_modified_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the Property last modification date. Properties with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
 	"kinds": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
@@ -144,8 +120,4 @@ var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 		ElementType: types.StringType,
 		Optional:    true,
 	},
-	"tags": datasourceschema.ListAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
-	},
-}
+})

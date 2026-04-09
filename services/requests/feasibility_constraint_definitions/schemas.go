@@ -5,7 +5,6 @@ import (
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
@@ -43,22 +42,4 @@ var argumentDefinitionSchema = map[string]resourceschema.Attribute{
 	},
 }
 
-var feasibilityConstraintDefinitionFilterSchema = map[string]datasourceschema.Attribute{
-	"created_bys": datasourceschema.ListAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
-	},
-	"to_created_at": datasourceschema.StringAttribute{
-		Optional: true,
-	},
-	"last_modified_bys": datasourceschema.ListAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
-	},
-	"from_last_modified_at": datasourceschema.StringAttribute{
-		Optional: true,
-	},
-	"to_last_modified_at": datasourceschema.StringAttribute{
-		Optional: true,
-	},
-}
+var feasibilityConstraintDefinitionFilterSchema = general_objects.AuditFilterFieldsWithTags(map[string]datasourceschema.Attribute{})

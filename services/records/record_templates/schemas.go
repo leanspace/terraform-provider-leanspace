@@ -84,7 +84,7 @@ var recordTemplatePropertySchema = map[string]resourceschema.Attribute{
 	},
 }
 
-var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+var dataSourceFilterSchema = general_objects.AuditFilterFieldsWithTags(map[string]datasourceschema.Attribute{
 	"names": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
@@ -102,34 +102,4 @@ var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 		Description: "Only returns Record Templates with at least one metricId that matches one of the provided values.",
 		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
-	"created_by": datasourceschema.ListAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
-		Description: "Filter on the user who created the RecordTemplate. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"last_modified_by": datasourceschema.ListAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
-		Description: "Filter on the user who last modified the RecordTemplate. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"from_created_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the RecordTemplate creation date. RecordTemplates with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"to_created_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the RecordTemplate creation date. RecordTemplates with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"from_last_modified_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the RecordTemplate last modification date. RecordTemplates with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"to_last_modified_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the RecordTemplate last modification date. RecordTemplates with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"tags": datasourceschema.ListAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
-	},
-}
+})

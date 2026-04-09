@@ -94,7 +94,7 @@ func halfApertureAngleSchema(maximum float64) map[string]resourceschema.Attribut
 	}
 }
 
-var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+var dataSourceFilterSchema = general_objects.AuditFilterFieldsWithTags(map[string]datasourceschema.Attribute{
 	"satellite_ids": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
@@ -105,34 +105,4 @@ var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 		Optional:    true,
 		Validators:  []validator.List{listvalidator.ValueStringsAre(stringvalidator.OneOf(validShapeTypes...))},
 	},
-	"tags": datasourceschema.ListAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
-	},
-	"created_bys": datasourceschema.ListAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
-		Description: "Filter on the user who created the entry. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"last_modified_bys": datasourceschema.ListAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
-		Description: "Filter on the user who last modified the entry. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"from_created_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the creation date. Entries with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"from_last_modified_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the last modification date. Entries with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"to_created_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the creation date. Entries with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"to_last_modified_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the last modification date. Entries with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-}
+})

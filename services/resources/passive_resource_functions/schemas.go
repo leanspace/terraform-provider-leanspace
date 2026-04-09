@@ -53,40 +53,10 @@ var formulaSchema = map[string]resourceschema.Attribute{
 	},
 }
 
-var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+var dataSourceFilterSchema = general_objects.AuditFilterFieldsWithTags(map[string]datasourceschema.Attribute{
 	"resource_ids": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
 		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
-	"tags": datasourceschema.ListAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
-	},
-	"created_bys": datasourceschema.ListAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
-		Description: "Filter on the user who created the Passive Resource Function. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"last_modified_bys": datasourceschema.ListAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
-		Description: "Filter on the user who last modified the Passive Resource Function. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"from_created_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the Passive Resource Function creation date. Passive Resource Functions with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"from_last_modified_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the Passive Resource Function last modification date. Passive Resource Functions with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"to_created_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the Passive Resource Function creation date. Passive Resource Functions with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"to_last_modified_at": datasourceschema.StringAttribute{
-		Optional:    true,
-		Description: "Filter on the Passive Resource Function last modification date. Passive Resource Functions with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-}
+})

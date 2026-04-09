@@ -103,6 +103,11 @@ var routeInstanceSchema = map[string]resourceschema.Attribute{
 }
 
 var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+	"last_modified_bys": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Description: "Filter on the user who last modified the entry. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
+	},
 	"tags": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
