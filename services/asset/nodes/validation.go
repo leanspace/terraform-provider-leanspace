@@ -25,19 +25,27 @@ var nodeValidators = Validators{
 	),
 }
 
-func (node *Node) Validate(obj map[string]any) error {
+func (node *Node) Validate() error {
+	obj := map[string]any{
+		"type":                     node.Type,
+		"kind":                     node.Kind,
+		"tle":                      node.Tle,
+		"norad_id":                 node.NoradId,
+		"international_designator": node.InternationalDesignator,
+		"latitude":                 node.Latitude,
+		"longitude":                node.Longitude,
+		"elevation":                node.Elevation,
+	}
 	if err := nodeValidators.Check(obj); err != nil {
 		return err
 	}
-	if node.Kind == "SATELLITE" && node.Tle != nil {
+	if node.Kind == "SATELLITE" && node.Tle != nil && len(node.Tle) >= 2 {
 		if !tle1stLineRegex.MatchString(node.Tle[0]) {
-			return fmt.Errorf("TLE first line mutch match %q, got: %q", tle1stLineRegex, node.Tle[0])
+			return fmt.Errorf("TLE first line must match %q, got: %q", tle1stLineRegex, node.Tle[0])
 		}
-
 		if !tle2ndLineRegex.MatchString(node.Tle[1]) {
-			return fmt.Errorf("TLE first line mutch match %q, got: %q", tle2ndLineRegex, node.Tle[1])
+			return fmt.Errorf("TLE second line must match %q, got: %q", tle2ndLineRegex, node.Tle[1])
 		}
 	}
-
 	return nil
 }

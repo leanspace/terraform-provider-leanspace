@@ -7,4 +7,5 @@ var AreaOfInterestDataType = provider.DataSourceType[AreaOfInterest, *AreaOfInte
 	Path:               "orbits-repository/area-of-interests",
 	Schema:             areaOfInterestSchema,
 	FilterSchema:       dataSourceFilterSchema,
+	NewTFModel:         func() any { return &AreaOfInterestTF{} },
 }

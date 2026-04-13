@@ -18,7 +18,8 @@ var PassDelayConfigurationType = provider.DataSourceType[PassDelayConfiguration,
 	UpdatePath: func(id string) string {
 		return path
 	},
-	IsUnique: true,
+	IsUnique:   true,
+	NewTFModel: func() any { return &PassDelayConfigurationTF{} },
 }
 
 var path = "passes-repository/passes/delay/configurations"

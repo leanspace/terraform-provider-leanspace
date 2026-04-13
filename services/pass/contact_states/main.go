@@ -7,4 +7,5 @@ var ContactStateDataType = provider.DataSourceType[ContactState, *ContactState]{
 	Path:               "passes-repository/contacts/states",
 	Schema:             contactStateSchema,
 	FilterSchema:       nil,
+	NewTFModel:         func() any { return &ContactStateTF{} },
 }

@@ -4,9 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/leanspace/terraform-provider-leanspace/helper"
-
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -49,56 +46,29 @@ func (r *GenericResource[T, PT]) Configure(_ context.Context, req resource.Confi
 	r.client = client
 }
 
-// getData reads all attributes from the framework plan/state into a raw map, validates, then converts to model.
-func (r *GenericResource[T, PT]) getData(ctx context.Context, attrValues map[string]attr.Value, checkValidity bool) (PT, error) {
-	rawMap, diags := AttrValuesToMap(ctx, r.dataType.Schema, attrValues)
-	if diags.HasError() {
-		return nil, fmt.Errorf("error converting plan to map: %s", diags.Errors()[0].Detail())
-	}
-	if rawMap == nil {
-		return nil, nil
-	}
-
-	var value PT = new(T)
-
-	if checkValidity && helper.Implements[T, ValidationModel]() {
-		err := any(value).(ValidationModel).Validate(rawMap)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	err := value.FromMap(rawMap)
-	return value, err
-}
-
 func (r *GenericResource[T, PT]) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	// Get plan values
-	planValues := make(map[string]attr.Value)
-	for key := range r.dataType.Schema {
-		var val attr.Value
-		diags := req.Plan.GetAttribute(ctx, path.Root(key), &val)
-		resp.Diagnostics.Append(diags...)
-		planValues[key] = val
-	}
+	tfModel := r.dataType.NewTFModel()
+	resp.Diagnostics.Append(req.Plan.Get(ctx, tfModel)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	value, err := r.getData(ctx, planValues, true)
-	if err != nil {
-		resp.Diagnostics.AddError("Error parsing plan", err.Error())
-		return
+	apiPtr := tfModel.(TFToAPI).ToAPI().(PT)
+
+	if v, ok := any(apiPtr).(ValidationModel); ok {
+		if err := v.Validate(); err != nil {
+			resp.Diagnostics.AddError("Validation error", err.Error())
+			return
+		}
 	}
 
-	createdValue, err := r.dataType.convert(r.client).Create(value)
+	createdValue, err := r.dataType.convert(r.client).Create(apiPtr)
 	if err != nil {
 		resp.Diagnostics.AddError("Error creating resource", err.Error())
 		return
 	}
 
-	// Re-read the resource to get the full state
-	readValue, err := r.dataType.convert(r.client).Get(createdValue.GetID(), value)
+	readValue, err := r.dataType.convert(r.client).Get(createdValue.GetID(), apiPtr)
 	if err != nil {
 		resp.Diagnostics.AddError("Error reading resource after create", err.Error())
 		return
@@ -108,22 +78,10 @@ func (r *GenericResource[T, PT]) Create(ctx context.Context, req resource.Create
 		return
 	}
 
-	storedData := readValue.ToMap()
-	storedData["id"] = createdValue.GetID()
-	attrVals, d := MapToAttrValues(ctx, r.dataType.Schema, storedData)
-	resp.Diagnostics.Append(d...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	// Set state
-	for key, val := range attrVals {
-		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root(key), val)...)
-	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, any(readValue).(APIToTF).ToTF())...)
 }
 
 func (r *GenericResource[T, PT]) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	// Get the ID from state
 	var id types.String
 	diags := req.State.GetAttribute(ctx, path.Root("id"), &id)
 	resp.Diagnostics.Append(diags...)
@@ -131,20 +89,12 @@ func (r *GenericResource[T, PT]) Read(ctx context.Context, req resource.ReadRequ
 		return
 	}
 
-	// Read current state to pass to Get (for PostReadProcess)
-	stateValues := make(map[string]attr.Value)
-	for key := range r.dataType.Schema {
-		var val attr.Value
-		d := req.State.GetAttribute(ctx, path.Root(key), &val)
-		resp.Diagnostics.Append(d...)
-		stateValues[key] = val
-	}
-
 	var readElement PT
-	rawMap, _ := AttrValuesToMap(ctx, r.dataType.Schema, stateValues)
-	if rawMap != nil {
-		readElement = new(T)
-		readElement.FromMap(rawMap)
+	tfModel := r.dataType.NewTFModel()
+	if d := req.State.Get(ctx, tfModel); !d.HasError() {
+		if conv, ok := tfModel.(TFToAPI); ok {
+			readElement = conv.ToAPI().(PT)
+		}
 	}
 
 	value, err := r.dataType.convert(r.client).Get(id.ValueString(), readElement)
@@ -154,38 +104,20 @@ func (r *GenericResource[T, PT]) Read(ctx context.Context, req resource.ReadRequ
 	}
 
 	if value == nil {
-		// Resource was deleted outside of Terraform
 		resp.State.RemoveResource(ctx)
 		return
 	}
 
-	storedData := value.ToMap()
-	storedData["id"] = id.ValueString()
-	attrVals, d := MapToAttrValues(ctx, r.dataType.Schema, storedData)
-	resp.Diagnostics.Append(d...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	for key, val := range attrVals {
-		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root(key), val)...)
-	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, any(value).(APIToTF).ToTF())...)
 }
 
 func (r *GenericResource[T, PT]) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	// Get plan values
-	planValues := make(map[string]attr.Value)
-	for key := range r.dataType.Schema {
-		var val attr.Value
-		diags := req.Plan.GetAttribute(ctx, path.Root(key), &val)
-		resp.Diagnostics.Append(diags...)
-		planValues[key] = val
-	}
+	tfModel := r.dataType.NewTFModel()
+	resp.Diagnostics.Append(req.Plan.Get(ctx, tfModel)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	// Get the ID from state
 	var id types.String
 	diags := req.State.GetAttribute(ctx, path.Root("id"), &id)
 	resp.Diagnostics.Append(diags...)
@@ -193,20 +125,22 @@ func (r *GenericResource[T, PT]) Update(ctx context.Context, req resource.Update
 		return
 	}
 
-	value, err := r.getData(ctx, planValues, true)
-	if err != nil {
-		resp.Diagnostics.AddError("Error parsing plan", err.Error())
-		return
+	apiPtr := tfModel.(TFToAPI).ToAPI().(PT)
+
+	if v, ok := any(apiPtr).(ValidationModel); ok {
+		if err := v.Validate(); err != nil {
+			resp.Diagnostics.AddError("Validation error", err.Error())
+			return
+		}
 	}
 
-	_, err = r.dataType.convert(r.client).Update(id.ValueString(), value)
+	_, err := r.dataType.convert(r.client).Update(id.ValueString(), apiPtr)
 	if err != nil {
 		resp.Diagnostics.AddError("Error updating resource", err.Error())
 		return
 	}
 
-	// Re-read the resource
-	readValue, err := r.dataType.convert(r.client).Get(id.ValueString(), value)
+	readValue, err := r.dataType.convert(r.client).Get(id.ValueString(), apiPtr)
 	if err != nil {
 		resp.Diagnostics.AddError("Error reading resource after update", err.Error())
 		return
@@ -216,21 +150,10 @@ func (r *GenericResource[T, PT]) Update(ctx context.Context, req resource.Update
 		return
 	}
 
-	storedData := readValue.ToMap()
-	storedData["id"] = id.ValueString()
-	attrVals, d := MapToAttrValues(ctx, r.dataType.Schema, storedData)
-	resp.Diagnostics.Append(d...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	for key, val := range attrVals {
-		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root(key), val)...)
-	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, any(readValue).(APIToTF).ToTF())...)
 }
 
 func (r *GenericResource[T, PT]) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	// Get the ID from state
 	var id types.String
 	diags := req.State.GetAttribute(ctx, path.Root("id"), &id)
 	resp.Diagnostics.Append(diags...)
@@ -238,20 +161,12 @@ func (r *GenericResource[T, PT]) Delete(ctx context.Context, req resource.Delete
 		return
 	}
 
-	// Read current state for the model (needed for PreDeleteProcess etc.)
-	stateValues := make(map[string]attr.Value)
-	for key := range r.dataType.Schema {
-		var val attr.Value
-		d := req.State.GetAttribute(ctx, path.Root(key), &val)
-		resp.Diagnostics.Append(d...)
-		stateValues[key] = val
-	}
-
 	var element PT
-	rawMap, _ := AttrValuesToMap(ctx, r.dataType.Schema, stateValues)
-	if rawMap != nil {
-		element = new(T)
-		element.FromMap(rawMap)
+	tfModel := r.dataType.NewTFModel()
+	if d := req.State.Get(ctx, tfModel); !d.HasError() {
+		if conv, ok := tfModel.(TFToAPI); ok {
+			element = conv.ToAPI().(PT)
+		}
 	}
 
 	err := r.dataType.convert(r.client).Delete(id.ValueString(), element)

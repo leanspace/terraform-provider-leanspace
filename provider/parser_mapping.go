@@ -3,16 +3,13 @@ package provider
 import (
 	"io"
 
-	"github.com/leanspace/terraform-provider-leanspace/helper"
-
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 )
 
 type ParseableModel[T any] interface {
 	*T
-	helper.Parseable
-	// A function that returns the ID of a model instance instance.
+	// A function that returns the ID of a model instance.
 	GetID() string
 }
 
@@ -84,14 +81,28 @@ type CustomEncodingModel interface {
 }
 
 type ValidationModel interface {
-	// An optional extra function that is called before an instance of this resource is parsed
-	// (ie. FromMap is called) for creation / update. This can be used to ensure all values are valid
-	// and are coherent, and to avoid having validation and error throwing during FromMap (better
-	// isolating resource logic from parsing).
-	// The instance this method is called on is empty/irrelevant - all the data is in the map, and will
-	// be the same as what FromMap receives.
+	// An optional extra function that is called before creating or updating.
+	// This can be used to ensure all values are valid and coherent.
 	// If an error is thrown the action is stopped and the error is displayed to the user.
-	Validate(map[string]any) error
+	Validate() error
+}
+
+// APIToTF is implemented by API models that can produce a Terraform model directly,
+// bypassing the intermediate map[string]any layer.
+type APIToTF interface {
+	ToTF() any // returns a pointer to the TF model struct
+}
+
+// TFToAPI is implemented by Terraform models that can produce their API model,
+// bypassing the intermediate map[string]any layer.
+type TFToAPI interface {
+	ToAPI() any // returns the API model (value, not pointer)
+}
+
+// APIToDSTF is implemented by API models that can produce a data-source-specific
+// Terraform model. Used by unique (non-paginated) data sources.
+type APIToDSTF interface {
+	ToDSTF() any // returns a pointer to the DS TF model struct
 }
 
 type GenericClient[T any, PT ParseableModel[T]] struct {
@@ -140,6 +151,10 @@ type DataSourceType[T any, PT ParseableModel[T]] struct {
 	FilterSchema map[string]datasourceschema.Attribute
 	// If the filet endpoint is paginated or not. Defaults to true.
 	IsUnique bool `default:"false"`
+	// Optional. Factory that returns a pointer to a new empty TF model struct (e.g. &NodeTF{}).
+	// When set, GenericResource uses the direct TF conversion path (Plan.Get/State.Set)
+	// instead of the map[string]any intermediary.
+	NewTFModel func() any
 }
 
 func (dataSource DataSourceType[T, PT]) convert(client *Client) GenericClient[T, PT] {

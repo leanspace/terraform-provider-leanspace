@@ -7,4 +7,5 @@ var RequestDefinitionDataType = provider.DataSourceType[RequestDefinition, *Requ
 	Path:               "requests-repository/request-definitions",
 	Schema:             requestDefinitionSchema,
 	FilterSchema:       requestDefinitionFilterSchema,
+	NewTFModel:         func() any { return &RequestDefinitionTF{} },
 }

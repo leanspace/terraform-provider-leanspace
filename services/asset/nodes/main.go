@@ -7,4 +7,5 @@ var NodeDataType = provider.DataSourceType[Node, *Node]{
 	Path:               "asset-repository/nodes",
 	Schema:             rootNodeSchema,
 	FilterSchema:       dataSourceFilterSchema,
+	NewTFModel:         func() any { return &NodeTF{} },
 }

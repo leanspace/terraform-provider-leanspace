@@ -7,4 +7,5 @@ var PlanTemplateDataType = provider.DataSourceType[PlanTemplate, *PlanTemplate]{
 	Path:               "plans-repository/plan-templates",
 	Schema:             planTemplateSchema,
 	FilterSchema:       nil,
+	NewTFModel:         func() any { return &PlanTemplateTF{} },
 }

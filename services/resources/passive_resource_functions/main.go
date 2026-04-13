@@ -7,4 +7,5 @@ var PassiveResourceFunctionDataType = provider.DataSourceType[PassiveResourceFun
 	Path:               "resources-repository/passive-resource-functions",
 	Schema:             passiveResourceFunctionSchema,
 	FilterSchema:       dataSourceFilterSchema,
+	NewTFModel:         func() any { return &PassiveResourceFunctionTF{} },
 }

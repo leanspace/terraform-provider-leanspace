@@ -7,4 +7,5 @@ var EventsDefinitionDataType = provider.DataSourceType[EventsDefinition, *Events
 	Path:               "events/event-definitions",
 	Schema:             eventsDefinitions,
 	FilterSchema:       dataSourceFilterSchema,
+	NewTFModel:         func() any { return &EventsDefinitionTF{} },
 }

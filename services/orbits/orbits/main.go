@@ -7,4 +7,5 @@ var OrbitDataType = provider.DataSourceType[Orbit, *Orbit]{
 	Path:               "orbits-repository/orbits",
 	Schema:             orbitSchema,
 	FilterSchema:       dataSourceFilterSchema,
+	NewTFModel:         func() any { return &OrbitTF{} },
 }

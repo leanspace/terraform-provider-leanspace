@@ -7,4 +7,5 @@ var ProcessorDataType = provider.DataSourceType[Processor, *Processor]{
 	Path:               "routes-repository/processors",
 	Schema:             processorSchema,
 	FilterSchema:       dataSourceFilterSchema,
+	NewTFModel:         func() any { return &ProcessorTF{} },
 }

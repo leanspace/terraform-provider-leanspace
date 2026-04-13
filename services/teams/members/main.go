@@ -7,4 +7,5 @@ var MemberDataType = provider.DataSourceType[Member, *Member]{
 	Path:               "teams-repository/members",
 	Schema:             memberSchema,
 	FilterSchema:       dataSourceFilterSchema,
+	NewTFModel:         func() any { return &MemberTF{} },
 }

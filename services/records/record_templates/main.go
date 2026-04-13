@@ -7,4 +7,5 @@ var RecordTemplateDataType = provider.DataSourceType[RecordTemplate, *RecordTemp
 	Path:               "records/record-templates",
 	Schema:             recordTemplateSchema,
 	FilterSchema:       dataSourceFilterSchema,
+	NewTFModel:         func() any { return &RecordTemplateTF{} },
 }

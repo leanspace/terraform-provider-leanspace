@@ -7,4 +7,5 @@ var FeasibilityConstraintDefinitionDataType = provider.DataSourceType[Feasibilit
 	Path:               "requests-repository/feasibility-constraint-definitions",
 	Schema:             feasibilityConstraintDefinitionSchema,
 	FilterSchema:       feasibilityConstraintDefinitionFilterSchema,
+	NewTFModel:         func() any { return &FeasibilityConstraintDefinitionTF{} },
 }

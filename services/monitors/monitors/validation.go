@@ -11,6 +11,11 @@ var monitorRuleValidators = Validators{
 	),
 }
 
-func (monitor *Monitor) Validate(obj map[string]any) error {
-	return monitorRuleValidators.Check(obj["rule"].(map[string]any))
+func (monitor *Monitor) Validate() error {
+	ruleMap := map[string]any{
+		"comparison_operator": monitor.Rule.ComparisonOperator,
+		"comparison_value":    monitor.Rule.ComparisonValue,
+		"tolerance":           monitor.Rule.Tolerance,
+	}
+	return monitorRuleValidators.Check(ruleMap)
 }

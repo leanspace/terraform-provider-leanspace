@@ -7,4 +7,5 @@ var SensorDataType = provider.DataSourceType[Sensor, *Sensor]{
 	Path:               "orbits-repository/sensors",
 	Schema:             sensorSchema,
 	FilterSchema:       dataSourceFilterSchema,
+	NewTFModel:         func() any { return &SensorTF{} },
 }

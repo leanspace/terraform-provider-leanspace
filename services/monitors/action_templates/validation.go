@@ -11,10 +11,11 @@ var actionTemplateValidator = Validators{
 	),
 }
 
-func (actionTemplate *ActionTemplate) Validate(obj map[string]any) error {
-	if err := actionTemplateValidator.Check(obj); err != nil {
-		return err
+func (actionTemplate *ActionTemplate) Validate() error {
+	obj := map[string]any{
+		"type":    actionTemplate.Type,
+		"url":     actionTemplate.URL,
+		"payload": actionTemplate.Payload,
 	}
-
-	return nil
+	return actionTemplateValidator.Check(obj)
 }
