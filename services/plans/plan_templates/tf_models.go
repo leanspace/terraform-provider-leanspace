@@ -73,9 +73,9 @@ func (x *PlanTemplate) ToTF() any {
 			if rf.Formula != nil {
 				formulaSlice = []ResourceFunctionFormulaTF{{
 					Type:      helper.TFStringValue(rf.Formula.Type),
-					Amplitude: helper.TFFloat64Value(rf.Formula.Amplitude),
-					Constant:  helper.TFFloat64Value(rf.Formula.Constant),
-					Rate:      helper.TFFloat64Value(rf.Formula.Rate),
+					Amplitude: helper.TFFloat64PtrValue(rf.Formula.Amplitude),
+					Constant:  helper.TFFloat64PtrValue(rf.Formula.Constant),
+					Rate:      helper.TFFloat64PtrValue(rf.Formula.Rate),
 					TimeUnit:  helper.TFStringValue(rf.Formula.TimeUnit),
 				}}
 			}
@@ -152,9 +152,9 @@ func (tf *PlanTemplateTF) ToAPI() any {
 				f := rf.Formula[0]
 				formulas[j].Formula = &ResourceFunctionFormula{
 					Type:      helper.FromTFString(f.Type),
-					Amplitude: helper.FromTFFloat64(f.Amplitude),
-					Constant:  helper.FromTFFloat64(f.Constant),
-					Rate:      helper.FromTFFloat64(f.Rate),
+					Amplitude: helper.FromTFFloat64Ptr(f.Amplitude),
+					Constant:  helper.FromTFFloat64Ptr(f.Constant),
+					Rate:      helper.FromTFFloat64Ptr(f.Rate),
 					TimeUnit:  helper.FromTFString(f.TimeUnit),
 				}
 			}

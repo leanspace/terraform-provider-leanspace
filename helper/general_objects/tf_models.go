@@ -3,6 +3,7 @@ package general_objects
 import (
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -343,7 +344,20 @@ func DefinitionAttributeToTF(a *DefinitionAttribute[any]) DefinitionAttributeTF 
 		Unique:    helper.TFBoolValue(a.Unique),
 	}
 	if any(a.DefaultValue) != nil {
-		tf.DefaultValue = helper.TFStringValue(fmt.Sprint(a.DefaultValue))
+		switch v := a.DefaultValue.(type) {
+		case []interface{}:
+			parts := make([]string, len(v))
+			for i, elem := range v {
+				if f, ok := elem.(float64); ok && f == float64(int64(f)) {
+					parts[i] = strconv.FormatInt(int64(f), 10)
+				} else {
+					parts[i] = fmt.Sprint(elem)
+				}
+			}
+			tf.DefaultValue = helper.TFStringValue(strings.Join(parts, ","))
+		default:
+			tf.DefaultValue = helper.TFStringValue(fmt.Sprint(a.DefaultValue))
+		}
 	} else {
 		tf.DefaultValue = types.StringNull()
 	}
@@ -377,7 +391,37 @@ func DefinitionAttributeFromTF(tf DefinitionAttributeTF) DefinitionAttribute[any
 		Unique:    helper.FromTFBool(tf.Unique),
 	}
 	if !tf.DefaultValue.IsNull() && !tf.DefaultValue.IsUnknown() {
-		a.DefaultValue = tf.DefaultValue.ValueString()
+		rawDefault := tf.DefaultValue.ValueString()
+		if helper.FromTFString(tf.Type) == "ARRAY" && rawDefault != "" {
+			parts := strings.Split(rawDefault, ",")
+			arr := make([]any, len(parts))
+			constraintType := ""
+			if tf.Constraint != nil {
+				constraintType = helper.FromTFString(tf.Constraint.Type)
+			}
+			for i, p := range parts {
+				p = strings.TrimSpace(p)
+				switch constraintType {
+				case "NUMERIC":
+					if n, err := strconv.ParseFloat(p, 64); err == nil {
+						arr[i] = n
+					} else {
+						arr[i] = p
+					}
+				case "BOOLEAN":
+					if b, err := strconv.ParseBool(p); err == nil {
+						arr[i] = b
+					} else {
+						arr[i] = p
+					}
+				default:
+					arr[i] = p
+				}
+			}
+			a.DefaultValue = arr
+		} else {
+			a.DefaultValue = rawDefault
+		}
 	}
 	if tf.Options != nil {
 		opts := make(map[string]any, len(tf.Options))
@@ -408,7 +452,20 @@ func ValueAttributeToTF(a *ValueAttribute[any]) ValueAttributeTF {
 		Fields:   FieldsToTF(a.Fields),
 	}
 	if any(a.Value) != nil {
-		tf.Value = helper.TFStringValue(fmt.Sprint(a.Value))
+		switch v := a.Value.(type) {
+		case []interface{}:
+			parts := make([]string, len(v))
+			for i, elem := range v {
+				if f, ok := elem.(float64); ok && f == float64(int64(f)) {
+					parts[i] = strconv.FormatInt(int64(f), 10)
+				} else {
+					parts[i] = fmt.Sprint(elem)
+				}
+			}
+			tf.Value = helper.TFStringValue(strings.Join(parts, ","))
+		default:
+			tf.Value = helper.TFStringValue(fmt.Sprint(a.Value))
+		}
 	} else {
 		tf.Value = types.StringNull()
 	}
@@ -423,7 +480,24 @@ func ValueAttributeFromTF(tf ValueAttributeTF) ValueAttribute[any] {
 		Fields:   FieldsFromTF(tf.Fields),
 	}
 	if !tf.Value.IsNull() && !tf.Value.IsUnknown() {
-		a.Value = tf.Value.ValueString()
+		rawValue := tf.Value.ValueString()
+		if helper.FromTFString(tf.Type) == "ARRAY" && rawValue != "" {
+			parts := strings.Split(rawValue, ",")
+			arr := make([]any, len(parts))
+			for i, p := range parts {
+				p = strings.TrimSpace(p)
+				if n, err := strconv.ParseFloat(p, 64); err == nil {
+					arr[i] = n
+				} else if b, err := strconv.ParseBool(p); err == nil {
+					arr[i] = b
+				} else {
+					arr[i] = p
+				}
+			}
+			a.Value = arr
+		} else {
+			a.Value = rawValue
+		}
 	}
 	return a
 }

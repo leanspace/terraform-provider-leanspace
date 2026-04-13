@@ -10,11 +10,12 @@ import (
 
 type MetricTF struct {
 	general_objects.AuditModelTF
-	Name        types.String                 `tfsdk:"name"`
-	Description types.String                 `tfsdk:"description"`
-	NodeId      types.String                 `tfsdk:"node_id"`
-	Tags        []general_objects.KeyValueTF `tfsdk:"tags"`
-	Attributes  *MetricAttributeTF           `tfsdk:"attributes"`
+	Name            types.String                 `tfsdk:"name"`
+	Description     types.String                 `tfsdk:"description"`
+	NodeId          types.String                 `tfsdk:"node_id"`
+	AncestorAssetId types.String                 `tfsdk:"ancestor_asset_id"`
+	Tags            []general_objects.KeyValueTF `tfsdk:"tags"`
+	Attributes      *MetricAttributeTF           `tfsdk:"attributes"`
 }
 
 // MetricAttributeTF is a local variant of DefinitionAttributeTF
@@ -109,22 +110,24 @@ func (x *Metric[T]) ToTF() interface{} {
 		MinSize: x.Attributes.MinSize, MaxSize: x.Attributes.MaxSize, Unique: x.Attributes.Unique,
 	}
 	return &MetricTF{
-		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
-		Name:         helper.TFStringValue(x.Name),
-		Description:  helper.TFStringValue(x.Description),
-		NodeId:       helper.TFStringValue(x.NodeId),
-		Tags:         general_objects.KeyValuesToTF(x.Tags),
-		Attributes:   metricAttributeToTF(&genAttr),
+		AuditModelTF:    general_objects.AuditModelToTF(&x.AuditModel),
+		Name:            helper.TFStringValue(x.Name),
+		Description:     helper.TFStringValue(x.Description),
+		NodeId:          helper.TFStringValue(x.NodeId),
+		AncestorAssetId: helper.TFStringValue(x.AncestorAssetId),
+		Tags:            general_objects.KeyValuesToTF(x.Tags),
+		Attributes:      metricAttributeToTF(&genAttr),
 	}
 }
 
 func (tf *MetricTF) ToAPI() interface{} {
 	return &Metric[interface{}]{
-		AuditModel:  general_objects.AuditModelFromTF(tf.AuditModelTF),
-		Name:        helper.FromTFString(tf.Name),
-		Description: helper.FromTFString(tf.Description),
-		NodeId:      helper.FromTFString(tf.NodeId),
-		Tags:        general_objects.KeyValuesFromTF(tf.Tags),
-		Attributes:  metricAttributeFromTF(tf.Attributes),
+		AuditModel:      general_objects.AuditModelFromTF(tf.AuditModelTF),
+		Name:            helper.FromTFString(tf.Name),
+		Description:     helper.FromTFString(tf.Description),
+		NodeId:          helper.FromTFString(tf.NodeId),
+		AncestorAssetId: helper.FromTFString(tf.AncestorAssetId),
+		Tags:            general_objects.KeyValuesFromTF(tf.Tags),
+		Attributes:      metricAttributeFromTF(tf.Attributes),
 	}
 }

@@ -10,7 +10,7 @@ type MemberTF struct {
 	general_objects.AuditModelTF
 	Name      types.String   `tfsdk:"name"`
 	Email     types.String   `tfsdk:"email"`
-	Status    types.String   `tfsdk:"status"`
+	State     types.String   `tfsdk:"state"`
 	PolicyIds []types.String `tfsdk:"policy_ids"`
 }
 
@@ -19,7 +19,7 @@ func (x *Member) ToTF() any {
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
 		Name:         helper.TFStringValue(x.Name),
 		Email:        helper.TFStringValue(x.Email),
-		Status:       helper.TFStringValue(x.Status),
+		State:        helper.TFStringValue(x.State),
 		PolicyIds:    helper.TFStringsValue(x.PolicyIds),
 	}
 }
@@ -29,7 +29,7 @@ func (tf *MemberTF) ToAPI() any {
 		AuditModel: general_objects.AuditModelFromTF(tf.AuditModelTF),
 		Name:       helper.FromTFString(tf.Name),
 		Email:      helper.FromTFString(tf.Email),
-		Status:     helper.FromTFString(tf.Status),
+		State:      helper.FromTFString(tf.State),
 		PolicyIds:  helper.FromTFStrings(tf.PolicyIds),
 	}
 }

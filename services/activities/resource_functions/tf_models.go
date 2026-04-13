@@ -27,9 +27,9 @@ func (x *ResourceFunction) ToTF() any {
 	if x.Formula != nil {
 		formula = &ResourceFunctionFormulaTF{
 			Type:      helper.TFStringValue(x.Formula.Type),
-			Amplitude: helper.TFFloat64Value(x.Formula.Amplitude),
-			Constant:  helper.TFFloat64Value(x.Formula.Constant),
-			Rate:      helper.TFFloat64Value(x.Formula.Rate),
+			Amplitude: helper.TFFloat64PtrValue(x.Formula.Amplitude),
+			Constant:  helper.TFFloat64PtrValue(x.Formula.Constant),
+			Rate:      helper.TFFloat64PtrValue(x.Formula.Rate),
 			TimeUnit:  helper.TFStringValue(x.Formula.TimeUnit),
 		}
 	}
@@ -47,9 +47,9 @@ func (tf *ResourceFunctionTF) ToAPI() any {
 	if tf.Formula != nil {
 		formula = &ResourceFunctionFormula{
 			Type:      helper.FromTFString(tf.Formula.Type),
-			Amplitude: helper.FromTFFloat64(tf.Formula.Amplitude),
-			Constant:  helper.FromTFFloat64(tf.Formula.Constant),
-			Rate:      helper.FromTFFloat64(tf.Formula.Rate),
+			Amplitude: helper.FromTFFloat64Ptr(tf.Formula.Amplitude),
+			Constant:  helper.FromTFFloat64Ptr(tf.Formula.Constant),
+			Rate:      helper.FromTFFloat64Ptr(tf.Formula.Rate),
 			TimeUnit:  helper.FromTFString(tf.Formula.TimeUnit),
 		}
 	}

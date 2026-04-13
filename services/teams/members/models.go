@@ -6,6 +6,6 @@ type Member struct {
 	general_objects.AuditModel
 	Name      string   `json:"name"`
 	Email     string   `json:"email"`
-	Status    string   `json:"status"`
+	State     string   `json:"state"`
 	PolicyIds []string `json:"policyIds"`
 }
