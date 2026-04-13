@@ -6,5 +6,6 @@ var ServiceAccountDataType = provider.DataSourceType[ServiceAccount, *ServiceAcc
 	ResourceIdentifier: "leanspace_service_accounts",
 	Path:               "teams-repository/service-accounts",
 	Schema:             serviceAccountSchema,
+	FilterSchema:       dataSourceFilterSchema,
 	NewTFModel:         func() any { return &ServiceAccountTF{} },
 }

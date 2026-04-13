@@ -13,7 +13,7 @@ import (
 )
 
 var validOperator = []string{"EQUAL_TO"}
-var source = []string{"COMMAND_STATE_CHANGED", "MONITOR_TRIGGERED", "PASS_AOS", "PASS_LOS", "STREAM_DECODED", "CUSTOM", "FILE_UPLOADED"}
+var source = []string{"COMMAND_STATE_CHANGED", "RELEASE_QUEUE_LOCKED", "RELEASE_QUEUE_UNLOCKED", "PASS_STATE_CHANGED", "MONITOR_TRIGGERED", "PASS_AOS", "PASS_LOS", "STREAM_DECODED", "CUSTOM", "FILE_UPLOADED"}
 var state = []string{"ACTIVE", "INACTIVE"}
 var validMetadataTypes = []string{
 	"NUMERIC", "BOOLEAN", "TEXT",
@@ -77,6 +77,20 @@ var ComparisonValueAttributeSchema = map[string]resourceschema.Attribute{
 }
 
 var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+	"source": datasourceschema.StringAttribute{
+		Optional:    true,
+		Description: helper.AllowedValuesToDescription(source),
+		Validators:  []validator.String{stringvalidator.OneOf(source...)},
+	},
+	"state": datasourceschema.StringAttribute{
+		Optional:    true,
+		Description: helper.AllowedValuesToDescription(state),
+		Validators:  []validator.String{stringvalidator.OneOf(state...)},
+	},
+	"criticalities": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+	},
 	"tags": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,

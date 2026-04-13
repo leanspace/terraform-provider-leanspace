@@ -15,7 +15,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var validMemberStatus = []string{"ACTIVE", "DISABLED", "DELETED"}
+var validMemberStates = []string{"PENDING", "ACTIVE", "DISABLED", "DELETED"}
 
 var memberSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"name": resourceschema.StringAttribute{
@@ -25,7 +25,7 @@ var memberSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.
 		Required:      true,
 		PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 	},
-	"status": resourceschema.StringAttribute{
+	"state": resourceschema.StringAttribute{
 		Computed: true,
 	},
 	"policy_ids": resourceschema.SetAttribute{
@@ -41,9 +41,14 @@ var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 		Optional:    true,
 		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
-	"statuses": datasourceschema.ListAttribute{
+	"policy_ids": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
-		Validators:  []validator.List{listvalidator.ValueStringsAre(stringvalidator.OneOf(validMemberStatus...))},
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
+	},
+	"states": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(stringvalidator.OneOf(validMemberStates...))},
 	},
 }

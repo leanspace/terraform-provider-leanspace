@@ -4,11 +4,14 @@ import (
 	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	datasourceSchema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
@@ -18,6 +21,7 @@ var nameRegex = regexp.MustCompile(`^[ a-zA-Z0-9_-]*$`)
 
 var validResourceFunctionTimeUnits = []string{"SECONDS", "MINUTES", "HOURS", "DAYS"}
 var validFormulaTypes = []string{"LINEAR", "RECTANGULAR"}
+var validIntegrityStatuses = []string{"VALID", "INVALID"}
 
 var planTemplateSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"asset_id": resourceschema.StringAttribute{
@@ -175,3 +179,29 @@ var invalidDefinitionLinkReasonSchema = map[string]resourceschema.Attribute{
 		Required: true,
 	},
 }
+
+var dataSourceFilterSchema = general_objects.AuditFilterFieldsWithoutTags(map[string]datasourceSchema.Attribute{
+	"asset_ids": resourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
+	},
+	"integrity_statuses": resourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(stringvalidator.OneOf(validIntegrityStatuses...))},
+	},
+	"from_estimated_duration_in_seconds": resourceschema.Int64Attribute{
+		Optional:   true,
+		Validators: []validator.Int64{int64validator.AtLeast(0)},
+	},
+	"to_estimated_duration_in_seconds": resourceschema.Int64Attribute{
+		Optional:   true,
+		Validators: []validator.Int64{int64validator.AtLeast(0)},
+	},
+	"activity_definition_ids": resourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
+	},
+})

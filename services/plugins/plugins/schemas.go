@@ -3,6 +3,7 @@ package plugins
 import (
 	"regexp"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -71,5 +72,6 @@ var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 	"types": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(stringvalidator.OneOf(validPluginTypes...))},
 	},
 }

@@ -1,6 +1,7 @@
 package generic_plugins
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -17,6 +18,12 @@ var validGenericPluginTypes = []string{
 
 var validGenericPluginLanguages = []string{
 	"JAVA",
+}
+
+var validGenericPluginStatuses = []string{
+	"ACTIVE",
+	"PENDING",
+	"FAILED",
 }
 
 var genericPluginSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
@@ -76,9 +83,11 @@ var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 	"statuses": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(stringvalidator.OneOf(validGenericPluginStatuses...))},
 	},
 	"types": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(stringvalidator.OneOf(append([]string{"JOB"}, validGenericPluginTypes...)...))},
 	},
 }

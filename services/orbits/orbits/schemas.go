@@ -2,6 +2,7 @@ package orbits
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework-validators/float64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -141,5 +142,15 @@ var dataSourceFilterSchema = general_objects.AuditFilterFieldsWithTags(map[strin
 	"satellite_ids": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
+	},
+	"with_gps_metrics": datasourceschema.BoolAttribute{
+		Optional: true,
+	},
+	"with_standard_deviations": datasourceschema.BoolAttribute{
+		Optional: true,
+	},
+	"with_satellite_configuration": datasourceschema.BoolAttribute{
+		Optional: true,
 	},
 })

@@ -3,7 +3,6 @@ package access_policies
 import (
 	"regexp"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -11,7 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
@@ -48,12 +46,11 @@ var statementSchema = map[string]resourceschema.Attribute{
 }
 
 var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
-	"action_ids": datasourceschema.ListAttribute{
+	"actions": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
-		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
-	"action_names": datasourceschema.ListAttribute{
+	"tags": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
 	},

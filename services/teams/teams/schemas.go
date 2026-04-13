@@ -35,4 +35,9 @@ var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 		Optional:    true,
 		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
+	"policty_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
+	},
 }

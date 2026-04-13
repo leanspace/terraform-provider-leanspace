@@ -99,4 +99,8 @@ var dataSourceFilterSchema = general_objects.AuditFilterFieldsWithTags(map[strin
 		Optional:    true,
 		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
+	"default_level": datasourceschema.Float64Attribute{
+		Optional:    true,
+		Description: "The default level of the resource.",
+	},
 })

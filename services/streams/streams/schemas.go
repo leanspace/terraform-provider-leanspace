@@ -284,4 +284,8 @@ var DataSourceFilterSchema = map[string]datasourceschema.Attribute{
 		Optional:    true,
 		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
+	"tags": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+	},
 }
