@@ -8,8 +8,7 @@ terraform {
 
 data "leanspace_access_policies" "all" {
   filters {
-    action_ids   = []
-    action_names = ["updateCommandTransmission"]
+    actions = ["updateCommandTransmission"]
     ids          = []
     query        = ""
     page         = 0
