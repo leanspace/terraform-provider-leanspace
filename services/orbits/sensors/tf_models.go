@@ -15,13 +15,13 @@ type SensorTF struct {
 }
 
 type ApertureShapeTF struct {
-	Type                        types.String          `tfsdk:"type"`
-	ApertureCenter              *Vector3DTF           `tfsdk:"aperture_center"`
-	HalfApertureAngle           *HalfApertureAngleTF  `tfsdk:"half_aperture_angle"`
-	FirstAxisVector             *Vector3DTF           `tfsdk:"first_axis_vector"`
-	FirstAxisHalfApertureAngle  *HalfApertureAngleTF  `tfsdk:"first_axis_half_aperture_angle"`
-	SecondAxisVector            *Vector3DTF           `tfsdk:"second_axis_vector"`
-	SecondAxisHalfApertureAngle *HalfApertureAngleTF  `tfsdk:"second_axis_half_aperture_angle"`
+	Type                        types.String         `tfsdk:"type"`
+	ApertureCenter              *Vector3DTF          `tfsdk:"aperture_center"`
+	HalfApertureAngle           *HalfApertureAngleTF `tfsdk:"half_aperture_angle"`
+	FirstAxisVector             *Vector3DTF          `tfsdk:"first_axis_vector"`
+	FirstAxisHalfApertureAngle  *HalfApertureAngleTF `tfsdk:"first_axis_half_aperture_angle"`
+	SecondAxisVector            *Vector3DTF          `tfsdk:"second_axis_vector"`
+	SecondAxisHalfApertureAngle *HalfApertureAngleTF `tfsdk:"second_axis_half_aperture_angle"`
 }
 
 type Vector3DTF struct {

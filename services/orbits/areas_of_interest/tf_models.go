@@ -64,7 +64,7 @@ func (x *AreaOfInterest) ToTF() any {
 			Type:                helper.TFStringValue(x.Shape.Type),
 			Geolocation:         geoPointToTF(x.Shape.Geolocation),
 			CenterGeolocation:   geoPointToTF(x.Shape.CenterGeolocation),
-			RadiusInMeters:      helper.TFFloat64Value(x.Shape.RadiusInMeters),
+			RadiusInMeters:      helper.TFFloat64PtrValue(x.Shape.RadiusInMeters),
 			VerticesGeolocation: verticesGeolocation,
 		}
 	}
@@ -91,7 +91,7 @@ func (tf *AreaOfInterestTF) ToAPI() any {
 			Type:                helper.FromTFString(tf.Shape.Type),
 			Geolocation:         geoPointFromTF(tf.Shape.Geolocation),
 			CenterGeolocation:   geoPointFromTF(tf.Shape.CenterGeolocation),
-			RadiusInMeters:      helper.FromTFFloat64(tf.Shape.RadiusInMeters),
+			RadiusInMeters:      helper.FromTFFloat64Ptr(tf.Shape.RadiusInMeters),
 			VerticesGeolocation: verticesGeolocation,
 		}
 	}

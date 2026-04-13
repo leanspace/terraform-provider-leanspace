@@ -8,8 +8,8 @@ import (
 
 type CommandStateTF struct {
 	general_objects.AuditModelTF
-	Name     types.String                `tfsdk:"name"`
-	ReadOnly types.Bool                  `tfsdk:"read_only"`
+	Name     types.String                 `tfsdk:"name"`
+	ReadOnly types.Bool                   `tfsdk:"read_only"`
 	Tags     []general_objects.KeyValueTF `tfsdk:"tags"`
 }
 

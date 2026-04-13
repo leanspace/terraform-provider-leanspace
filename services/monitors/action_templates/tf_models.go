@@ -17,12 +17,9 @@ type ActionTemplateTF struct {
 }
 
 func (x *ActionTemplate) ToTF() any {
-	var headers map[string]types.String
-	if x.Headers != nil {
-		headers = make(map[string]types.String, len(x.Headers))
-		for k, v := range x.Headers {
-			headers[k] = helper.TFStringValue(v)
-		}
+	headers := make(map[string]types.String)
+	for k, v := range x.Headers {
+		headers[k] = helper.TFStringValue(v)
 	}
 	return &ActionTemplateTF{
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),

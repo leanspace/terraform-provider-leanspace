@@ -3,6 +3,7 @@ package helper
 import (
 	"context"
 	"fmt"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -218,7 +219,16 @@ type isSetCondition struct {
 }
 
 func (c isSetCondition) eval(v map[string]any) bool {
-	return v[c.key] != nil && v[c.key] != "" && v[c.key] != 0 && v[c.key] != '\x00' && v[c.key] != 0.0
+	val := v[c.key]
+	if val == nil {
+		return false
+	}
+	// Handle typed nils (e.g. (*int)(nil) stored as a non-nil interface).
+	rv := reflect.ValueOf(val)
+	if rv.Kind() == reflect.Ptr && rv.IsNil() {
+		return false
+	}
+	return val != "" && val != 0 && val != '\x00' && val != 0.0
 }
 func (c isSetCondition) printExpected() string {
 	return fmt.Sprintf("%q is set", c.key)
@@ -258,11 +268,37 @@ type hasLengthCondition struct {
 }
 
 func (c hasLengthCondition) eval(v map[string]any) bool {
-	if list, isList := v[c.key].([]any); isList {
+	val := v[c.key]
+	// Handle untyped nil and typed nils (e.g. (*map[string]any)(nil)).
+	if val == nil {
+		return c.length == 0
+	}
+	rv := reflect.ValueOf(val)
+	if rv.Kind() == reflect.Ptr {
+		if rv.IsNil() {
+			return c.length == 0
+		}
+		rv = rv.Elem()
+		val = rv.Interface()
+	}
+	if list, isList := val.([]any); isList {
 		return len(list) == c.length
 	}
-	if map_, isMap := v[c.key].(map[string]any); isMap {
+	if list, isList := val.([]string); isList {
+		return len(list) == c.length
+	}
+	if map_, isMap := val.(map[string]any); isMap {
 		return len(map_) == c.length
+	}
+	if rv.Kind() == reflect.Slice || rv.Kind() == reflect.Map {
+		return rv.Len() == c.length
+	}
+	if rv.Kind() == reflect.Struct {
+		// Structs have no "length"; treat a zero struct as empty (0) and any non-zero struct as present (1).
+		if rv.IsZero() {
+			return c.length == 0
+		}
+		return c.length == 1
 	}
 	panic(fmt.Sprintf("Tried checking length of %#v (only accepts lists and maps)", v[c.key]))
 }

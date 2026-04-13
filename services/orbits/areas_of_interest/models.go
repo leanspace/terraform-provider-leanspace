@@ -13,7 +13,7 @@ type AreaOfInterestShape struct {
 	Type                string     `json:"type"` // POINT, CIRCLE, POLYGON
 	Geolocation         *GeoPoint  `json:"geolocation,omitempty"`
 	CenterGeolocation   *GeoPoint  `json:"centerGeolocation,omitempty"`
-	RadiusInMeters      float64    `json:"radiusInMeters,omitempty"`
+	RadiusInMeters      *float64   `json:"radiusInMeters,omitempty"`
 	VerticesGeolocation []GeoPoint `json:"verticesGeolocation,omitempty"`
 }
 

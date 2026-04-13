@@ -9,8 +9,8 @@ import (
 
 type FeasibilityConstraintDefinitionTF struct {
 	general_objects.AuditModelTF
-	Name                types.String                              `tfsdk:"name"`
-	Description         types.String                              `tfsdk:"description"`
+	Name                types.String                                `tfsdk:"name"`
+	Description         types.String                                `tfsdk:"description"`
 	ArgumentDefinitions []activity_definitions.ArgumentDefinitionTF `tfsdk:"argument_definitions"`
 }
 

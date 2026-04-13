@@ -1,20 +1,26 @@
 package plan_templates
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
+var planReasonAttrTypes = map[string]attr.Type{
+	"code":    types.StringType,
+	"message": types.StringType,
+}
+
 type PlanTemplateTF struct {
 	general_objects.AuditModelTF
-	AssetId                    types.String                     `tfsdk:"asset_id"`
-	Name                       types.String                     `tfsdk:"name"`
-	Description                types.String                     `tfsdk:"description"`
-	IntegrityStatus            types.String                     `tfsdk:"integrity_status"`
-	ActivityConfigs            []ActivityConfigResultTF         `tfsdk:"activity_configs"`
-	EstimatedDurationInSeconds types.Int64                      `tfsdk:"estimated_duration_in_seconds"`
-	InvalidPlanTemplateReasons []InvalidPlanTemplateReasonTF    `tfsdk:"invalid_plan_template_reasons"`
+	AssetId                    types.String             `tfsdk:"asset_id"`
+	Name                       types.String             `tfsdk:"name"`
+	Description                types.String             `tfsdk:"description"`
+	IntegrityStatus            types.String             `tfsdk:"integrity_status"`
+	ActivityConfigs            []ActivityConfigResultTF `tfsdk:"activity_configs"`
+	EstimatedDurationInSeconds types.Int64              `tfsdk:"estimated_duration_in_seconds"`
+	InvalidPlanTemplateReasons types.List               `tfsdk:"invalid_plan_template_reasons"`
 }
 
 type ActivityConfigResultTF struct {
@@ -28,12 +34,7 @@ type ActivityConfigResultTF struct {
 	ResourceFunctionFormulas     []ResourceFunctionFormulaOverloadTF `tfsdk:"resource_function_formulas"`
 	Tags                         []general_objects.KeyValueTF        `tfsdk:"tags"`
 	DefinitionLinkStatus         types.String                        `tfsdk:"definition_link_status"`
-	InvalidDefinitionLinkReasons []InvalidDefinitionLinkReasonTF     `tfsdk:"invalid_definition_link_reasons"`
-}
-
-type InvalidPlanTemplateReasonTF struct {
-	Code    types.String `tfsdk:"code"`
-	Message types.String `tfsdk:"message"`
+	InvalidDefinitionLinkReasons types.List                          `tfsdk:"invalid_definition_link_reasons"`
 }
 
 type ArgumentTF struct {
@@ -42,8 +43,8 @@ type ArgumentTF struct {
 }
 
 type ResourceFunctionFormulaOverloadTF struct {
-	ResourceFunctionId types.String                  `tfsdk:"resource_function_id"`
-	Formula            []ResourceFunctionFormulaTF   `tfsdk:"formula"`
+	ResourceFunctionId types.String                `tfsdk:"resource_function_id"`
+	Formula            []ResourceFunctionFormulaTF `tfsdk:"formula"`
 }
 
 type ResourceFunctionFormulaTF struct {
@@ -54,20 +55,15 @@ type ResourceFunctionFormulaTF struct {
 	TimeUnit  types.String  `tfsdk:"time_unit"`
 }
 
-type InvalidDefinitionLinkReasonTF struct {
-	Code    types.String `tfsdk:"code"`
-	Message types.String `tfsdk:"message"`
-}
-
 func (x *PlanTemplate) ToTF() any {
 	activityConfigs := make([]ActivityConfigResultTF, len(x.ActivityConfigs))
 	for i, ac := range x.ActivityConfigs {
 		arguments := make([]ArgumentTF, len(ac.Arguments))
 		for j, arg := range ac.Arguments {
-			attr := general_objects.ValueAttributeToTF(&arg.Attributes)
+			attrVal := general_objects.ValueAttributeToTF(&arg.Attributes)
 			arguments[j] = ArgumentTF{
 				Name:       helper.TFStringValue(arg.Name),
-				Attributes: []general_objects.ValueAttributeTF{attr},
+				Attributes: []general_objects.ValueAttributeTF{attrVal},
 			}
 		}
 
@@ -89,13 +85,15 @@ func (x *PlanTemplate) ToTF() any {
 			}
 		}
 
-		invalidReasons := make([]InvalidDefinitionLinkReasonTF, len(ac.InvalidDefinitionLinkReasons))
+		defLinkReasonElems := make([]attr.Value, len(ac.InvalidDefinitionLinkReasons))
 		for j, r := range ac.InvalidDefinitionLinkReasons {
-			invalidReasons[j] = InvalidDefinitionLinkReasonTF{
-				Code:    helper.TFStringValue(r.Code),
-				Message: helper.TFStringValue(r.Message),
-			}
+			rObj, _ := types.ObjectValue(planReasonAttrTypes, map[string]attr.Value{
+				"code":    helper.TFStringValue(r.Code),
+				"message": helper.TFStringValue(r.Message),
+			})
+			defLinkReasonElems[j] = rObj
 		}
+		defLinkReasons := types.ListValueMust(types.ObjectType{AttrTypes: planReasonAttrTypes}, defLinkReasonElems)
 
 		activityConfigs[i] = ActivityConfigResultTF{
 			ActivityDefinitionId:         helper.TFStringValue(ac.ActivityDefinitionId),
@@ -108,17 +106,19 @@ func (x *PlanTemplate) ToTF() any {
 			ResourceFunctionFormulas:     formulas,
 			Tags:                         general_objects.KeyValuesToTF(ac.Tags),
 			DefinitionLinkStatus:         helper.TFStringValue(ac.DefinitionLinkStatus),
-			InvalidDefinitionLinkReasons: invalidReasons,
+			InvalidDefinitionLinkReasons: defLinkReasons,
 		}
 	}
 
-	invalidReasons := make([]InvalidPlanTemplateReasonTF, len(x.InvalidPlanTemplateReasons))
+	ptReasonElems := make([]attr.Value, len(x.InvalidPlanTemplateReasons))
 	for i, r := range x.InvalidPlanTemplateReasons {
-		invalidReasons[i] = InvalidPlanTemplateReasonTF{
-			Code:    helper.TFStringValue(r.Code),
-			Message: helper.TFStringValue(r.Message),
-		}
+		rObj, _ := types.ObjectValue(planReasonAttrTypes, map[string]attr.Value{
+			"code":    helper.TFStringValue(r.Code),
+			"message": helper.TFStringValue(r.Message),
+		})
+		ptReasonElems[i] = rObj
 	}
+	invalidPlanTemplateReasons := types.ListValueMust(types.ObjectType{AttrTypes: planReasonAttrTypes}, ptReasonElems)
 
 	return &PlanTemplateTF{
 		AuditModelTF:               general_objects.AuditModelToTF(&x.AuditModel),
@@ -128,7 +128,7 @@ func (x *PlanTemplate) ToTF() any {
 		IntegrityStatus:            helper.TFStringValue(x.IntegrityStatus),
 		ActivityConfigs:            activityConfigs,
 		EstimatedDurationInSeconds: helper.TFInt64Value(x.EstimatedDurationInSeconds),
-		InvalidPlanTemplateReasons: invalidReasons,
+		InvalidPlanTemplateReasons: invalidPlanTemplateReasons,
 	}
 }
 
@@ -160,34 +160,17 @@ func (tf *PlanTemplateTF) ToAPI() any {
 			}
 		}
 
-		invalidReasons := make([]InvalidDefinitionLinkReason, len(ac.InvalidDefinitionLinkReasons))
-		for j, r := range ac.InvalidDefinitionLinkReasons {
-			invalidReasons[j] = InvalidDefinitionLinkReason{
-				Code:    helper.FromTFString(r.Code),
-				Message: helper.FromTFString(r.Message),
-			}
-		}
-
 		activityConfigs[i] = ActivityConfigResult{
-			ActivityDefinitionId:         helper.FromTFString(ac.ActivityDefinitionId),
-			DelayReferenceOnPredecessor:  helper.FromTFString(ac.DelayReferenceOnPredecessor),
-			Position:                     helper.FromTFInt64(ac.Position),
-			DelayInSeconds:               helper.FromTFInt64(ac.DelayInSeconds),
-			EstimatedDurationInSeconds:   helper.FromTFIntPtr(ac.EstimatedDurationInSeconds),
-			Name:                         helper.FromTFString(ac.Name),
-			Arguments:                    arguments,
-			ResourceFunctionFormulas:     formulas,
-			Tags:                         general_objects.KeyValuesFromTF(ac.Tags),
-			DefinitionLinkStatus:         helper.FromTFString(ac.DefinitionLinkStatus),
-			InvalidDefinitionLinkReasons: invalidReasons,
-		}
-	}
-
-	invalidReasons := make([]InvalidPlanTemplateReason, len(tf.InvalidPlanTemplateReasons))
-	for i, r := range tf.InvalidPlanTemplateReasons {
-		invalidReasons[i] = InvalidPlanTemplateReason{
-			Code:    helper.FromTFString(r.Code),
-			Message: helper.FromTFString(r.Message),
+			ActivityDefinitionId:        helper.FromTFString(ac.ActivityDefinitionId),
+			DelayReferenceOnPredecessor: helper.FromTFString(ac.DelayReferenceOnPredecessor),
+			Position:                    helper.FromTFInt64(ac.Position),
+			DelayInSeconds:              helper.FromTFInt64(ac.DelayInSeconds),
+			EstimatedDurationInSeconds:  helper.FromTFIntPtr(ac.EstimatedDurationInSeconds),
+			Name:                        helper.FromTFString(ac.Name),
+			Arguments:                   arguments,
+			ResourceFunctionFormulas:    formulas,
+			Tags:                        general_objects.KeyValuesFromTF(ac.Tags),
+			DefinitionLinkStatus:        helper.FromTFString(ac.DefinitionLinkStatus),
 		}
 	}
 
@@ -199,6 +182,5 @@ func (tf *PlanTemplateTF) ToAPI() any {
 		IntegrityStatus:            helper.FromTFString(tf.IntegrityStatus),
 		ActivityConfigs:            activityConfigs,
 		EstimatedDurationInSeconds: helper.FromTFInt64(tf.EstimatedDurationInSeconds),
-		InvalidPlanTemplateReasons: invalidReasons,
 	}
 }

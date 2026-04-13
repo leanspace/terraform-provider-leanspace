@@ -8,26 +8,26 @@ import (
 
 type CommandDefinitionTF struct {
 	general_objects.AuditModelTF
-	NodeId      types.String   `tfsdk:"node_id"`
-	Name        types.String   `tfsdk:"name"`
-	Description types.String   `tfsdk:"description"`
-	Identifier  types.String   `tfsdk:"identifier"`
-	Metadata    []MetadataTF   `tfsdk:"metadata"`
-	Arguments   []ArgumentTF   `tfsdk:"arguments"`
+	NodeId      types.String `tfsdk:"node_id"`
+	Name        types.String `tfsdk:"name"`
+	Description types.String `tfsdk:"description"`
+	Identifier  types.String `tfsdk:"identifier"`
+	Metadata    []MetadataTF `tfsdk:"metadata"`
+	Arguments   []ArgumentTF `tfsdk:"arguments"`
 }
 
 type MetadataTF struct {
-	ID          types.String                     `tfsdk:"id"`
-	Name        types.String                     `tfsdk:"name"`
-	Description types.String                     `tfsdk:"description"`
+	ID          types.String                      `tfsdk:"id"`
+	Name        types.String                      `tfsdk:"name"`
+	Description types.String                      `tfsdk:"description"`
 	Attributes  *general_objects.ValueAttributeTF `tfsdk:"attributes"`
 }
 
 type ArgumentTF struct {
-	ID          types.String                          `tfsdk:"id"`
-	Name        types.String                          `tfsdk:"name"`
-	Identifier  types.String                          `tfsdk:"identifier"`
-	Description types.String                          `tfsdk:"description"`
+	ID          types.String                           `tfsdk:"id"`
+	Name        types.String                           `tfsdk:"name"`
+	Identifier  types.String                           `tfsdk:"identifier"`
+	Description types.String                           `tfsdk:"description"`
 	Attributes  *general_objects.DefinitionAttributeTF `tfsdk:"attributes"`
 }
 

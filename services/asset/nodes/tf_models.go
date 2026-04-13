@@ -1,11 +1,40 @@
 package nodes
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/properties"
 )
+
+// nodeObjectAttrTypes is the attr.Type map for a node object, matching nodeSchema.
+// The nodes computed field uses a set of these objects.
+var nodeTagAttrTypes = map[string]attr.Type{
+	"key":   types.StringType,
+	"value": types.StringType,
+}
+
+var nodeObjectAttrTypes = map[string]attr.Type{
+	"id":                       types.StringType,
+	"created_at":               types.StringType,
+	"created_by":               types.StringType,
+	"last_modified_at":         types.StringType,
+	"last_modified_by":         types.StringType,
+	"name":                     types.StringType,
+	"description":              types.StringType,
+	"parent_node_id":           types.StringType,
+	"type":                     types.StringType,
+	"kind":                     types.StringType,
+	"tags":                     types.SetType{ElemType: types.ObjectType{AttrTypes: nodeTagAttrTypes}},
+	"number_of_children":       types.Int64Type,
+	"norad_id":                 types.StringType,
+	"international_designator": types.StringType,
+	"tle":                      types.ListType{ElemType: types.StringType},
+	"latitude":                 types.Float64Type,
+	"longitude":                types.Float64Type,
+	"elevation":                types.Float64Type,
+}
 
 type NodeTF struct {
 	general_objects.AuditModelTF
@@ -22,6 +51,9 @@ type NodeTF struct {
 	Latitude                types.Float64                `tfsdk:"latitude"`
 	Longitude               types.Float64                `tfsdk:"longitude"`
 	Elevation               types.Float64                `tfsdk:"elevation"`
+	// Computed-only: holds nested node objects (max 1 level deep). Uses types.Set
+	// to match the SetNestedAttribute schema without needing a concrete element type.
+	Nodes types.Set `tfsdk:"nodes"`
 }
 
 func (x *Node) ToTF() any {
@@ -34,6 +66,8 @@ func (x *Node) ToTF() any {
 		Kind:             helper.TFStringValue(x.Kind),
 		Tags:             general_objects.KeyValuesToTF(x.Tags),
 		NumberOfChildren: helper.TFInt64Value(x.NumberOfChildren),
+		// nodes is Computed-only; set empty set so the framework does not see a null→value diff.
+		Nodes: types.SetValueMust(types.ObjectType{AttrTypes: nodeObjectAttrTypes}, []attr.Value{}),
 	}
 
 	if x.Kind == "SATELLITE" {

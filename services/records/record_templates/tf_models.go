@@ -1,27 +1,28 @@
 package record_templates
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
+
+var defaultParserAttrTypes = map[string]attr.Type{
+	"id":        types.StringType,
+	"file_type": types.StringType,
+}
 
 type RecordTemplateTF struct {
 	general_objects.AuditModelTF
 	Name                 types.String                 `tfsdk:"name"`
 	Description          types.String                 `tfsdk:"description"`
 	StreamId             types.String                 `tfsdk:"stream_id"`
-	DefaultParsers       []DefaultParserTF            `tfsdk:"default_parsers"`
+	DefaultParsers       types.Set                    `tfsdk:"default_parsers"`
 	NodeIds              []types.String               `tfsdk:"node_ids"`
 	MetricIds            []types.String               `tfsdk:"metric_ids"`
 	CommandDefinitionIds []types.String               `tfsdk:"command_definition_ids"`
 	Properties           []PropertyTF                 `tfsdk:"properties"`
 	Tags                 []general_objects.KeyValueTF `tfsdk:"tags"`
-}
-
-type DefaultParserTF struct {
-	ID       types.String `tfsdk:"id"`
-	FileType types.String `tfsdk:"file_type"`
 }
 
 type PropertyTF struct {
@@ -30,20 +31,22 @@ type PropertyTF struct {
 }
 
 func (x *RecordTemplate) ToTF() any {
-	defaultParsers := make([]DefaultParserTF, len(x.DefaultParsers))
+	dpElems := make([]attr.Value, len(x.DefaultParsers))
 	for i, dp := range x.DefaultParsers {
-		defaultParsers[i] = DefaultParserTF{
-			ID:       helper.TFStringValue(dp.ID),
-			FileType: helper.TFStringValue(dp.FileType),
-		}
+		dpObj, _ := types.ObjectValue(defaultParserAttrTypes, map[string]attr.Value{
+			"id":        helper.TFStringValue(dp.ID),
+			"file_type": helper.TFStringValue(dp.FileType),
+		})
+		dpElems[i] = dpObj
 	}
+	defaultParsers := types.SetValueMust(types.ObjectType{AttrTypes: defaultParserAttrTypes}, dpElems)
 
 	properties := make([]PropertyTF, len(x.Properties))
 	for i, p := range x.Properties {
-		attr := general_objects.DefinitionAttributeToTF(&p.Attributes)
+		attrVal := general_objects.DefinitionAttributeToTF(&p.Attributes)
 		properties[i] = PropertyTF{
 			Name:       helper.TFStringValue(p.Name),
-			Attributes: &attr,
+			Attributes: &attrVal,
 		}
 	}
 
@@ -62,14 +65,6 @@ func (x *RecordTemplate) ToTF() any {
 }
 
 func (tf *RecordTemplateTF) ToAPI() any {
-	defaultParsers := make([]DefaultParser, len(tf.DefaultParsers))
-	for i, dp := range tf.DefaultParsers {
-		defaultParsers[i] = DefaultParser{
-			ID:       helper.FromTFString(dp.ID),
-			FileType: helper.FromTFString(dp.FileType),
-		}
-	}
-
 	properties := make([]Property[any], len(tf.Properties))
 	for i, p := range tf.Properties {
 		properties[i] = Property[any]{
@@ -85,7 +80,6 @@ func (tf *RecordTemplateTF) ToAPI() any {
 		Name:                 helper.FromTFString(tf.Name),
 		Description:          helper.FromTFString(tf.Description),
 		StreamId:             helper.FromTFString(tf.StreamId),
-		DefaultParsers:       defaultParsers,
 		NodeIds:              helper.FromTFStrings(tf.NodeIds),
 		MetricIds:            helper.FromTFStrings(tf.MetricIds),
 		CommandDefinitionIds: helper.FromTFStrings(tf.CommandDefinitionIds),

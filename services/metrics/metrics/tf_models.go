@@ -20,22 +20,22 @@ type MetricTF struct {
 // MetricAttributeTF is a local variant of DefinitionAttributeTF
 // without "required" and "default_value" (excluded from the metric schema).
 type MetricAttributeTF struct {
-	Type       types.String                    `tfsdk:"type"`
-	MinLength  types.Int64                     `tfsdk:"min_length"`
-	MaxLength  types.Int64                     `tfsdk:"max_length"`
-	Pattern    types.String                    `tfsdk:"pattern"`
-	Min        types.Float64                   `tfsdk:"min"`
-	Max        types.Float64                   `tfsdk:"max"`
-	Scale      types.Int64                     `tfsdk:"scale"`
-	Precision  types.Int64                     `tfsdk:"precision"`
-	UnitId     types.String                    `tfsdk:"unit_id"`
-	Before     types.String                    `tfsdk:"before"`
-	After      types.String                    `tfsdk:"after"`
-	Options    map[string]types.String         `tfsdk:"options"`
-	Fields     *general_objects.FieldsDefTF    `tfsdk:"fields"`
-	MinSize    types.Int64                     `tfsdk:"min_size"`
-	MaxSize    types.Int64                     `tfsdk:"max_size"`
-	Unique     types.Bool                      `tfsdk:"unique"`
+	Type       types.String                       `tfsdk:"type"`
+	MinLength  types.Int64                        `tfsdk:"min_length"`
+	MaxLength  types.Int64                        `tfsdk:"max_length"`
+	Pattern    types.String                       `tfsdk:"pattern"`
+	Min        types.Float64                      `tfsdk:"min"`
+	Max        types.Float64                      `tfsdk:"max"`
+	Scale      types.Int64                        `tfsdk:"scale"`
+	Precision  types.Int64                        `tfsdk:"precision"`
+	UnitId     types.String                       `tfsdk:"unit_id"`
+	Before     types.String                       `tfsdk:"before"`
+	After      types.String                       `tfsdk:"after"`
+	Options    map[string]types.String            `tfsdk:"options"`
+	Fields     *general_objects.FieldsDefTF       `tfsdk:"fields"`
+	MinSize    types.Int64                        `tfsdk:"min_size"`
+	MaxSize    types.Int64                        `tfsdk:"max_size"`
+	Unique     types.Bool                         `tfsdk:"unique"`
 	Constraint *general_objects.ArrayConstraintTF `tfsdk:"constraint"`
 }
 

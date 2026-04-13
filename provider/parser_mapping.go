@@ -3,8 +3,8 @@ package provider
 import (
 	"io"
 
-	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 )
 
 type ParseableModel[T any] interface {

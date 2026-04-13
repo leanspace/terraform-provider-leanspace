@@ -229,18 +229,18 @@ func FieldsFromTF(tf *FieldsTF) *Fields {
 // --- ArrayConstraint TF model ---
 
 type ArrayConstraintTF struct {
-	Type      types.String           `tfsdk:"type"`
-	Required  types.Bool             `tfsdk:"required"`
-	MinLength types.Int64            `tfsdk:"min_length"`
-	MaxLength types.Int64            `tfsdk:"max_length"`
-	Pattern   types.String           `tfsdk:"pattern"`
-	Min       types.Float64          `tfsdk:"min"`
-	Max       types.Float64          `tfsdk:"max"`
-	Scale     types.Int64            `tfsdk:"scale"`
-	Precision types.Int64            `tfsdk:"precision"`
-	UnitId    types.String           `tfsdk:"unit_id"`
-	Before    types.String           `tfsdk:"before"`
-	After     types.String           `tfsdk:"after"`
+	Type      types.String            `tfsdk:"type"`
+	Required  types.Bool              `tfsdk:"required"`
+	MinLength types.Int64             `tfsdk:"min_length"`
+	MaxLength types.Int64             `tfsdk:"max_length"`
+	Pattern   types.String            `tfsdk:"pattern"`
+	Min       types.Float64           `tfsdk:"min"`
+	Max       types.Float64           `tfsdk:"max"`
+	Scale     types.Int64             `tfsdk:"scale"`
+	Precision types.Int64             `tfsdk:"precision"`
+	UnitId    types.String            `tfsdk:"unit_id"`
+	Before    types.String            `tfsdk:"before"`
+	After     types.String            `tfsdk:"after"`
 	Options   map[string]types.String `tfsdk:"options"`
 }
 
@@ -302,25 +302,25 @@ func ArrayConstraintFromTF(tf *ArrayConstraintTF) ArrayConstraint[any] {
 // --- DefinitionAttribute TF model (full version with all fields) ---
 
 type DefinitionAttributeTF struct {
-	Type         types.String           `tfsdk:"type"`
-	Required     types.Bool             `tfsdk:"required"`
-	DefaultValue types.String           `tfsdk:"default_value"`
-	MinLength    types.Int64            `tfsdk:"min_length"`
-	MaxLength    types.Int64            `tfsdk:"max_length"`
-	Pattern      types.String           `tfsdk:"pattern"`
-	Min          types.Float64          `tfsdk:"min"`
-	Max          types.Float64          `tfsdk:"max"`
-	Scale        types.Int64            `tfsdk:"scale"`
-	Precision    types.Int64            `tfsdk:"precision"`
-	UnitId       types.String           `tfsdk:"unit_id"`
-	Before       types.String           `tfsdk:"before"`
-	After        types.String           `tfsdk:"after"`
+	Type         types.String            `tfsdk:"type"`
+	Required     types.Bool              `tfsdk:"required"`
+	DefaultValue types.String            `tfsdk:"default_value"`
+	MinLength    types.Int64             `tfsdk:"min_length"`
+	MaxLength    types.Int64             `tfsdk:"max_length"`
+	Pattern      types.String            `tfsdk:"pattern"`
+	Min          types.Float64           `tfsdk:"min"`
+	Max          types.Float64           `tfsdk:"max"`
+	Scale        types.Int64             `tfsdk:"scale"`
+	Precision    types.Int64             `tfsdk:"precision"`
+	UnitId       types.String            `tfsdk:"unit_id"`
+	Before       types.String            `tfsdk:"before"`
+	After        types.String            `tfsdk:"after"`
 	Options      map[string]types.String `tfsdk:"options"`
-	Fields       *FieldsDefTF           `tfsdk:"fields"`
-	MinSize      types.Int64            `tfsdk:"min_size"`
-	MaxSize      types.Int64            `tfsdk:"max_size"`
-	Unique       types.Bool             `tfsdk:"unique"`
-	Constraint   *ArrayConstraintTF     `tfsdk:"constraint"`
+	Fields       *FieldsDefTF            `tfsdk:"fields"`
+	MinSize      types.Int64             `tfsdk:"min_size"`
+	MaxSize      types.Int64             `tfsdk:"max_size"`
+	Unique       types.Bool              `tfsdk:"unique"`
+	Constraint   *ArrayConstraintTF      `tfsdk:"constraint"`
 }
 
 func DefinitionAttributeToTF(a *DefinitionAttribute[any]) DefinitionAttributeTF {

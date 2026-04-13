@@ -20,10 +20,10 @@ type StreamTF struct {
 }
 
 type ConfigurationTF struct {
-	Endianness   types.String                `tfsdk:"endianness"`
-	Structure    *ElementListTF              `tfsdk:"structure"`
-	Metadata     *MetadataTF                 `tfsdk:"metadata"`
-	Computations *ElementListWithValidTF     `tfsdk:"computations"`
+	Endianness   types.String            `tfsdk:"endianness"`
+	Structure    *ElementListTF          `tfsdk:"structure"`
+	Metadata     *MetadataTF             `tfsdk:"metadata"`
+	Computations *ElementListWithValidTF `tfsdk:"computations"`
 }
 
 type ElementListTF struct {
@@ -36,17 +36,17 @@ type ElementListWithValidTF struct {
 }
 
 type StreamComponentTF struct {
-	Name       types.String          `tfsdk:"name"`
-	Order      types.Int64           `tfsdk:"order"`
-	Path       types.String          `tfsdk:"path"`
-	Type       types.String          `tfsdk:"type"`
-	Repetitive *RepetitiveTF         `tfsdk:"repetitive"`
-	Length     *LengthTF             `tfsdk:"length"`
-	Processor  types.String          `tfsdk:"processor"`
-	DataType   types.String          `tfsdk:"data_type"`
-	Endianness types.String          `tfsdk:"endianness"`
-	Expression *SwitchExpressionTF   `tfsdk:"expression"`
-	Elements   []StreamComponentTF   `tfsdk:"elements"`
+	Name       types.String        `tfsdk:"name"`
+	Order      types.Int64         `tfsdk:"order"`
+	Path       types.String        `tfsdk:"path"`
+	Type       types.String        `tfsdk:"type"`
+	Repetitive *RepetitiveTF       `tfsdk:"repetitive"`
+	Length     *LengthTF           `tfsdk:"length"`
+	Processor  types.String        `tfsdk:"processor"`
+	DataType   types.String        `tfsdk:"data_type"`
+	Endianness types.String        `tfsdk:"endianness"`
+	Expression *SwitchExpressionTF `tfsdk:"expression"`
+	Elements   []StreamComponentTF `tfsdk:"elements"`
 }
 
 type RepetitiveTF struct {
@@ -62,7 +62,7 @@ type LengthTF struct {
 }
 
 type SwitchExpressionTF struct {
-	SwitchOn types.String    `tfsdk:"switch_on"`
+	SwitchOn types.String     `tfsdk:"switch_on"`
 	Options  []SwitchOptionTF `tfsdk:"options"`
 }
 

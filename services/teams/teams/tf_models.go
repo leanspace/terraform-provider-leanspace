@@ -8,9 +8,9 @@ import (
 
 type TeamTF struct {
 	general_objects.AuditModelTF
-	Name      types.String                `tfsdk:"name"`
-	PolicyIds []types.String              `tfsdk:"policy_ids"`
-	Members   []types.String              `tfsdk:"members"`
+	Name      types.String                 `tfsdk:"name"`
+	PolicyIds []types.String               `tfsdk:"policy_ids"`
+	Members   []types.String               `tfsdk:"members"`
 	Tags      []general_objects.KeyValueTF `tfsdk:"tags"`
 }
 

@@ -112,6 +112,10 @@ func AuditFilterFieldsWithTags(filters map[string]datasourceschema.Attribute) ma
 	return AuditFilterFields(filters, true, false)
 }
 
+func AuditFilterFieldsWithoutTags(filters map[string]datasourceschema.Attribute) map[string]datasourceschema.Attribute {
+	return AuditFilterFields(filters, false, false)
+}
+
 // AuditFilterFields returns the standard audit filter attributes: created_bys, last_modified_bys,
 // from_created_at, to_created_at, from_last_modified_at, to_last_modified_at, and optionally tags. If singularBy is true, it returns created_by and last_modified_by instead of their plural version.
 func AuditFilterFields(filters map[string]datasourceschema.Attribute, includeTags bool, singularBy bool) map[string]datasourceschema.Attribute {

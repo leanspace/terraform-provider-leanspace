@@ -22,17 +22,17 @@ type PluginTF struct {
 
 func (x *Plugin) ToTF() any {
 	return &PluginTF{
-		AuditModelTF:                    general_objects.AuditModelToTF(&x.AuditModel),
-		Type:                            helper.TFStringValue(x.Type),
-		ImplementationClassName:         helper.TFStringValue(x.ImplementationClassName),
-		Name:                            helper.TFStringValue(x.Name),
-		Description:                     helper.TFStringValue(x.Description),
+		AuditModelTF:                     general_objects.AuditModelToTF(&x.AuditModel),
+		Type:                             helper.TFStringValue(x.Type),
+		ImplementationClassName:          helper.TFStringValue(x.ImplementationClassName),
+		Name:                             helper.TFStringValue(x.Name),
+		Description:                      helper.TFStringValue(x.Description),
 		SourceCodeFileDownloadAuthorized: helper.TFBoolValue(x.SourceCodeFileDownloadAuthorized),
-		FilePath:                        helper.TFStringValue(x.FilePath),
-		SdkVersion:                      helper.TFStringValue(x.SdkVersion),
-		SdkVersionFamily:                helper.TFStringValue(x.SdkVersionFamily),
-		Status:                          helper.TFStringValue(x.Status),
-		FileSha:                         helper.TFStringValue(x.FileSha),
+		FilePath:                         helper.TFStringValue(x.FilePath),
+		SdkVersion:                       helper.TFStringValue(x.SdkVersion),
+		SdkVersionFamily:                 helper.TFStringValue(x.SdkVersionFamily),
+		Status:                           helper.TFStringValue(x.Status),
+		FileSha:                          helper.TFStringValue(x.FileSha),
 	}
 }
 

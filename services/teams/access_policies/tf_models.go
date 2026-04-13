@@ -8,10 +8,10 @@ import (
 
 type AccessPolicyTF struct {
 	general_objects.AuditModelTF
-	Name        types.String                `tfsdk:"name"`
-	Description types.String                `tfsdk:"description"`
-	ReadOnly    types.Bool                  `tfsdk:"read_only"`
-	Statements  []StatementTF               `tfsdk:"statements"`
+	Name        types.String                 `tfsdk:"name"`
+	Description types.String                 `tfsdk:"description"`
+	ReadOnly    types.Bool                   `tfsdk:"read_only"`
+	Statements  []StatementTF                `tfsdk:"statements"`
 	Tags        []general_objects.KeyValueTF `tfsdk:"tags"`
 }
 

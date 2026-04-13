@@ -32,11 +32,11 @@ type ArgumentDefinitionTF struct {
 }
 
 type CommandMappingTF struct {
-	CommandDefinitionId types.String          `tfsdk:"command_definition_id"`
-	Position            types.Int64           `tfsdk:"position"`
-	DelayInMilliseconds types.Int64           `tfsdk:"delay_in_milliseconds"`
-	ArgumentMappings    []ArgumentMappingTF   `tfsdk:"argument_mappings"`
-	MetadataMappings    []MetadataMappingTF   `tfsdk:"metadata_mappings"`
+	CommandDefinitionId types.String        `tfsdk:"command_definition_id"`
+	Position            types.Int64         `tfsdk:"position"`
+	DelayInMilliseconds types.Int64         `tfsdk:"delay_in_milliseconds"`
+	ArgumentMappings    []ArgumentMappingTF `tfsdk:"argument_mappings"`
+	MetadataMappings    []MetadataMappingTF `tfsdk:"metadata_mappings"`
 }
 
 type ArgumentMappingTF struct {

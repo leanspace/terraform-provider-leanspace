@@ -1,11 +1,66 @@
 package dashboards
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
-	"github.com/leanspace/terraform-provider-leanspace/services/dashboard/widgets"
 )
+
+var dashFilterAttrTypes = map[string]attr.Type{
+	"filter_by": types.StringType,
+	"operator":  types.StringType,
+	"value":     types.StringType,
+}
+
+var dashSeriesAttrTypes = map[string]attr.Type{
+	"id":          types.StringType,
+	"name":        types.StringType,
+	"datasource":  types.StringType,
+	"aggregation": types.StringType,
+	"filters":     types.SetType{ElemType: types.ObjectType{AttrTypes: dashFilterAttrTypes}},
+}
+
+var dashThresholdAttrTypes = map[string]attr.Type{
+	"from":  types.StringType,
+	"to":    types.StringType,
+	"color": types.StringType,
+}
+
+var dashMetadataAttrTypes = map[string]attr.Type{
+	"y_axis_label":     types.StringType,
+	"y_axis_range_min": types.ListType{ElemType: types.Float64Type},
+	"y_axis_range_max": types.ListType{ElemType: types.Float64Type},
+	"thresholds":       types.ListType{ElemType: types.ObjectType{AttrTypes: dashThresholdAttrTypes}},
+}
+
+var dashViewInfoAttrTypes = map[string]attr.Type{
+	"id":   types.StringType,
+	"name": types.StringType,
+}
+
+var dashTagAttrTypes = map[string]attr.Type{
+	"key":   types.StringType,
+	"value": types.StringType,
+}
+
+var dashboardWidgetAttrTypes = map[string]attr.Type{
+	"id":                     types.StringType,
+	"created_at":             types.StringType,
+	"created_by":             types.StringType,
+	"last_modified_at":       types.StringType,
+	"last_modified_by":       types.StringType,
+	"name":                   types.StringType,
+	"description":            types.StringType,
+	"type":                   types.StringType,
+	"granularity":            types.StringType,
+	"query_time_dimension":   types.StringType,
+	"display_time_dimension": types.StringType,
+	"series":                 types.ListType{ElemType: types.ObjectType{AttrTypes: dashSeriesAttrTypes}},
+	"metadata":               types.ListType{ElemType: types.ObjectType{AttrTypes: dashMetadataAttrTypes}},
+	"view":                   types.ListType{ElemType: types.ObjectType{AttrTypes: dashViewInfoAttrTypes}},
+	"tags":                   types.SetType{ElemType: types.ObjectType{AttrTypes: dashTagAttrTypes}},
+}
 
 type DashboardTF struct {
 	general_objects.AuditModelTF
@@ -13,7 +68,7 @@ type DashboardTF struct {
 	Description     types.String                 `tfsdk:"description"`
 	NodeIds         []types.String               `tfsdk:"node_ids"`
 	WidgetInfo      []WidgetInfoTF               `tfsdk:"widget_info"`
-	Widgets         []DashboardWidgetTF          `tfsdk:"widgets"`
+	Widgets         types.Set                    `tfsdk:"widgets"`
 	Tags            []general_objects.KeyValueTF `tfsdk:"tags"`
 	TimestampFormat types.String                 `tfsdk:"timestamp_format"`
 }
@@ -27,52 +82,6 @@ type WidgetInfoTF struct {
 	Y    types.Int64  `tfsdk:"y"`
 	MinW types.Int64  `tfsdk:"min_w"`
 	MinH types.Int64  `tfsdk:"min_h"`
-}
-
-type DashboardWidgetTF struct {
-	general_objects.AuditModelTF
-	Name                 types.String                 `tfsdk:"name"`
-	Description          types.String                 `tfsdk:"description"`
-	Type                 types.String                 `tfsdk:"type"`
-	Granularity          types.String                 `tfsdk:"granularity"`
-	QueryTimeDimension   types.String                 `tfsdk:"query_time_dimension"`
-	DisplayTimeDimension types.String                 `tfsdk:"display_time_dimension"`
-	Series               []DashboardSeriesTF          `tfsdk:"series"`
-	Metadata             []DashboardWidgetMetadataTF  `tfsdk:"metadata"`
-	View                 []DashboardViewInfoTF        `tfsdk:"view"`
-	Tags                 []general_objects.KeyValueTF `tfsdk:"tags"`
-}
-
-type DashboardSeriesTF struct {
-	ID          types.String            `tfsdk:"id"`
-	Name        types.String            `tfsdk:"name"`
-	Datasource  types.String            `tfsdk:"datasource"`
-	Aggregation types.String            `tfsdk:"aggregation"`
-	Filters     []DashboardFilterTF     `tfsdk:"filters"`
-}
-
-type DashboardFilterTF struct {
-	FilterBy types.String `tfsdk:"filter_by"`
-	Operator types.String `tfsdk:"operator"`
-	Value    types.String `tfsdk:"value"`
-}
-
-type DashboardWidgetMetadataTF struct {
-	YAxisLabel    types.String    `tfsdk:"y_axis_label"`
-	YAxisRangeMin []types.Float64 `tfsdk:"y_axis_range_min"`
-	YAxisRangeMax []types.Float64 `tfsdk:"y_axis_range_max"`
-	Thresholds    []DashboardThresholdTF `tfsdk:"thresholds"`
-}
-
-type DashboardThresholdTF struct {
-	From  types.String `tfsdk:"from"`
-	To    types.String `tfsdk:"to"`
-	Color types.String `tfsdk:"color"`
-}
-
-type DashboardViewInfoTF struct {
-	ID   types.String `tfsdk:"id"`
-	Name types.String `tfsdk:"name"`
 }
 
 func (x *Dashboard) ToTF() any {
@@ -90,64 +99,105 @@ func (x *Dashboard) ToTF() any {
 		}
 	}
 
-	dashWidgets := make([]DashboardWidgetTF, len(x.Widgets))
+	widgetElems := make([]attr.Value, len(x.Widgets))
 	for i, w := range x.Widgets {
-		series := make([]DashboardSeriesTF, len(w.Series))
+		// Build series list
+		seriesElems := make([]attr.Value, len(w.Series))
 		for j, s := range w.Series {
-			filters := make([]DashboardFilterTF, len(s.Filters))
+			filterElems := make([]attr.Value, len(s.Filters))
 			for k, f := range s.Filters {
-				filters[k] = DashboardFilterTF{
-					FilterBy: helper.TFStringValue(f.FilterBy),
-					Operator: helper.TFStringValue(f.Operator),
-					Value:    helper.TFStringValue(f.Value),
-				}
+				fObj, _ := types.ObjectValue(dashFilterAttrTypes, map[string]attr.Value{
+					"filter_by": helper.TFStringValue(f.FilterBy),
+					"operator":  helper.TFStringValue(f.Operator),
+					"value":     helper.TFStringValue(f.Value),
+				})
+				filterElems[k] = fObj
 			}
-			series[j] = DashboardSeriesTF{
-				ID:          helper.TFStringValue(s.ID),
-				Name:        helper.TFStringValue(s.Name),
-				Datasource:  helper.TFStringValue(s.Datasource),
-				Aggregation: helper.TFStringValue(s.Aggregation),
-				Filters:     filters,
-			}
+			filtersSet, _ := types.SetValue(types.ObjectType{AttrTypes: dashFilterAttrTypes}, filterElems)
+			sObj, _ := types.ObjectValue(dashSeriesAttrTypes, map[string]attr.Value{
+				"id":          helper.TFStringValue(s.ID),
+				"name":        helper.TFStringValue(s.Name),
+				"datasource":  helper.TFStringValue(s.Datasource),
+				"aggregation": helper.TFStringValue(s.Aggregation),
+				"filters":     filtersSet,
+			})
+			seriesElems[j] = sObj
 		}
+		seriesList, _ := types.ListValue(types.ObjectType{AttrTypes: dashSeriesAttrTypes}, seriesElems)
 
-		var metadataSlice []DashboardWidgetMetadataTF
+		// Build metadata list
+		var metadataElems []attr.Value
 		hasMetadata := w.Metadata.YAxisLabel != "" || len(w.Metadata.Thresholds) > 0 ||
 			(w.Metadata.YAxisRange != nil && len(w.Metadata.YAxisRange) == 2)
 		if hasMetadata {
-			md := DashboardWidgetMetadataTF{
-				YAxisLabel: helper.TFStringValue(w.Metadata.YAxisLabel),
-			}
-			if w.Metadata.YAxisRange != nil && len(w.Metadata.YAxisRange) == 2 {
-				if w.Metadata.YAxisRange[0] != nil {
-					md.YAxisRangeMin = []types.Float64{helper.TFFloat64PtrValue(w.Metadata.YAxisRange[0])}
-				}
-				if w.Metadata.YAxisRange[1] != nil {
-					md.YAxisRangeMax = []types.Float64{helper.TFFloat64PtrValue(w.Metadata.YAxisRange[1])}
-				}
-			}
-			thresholds := make([]DashboardThresholdTF, len(w.Metadata.Thresholds))
+			thresholdElems := make([]attr.Value, len(w.Metadata.Thresholds))
 			for j, t := range w.Metadata.Thresholds {
-				thresholds[j] = DashboardThresholdTF{Color: helper.TFStringValue(t.Color)}
-				// from/to handled as strings in the original parsers
+				tObj, _ := types.ObjectValue(dashThresholdAttrTypes, map[string]attr.Value{
+					"from":  types.StringNull(),
+					"to":    types.StringNull(),
+					"color": helper.TFStringValue(t.Color),
+				})
+				thresholdElems[j] = tObj
 			}
-			md.Thresholds = thresholds
-			metadataSlice = []DashboardWidgetMetadataTF{md}
-		}
+			thresholdList, _ := types.ListValue(types.ObjectType{AttrTypes: dashThresholdAttrTypes}, thresholdElems)
 
-		dashWidgets[i] = DashboardWidgetTF{
-			AuditModelTF:         general_objects.AuditModelToTF(&w.AuditModel),
-			Name:                 helper.TFStringValue(w.Name),
-			Description:          helper.TFStringValue(w.Description),
-			Type:                 helper.TFStringValue(w.Type),
-			Granularity:          helper.TFStringValue(w.Granularity),
-			QueryTimeDimension:   helper.TFStringValue(w.QueryTimeDimension),
-			DisplayTimeDimension: helper.TFStringValue(w.DisplayTimeDimension),
-			Series:               series,
-			Metadata:             metadataSlice,
-			Tags:                 general_objects.KeyValuesToTF(w.Tags),
+			var minElems []attr.Value
+			if w.Metadata.YAxisRange != nil && len(w.Metadata.YAxisRange) == 2 && w.Metadata.YAxisRange[0] != nil {
+				minElems = []attr.Value{helper.TFFloat64PtrValue(w.Metadata.YAxisRange[0])}
+			}
+			minList, _ := types.ListValue(types.Float64Type, minElems)
+
+			var maxElems []attr.Value
+			if w.Metadata.YAxisRange != nil && len(w.Metadata.YAxisRange) == 2 && w.Metadata.YAxisRange[1] != nil {
+				maxElems = []attr.Value{helper.TFFloat64PtrValue(w.Metadata.YAxisRange[1])}
+			}
+			maxList, _ := types.ListValue(types.Float64Type, maxElems)
+
+			mdObj, _ := types.ObjectValue(dashMetadataAttrTypes, map[string]attr.Value{
+				"y_axis_label":     helper.TFStringValue(w.Metadata.YAxisLabel),
+				"y_axis_range_min": minList,
+				"y_axis_range_max": maxList,
+				"thresholds":       thresholdList,
+			})
+			metadataElems = []attr.Value{mdObj}
 		}
+		metadataList, _ := types.ListValue(types.ObjectType{AttrTypes: dashMetadataAttrTypes}, metadataElems)
+
+		// Build view list (always empty — API view is complex struct not mapped here)
+		viewList, _ := types.ListValue(types.ObjectType{AttrTypes: dashViewInfoAttrTypes}, nil)
+
+		// Build tags set
+		tagElems := make([]attr.Value, len(w.Tags))
+		for j, t := range w.Tags {
+			tObj, _ := types.ObjectValue(dashTagAttrTypes, map[string]attr.Value{
+				"key":   helper.TFStringValue(t.Key),
+				"value": helper.TFStringValue(t.Value),
+			})
+			tagElems[j] = tObj
+		}
+		tagsSet, _ := types.SetValue(types.ObjectType{AttrTypes: dashTagAttrTypes}, tagElems)
+
+		am := general_objects.AuditModelToTF(&w.AuditModel)
+		widgetObj, _ := types.ObjectValue(dashboardWidgetAttrTypes, map[string]attr.Value{
+			"id":                     am.ID,
+			"created_at":             am.CreatedAt,
+			"created_by":             am.CreatedBy,
+			"last_modified_at":       am.LastModifiedAt,
+			"last_modified_by":       am.LastModifiedBy,
+			"name":                   helper.TFStringValue(w.Name),
+			"description":            helper.TFStringValue(w.Description),
+			"type":                   helper.TFStringValue(w.Type),
+			"granularity":            helper.TFStringValue(w.Granularity),
+			"query_time_dimension":   helper.TFStringValue(w.QueryTimeDimension),
+			"display_time_dimension": helper.TFStringValue(w.DisplayTimeDimension),
+			"series":                 seriesList,
+			"metadata":               metadataList,
+			"view":                   viewList,
+			"tags":                   tagsSet,
+		})
+		widgetElems[i] = widgetObj
 	}
+	dashWidgets := types.SetValueMust(types.ObjectType{AttrTypes: dashboardWidgetAttrTypes}, widgetElems)
 
 	return &DashboardTF{
 		AuditModelTF:    general_objects.AuditModelToTF(&x.AuditModel),
@@ -178,63 +228,12 @@ func (tf *DashboardTF) ToAPI() any {
 		}
 	}
 
-	dashWidgets := make([]DashboardWidget, len(tf.Widgets))
-	for i, w := range tf.Widgets {
-		series := make([]widgets.Series, len(w.Series))
-		for j, s := range w.Series {
-			filters := make([]widgets.Filter, len(s.Filters))
-			for k, f := range s.Filters {
-				filters[k] = widgets.Filter{
-					FilterBy: helper.FromTFString(f.FilterBy),
-					Operator: helper.FromTFString(f.Operator),
-					Value:    helper.FromTFString(f.Value),
-				}
-			}
-			series[j] = widgets.Series{
-				ID:          helper.FromTFString(s.ID),
-				Name:        helper.FromTFString(s.Name),
-				Datasource:  helper.FromTFString(s.Datasource),
-				Aggregation: helper.FromTFString(s.Aggregation),
-				Filters:     filters,
-			}
-		}
-
-		dw := DashboardWidget{
-			AuditModel:           general_objects.AuditModelFromTF(w.AuditModelTF),
-			Name:                 helper.FromTFString(w.Name),
-			Description:          helper.FromTFString(w.Description),
-			Type:                 helper.FromTFString(w.Type),
-			Granularity:          helper.FromTFString(w.Granularity),
-			QueryTimeDimension:   helper.FromTFString(w.QueryTimeDimension),
-			DisplayTimeDimension: helper.FromTFString(w.DisplayTimeDimension),
-			Series:               series,
-			Tags:                 general_objects.KeyValuesFromTF(w.Tags),
-		}
-		if len(w.Metadata) > 0 {
-			md := w.Metadata[0]
-			dw.Metadata = widgets.Metadata{
-				YAxisLabel: helper.FromTFString(md.YAxisLabel),
-				YAxisRange: make([]*float64, 2),
-			}
-			if len(md.YAxisRangeMin) > 0 {
-				v := md.YAxisRangeMin[0].ValueFloat64()
-				dw.Metadata.YAxisRange[0] = &v
-			}
-			if len(md.YAxisRangeMax) > 0 {
-				v := md.YAxisRangeMax[0].ValueFloat64()
-				dw.Metadata.YAxisRange[1] = &v
-			}
-		}
-		dashWidgets[i] = dw
-	}
-
 	return &Dashboard{
 		AuditModel:      general_objects.AuditModelFromTF(tf.AuditModelTF),
 		Name:            helper.FromTFString(tf.Name),
 		Description:     helper.FromTFString(tf.Description),
 		NodeIds:         nodeIds,
 		WidgetInfo:      widgetInfos,
-		Widgets:         dashWidgets,
 		Tags:            general_objects.KeyValuesFromTF(tf.Tags),
 		TimestampFormat: helper.FromTFString(tf.TimestampFormat),
 	}

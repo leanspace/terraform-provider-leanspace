@@ -1,10 +1,26 @@
 package routes
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
+
+var errorAttrTypes = map[string]attr.Type{
+	"code":    types.StringType,
+	"message": types.StringType,
+}
+
+var routeInstanceAttrTypes = map[string]attr.Type{
+	"status":                        types.StringType,
+	"last_status_at":                types.StringType,
+	"container_id":                  types.StringType,
+	"last_message_start_process_at": types.StringType,
+	"last_message_end_process_at":   types.StringType,
+	"number_of_messages_processed":  types.Int64Type,
+	"camel_route_id":                types.StringType,
+}
 
 type RouteTF struct {
 	general_objects.AuditModelTF
@@ -12,7 +28,7 @@ type RouteTF struct {
 	Description    types.String                 `tfsdk:"description"`
 	Tags           []general_objects.KeyValueTF `tfsdk:"tags"`
 	Definition     *DefinitionTF                `tfsdk:"definition"`
-	RouteInstances []RouteInstanceTF            `tfsdk:"route_instances"`
+	RouteInstances types.List                   `tfsdk:"route_instances"`
 	ProcessorIds   []types.String               `tfsdk:"processor_ids"`
 }
 
@@ -21,45 +37,34 @@ type DefinitionTF struct {
 	LogLevel         types.String `tfsdk:"log_level"`
 	Valid            types.Bool   `tfsdk:"valid"`
 	ServiceAccountId types.String `tfsdk:"service_account_id"`
-	Errors           []ErrorTF    `tfsdk:"errors"`
-}
-
-type ErrorTF struct {
-	Code    types.String `tfsdk:"code"`
-	Message types.String `tfsdk:"message"`
-}
-
-type RouteInstanceTF struct {
-	Status                    types.String `tfsdk:"status"`
-	LastStatusAt              types.String `tfsdk:"last_status_at"`
-	ContainerId               types.String `tfsdk:"container_id"`
-	LastMessageStartProcessAt types.String `tfsdk:"last_message_start_process_at"`
-	LastMessageEndProcessAt   types.String `tfsdk:"last_message_end_process_at"`
-	NumberOfMessagesProcessed types.Int64  `tfsdk:"number_of_messages_processed"`
-	CamelRouteId              types.String `tfsdk:"camel_route_id"`
+	Errors           types.List   `tfsdk:"errors"`
 }
 
 func (x *Route) ToTF() any {
-	errs := make([]ErrorTF, len(x.Definition.Errors))
+	errElems := make([]attr.Value, len(x.Definition.Errors))
 	for i, e := range x.Definition.Errors {
-		errs[i] = ErrorTF{
-			Code:    helper.TFStringValue(e.Code),
-			Message: helper.TFStringValue(e.Message),
-		}
+		eObj, _ := types.ObjectValue(errorAttrTypes, map[string]attr.Value{
+			"code":    helper.TFStringValue(e.Code),
+			"message": helper.TFStringValue(e.Message),
+		})
+		errElems[i] = eObj
 	}
+	errors := types.ListValueMust(types.ObjectType{AttrTypes: errorAttrTypes}, errElems)
 
-	routeInstances := make([]RouteInstanceTF, len(x.RouteInstances))
+	riElems := make([]attr.Value, len(x.RouteInstances))
 	for i, ri := range x.RouteInstances {
-		routeInstances[i] = RouteInstanceTF{
-			Status:                    helper.TFStringValue(ri.Status),
-			LastStatusAt:              helper.TFStringValue(ri.LastStatusAt),
-			ContainerId:               helper.TFStringValue(ri.ContainerId),
-			LastMessageStartProcessAt: helper.TFStringValue(ri.LastMessageStartProcessAt),
-			LastMessageEndProcessAt:   helper.TFStringValue(ri.LastMessageEndProcessAt),
-			NumberOfMessagesProcessed: helper.TFInt64Value(ri.NumberOfMessagesProcessed),
-			CamelRouteId:              helper.TFStringValue(ri.CamelRouteId),
-		}
+		riObj, _ := types.ObjectValue(routeInstanceAttrTypes, map[string]attr.Value{
+			"status":                        helper.TFStringValue(ri.Status),
+			"last_status_at":                helper.TFStringValue(ri.LastStatusAt),
+			"container_id":                  helper.TFStringValue(ri.ContainerId),
+			"last_message_start_process_at": helper.TFStringValue(ri.LastMessageStartProcessAt),
+			"last_message_end_process_at":   helper.TFStringValue(ri.LastMessageEndProcessAt),
+			"number_of_messages_processed":  helper.TFInt64Value(ri.NumberOfMessagesProcessed),
+			"camel_route_id":                helper.TFStringValue(ri.CamelRouteId),
+		})
+		riElems[i] = riObj
 	}
+	routeInstances := types.ListValueMust(types.ObjectType{AttrTypes: routeInstanceAttrTypes}, riElems)
 
 	return &RouteTF{
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
@@ -71,7 +76,7 @@ func (x *Route) ToTF() any {
 			LogLevel:         helper.TFStringValue(x.Definition.LogLevel),
 			Valid:            helper.TFBoolValue(x.Definition.Valid),
 			ServiceAccountId: helper.TFStringValue(x.Definition.ServiceAccountId),
-			Errors:           errs,
+			Errors:           errors,
 		},
 		RouteInstances: routeInstances,
 		ProcessorIds:   helper.TFStringsValue(x.ProcessorIds),
@@ -81,42 +86,20 @@ func (x *Route) ToTF() any {
 func (tf *RouteTF) ToAPI() any {
 	var def Definition
 	if tf.Definition != nil {
-		errs := make([]Error, len(tf.Definition.Errors))
-		for i, e := range tf.Definition.Errors {
-			errs[i] = Error{
-				Code:    helper.FromTFString(e.Code),
-				Message: helper.FromTFString(e.Message),
-			}
-		}
 		def = Definition{
 			Configuration:    helper.FromTFString(tf.Definition.Configuration),
 			LogLevel:         helper.FromTFString(tf.Definition.LogLevel),
 			Valid:            helper.FromTFBool(tf.Definition.Valid),
 			ServiceAccountId: helper.FromTFString(tf.Definition.ServiceAccountId),
-			Errors:           errs,
-		}
-	}
-
-	routeInstances := make([]RouteInstance, len(tf.RouteInstances))
-	for i, ri := range tf.RouteInstances {
-		routeInstances[i] = RouteInstance{
-			Status:                    helper.FromTFString(ri.Status),
-			LastStatusAt:              helper.FromTFString(ri.LastStatusAt),
-			ContainerId:               helper.FromTFString(ri.ContainerId),
-			LastMessageStartProcessAt: helper.FromTFString(ri.LastMessageStartProcessAt),
-			LastMessageEndProcessAt:   helper.FromTFString(ri.LastMessageEndProcessAt),
-			NumberOfMessagesProcessed: helper.FromTFInt64(ri.NumberOfMessagesProcessed),
-			CamelRouteId:              helper.FromTFString(ri.CamelRouteId),
 		}
 	}
 
 	return &Route{
-		AuditModel:     general_objects.AuditModelFromTF(tf.AuditModelTF),
-		Name:           helper.FromTFString(tf.Name),
-		Description:    helper.FromTFString(tf.Description),
-		Tags:           general_objects.KeyValuesFromTF(tf.Tags),
-		Definition:     def,
-		RouteInstances: routeInstances,
-		ProcessorIds:   helper.FromTFStrings(tf.ProcessorIds),
+		AuditModel:   general_objects.AuditModelFromTF(tf.AuditModelTF),
+		Name:         helper.FromTFString(tf.Name),
+		Description:  helper.FromTFString(tf.Description),
+		Tags:         general_objects.KeyValuesFromTF(tf.Tags),
+		Definition:   def,
+		ProcessorIds: helper.FromTFStrings(tf.ProcessorIds),
 	}
 }

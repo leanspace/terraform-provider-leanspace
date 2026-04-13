@@ -3,10 +3,16 @@ package widgets
 import (
 	"strconv"
 
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
+
+var widgetDashboardInfoAttrTypes = map[string]attr.Type{
+	"id":   types.StringType,
+	"name": types.StringType,
+}
 
 type WidgetTF struct {
 	general_objects.AuditModelTF
@@ -18,7 +24,7 @@ type WidgetTF struct {
 	DisplayTimeDimension types.String                 `tfsdk:"display_time_dimension"`
 	Series               []SeriesTF                   `tfsdk:"series"`
 	Metadata             *MetadataTF                  `tfsdk:"metadata"`
-	Dashboards           []DashboardInfoTF            `tfsdk:"dashboards"`
+	Dashboards           types.Set                    `tfsdk:"dashboards"`
 	Tags                 []general_objects.KeyValueTF `tfsdk:"tags"`
 }
 
@@ -47,11 +53,6 @@ type ThresholdTF struct {
 	From  types.String `tfsdk:"from"`
 	To    types.String `tfsdk:"to"`
 	Color types.String `tfsdk:"color"`
-}
-
-type DashboardInfoTF struct {
-	ID   types.String `tfsdk:"id"`
-	Name types.String `tfsdk:"name"`
 }
 
 func (x *Widget) ToTF() any {
@@ -106,13 +107,15 @@ func (x *Widget) ToTF() any {
 		}
 	}
 
-	dashboards := make([]DashboardInfoTF, len(x.Dashboards))
+	dashElems := make([]attr.Value, len(x.Dashboards))
 	for i, d := range x.Dashboards {
-		dashboards[i] = DashboardInfoTF{
-			ID:   helper.TFStringValue(d.ID),
-			Name: helper.TFStringValue(d.Name),
-		}
+		dObj, _ := types.ObjectValue(widgetDashboardInfoAttrTypes, map[string]attr.Value{
+			"id":   helper.TFStringValue(d.ID),
+			"name": helper.TFStringValue(d.Name),
+		})
+		dashElems[i] = dObj
 	}
+	dashboards := types.SetValueMust(types.ObjectType{AttrTypes: widgetDashboardInfoAttrTypes}, dashElems)
 
 	return &WidgetTF{
 		AuditModelTF:         general_objects.AuditModelToTF(&x.AuditModel),
@@ -181,14 +184,6 @@ func (tf *WidgetTF) ToAPI() any {
 		metadata.Thresholds = thresholds
 	}
 
-	dashboards := make([]DashboardInfo, len(tf.Dashboards))
-	for i, d := range tf.Dashboards {
-		dashboards[i] = DashboardInfo{
-			ID:   helper.FromTFString(d.ID),
-			Name: helper.FromTFString(d.Name),
-		}
-	}
-
 	return &Widget{
 		AuditModel:           general_objects.AuditModelFromTF(tf.AuditModelTF),
 		Name:                 helper.FromTFString(tf.Name),
@@ -199,7 +194,6 @@ func (tf *WidgetTF) ToAPI() any {
 		DisplayTimeDimension: helper.FromTFString(tf.DisplayTimeDimension),
 		Series:               series,
 		Metadata:             metadata,
-		Dashboards:           dashboards,
 		Tags:                 general_objects.KeyValuesFromTF(tf.Tags),
 	}
 }

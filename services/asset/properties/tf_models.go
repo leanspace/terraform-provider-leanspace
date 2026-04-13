@@ -18,20 +18,20 @@ type PropertyTF struct {
 	NodeId      types.String                 `tfsdk:"node_id"`
 	Tags        []general_objects.KeyValueTF `tfsdk:"tags"`
 	// Attribute fields (flat, at top level)
-	Type      types.String                `tfsdk:"type"`
-	Value     types.String                `tfsdk:"value"`
-	Min       types.Float64               `tfsdk:"min"`
-	Max       types.Float64               `tfsdk:"max"`
-	Scale     types.Int64                 `tfsdk:"scale"`
-	Precision types.Int64                 `tfsdk:"precision"`
-	UnitId    types.String                `tfsdk:"unit_id"`
-	MinLength types.Int64                 `tfsdk:"min_length"`
-	MaxLength types.Int64                 `tfsdk:"max_length"`
-	Pattern   types.String                `tfsdk:"pattern"`
-	Options   map[string]types.String     `tfsdk:"options"`
-	Before    types.String                `tfsdk:"before"`
-	After     types.String                `tfsdk:"after"`
-	Fields    *general_objects.FieldsTF   `tfsdk:"fields"`
+	Type      types.String              `tfsdk:"type"`
+	Value     types.String              `tfsdk:"value"`
+	Min       types.Float64             `tfsdk:"min"`
+	Max       types.Float64             `tfsdk:"max"`
+	Scale     types.Int64               `tfsdk:"scale"`
+	Precision types.Int64               `tfsdk:"precision"`
+	UnitId    types.String              `tfsdk:"unit_id"`
+	MinLength types.Int64               `tfsdk:"min_length"`
+	MaxLength types.Int64               `tfsdk:"max_length"`
+	Pattern   types.String              `tfsdk:"pattern"`
+	Options   map[string]types.String   `tfsdk:"options"`
+	Before    types.String              `tfsdk:"before"`
+	After     types.String              `tfsdk:"after"`
+	Fields    *general_objects.FieldsTF `tfsdk:"fields"`
 }
 
 func (x *Property[T]) ToTF() interface{} {
