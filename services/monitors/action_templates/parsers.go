@@ -1,35 +1,30 @@
 package action_templates
 
+import (
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+)
+
 func (actionTemplate *ActionTemplate) ToMap() map[string]any {
-	actionTemplateMap := make(map[string]any)
-	actionTemplateMap["id"] = actionTemplate.ID
-	actionTemplateMap["name"] = actionTemplate.Name
-	actionTemplateMap["type"] = actionTemplate.Type
-	actionTemplateMap["url"] = actionTemplate.URL
-	actionTemplateMap["payload"] = actionTemplate.Payload
-	actionTemplateMap["content"] = actionTemplate.Content
-	actionTemplateMap["headers"] = actionTemplate.Headers
-	actionTemplateMap["created_at"] = actionTemplate.CreatedAt
-	actionTemplateMap["created_by"] = actionTemplate.CreatedBy
-	actionTemplateMap["last_modified_at"] = actionTemplate.LastModifiedAt
-	actionTemplateMap["last_modified_by"] = actionTemplate.LastModifiedBy
+	actionTemplateMap := actionTemplate.ToAuditMap()
+	actionTemplateMap["name"] = helper.NilIfEmpty(actionTemplate.Name)
+	actionTemplateMap["type"] = helper.NilIfEmpty(actionTemplate.Type)
+	actionTemplateMap["url"] = helper.NilIfEmpty(actionTemplate.URL)
+	actionTemplateMap["payload"] = helper.NilIfEmpty(actionTemplate.Payload)
+	actionTemplateMap["content"] = helper.NilIfEmpty(actionTemplate.Content)
+	actionTemplateMap["headers"] = helper.NilIfEmpty(actionTemplate.Headers)
 	return actionTemplateMap
 }
 
 func (actionTemplate *ActionTemplate) FromMap(actionTemplateMap map[string]any) error {
-	actionTemplate.ID = actionTemplateMap["id"].(string)
-	actionTemplate.Name = actionTemplateMap["name"].(string)
-	actionTemplate.Type = actionTemplateMap["type"].(string)
-	actionTemplate.URL = actionTemplateMap["url"].(string)
-	actionTemplate.Payload = actionTemplateMap["payload"].(string)
-	actionTemplate.Content = actionTemplateMap["content"].(string)
-	actionTemplate.Headers = make(map[string]string, len(actionTemplateMap["headers"].(map[string]any)))
-	for key, value := range actionTemplateMap["headers"].(map[string]any) {
+	actionTemplate.FromAuditMap(actionTemplateMap)
+	actionTemplate.Name = helper.CastString(actionTemplateMap, "name")
+	actionTemplate.Type = helper.CastString(actionTemplateMap, "type")
+	actionTemplate.URL = helper.CastString(actionTemplateMap, "url")
+	actionTemplate.Payload = helper.CastString(actionTemplateMap, "payload")
+	actionTemplate.Content = helper.CastString(actionTemplateMap, "content")
+	actionTemplate.Headers = make(map[string]string, len(helper.CastMapAny(actionTemplateMap, "headers")))
+	for key, value := range helper.CastMapAny(actionTemplateMap, "headers") {
 		actionTemplate.Headers[key] = value.(string)
 	}
-	actionTemplate.CreatedAt = actionTemplateMap["created_at"].(string)
-	actionTemplate.CreatedBy = actionTemplateMap["created_by"].(string)
-	actionTemplate.LastModifiedAt = actionTemplateMap["last_modified_at"].(string)
-	actionTemplate.LastModifiedBy = actionTemplateMap["last_modified_by"].(string)
 	return nil
 }

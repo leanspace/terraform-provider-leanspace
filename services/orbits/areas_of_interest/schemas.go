@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/float64default"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
@@ -70,6 +71,8 @@ var geoPointSchema = map[string]resourceschema.Attribute{
 	},
 	"altitude": resourceschema.Float64Attribute{
 		Optional:   true,
+		Computed:   true,
+		Default:    float64default.StaticFloat64(0.0),
 		Validators: []validator.Float64{float64validator.AtLeast(0)},
 	},
 }

@@ -1,61 +1,53 @@
 package generic_plugins
 
 import (
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 	"github.com/leanspace/terraform-provider-leanspace/services/plugins"
 )
 
 func (genericPlugin *GenericPlugin) ToMap() map[string]any {
-	genericPluginMap := make(map[string]any)
-	genericPluginMap["id"] = genericPlugin.ID
-	genericPluginMap["name"] = genericPlugin.Name
-	genericPluginMap["description"] = genericPlugin.Description
-	genericPluginMap["type"] = genericPlugin.Type
-	genericPluginMap["language"] = genericPlugin.Language
+	genericPluginMap := genericPlugin.ToAuditMap()
+	genericPluginMap["name"] = helper.NilIfEmpty(genericPlugin.Name)
+	genericPluginMap["description"] = helper.NilIfEmpty(genericPlugin.Description)
+	genericPluginMap["type"] = helper.NilIfEmpty(genericPlugin.Type)
+	genericPluginMap["language"] = helper.NilIfEmpty(genericPlugin.Language)
 	genericPluginMap["source_code_link"] = []any{genericPlugin.SourceCodeLink.ToMap()}
-	genericPluginMap["created_at"] = genericPlugin.CreatedAt
-	genericPluginMap["created_by"] = genericPlugin.CreatedBy
-	genericPluginMap["last_modified_at"] = genericPlugin.LastModifiedAt
-	genericPluginMap["last_modified_by"] = genericPlugin.LastModifiedBy
-	genericPluginMap["status"] = genericPlugin.Status
-	genericPluginMap["source_code_path"] = genericPlugin.FilePath
-	genericPluginMap["source_code_sha"] = genericPlugin.FileSha
+	genericPluginMap["status"] = helper.NilIfEmpty(genericPlugin.Status)
+	genericPluginMap["source_code_path"] = helper.NilIfEmpty(genericPlugin.FilePath)
+	genericPluginMap["source_code_sha"] = helper.NilIfEmpty(genericPlugin.FileSha)
 	return genericPluginMap
 }
 
 func (sourceCodeLink *SourceCodeLink) ToMap() map[string]any {
 	sourceCodeLinkMap := make(map[string]any)
-	sourceCodeLinkMap["expiration_time"] = sourceCodeLink.ExpirationTime
-	sourceCodeLinkMap["source_code_id"] = sourceCodeLink.SourceCodeId
-	sourceCodeLinkMap["url"] = sourceCodeLink.Url
+	sourceCodeLinkMap["expiration_time"] = helper.NilIfEmpty(sourceCodeLink.ExpirationTime)
+	sourceCodeLinkMap["source_code_id"] = helper.NilIfEmpty(sourceCodeLink.SourceCodeId)
+	sourceCodeLinkMap["url"] = helper.NilIfEmpty(sourceCodeLink.Url)
 	return sourceCodeLinkMap
 }
 
 func (genericPlugin *GenericPlugin) FromMap(genericPluginMap map[string]any) error {
-	genericPlugin.ID = genericPluginMap["id"].(string)
-	genericPlugin.Name = genericPluginMap["name"].(string)
-	genericPlugin.Description = genericPluginMap["description"].(string)
-	genericPlugin.Type = genericPluginMap["type"].(string)
-	genericPlugin.Language = genericPluginMap["language"].(string)
-	if len(genericPluginMap["source_code_link"].([]any)) > 0 {
-		if err := genericPlugin.SourceCodeLink.FromMap(genericPluginMap["source_code_link"].([]any)[0].(map[string]any)); err != nil {
+	genericPlugin.FromAuditMap(genericPluginMap)
+	genericPlugin.Name = helper.CastString(genericPluginMap, "name")
+	genericPlugin.Description = helper.CastString(genericPluginMap, "description")
+	genericPlugin.Type = helper.CastString(genericPluginMap, "type")
+	genericPlugin.Language = helper.CastString(genericPluginMap, "language")
+	if len(helper.CastSlice(genericPluginMap, "source_code_link")) > 0 {
+		if err := genericPlugin.SourceCodeLink.FromMap(helper.CastSlice(genericPluginMap, "source_code_link")[0].(map[string]any)); err != nil {
 			return err
 		}
 	}
-	genericPlugin.CreatedAt = genericPluginMap["created_at"].(string)
-	genericPlugin.CreatedBy = genericPluginMap["created_by"].(string)
-	genericPlugin.LastModifiedAt = genericPluginMap["last_modified_at"].(string)
-	genericPlugin.LastModifiedBy = genericPluginMap["last_modified_by"].(string)
-	genericPlugin.Status = genericPluginMap["status"].(string)
-	genericPlugin.FilePath = genericPluginMap["source_code_path"].(string)
-	genericPlugin.FileSha = genericPluginMap["source_code_sha"].(string)
+	genericPlugin.Status = helper.CastString(genericPluginMap, "status")
+	genericPlugin.FilePath = helper.CastString(genericPluginMap, "source_code_path")
+	genericPlugin.FileSha = helper.CastString(genericPluginMap, "source_code_sha")
 	return nil
 }
 
 func (sourceCodeLink *SourceCodeLink) FromMap(sourceCodeLinkMap map[string]any) error {
-	sourceCodeLink.ExpirationTime = sourceCodeLinkMap["expiration_time"].(string)
-	sourceCodeLink.SourceCodeId = sourceCodeLinkMap["source_code_id"].(string)
-	sourceCodeLink.Url = sourceCodeLinkMap["url"].(string)
+	sourceCodeLink.ExpirationTime = helper.CastString(sourceCodeLinkMap, "expiration_time")
+	sourceCodeLink.SourceCodeId = helper.CastString(sourceCodeLinkMap, "source_code_id")
+	sourceCodeLink.Url = helper.CastString(sourceCodeLinkMap, "url")
 	return nil
 }
 

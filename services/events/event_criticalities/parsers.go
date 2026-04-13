@@ -1,33 +1,23 @@
 package event_criticalities
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 func (eventCriticality *EventCriticalities) ToMap() map[string]any {
-	eventCriticalityMap := make(map[string]any)
-	eventCriticalityMap["id"] = eventCriticality.ID
-	eventCriticalityMap["name"] = eventCriticality.Name
-	eventCriticalityMap["created_at"] = eventCriticality.CreatedAt
-	eventCriticalityMap["created_by"] = eventCriticality.CreatedBy
-	eventCriticalityMap["last_modified_at"] = eventCriticality.LastModifiedAt
-	eventCriticalityMap["last_modified_by"] = eventCriticality.LastModifiedBy
-	eventCriticalityMap["read_only"] = eventCriticality.ReadOnly
+	eventCriticalityMap := eventCriticality.ToAuditMap()
+	eventCriticalityMap["name"] = helper.NilIfEmpty(eventCriticality.Name)
+	eventCriticalityMap["read_only"] = helper.NilIfEmpty(eventCriticality.ReadOnly)
 	eventCriticalityMap["tags"] = helper.ParseToMaps(eventCriticality.Tags)
 	return eventCriticalityMap
 }
 
 func (eventCriticality *EventCriticalities) FromMap(eventCriticalityMap map[string]any) error {
-	eventCriticality.ID = eventCriticalityMap["id"].(string)
-	eventCriticality.Name = eventCriticalityMap["name"].(string)
-	eventCriticality.CreatedAt = eventCriticalityMap["created_at"].(string)
-	eventCriticality.CreatedBy = eventCriticalityMap["created_by"].(string)
-	eventCriticality.LastModifiedAt = eventCriticalityMap["last_modified_at"].(string)
-	eventCriticality.LastModifiedBy = eventCriticalityMap["last_modified_by"].(string)
-	eventCriticality.ReadOnly = eventCriticalityMap["read_only"].(bool)
-	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](eventCriticalityMap["tags"].(*schema.Set).List()); err != nil {
+	eventCriticality.FromAuditMap(eventCriticalityMap)
+	eventCriticality.Name = helper.CastString(eventCriticalityMap, "name")
+	eventCriticality.ReadOnly = helper.CastBool(eventCriticalityMap, "read_only")
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](helper.CastSlice(eventCriticalityMap, "tags")); err != nil {
 		return err
 	} else {
 		eventCriticality.Tags = tags

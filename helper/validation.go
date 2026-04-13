@@ -9,7 +9,10 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 // A condition is an interface that can be used to evaluate a map[string]any,
@@ -493,3 +496,114 @@ var uuidRegex = regexp.MustCompile(uuidRegexStr)
 func ValidUUID() []validator.String {
 	return []validator.String{stringvalidator.RegexMatches(uuidRegex, "must be a valid UUID")}
 }
+
+// parentPathOf reconstructs the parent path by iterating path steps, dropping the last one.
+func parentPathOf(p path.Path) path.Path {
+	steps := p.Steps()
+	if len(steps) == 0 {
+		return path.Empty()
+	}
+	parent := path.Empty()
+	for _, step := range steps[:len(steps)-1] {
+		switch s := step.(type) {
+		case path.PathStepAttributeName:
+			parent = parent.AtName(string(s))
+		case path.PathStepElementKeyInt:
+			parent = parent.AtListIndex(int(s))
+		case path.PathStepElementKeyString:
+			parent = parent.AtMapKey(string(s))
+		case path.PathStepElementKeyValue:
+			parent = parent.AtSetValue(s.Value)
+		}
+	}
+	return parent
+}
+
+// RequiredIfParentConfigured returns a String validator that mimics Required behaviour
+// but only when the immediate parent block is actually configured (non-null).
+//
+// This is needed because terraform-plugin-framework evaluates Required inside
+// SingleNestedBlock even when the block is absent (children are null). Making a
+// field Optional + RequiredIfParentConfigured() preserves the "required within the
+// block" semantics while not failing when the block itself is omitted.
+func RequiredIfParentConfigured() validator.String {
+	return requiredStringIfParentConfigured{}
+}
+
+type requiredStringIfParentConfigured struct{}
+
+func (v requiredStringIfParentConfigured) Description(_ context.Context) string {
+	return "Required when the parent block is configured."
+}
+
+func (v requiredStringIfParentConfigured) MarkdownDescription(ctx context.Context) string {
+	return v.Description(ctx)
+}
+
+func (v requiredStringIfParentConfigured) ValidateString(ctx context.Context, req validator.StringRequest, resp *validator.StringResponse) {
+	// Value is set — no issue.
+	if !req.ConfigValue.IsNull() && !req.ConfigValue.IsUnknown() {
+		return
+	}
+
+	// Value is null/unknown — check whether the parent block is configured.
+	parentPath := parentPathOf(req.Path)
+	var parentVal attr.Value
+	diags := req.Config.GetAttribute(ctx, parentPath, &parentVal)
+	if diags.HasError() {
+		return // can't determine parent state; skip
+	}
+
+	// Parent is absent or unknown — the block is not written by the user; no error.
+	if parentVal == nil || parentVal.IsNull() || parentVal.IsUnknown() {
+		return
+	}
+
+	resp.Diagnostics.AddAttributeError(
+		req.Path,
+		"Missing Required Value",
+		"This attribute is required when the parent block is configured.",
+	)
+}
+
+// RequiredFloat64IfParentConfigured returns a Float64 validator with the same
+// "required within its optional parent block" semantics as RequiredIfParentConfigured.
+func RequiredFloat64IfParentConfigured() validator.Float64 {
+	return requiredFloat64IfParentConfigured{}
+}
+
+type requiredFloat64IfParentConfigured struct{}
+
+func (v requiredFloat64IfParentConfigured) Description(_ context.Context) string {
+	return "Required when the parent block is configured."
+}
+
+func (v requiredFloat64IfParentConfigured) MarkdownDescription(ctx context.Context) string {
+	return v.Description(ctx)
+}
+
+func (v requiredFloat64IfParentConfigured) ValidateFloat64(ctx context.Context, req validator.Float64Request, resp *validator.Float64Response) {
+	if !req.ConfigValue.IsNull() && !req.ConfigValue.IsUnknown() {
+		return
+	}
+
+	parentPath := parentPathOf(req.Path)
+	var parentVal attr.Value
+	diags := req.Config.GetAttribute(ctx, parentPath, &parentVal)
+	if diags.HasError() {
+		return
+	}
+
+	if parentVal == nil || parentVal.IsNull() || parentVal.IsUnknown() {
+		return
+	}
+
+	resp.Diagnostics.AddAttributeError(
+		req.Path,
+		"Missing Required Value",
+		"This attribute is required when the parent block is configured.",
+	)
+}
+
+// Ensure the types import is used (types.StringValue is referenced by path validators elsewhere).
+var _ = types.StringNull

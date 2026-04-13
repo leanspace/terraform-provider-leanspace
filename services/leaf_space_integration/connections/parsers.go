@@ -1,34 +1,38 @@
 package connections
 
-func (leafSpaceConnectionIntegration *LeafSpaceConnection) ToMap() map[string]any {
-	leafSpaceConnectionIntegrationStateMap := make(map[string]any)
-	leafSpaceConnectionIntegrationStateMap["id"] = leafSpaceConnectionIntegration.ID
-	leafSpaceConnectionIntegrationStateMap["name"] = leafSpaceConnectionIntegration.Name
-	leafSpaceConnectionIntegrationStateMap["domain_url"] = leafSpaceConnectionIntegration.DomainUrl
-	leafSpaceConnectionIntegrationStateMap["authentication_token"] = leafSpaceConnectionIntegration.AuthenticationToken
-	leafSpaceConnectionIntegrationStateMap["status"] = leafSpaceConnectionIntegration.Status
-	leafSpaceConnectionIntegrationStateMap["password"] = leafSpaceConnectionIntegration.Password
-	leafSpaceConnectionIntegrationStateMap["username"] = leafSpaceConnectionIntegration.Username
-	leafSpaceConnectionIntegrationStateMap["created_at"] = leafSpaceConnectionIntegration.CreatedAt
-	leafSpaceConnectionIntegrationStateMap["created_by"] = leafSpaceConnectionIntegration.CreatedBy
-	leafSpaceConnectionIntegrationStateMap["last_modified_at"] = leafSpaceConnectionIntegration.LastModifiedAt
-	leafSpaceConnectionIntegrationStateMap["last_modified_by"] = leafSpaceConnectionIntegration.LastModifiedBy
+import (
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/provider"
+)
 
+func (leafSpaceConnectionIntegration *LeafSpaceConnection) ToMap() map[string]any {
+	leafSpaceConnectionIntegrationStateMap := leafSpaceConnectionIntegration.ToAuditMap()
+	leafSpaceConnectionIntegrationStateMap["name"] = helper.NilIfEmpty(leafSpaceConnectionIntegration.Name)
+	leafSpaceConnectionIntegrationStateMap["domain_url"] = helper.NilIfEmpty(leafSpaceConnectionIntegration.DomainUrl)
+	leafSpaceConnectionIntegrationStateMap["authentication_token"] = helper.NilIfEmpty(leafSpaceConnectionIntegration.AuthenticationToken)
+	leafSpaceConnectionIntegrationStateMap["status"] = helper.NilIfEmpty(leafSpaceConnectionIntegration.Status)
+	leafSpaceConnectionIntegrationStateMap["password"] = helper.NilIfEmpty(leafSpaceConnectionIntegration.Password)
+	leafSpaceConnectionIntegrationStateMap["username"] = helper.NilIfEmpty(leafSpaceConnectionIntegration.Username)
 	return leafSpaceConnectionIntegrationStateMap
 }
 
-func (leafSpaceConnectionIntegration *LeafSpaceConnection) FromMap(leafSpaceIntegrationMap map[string]any) error {
-	leafSpaceConnectionIntegration.ID = leafSpaceIntegrationMap["id"].(string)
-	leafSpaceConnectionIntegration.Name = leafSpaceIntegrationMap["name"].(string)
-	leafSpaceConnectionIntegration.DomainUrl = leafSpaceIntegrationMap["domain_url"].(string)
-	leafSpaceConnectionIntegration.AuthenticationToken = leafSpaceIntegrationMap["authentication_token"].(string)
-	leafSpaceConnectionIntegration.Password = leafSpaceIntegrationMap["password"].(string)
-	leafSpaceConnectionIntegration.Username = leafSpaceIntegrationMap["username"].(string)
-	leafSpaceConnectionIntegration.Status = leafSpaceIntegrationMap["status"].(string)
-	leafSpaceConnectionIntegration.CreatedAt = leafSpaceIntegrationMap["created_at"].(string)
-	leafSpaceConnectionIntegration.CreatedBy = leafSpaceIntegrationMap["created_by"].(string)
-	leafSpaceConnectionIntegration.LastModifiedAt = leafSpaceIntegrationMap["last_modified_at"].(string)
-	leafSpaceConnectionIntegration.LastModifiedBy = leafSpaceIntegrationMap["last_modified_by"].(string)
+// PostReadProcess copies write-only fields (password, username) from the prior state
+// into the freshly-fetched API response, because the API never returns those values.
+func (leafSpaceConnectionIntegration *LeafSpaceConnection) PostReadProcess(_ *provider.Client, newValue any) error {
+	if newConnection, ok := newValue.(*LeafSpaceConnection); ok {
+		newConnection.Password = leafSpaceConnectionIntegration.Password
+		newConnection.Username = leafSpaceConnectionIntegration.Username
+	}
+	return nil
+}
 
+func (leafSpaceConnectionIntegration *LeafSpaceConnection) FromMap(leafSpaceIntegrationMap map[string]any) error {
+	leafSpaceConnectionIntegration.FromAuditMap(leafSpaceIntegrationMap)
+	leafSpaceConnectionIntegration.Name = helper.CastString(leafSpaceIntegrationMap, "name")
+	leafSpaceConnectionIntegration.DomainUrl = helper.CastString(leafSpaceIntegrationMap, "domain_url")
+	leafSpaceConnectionIntegration.AuthenticationToken = helper.CastString(leafSpaceIntegrationMap, "authentication_token")
+	leafSpaceConnectionIntegration.Password = helper.CastString(leafSpaceIntegrationMap, "password")
+	leafSpaceConnectionIntegration.Username = helper.CastString(leafSpaceIntegrationMap, "username")
+	leafSpaceConnectionIntegration.Status = helper.CastString(leafSpaceIntegrationMap, "status")
 	return nil
 }

@@ -9,41 +9,30 @@ import (
 	"os"
 	"strings"
 
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
 func (processor *Processor) ToMap() map[string]any {
-	processorMap := make(map[string]any)
-	processorMap["id"] = processor.ID
-	processorMap["name"] = processor.Name
-	processorMap["description"] = processor.Description
-	processorMap["version"] = processor.Version
-	processorMap["type"] = processor.Type
-	processorMap["file_path"] = processor.FilePath
-	processorMap["file_sha"] = processor.FileSha
-
-	processorMap["created_at"] = processor.CreatedAt
-	processorMap["created_by"] = processor.CreatedBy
-	processorMap["last_modified_at"] = processor.LastModifiedAt
-	processorMap["last_modified_by"] = processor.LastModifiedBy
-
+	processorMap := processor.ToAuditMap()
+	processorMap["name"] = helper.NilIfEmpty(processor.Name)
+	processorMap["description"] = helper.NilIfEmpty(processor.Description)
+	processorMap["version"] = helper.NilIfEmpty(processor.Version)
+	processorMap["type"] = helper.NilIfEmpty(processor.Type)
+	processorMap["file_path"] = helper.NilIfEmpty(processor.FilePath)
+	processorMap["file_sha"] = helper.NilIfEmpty(processor.FileSha)
 	return processorMap
 }
 
 func (processor *Processor) FromMap(processorMap map[string]any) error {
-	processor.ID = processorMap["id"].(string)
-	processor.Name = processorMap["name"].(string)
-	processor.Description = processorMap["description"].(string)
-	processor.Version = processorMap["version"].(string)
-	processor.Type = processorMap["type"].(string)
-	processor.FilePath = processorMap["file_path"].(string)
-	processor.FileSha = processorMap["file_sha"].(string)
-
-	processor.CreatedAt = processorMap["created_at"].(string)
-	processor.CreatedBy = processorMap["created_by"].(string)
-	processor.LastModifiedAt = processorMap["last_modified_at"].(string)
-	processor.LastModifiedBy = processorMap["last_modified_by"].(string)
-
+	processor.FromAuditMap(processorMap)
+	processor.Name = helper.CastString(processorMap, "name")
+	processor.Description = helper.CastString(processorMap, "description")
+	processor.Version = helper.CastString(processorMap, "version")
+	processor.Type = helper.CastString(processorMap, "type")
+	processor.FilePath = helper.CastString(processorMap, "file_path")
+	processor.FileSha = helper.CastString(processorMap, "file_sha")
 	return nil
 }
 

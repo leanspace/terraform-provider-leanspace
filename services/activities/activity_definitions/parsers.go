@@ -1,24 +1,20 @@
 package activity_definitions
 
 import (
+	"fmt"
+
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
 func (activityDefinition *ActivityDefinition) ToMap() map[string]any {
-	actDefinitionMap := make(map[string]any)
-	actDefinitionMap["id"] = activityDefinition.ID
-	actDefinitionMap["node_id"] = activityDefinition.NodeId
-	actDefinitionMap["name"] = activityDefinition.Name
-	actDefinitionMap["description"] = activityDefinition.Description
-	actDefinitionMap["estimated_duration"] = activityDefinition.EstimatedDuration
-	actDefinitionMap["mapping_status"] = activityDefinition.MappingStatus
-	actDefinitionMap["created_at"] = activityDefinition.CreatedAt
-	actDefinitionMap["created_by"] = activityDefinition.CreatedBy
-	actDefinitionMap["last_modified_at"] = activityDefinition.LastModifiedAt
-	actDefinitionMap["last_modified_by"] = activityDefinition.LastModifiedBy
+	actDefinitionMap := activityDefinition.ToAuditMap()
+	actDefinitionMap["node_id"] = helper.NilIfEmpty(activityDefinition.NodeId)
+	actDefinitionMap["name"] = helper.NilIfEmpty(activityDefinition.Name)
+	actDefinitionMap["description"] = helper.NilIfEmpty(activityDefinition.Description)
+	actDefinitionMap["estimated_duration"] = helper.NilIfEmpty(activityDefinition.EstimatedDuration)
+	actDefinitionMap["mapping_status"] = helper.NilIfEmpty(activityDefinition.MappingStatus)
 	actDefinitionMap["tags"] = helper.ParseToMaps(activityDefinition.Tags)
 	if activityDefinition.Metadata != nil {
 		actDefinitionMap["metadata"] = helper.ParseToMaps(activityDefinition.Metadata)
@@ -34,25 +30,25 @@ func (activityDefinition *ActivityDefinition) ToMap() map[string]any {
 
 func (metadata *Metadata[T]) ToMap() map[string]any {
 	metadataMap := make(map[string]any)
-	metadataMap["name"] = metadata.Name
-	metadataMap["description"] = metadata.Description
-	metadataMap["attributes"] = []any{metadata.Attributes.ToMap()}
+	metadataMap["name"] = helper.NilIfEmpty(metadata.Name)
+	metadataMap["description"] = helper.NilIfEmpty(metadata.Description)
+	metadataMap["attributes"] = metadata.Attributes.ToMap()
 	return metadataMap
 }
 
 func (argument *ArgumentDefinition[T]) ToMap() map[string]any {
 	argumentMap := make(map[string]any)
-	argumentMap["name"] = argument.Name
-	argumentMap["description"] = argument.Description
-	argumentMap["attributes"] = []any{argument.Attributes.ToMap()}
+	argumentMap["name"] = helper.NilIfEmpty(argument.Name)
+	argumentMap["description"] = helper.NilIfEmpty(argument.Description)
+	argumentMap["attributes"] = argument.Attributes.ToMap()
 	return argumentMap
 }
 
 func (commandMapping *CommandMapping) ToMap() map[string]any {
 	commandMappingMap := make(map[string]any)
-	commandMappingMap["command_definition_id"] = commandMapping.CommandDefinitionId
-	commandMappingMap["position"] = commandMapping.Position
-	commandMappingMap["delay_in_milliseconds"] = commandMapping.DelayInMilliseconds
+	commandMappingMap["command_definition_id"] = helper.NilIfEmpty(commandMapping.CommandDefinitionId)
+	commandMappingMap["position"] = helper.NilIfEmpty(commandMapping.Position)
+	commandMappingMap["delay_in_milliseconds"] = helper.NilIfEmpty(commandMapping.DelayInMilliseconds)
 	commandMappingMap["argument_mappings"] = helper.ParseToMaps(commandMapping.ArgumentMappings)
 	commandMappingMap["metadata_mappings"] = helper.ParseToMaps(commandMapping.MetadataMappings)
 	return commandMappingMap
@@ -60,37 +56,33 @@ func (commandMapping *CommandMapping) ToMap() map[string]any {
 
 func (argumentMapping *ArgumentMapping) ToMap() map[string]any {
 	argumentMappingMap := make(map[string]any)
-	argumentMappingMap["activity_definition_argument_name"] = argumentMapping.ActivityDefinitionArgumentName
-	argumentMappingMap["command_definition_argument_name"] = argumentMapping.CommandDefinitionArgumentName
+	argumentMappingMap["activity_definition_argument_name"] = helper.NilIfEmpty(argumentMapping.ActivityDefinitionArgumentName)
+	argumentMappingMap["command_definition_argument_name"] = helper.NilIfEmpty(argumentMapping.CommandDefinitionArgumentName)
 	return argumentMappingMap
 }
 
 func (metadataMapping *MetadataMapping) ToMap() map[string]any {
-	argumentMappingMap := make(map[string]any)
-	argumentMappingMap["activity_definition_metadata_name"] = metadataMapping.ActivityDefinitionMetadataName
-	argumentMappingMap["command_definition_argument_name"] = metadataMapping.CommandDefinitionArgumentName
-	return argumentMappingMap
+	metadataMappingMap := make(map[string]any)
+	metadataMappingMap["activity_definition_metadata_name"] = helper.NilIfEmpty(metadataMapping.ActivityDefinitionMetadataName)
+	metadataMappingMap["command_definition_argument_name"] = helper.NilIfEmpty(metadataMapping.CommandDefinitionArgumentName)
+	return metadataMappingMap
 }
 
 func (activityDefinition *ActivityDefinition) FromMap(actDefinitionMap map[string]any) error {
-	activityDefinition.ID = actDefinitionMap["id"].(string)
-	activityDefinition.NodeId = actDefinitionMap["node_id"].(string)
-	activityDefinition.Name = actDefinitionMap["name"].(string)
-	activityDefinition.EstimatedDuration = actDefinitionMap["estimated_duration"].(int)
-	activityDefinition.Description = actDefinitionMap["description"].(string)
-	activityDefinition.MappingStatus = actDefinitionMap["mapping_status"].(string)
-	activityDefinition.CreatedAt = actDefinitionMap["created_at"].(string)
-	activityDefinition.CreatedBy = actDefinitionMap["created_by"].(string)
-	activityDefinition.LastModifiedAt = actDefinitionMap["last_modified_at"].(string)
-	activityDefinition.LastModifiedBy = actDefinitionMap["last_modified_by"].(string)
-	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](actDefinitionMap["tags"].(*schema.Set).List()); err != nil {
+	activityDefinition.FromAuditMap(actDefinitionMap)
+	activityDefinition.NodeId = helper.CastString(actDefinitionMap, "node_id")
+	activityDefinition.Name = helper.CastString(actDefinitionMap, "name")
+	activityDefinition.EstimatedDuration = helper.CastInt(actDefinitionMap, "estimated_duration")
+	activityDefinition.Description = helper.CastString(actDefinitionMap, "description")
+	activityDefinition.MappingStatus = helper.CastString(actDefinitionMap, "mapping_status")
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](helper.CastSlice(actDefinitionMap, "tags")); err != nil {
 		return err
 	} else {
 		activityDefinition.Tags = tags
 	}
 	if actDefinitionMap["metadata"] != nil {
 		if metadata, err := helper.ParseFromMaps[Metadata[any]](
-			actDefinitionMap["metadata"].(*schema.Set).List(),
+			helper.CastSlice(actDefinitionMap, "metadata"),
 		); err != nil {
 			return err
 		} else {
@@ -99,7 +91,7 @@ func (activityDefinition *ActivityDefinition) FromMap(actDefinitionMap map[strin
 	}
 	if actDefinitionMap["argument_definitions"] != nil {
 		if argumentDefinitions, err := helper.ParseFromMaps[ArgumentDefinition[any]](
-			actDefinitionMap["argument_definitions"].(*schema.Set).List(),
+			helper.CastSlice(actDefinitionMap, "argument_definitions"),
 		); err != nil {
 			return err
 		} else {
@@ -108,7 +100,7 @@ func (activityDefinition *ActivityDefinition) FromMap(actDefinitionMap map[strin
 	}
 	if actDefinitionMap["command_mappings"] != nil {
 		if commandMappings, err := helper.ParseFromMaps[CommandMapping](
-			actDefinitionMap["command_mappings"].([]any),
+			helper.CastSlice(actDefinitionMap, "command_mappings"),
 		); err != nil {
 			return err
 		} else {
@@ -119,38 +111,34 @@ func (activityDefinition *ActivityDefinition) FromMap(actDefinitionMap map[strin
 }
 
 func (metadata *Metadata[T]) FromMap(metadataMap map[string]any) error {
-	metadata.Name = metadataMap["name"].(string)
-	metadata.Description = metadataMap["description"].(string)
-	if len(metadataMap["attributes"].([]any)) > 0 {
-		if err := metadata.Attributes.FromMap(metadataMap["attributes"].([]any)[0].(map[string]any)); err != nil {
-			return err
-		}
+	metadata.Name = helper.CastString(metadataMap, "name")
+	metadata.Description = helper.CastString(metadataMap, "description")
+	if err := metadata.Attributes.FromMap(helper.CastMapAny(metadataMap, "attributes")); err != nil {
+		return err
 	}
 	return nil
 }
 
 func (argument *ArgumentDefinition[T]) FromMap(argumentMap map[string]any) error {
-	argument.Name = argumentMap["name"].(string)
-	argument.Description = argumentMap["description"].(string)
+	argument.Name = helper.CastString(argumentMap, "name")
+	argument.Description = helper.CastString(argumentMap, "description")
 
-	if len(argumentMap["attributes"].([]any)) > 0 {
-		if err := argument.Attributes.FromMap(argumentMap["attributes"].([]any)[0].(map[string]any)); err != nil {
-			return err
-		}
+	if err := argument.Attributes.FromMap(helper.CastMapAny(argumentMap, "attributes")); err != nil {
+		return err
 	}
 	return nil
 }
 
 func (commandMapping *CommandMapping) FromMap(commandMappingMap map[string]any) error {
-	commandMapping.CommandDefinitionId = commandMappingMap["command_definition_id"].(string)
-	commandMapping.Position = commandMappingMap["position"].(int)
-	commandMapping.DelayInMilliseconds = commandMappingMap["delay_in_milliseconds"].(int)
-	if argumentMappings, err := helper.ParseFromMaps[ArgumentMapping](commandMappingMap["argument_mappings"].(*schema.Set).List()); err != nil {
+	commandMapping.CommandDefinitionId = helper.CastString(commandMappingMap, "command_definition_id")
+	commandMapping.Position = helper.CastInt(commandMappingMap, "position")
+	commandMapping.DelayInMilliseconds = helper.CastInt(commandMappingMap, "delay_in_milliseconds")
+	if argumentMappings, err := helper.ParseFromMaps[ArgumentMapping](helper.CastSlice(commandMappingMap, "argument_mappings")); err != nil {
 		return err
 	} else {
 		commandMapping.ArgumentMappings = argumentMappings
 	}
-	if metadataMappings, err := helper.ParseFromMaps[MetadataMapping](commandMappingMap["metadata_mappings"].(*schema.Set).List()); err != nil {
+	if metadataMappings, err := helper.ParseFromMaps[MetadataMapping](helper.CastSlice(commandMappingMap, "metadata_mappings")); err != nil {
 		return err
 	} else {
 		commandMapping.MetadataMappings = metadataMappings
@@ -159,22 +147,50 @@ func (commandMapping *CommandMapping) FromMap(commandMappingMap map[string]any) 
 }
 
 func (argumentMapping *ArgumentMapping) FromMap(argumentMappingMap map[string]any) error {
-	argumentMapping.ActivityDefinitionArgumentName = argumentMappingMap["activity_definition_argument_name"].(string)
-	argumentMapping.CommandDefinitionArgumentName = argumentMappingMap["command_definition_argument_name"].(string)
-	argumentMapping.MappingStatus = argumentMappingMap["mapping_status"].(string)
+	argumentMapping.ActivityDefinitionArgumentName = helper.CastString(argumentMappingMap, "activity_definition_argument_name")
+	argumentMapping.CommandDefinitionArgumentName = helper.CastString(argumentMappingMap, "command_definition_argument_name")
+	argumentMapping.MappingStatus = helper.CastString(argumentMappingMap, "mapping_status")
 	return nil
 }
 
 func (metadataMapping *MetadataMapping) FromMap(metadataMappingMap map[string]any) error {
-	metadataMapping.ActivityDefinitionMetadataName = metadataMappingMap["activity_definition_metadata_name"].(string)
-	metadataMapping.CommandDefinitionArgumentName = metadataMappingMap["command_definition_argument_name"].(string)
-	metadataMapping.MappingStatus = metadataMappingMap["mapping_status"].(string)
+	metadataMapping.ActivityDefinitionMetadataName = helper.CastString(metadataMappingMap, "activity_definition_metadata_name")
+	metadataMapping.CommandDefinitionArgumentName = helper.CastString(metadataMappingMap, "command_definition_argument_name")
+	metadataMapping.MappingStatus = helper.CastString(metadataMappingMap, "mapping_status")
 	return nil
 }
 
 func (activityDefinition *ActivityDefinition) PreMarshallProcess() error {
 	for i := range activityDefinition.CommandMappings {
 		activityDefinition.CommandMappings[i].Position = i
+	}
+	return nil
+}
+
+func (activityDefinition *ActivityDefinition) PostReadProcess(_ *provider.Client, newValue any) error {
+	newDef, ok := newValue.(*ActivityDefinition)
+	if !ok || newDef == nil {
+		return nil
+	}
+	newDef.Metadata = helper.ReorderByKey(activityDefinition.Metadata, newDef.Metadata,
+		func(m Metadata[any]) string { return m.Name })
+	newDef.ArgumentDefinitions = helper.ReorderByKey(activityDefinition.ArgumentDefinitions, newDef.ArgumentDefinitions,
+		func(a ArgumentDefinition[any]) string { return a.Name })
+	newDef.CommandMappings = helper.ReorderByKey(activityDefinition.CommandMappings, newDef.CommandMappings,
+		func(c CommandMapping) string { return fmt.Sprintf("%s:%d", c.CommandDefinitionId, c.Position) })
+	// Reorder mappings within each command mapping to match state order.
+	for i, stateCmd := range activityDefinition.CommandMappings {
+		if i >= len(newDef.CommandMappings) {
+			break
+		}
+		newDef.CommandMappings[i].ArgumentMappings = helper.ReorderByKey(
+			stateCmd.ArgumentMappings, newDef.CommandMappings[i].ArgumentMappings,
+			func(m ArgumentMapping) string { return m.ActivityDefinitionArgumentName },
+		)
+		newDef.CommandMappings[i].MetadataMappings = helper.ReorderByKey(
+			stateCmd.MetadataMappings, newDef.CommandMappings[i].MetadataMappings,
+			func(m MetadataMapping) string { return m.ActivityDefinitionMetadataName },
+		)
 	}
 	return nil
 }

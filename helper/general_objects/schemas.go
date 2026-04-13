@@ -6,6 +6,7 @@ import (
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -542,8 +543,10 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string, fo
 			Description: "Array only: The maximum number of elements allowed",
 		},
 		"unique": resourceschema.BoolAttribute{
-			Optional:    true,
-			Description: "Array only: No duplicated elements are allowed",
+			Optional:      true,
+			Computed:      true,
+			Description:   "Array only: No duplicated elements are allowed",
+			PlanModifiers: []planmodifier.Bool{boolplanmodifier.UseStateForUnknown()},
 		},
 		"constraint": resourceschema.SingleNestedAttribute{
 			Optional:    true,
@@ -772,11 +775,11 @@ func ValueAttributeSchemaDS(excludeTypes []string) map[string]datasourceschema.A
 
 func ResourceSchemaWith(fields map[string]resourceschema.Attribute) map[string]resourceschema.Attribute {
 	result := make(map[string]resourceschema.Attribute, len(fields)+5)
-	result["id"] = resourceschema.StringAttribute{Computed: true}
-	result["created_at"] = resourceschema.StringAttribute{Computed: true, Description: "When it was created"}
-	result["created_by"] = resourceschema.StringAttribute{Computed: true, Description: "Who created it"}
-	result["last_modified_at"] = resourceschema.StringAttribute{Computed: true, Description: "When it was last modified"}
-	result["last_modified_by"] = resourceschema.StringAttribute{Computed: true, Description: "Who modified it the last"}
+	result["id"] = resourceschema.StringAttribute{Computed: true, PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()}}
+	result["created_at"] = resourceschema.StringAttribute{Computed: true, Description: "When it was created", PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()}}
+	result["created_by"] = resourceschema.StringAttribute{Computed: true, Description: "Who created it", PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()}}
+	result["last_modified_at"] = resourceschema.StringAttribute{Computed: true, Description: "When it was last modified", PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()}}
+	result["last_modified_by"] = resourceschema.StringAttribute{Computed: true, Description: "Who modified it the last", PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()}}
 	for k, v := range fields {
 		result[k] = v
 	}

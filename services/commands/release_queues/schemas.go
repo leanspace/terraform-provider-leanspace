@@ -57,7 +57,16 @@ var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 		ElementType: types.StringType,
 		Optional:    true,
 	},
+	"command_transformation_strategy": datasourceschema.StringAttribute{
+		Optional:    true,
+		Description: "What transformation strategy shall be applied on created and updated Commands",
+		Validators:  []validator.String{stringvalidator.OneOf(validCommandTransformationStrategies...)},
+	},
 	"logical_lock": datasourceschema.BoolAttribute{
 		Optional: true,
+	},
+	"tags": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
 }

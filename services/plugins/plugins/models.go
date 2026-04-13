@@ -23,7 +23,6 @@ type Plugin struct {
 	FileSha                          string `json:"fileSha"`
 }
 
-func (plugin Plugin) GetID() string     { return plugin.ID }
 func (plugin Plugin) GetStatus() string { return plugin.Status }
 func (plugin *Plugin) SetStatus(status string) {
 	plugin.Status = status

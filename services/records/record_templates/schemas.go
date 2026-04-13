@@ -50,7 +50,7 @@ var recordTemplateSchema = general_objects.ResourceSchemaWith(map[string]resourc
 		Optional:    true,
 		Validators:  []validator.Set{setvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
-	"properties": resourceschema.SetNestedAttribute{
+	"properties": resourceschema.ListNestedAttribute{
 		Optional: true,
 		NestedObject: resourceschema.NestedAttributeObject{
 			Attributes: recordTemplatePropertySchema,

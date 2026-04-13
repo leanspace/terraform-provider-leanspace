@@ -18,7 +18,7 @@ type ActivityConfigResult struct {
 	DelayReferenceOnPredecessor  string                            `json:"delayReferenceOnPredecessor,omitempty"`
 	Position                     int                               `json:"position"`
 	DelayInSeconds               int                               `json:"delayInSeconds"`
-	EstimatedDurationInSeconds   int                               `json:"estimatedDurationInSeconds,omitempty"`
+	EstimatedDurationInSeconds   *int                              `json:"estimatedDurationInSeconds,omitempty"`
 	Name                         string                            `json:"name,omitempty"`
 	Arguments                    []Argument                        `json:"arguments,omitempty"`
 	ResourceFunctionFormulas     []ResourceFunctionFormulaOverload `json:"resourceFunctionFormulas,omitempty"`

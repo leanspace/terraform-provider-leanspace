@@ -2,63 +2,52 @@ package command_definitions
 
 import (
 	"github.com/leanspace/terraform-provider-leanspace/helper"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
 func (commandDefinition *CommandDefinition) ToMap() map[string]any {
-	commandDefinitionMap := make(map[string]any)
-	commandDefinitionMap["id"] = commandDefinition.ID
-	commandDefinitionMap["node_id"] = commandDefinition.NodeId
-	commandDefinitionMap["name"] = commandDefinition.Name
-	commandDefinitionMap["description"] = commandDefinition.Description
-	commandDefinitionMap["identifier"] = commandDefinition.Identifier
-	commandDefinitionMap["created_at"] = commandDefinition.CreatedAt
-	commandDefinitionMap["created_by"] = commandDefinition.CreatedBy
-	commandDefinitionMap["last_modified_at"] = commandDefinition.LastModifiedAt
-	commandDefinitionMap["last_modified_by"] = commandDefinition.LastModifiedBy
+	commandDefinitionMap := commandDefinition.ToAuditMap()
+	commandDefinitionMap["node_id"] = helper.NilIfEmpty(commandDefinition.NodeId)
+	commandDefinitionMap["name"] = helper.NilIfEmpty(commandDefinition.Name)
+	commandDefinitionMap["description"] = helper.NilIfEmpty(commandDefinition.Description)
+	commandDefinitionMap["identifier"] = helper.NilIfEmpty(commandDefinition.Identifier)
 	if commandDefinition.Metadata != nil {
 		commandDefinitionMap["metadata"] = helper.ParseToMaps(commandDefinition.Metadata)
 	}
 	if commandDefinition.Arguments != nil {
 		commandDefinitionMap["arguments"] = helper.ParseToMaps(commandDefinition.Arguments)
 	}
-
 	return commandDefinitionMap
 }
 
 func (metadata Metadata[T]) ToMap() map[string]any {
 	metadataMap := make(map[string]any)
-	metadataMap["id"] = metadata.ID
-	metadataMap["name"] = metadata.Name
-	metadataMap["description"] = metadata.Description
-	metadataMap["attributes"] = []any{metadata.Attributes.ToMap()}
+	metadataMap["id"] = helper.NilIfEmpty(metadata.ID)
+	metadataMap["name"] = helper.NilIfEmpty(metadata.Name)
+	metadataMap["description"] = helper.NilIfEmpty(metadata.Description)
+	metadataMap["attributes"] = metadata.Attributes.ToMap()
 	return metadataMap
 }
 
 func (argument Argument[T]) ToMap() map[string]any {
 	argumentMap := make(map[string]any)
-	argumentMap["id"] = argument.ID
-	argumentMap["name"] = argument.Name
-	argumentMap["identifier"] = argument.Identifier
-	argumentMap["description"] = argument.Description
-	argumentMap["attributes"] = []any{argument.Attributes.ToMap()}
+	argumentMap["id"] = helper.NilIfEmpty(argument.ID)
+	argumentMap["name"] = helper.NilIfEmpty(argument.Name)
+	argumentMap["identifier"] = helper.NilIfEmpty(argument.Identifier)
+	argumentMap["description"] = helper.NilIfEmpty(argument.Description)
+	argumentMap["attributes"] = argument.Attributes.ToMap()
 	return argumentMap
 }
 
 func (commandDefinition *CommandDefinition) FromMap(cmdDefinitionMap map[string]any) error {
-	commandDefinition.ID = cmdDefinitionMap["id"].(string)
-	commandDefinition.NodeId = cmdDefinitionMap["node_id"].(string)
-	commandDefinition.Name = cmdDefinitionMap["name"].(string)
-	commandDefinition.Description = cmdDefinitionMap["description"].(string)
-	commandDefinition.Identifier = cmdDefinitionMap["identifier"].(string)
-	commandDefinition.CreatedAt = cmdDefinitionMap["created_at"].(string)
-	commandDefinition.CreatedBy = cmdDefinitionMap["created_by"].(string)
-	commandDefinition.LastModifiedAt = cmdDefinitionMap["last_modified_at"].(string)
-	commandDefinition.LastModifiedBy = cmdDefinitionMap["last_modified_by"].(string)
+	commandDefinition.FromAuditMap(cmdDefinitionMap)
+	commandDefinition.NodeId = helper.CastString(cmdDefinitionMap, "node_id")
+	commandDefinition.Name = helper.CastString(cmdDefinitionMap, "name")
+	commandDefinition.Description = helper.CastString(cmdDefinitionMap, "description")
+	commandDefinition.Identifier = helper.CastString(cmdDefinitionMap, "identifier")
 	if cmdDefinitionMap["metadata"] != nil {
 		if metadata, err := helper.ParseFromMaps[Metadata[any]](
-			cmdDefinitionMap["metadata"].(*schema.Set).List(),
+			helper.CastSlice(cmdDefinitionMap, "metadata"),
 		); err != nil {
 			return err
 		} else {
@@ -68,7 +57,7 @@ func (commandDefinition *CommandDefinition) FromMap(cmdDefinitionMap map[string]
 	if cmdDefinitionMap["arguments"] != nil {
 
 		if arguments, err := helper.ParseFromMaps[Argument[any]](
-			cmdDefinitionMap["arguments"].(*schema.Set).List(),
+			helper.CastSlice(cmdDefinitionMap, "arguments"),
 		); err != nil {
 			return err
 		} else {
@@ -80,26 +69,35 @@ func (commandDefinition *CommandDefinition) FromMap(cmdDefinitionMap map[string]
 }
 
 func (metadata *Metadata[T]) FromMap(metadataMap map[string]any) error {
-	metadata.ID = metadataMap["id"].(string)
-	metadata.Name = metadataMap["name"].(string)
-	metadata.Description = metadataMap["description"].(string)
-	if len(metadataMap["attributes"].([]any)) > 0 {
-		if err := metadata.Attributes.FromMap(metadataMap["attributes"].([]any)[0].(map[string]any)); err != nil {
-			return err
-		}
+	metadata.ID = helper.CastString(metadataMap, "id")
+	metadata.Name = helper.CastString(metadataMap, "name")
+	metadata.Description = helper.CastString(metadataMap, "description")
+	if err := metadata.Attributes.FromMap(helper.CastMapAny(metadataMap, "attributes")); err != nil {
+		return err
 	}
 	return nil
 }
 
 func (argument *Argument[T]) FromMap(argumentMap map[string]any) error {
-	argument.ID = argumentMap["id"].(string)
-	argument.Name = argumentMap["name"].(string)
-	argument.Identifier = argumentMap["identifier"].(string)
-	argument.Description = argumentMap["description"].(string)
-	if len(argumentMap["attributes"].([]any)) > 0 {
-		if err := argument.Attributes.FromMap(argumentMap["attributes"].([]any)[0].(map[string]any)); err != nil {
-			return err
-		}
+	argument.ID = helper.CastString(argumentMap, "id")
+	argument.Name = helper.CastString(argumentMap, "name")
+	argument.Identifier = helper.CastString(argumentMap, "identifier")
+	argument.Description = helper.CastString(argumentMap, "description")
+	if err := argument.Attributes.FromMap(helper.CastMapAny(argumentMap, "attributes")); err != nil {
+		return err
 	}
+	return nil
+}
+
+// PostReadProcess reorders the API response's metadata and arguments to match the
+// plan/state order (matched by name), preventing "unexpected new value" errors when
+// the API returns elements in a different order.
+func (commandDefinition *CommandDefinition) PostReadProcess(_ *provider.Client, newValue any) error {
+	newCmdDef, ok := newValue.(*CommandDefinition)
+	if !ok || newCmdDef == nil {
+		return nil
+	}
+	newCmdDef.Metadata = helper.ReorderByKey(commandDefinition.Metadata, newCmdDef.Metadata, func(m Metadata[any]) string { return m.Name })
+	newCmdDef.Arguments = helper.ReorderByKey(commandDefinition.Arguments, newCmdDef.Arguments, func(a Argument[any]) string { return a.Name })
 	return nil
 }

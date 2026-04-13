@@ -1,17 +1,15 @@
 package request_definitions
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/services/activities/activity_definitions"
 )
 
 func (requestDefinition *RequestDefinition) ToMap() map[string]any {
-	requestDefinitionMap := make(map[string]any)
-	requestDefinitionMap["id"] = requestDefinition.ID
-	requestDefinitionMap["name"] = requestDefinition.Name
-	requestDefinitionMap["description"] = requestDefinition.Description
-	requestDefinitionMap["plan_template_ids"] = requestDefinition.PlanTemplateIds
+	requestDefinitionMap := requestDefinition.ToAuditMap()
+	requestDefinitionMap["name"] = helper.NilIfEmpty(requestDefinition.Name)
+	requestDefinitionMap["description"] = helper.NilIfEmpty(requestDefinition.Description)
+	requestDefinitionMap["plan_template_ids"] = helper.NilIfEmpty(requestDefinition.PlanTemplateIds)
 
 	if requestDefinition.FeasibilityConstraintDefinitions != nil {
 		requestDefinitionMap["feasibility_constraint_definitions"] = helper.ParseToMaps(requestDefinition.FeasibilityConstraintDefinitions)
@@ -25,56 +23,45 @@ func (requestDefinition *RequestDefinition) ToMap() map[string]any {
 		requestDefinitionMap["configuration_argument_mappings"] = helper.ParseToMaps(requestDefinition.ConfigurationArgumentMappings)
 	}
 
-	requestDefinitionMap["created_at"] = requestDefinition.CreatedAt
-	requestDefinitionMap["created_by"] = requestDefinition.CreatedBy
-	requestDefinitionMap["last_modified_at"] = requestDefinition.LastModifiedAt
-	requestDefinitionMap["last_modified_by"] = requestDefinition.LastModifiedBy
-
 	return requestDefinitionMap
 }
 
 func (feasibilityConstraintDefinition *FeasibilityConstraintDefinition) ToMap() map[string]any {
-	feasibilityConstraintDefinitionMap := make(map[string]any)
-	feasibilityConstraintDefinitionMap["id"] = feasibilityConstraintDefinition.ID
-	feasibilityConstraintDefinitionMap["name"] = feasibilityConstraintDefinition.Name
-	feasibilityConstraintDefinitionMap["description"] = feasibilityConstraintDefinition.Description
-	feasibilityConstraintDefinitionMap["required"] = feasibilityConstraintDefinition.Required
+	feasibilityConstraintDefinitionMap := feasibilityConstraintDefinition.ToAuditMap()
+	feasibilityConstraintDefinitionMap["name"] = helper.NilIfEmpty(feasibilityConstraintDefinition.Name)
+	feasibilityConstraintDefinitionMap["description"] = helper.NilIfEmpty(feasibilityConstraintDefinition.Description)
+	feasibilityConstraintDefinitionMap["required"] = helper.NilIfEmpty(feasibilityConstraintDefinition.Required)
 
 	if feasibilityConstraintDefinition.ArgumentDefinitions != nil {
 		feasibilityConstraintDefinitionMap["argument_definitions"] = helper.ParseToMaps(feasibilityConstraintDefinition.ArgumentDefinitions)
 	}
-
-	feasibilityConstraintDefinitionMap["created_at"] = feasibilityConstraintDefinition.CreatedAt
-	feasibilityConstraintDefinitionMap["created_by"] = feasibilityConstraintDefinition.CreatedBy
-	feasibilityConstraintDefinitionMap["last_modified_at"] = feasibilityConstraintDefinition.LastModifiedAt
-	feasibilityConstraintDefinitionMap["last_modified_by"] = feasibilityConstraintDefinition.LastModifiedBy
 
 	return feasibilityConstraintDefinitionMap
 }
 
 func (mapping *ArgumentMapping) ToMap() map[string]any {
 	mappingMap := make(map[string]any)
-	mappingMap["plan_template_id"] = mapping.PlanTemplateId
-	mappingMap["activity_definition_position"] = mapping.ActivityDefinitionPosition
-	mappingMap["configuration_argument_definition_name"] = mapping.ConfigurationArgumentDefinitionName
-	mappingMap["activity_definition_argument_definition_name"] = mapping.ActivityDefinitionArgumentDefinitionName
+	mappingMap["plan_template_id"] = helper.NilIfEmpty(mapping.PlanTemplateId)
+	mappingMap["activity_definition_position"] = helper.NilIfEmpty(mapping.ActivityDefinitionPosition)
+	mappingMap["configuration_argument_definition_name"] = helper.NilIfEmpty(mapping.ConfigurationArgumentDefinitionName)
+	mappingMap["activity_definition_argument_definition_name"] = helper.NilIfEmpty(mapping.ActivityDefinitionArgumentDefinitionName)
 
 	return mappingMap
 }
 
 func (requestDefinition *RequestDefinition) FromMap(requestDefinitionMap map[string]any) error {
-	requestDefinition.ID = requestDefinitionMap["id"].(string)
-	requestDefinition.Name = requestDefinitionMap["name"].(string)
-	requestDefinition.Description = requestDefinitionMap["description"].(string)
+	requestDefinition.FromAuditMap(requestDefinitionMap)
+	requestDefinition.Name = helper.CastString(requestDefinitionMap, "name")
+	requestDefinition.Description = helper.CastString(requestDefinitionMap, "description")
 
-	requestDefinition.PlanTemplateIds = make([]string, len(requestDefinitionMap["plan_template_ids"].(*schema.Set).List()))
-	for i, processorId := range requestDefinitionMap["plan_template_ids"].(*schema.Set).List() {
+	requestDefinition.PlanTemplateIds = make([]string, len(helper.CastSlice(requestDefinitionMap, "plan_template_ids")))
+	for i, processorId := range helper.CastSlice(requestDefinitionMap, "plan_template_ids") {
 		requestDefinition.PlanTemplateIds[i] = processorId.(string)
 	}
 
 	if requestDefinitionMap["feasibility_constraint_definitions"] != nil {
 		if feasibilityConstraintDefinitions, err := helper.ParseFromMaps[FeasibilityConstraintDefinition](
-			requestDefinitionMap["feasibility_constraint_definitions"].(*schema.Set).List(),
+			helper.CastSlice(requestDefinitionMap, "feasibility_constraint_definitions"),
 		); err != nil {
 			return err
 		} else {
@@ -84,7 +71,7 @@ func (requestDefinition *RequestDefinition) FromMap(requestDefinitionMap map[str
 
 	if requestDefinitionMap["configuration_argument_definitions"] != nil {
 		if argumentDefinitions, err := helper.ParseFromMaps[activity_definitions.ArgumentDefinition[any]](
-			requestDefinitionMap["configuration_argument_definitions"].(*schema.Set).List(),
+			helper.CastSlice(requestDefinitionMap, "configuration_argument_definitions"),
 		); err != nil {
 			return err
 		} else {
@@ -94,7 +81,7 @@ func (requestDefinition *RequestDefinition) FromMap(requestDefinitionMap map[str
 
 	if requestDefinitionMap["configuration_argument_mappings"] != nil {
 		if configurationArgumentMappings, err := helper.ParseFromMaps[ArgumentMapping](
-			requestDefinitionMap["configuration_argument_mappings"].(*schema.Set).List(),
+			helper.CastSlice(requestDefinitionMap, "configuration_argument_mappings"),
 		); err != nil {
 			return err
 		} else {
@@ -102,22 +89,18 @@ func (requestDefinition *RequestDefinition) FromMap(requestDefinitionMap map[str
 		}
 	}
 
-	requestDefinition.CreatedAt = requestDefinitionMap["created_at"].(string)
-	requestDefinition.CreatedBy = requestDefinitionMap["created_by"].(string)
-	requestDefinition.LastModifiedAt = requestDefinitionMap["last_modified_at"].(string)
-	requestDefinition.LastModifiedBy = requestDefinitionMap["last_modified_by"].(string)
 	return nil
 }
 
 func (feasibilityConstraintDefinition *FeasibilityConstraintDefinition) FromMap(feasibilityConstraintDefinitionMap map[string]any) error {
-	feasibilityConstraintDefinition.ID = feasibilityConstraintDefinitionMap["id"].(string)
-	feasibilityConstraintDefinition.Name = feasibilityConstraintDefinitionMap["name"].(string)
-	feasibilityConstraintDefinition.Description = feasibilityConstraintDefinitionMap["description"].(string)
-	feasibilityConstraintDefinition.Required = feasibilityConstraintDefinitionMap["required"].(bool)
+	feasibilityConstraintDefinition.FromAuditMap(feasibilityConstraintDefinitionMap)
+	feasibilityConstraintDefinition.Name = helper.CastString(feasibilityConstraintDefinitionMap, "name")
+	feasibilityConstraintDefinition.Description = helper.CastString(feasibilityConstraintDefinitionMap, "description")
+	feasibilityConstraintDefinition.Required = helper.CastBool(feasibilityConstraintDefinitionMap, "required")
 
 	if feasibilityConstraintDefinitionMap["argument_definitions"] != nil {
 		if argumentDefinitions, err := helper.ParseFromMaps[activity_definitions.ArgumentDefinition[any]](
-			feasibilityConstraintDefinitionMap["argument_definitions"].(*schema.Set).List(),
+			helper.CastSlice(feasibilityConstraintDefinitionMap, "argument_definitions"),
 		); err != nil {
 			return err
 		} else {
@@ -125,18 +108,14 @@ func (feasibilityConstraintDefinition *FeasibilityConstraintDefinition) FromMap(
 		}
 	}
 
-	feasibilityConstraintDefinition.CreatedAt = feasibilityConstraintDefinitionMap["created_at"].(string)
-	feasibilityConstraintDefinition.CreatedBy = feasibilityConstraintDefinitionMap["created_by"].(string)
-	feasibilityConstraintDefinition.LastModifiedAt = feasibilityConstraintDefinitionMap["last_modified_at"].(string)
-	feasibilityConstraintDefinition.LastModifiedBy = feasibilityConstraintDefinitionMap["last_modified_by"].(string)
 	return nil
 }
 
 func (mapping *ArgumentMapping) FromMap(mappingMap map[string]any) error {
-	mapping.PlanTemplateId = mappingMap["plan_template_id"].(string)
-	mapping.ActivityDefinitionPosition = mappingMap["activity_definition_position"].(int)
-	mapping.ConfigurationArgumentDefinitionName = mappingMap["configuration_argument_definition_name"].(string)
-	mapping.ActivityDefinitionArgumentDefinitionName = mappingMap["activity_definition_argument_definition_name"].(string)
+	mapping.PlanTemplateId = helper.CastString(mappingMap, "plan_template_id")
+	mapping.ActivityDefinitionPosition = helper.CastInt(mappingMap, "activity_definition_position")
+	mapping.ConfigurationArgumentDefinitionName = helper.CastString(mappingMap, "configuration_argument_definition_name")
+	mapping.ActivityDefinitionArgumentDefinitionName = helper.CastString(mappingMap, "activity_definition_argument_definition_name")
 
 	return nil
 }

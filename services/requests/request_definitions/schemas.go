@@ -6,6 +6,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
@@ -53,31 +56,38 @@ var feasibilityConstraintDefinitionSchema = map[string]resourceschema.Attribute{
 		Required: true,
 	},
 	"name": resourceschema.StringAttribute{
-		Computed: true,
+		Computed:      true,
+		PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 	},
 	"description": resourceschema.StringAttribute{
-		Computed: true,
+		Computed:      true,
+		PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 	},
 	"required": resourceschema.BoolAttribute{
 		Required: true,
 	},
-	"argument_definitions": resourceschema.SetNestedAttribute{
-		Computed: true,
+	"argument_definitions": resourceschema.ListNestedAttribute{
+		Computed:      true,
+		PlanModifiers: []planmodifier.List{listplanmodifier.UseStateForUnknown()},
 		NestedObject: resourceschema.NestedAttributeObject{
 			Attributes: computedArgumentDefinitionSchema,
 		},
 	},
 	"created_at": resourceschema.StringAttribute{
-		Computed: true,
+		Computed:      true,
+		PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 	},
 	"created_by": resourceschema.StringAttribute{
-		Computed: true,
+		Computed:      true,
+		PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 	},
 	"last_modified_at": resourceschema.StringAttribute{
-		Computed: true,
+		Computed:      true,
+		PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 	},
 	"last_modified_by": resourceschema.StringAttribute{
-		Computed: true,
+		Computed:      true,
+		PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 	},
 }
 

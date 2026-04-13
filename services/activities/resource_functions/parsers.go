@@ -1,66 +1,61 @@
 package resource_functions
 
+import (
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+)
+
 func (resourceFunction *ResourceFunction) ToMap() map[string]any {
-	resourceFunctionMap := make(map[string]any)
-	resourceFunctionMap["id"] = resourceFunction.ID
-	resourceFunctionMap["activity_definition_id"] = resourceFunction.ActivityDefinitionId
-	resourceFunctionMap["resource_id"] = resourceFunction.ResourceId
-	resourceFunctionMap["name"] = resourceFunction.Name
-	resourceFunctionMap["formula"] = []map[string]any{resourceFunction.Formula.ToMap()}
-	resourceFunctionMap["created_at"] = resourceFunction.CreatedAt
-	resourceFunctionMap["created_by"] = resourceFunction.CreatedBy
-	resourceFunctionMap["last_modified_at"] = resourceFunction.LastModifiedAt
-	resourceFunctionMap["last_modified_by"] = resourceFunction.LastModifiedBy
+	resourceFunctionMap := resourceFunction.ToAuditMap()
+	resourceFunctionMap["activity_definition_id"] = helper.NilIfEmpty(resourceFunction.ActivityDefinitionId)
+	resourceFunctionMap["resource_id"] = helper.NilIfEmpty(resourceFunction.ResourceId)
+	resourceFunctionMap["name"] = helper.NilIfEmpty(resourceFunction.Name)
+	resourceFunctionMap["formula"] = resourceFunction.Formula.ToMap()
 	return resourceFunctionMap
 }
 
 func (formula *ResourceFunctionFormula) ToMap() map[string]any {
 	formulaMap := make(map[string]any)
 
-	formulaMap["type"] = formula.Type
+	formulaMap["type"] = helper.NilIfEmpty(formula.Type)
 
 	if formula.Type == "LINEAR" {
-		formulaMap["constant"] = formula.Constant
-		formulaMap["rate"] = formula.Rate
-		formulaMap["time_unit"] = formula.TimeUnit
+		formulaMap["constant"] = helper.NilIfEmpty(formula.Constant)
+		formulaMap["rate"] = helper.NilIfEmpty(formula.Rate)
+		formulaMap["time_unit"] = helper.NilIfEmpty(formula.TimeUnit)
 	}
 
 	if formula.Type == "RECTANGULAR" {
-		formulaMap["amplitude"] = formula.Amplitude
+		formulaMap["amplitude"] = helper.NilIfEmpty(formula.Amplitude)
 	}
 
 	return formulaMap
 }
 
 func (resourceFunction *ResourceFunction) FromMap(resourceFunctionMap map[string]any) error {
-	resourceFunction.ID = resourceFunctionMap["id"].(string)
-	resourceFunction.ActivityDefinitionId = resourceFunctionMap["activity_definition_id"].(string)
-	resourceFunction.ResourceId = resourceFunctionMap["resource_id"].(string)
-	resourceFunction.Name = resourceFunctionMap["name"].(string)
-	if len(resourceFunctionMap["formula"].([]any)) > 0 && resourceFunctionMap["formula"].([]any)[0] != nil {
+	resourceFunction.FromAuditMap(resourceFunctionMap)
+	resourceFunction.ActivityDefinitionId = helper.CastString(resourceFunctionMap, "activity_definition_id")
+	resourceFunction.ResourceId = helper.CastString(resourceFunctionMap, "resource_id")
+	resourceFunction.Name = helper.CastString(resourceFunctionMap, "name")
+	if resourceFunctionMap["formula"] != nil {
 		resourceFunction.Formula = new(ResourceFunctionFormula)
-		if err := resourceFunction.Formula.FromMap(resourceFunctionMap["formula"].([]any)[0].(map[string]any)); err != nil {
+		if err := resourceFunction.Formula.FromMap(helper.CastMapAny(resourceFunctionMap, "formula")); err != nil {
 			return err
 		}
 	}
-	resourceFunction.CreatedAt = resourceFunctionMap["created_at"].(string)
-	resourceFunction.CreatedBy = resourceFunctionMap["created_by"].(string)
-	resourceFunction.LastModifiedAt = resourceFunctionMap["last_modified_at"].(string)
-	resourceFunction.LastModifiedBy = resourceFunctionMap["last_modified_by"].(string)
 	return nil
 }
 
 func (formula *ResourceFunctionFormula) FromMap(formulaMap map[string]any) error {
-	formula.Type = formulaMap["type"].(string)
+	formula.Type = helper.CastString(formulaMap, "type")
 
 	if formula.Type == "LINEAR" {
-		formula.Constant = formulaMap["constant"].(float64)
-		formula.Rate = formulaMap["rate"].(float64)
-		formula.TimeUnit = formulaMap["time_unit"].(string)
+		formula.Constant = helper.CastFloat64(formulaMap, "constant")
+		formula.Rate = helper.CastFloat64(formulaMap, "rate")
+		formula.TimeUnit = helper.CastString(formulaMap, "time_unit")
 	}
 
 	if formula.Type == "RECTANGULAR" {
-		formula.Amplitude = formulaMap["amplitude"].(float64)
+		formula.Amplitude = helper.CastFloat64(formulaMap, "amplitude")
 	}
 
 	return nil

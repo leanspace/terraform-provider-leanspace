@@ -59,7 +59,7 @@ var definitionSchema = map[string]resourceschema.Attribute{
 		Optional:   true,
 		Validators: helper.ValidUUID(),
 	},
-	"errors": resourceschema.SetNestedAttribute{
+	"errors": resourceschema.ListNestedAttribute{
 		Computed: true,
 		NestedObject: resourceschema.NestedAttributeObject{
 			Attributes: errorSchema,

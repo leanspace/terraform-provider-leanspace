@@ -3,53 +3,40 @@ package release_queues
 import (
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func (queue *ReleaseQueue) ToMap() map[string]any {
-	queueMap := make(map[string]any)
-	queueMap["id"] = queue.ID
-	queueMap["asset_id"] = queue.AssetId
-	queueMap["name"] = queue.Name
-	queueMap["description"] = queue.Description
-	queueMap["command_transformer_plugin_id"] = queue.CommandTransformerPluginId
-	queueMap["command_transformation_strategy"] = queue.CommandTransformationStrategy
-	queueMap["command_transformer_plugin_configuration_data"] = queue.CommandTransformerPluginConfigurationData
+	queueMap := queue.ToAuditMap()
+	queueMap["asset_id"] = helper.NilIfEmpty(queue.AssetId)
+	queueMap["name"] = helper.NilIfEmpty(queue.Name)
+	queueMap["description"] = helper.NilIfEmpty(queue.Description)
+	queueMap["command_transformer_plugin_id"] = helper.NilIfEmpty(queue.CommandTransformerPluginId)
+	queueMap["command_transformation_strategy"] = helper.NilIfEmpty(queue.CommandTransformationStrategy)
+	queueMap["command_transformer_plugin_configuration_data"] = helper.NilIfEmpty(queue.CommandTransformerPluginConfigurationData)
 	queueMap["global_transmission_metadata"] = helper.ParseToMaps(queue.GlobalTransmissionMetadata)
-	queueMap["logical_lock"] = queue.LogicalLock
-	queueMap["created_at"] = queue.CreatedAt
-	queueMap["created_by"] = queue.CreatedBy
-	queueMap["last_modified_at"] = queue.LastModifiedAt
-	queueMap["last_modified_by"] = queue.LastModifiedBy
+	queueMap["logical_lock"] = helper.NilIfEmpty(queue.LogicalLock)
 	queueMap["tags"] = helper.ParseToMaps(queue.Tags)
-
 	return queueMap
 }
 
 func (queue *ReleaseQueue) FromMap(queueMap map[string]any) error {
-	queue.ID = queueMap["id"].(string)
-	queue.AssetId = queueMap["asset_id"].(string)
-	queue.Name = queueMap["name"].(string)
-	queue.Description = queueMap["description"].(string)
-	queue.CommandTransformerPluginId = queueMap["command_transformer_plugin_id"].(string)
-	queue.CommandTransformationStrategy = queueMap["command_transformation_strategy"].(string)
-	queue.CommandTransformerPluginConfigurationData = queueMap["command_transformer_plugin_configuration_data"].(string)
-	if globalTransmissionMetadata, err := helper.ParseFromMaps[general_objects.KeyValue](queueMap["global_transmission_metadata"].(*schema.Set).List()); err != nil {
+	queue.FromAuditMap(queueMap)
+	queue.AssetId = helper.CastString(queueMap, "asset_id")
+	queue.Name = helper.CastString(queueMap, "name")
+	queue.Description = helper.CastString(queueMap, "description")
+	queue.CommandTransformerPluginId = helper.CastString(queueMap, "command_transformer_plugin_id")
+	queue.CommandTransformationStrategy = helper.CastString(queueMap, "command_transformation_strategy")
+	queue.CommandTransformerPluginConfigurationData = helper.CastString(queueMap, "command_transformer_plugin_configuration_data")
+	if globalTransmissionMetadata, err := helper.ParseFromMaps[general_objects.KeyValue](helper.CastSlice(queueMap, "global_transmission_metadata")); err != nil {
 		return err
 	} else {
 		queue.GlobalTransmissionMetadata = globalTransmissionMetadata
 	}
-	queue.LogicalLock = queueMap["logical_lock"].(bool)
-	queue.CreatedAt = queueMap["created_at"].(string)
-	queue.CreatedBy = queueMap["created_by"].(string)
-	queue.LastModifiedAt = queueMap["last_modified_at"].(string)
-	queue.LastModifiedBy = queueMap["last_modified_by"].(string)
-	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](queueMap["tags"].(*schema.Set).List()); err != nil {
+	queue.LogicalLock = helper.CastBool(queueMap, "logical_lock")
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](helper.CastSlice(queueMap, "tags")); err != nil {
 		return err
 	} else {
 		queue.Tags = tags
 	}
-
 	return nil
 }

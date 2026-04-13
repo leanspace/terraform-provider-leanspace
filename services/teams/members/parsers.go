@@ -1,35 +1,26 @@
 package members
 
-import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+import (
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+)
 
 func (member *Member) ToMap() map[string]any {
-	memberMap := make(map[string]any)
-	memberMap["id"] = member.ID
-	memberMap["name"] = member.Name
-	memberMap["email"] = member.Email
-	memberMap["status"] = member.Status
-	memberMap["policy_ids"] = member.PolicyIds
-	memberMap["created_at"] = member.CreatedAt
-	memberMap["created_by"] = member.CreatedBy
-	memberMap["last_modified_at"] = member.LastModifiedAt
-	memberMap["last_modified_by"] = member.LastModifiedBy
-
+	memberMap := member.ToAuditMap()
+	memberMap["name"] = helper.NilIfEmpty(member.Name)
+	memberMap["email"] = helper.NilIfEmpty(member.Email)
+	memberMap["status"] = helper.NilIfEmpty(member.Status)
+	memberMap["policy_ids"] = helper.NilIfEmpty(member.PolicyIds)
 	return memberMap
 }
 
 func (member *Member) FromMap(memberMap map[string]any) error {
-	member.ID = memberMap["id"].(string)
-	member.Name = memberMap["name"].(string)
-	member.Email = memberMap["email"].(string)
-	member.Status = memberMap["status"].(string)
-	member.PolicyIds = make([]string, memberMap["policy_ids"].(*schema.Set).Len())
-	for i, value := range memberMap["policy_ids"].(*schema.Set).List() {
+	member.FromAuditMap(memberMap)
+	member.Name = helper.CastString(memberMap, "name")
+	member.Email = helper.CastString(memberMap, "email")
+	member.Status = helper.CastString(memberMap, "status")
+	member.PolicyIds = make([]string, len(helper.CastSlice(memberMap, "policy_ids")))
+	for i, value := range helper.CastSlice(memberMap, "policy_ids") {
 		member.PolicyIds[i] = value.(string)
 	}
-	member.CreatedAt = memberMap["created_at"].(string)
-	member.CreatedBy = memberMap["created_by"].(string)
-	member.LastModifiedAt = memberMap["last_modified_at"].(string)
-	member.LastModifiedBy = memberMap["last_modified_by"].(string)
-
 	return nil
 }

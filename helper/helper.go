@@ -34,14 +34,219 @@ func ParseToMaps[T any, PT ParseablePointer[T]](parseables []T) []map[string]any
 }
 
 func ParseFromMaps[T any, PT ParseablePointer[T]](maps []any) ([]T, error) {
-	parseables := make([]T, len(maps))
-	for index, m := range maps {
-		var pointer PT = &parseables[index]
+	parseables := make([]T, 0, len(maps))
+	for _, m := range maps {
+		if m == nil {
+			continue
+		}
+		var t T
+		var pointer PT = &t
 		if err := pointer.FromMap(m.(map[string]any)); err != nil {
 			return parseables, err
 		}
+		parseables = append(parseables, t)
 	}
 	return parseables, nil
+}
+
+// CastString safely extracts a string from a map. Returns "" if the key is missing or nil.
+func CastString(m map[string]any, key string) string {
+	if v, ok := m[key]; ok && v != nil {
+		if s, ok := v.(string); ok {
+			return s
+		}
+		return fmt.Sprint(v)
+	}
+	return ""
+}
+
+// CastBool safely extracts a bool from a map. Returns false if the key is missing or nil.
+func CastBool(m map[string]any, key string) bool {
+	if v, ok := m[key]; ok && v != nil {
+		if b, ok := v.(bool); ok {
+			return b
+		}
+	}
+	return false
+}
+
+// CastInt safely extracts an int from a map. Returns 0 if the key is missing or nil.
+// Handles int, int64, and float64 (JSON numbers).
+func CastInt(m map[string]any, key string) int {
+	if v, ok := m[key]; ok && v != nil {
+		switch n := v.(type) {
+		case int:
+			return n
+		case int64:
+			return int(n)
+		case float64:
+			return int(n)
+		}
+	}
+	return 0
+}
+
+// CastFloat64 safely extracts a float64 from a map. Returns 0.0 if the key is missing or nil.
+func CastFloat64(m map[string]any, key string) float64 {
+	if v, ok := m[key]; ok && v != nil {
+		switch n := v.(type) {
+		case float64:
+			return n
+		case int:
+			return float64(n)
+		case int64:
+			return float64(n)
+		}
+	}
+	return 0.0
+}
+
+// CastSlice safely extracts a []any from a map. Returns []any{} if the key is missing, nil, or wrong type.
+func CastSlice(m map[string]any, key string) []any {
+	if v, ok := m[key]; ok && v != nil {
+		switch s := v.(type) {
+		case []any:
+			return s
+		case []map[string]any:
+			result := make([]any, len(s))
+			for i, item := range s {
+				result[i] = item
+			}
+			return result
+		case []string:
+			result := make([]any, len(s))
+			for i, item := range s {
+				result[i] = item
+			}
+			return result
+		}
+	}
+	return []any{}
+}
+
+// CastMapAny safely extracts a map[string]any from a map. Returns map[string]any{} if missing or nil.
+func CastMapAny(m map[string]any, key string) map[string]any {
+	if v, ok := m[key]; ok && v != nil {
+		if m2, ok := v.(map[string]any); ok {
+			return m2
+		}
+	}
+	return map[string]any{}
+}
+
+// NilIfEmpty converts an empty string to nil; all other values pass through unchanged.
+// Using any as the parameter type makes it safe to apply to any struct field in ToMap()
+// regardless of its type — non-string values are returned as-is.
+func NilIfEmpty(v any) any {
+	if s, ok := v.(string); ok && s == "" {
+		return nil
+	}
+	return v
+}
+
+// CastIntPtr safely extracts an int from a map, returning nil if the key is absent or null.
+// Use this for Optional model fields typed *int so that "not set" is preserved as nil
+// rather than collapsed to the zero value.
+func CastIntPtr(m map[string]any, key string) *int {
+	v, ok := m[key]
+	if !ok || v == nil {
+		return nil
+	}
+	switch n := v.(type) {
+	case int:
+		return &n
+	case int64:
+		i := int(n)
+		return &i
+	case float64:
+		i := int(n)
+		return &i
+	}
+	return nil
+}
+
+// CastFloat64Ptr safely extracts a float64 from a map, returning nil if the key is absent or null.
+func CastFloat64Ptr(m map[string]any, key string) *float64 {
+	v, ok := m[key]
+	if !ok || v == nil {
+		return nil
+	}
+	switch n := v.(type) {
+	case float64:
+		return &n
+	case int:
+		f := float64(n)
+		return &f
+	case int64:
+		f := float64(n)
+		return &f
+	}
+	return nil
+}
+
+// CastBoolPtr safely extracts a bool from a map, returning nil if the key is absent or null.
+func CastBoolPtr(m map[string]any, key string) *bool {
+	v, ok := m[key]
+	if !ok || v == nil {
+		return nil
+	}
+	switch n := v.(type) {
+	case bool:
+		return &n
+	}
+	return nil
+}
+
+// IntPtrToAny converts a *int to any: nil pointer → nil (map will carry null), non-nil → int value.
+func IntPtrToAny(v *int) any {
+	if v == nil {
+		return nil
+	}
+	return *v
+}
+
+// Float64PtrToAny converts a *float64 to any: nil pointer → nil, non-nil → float64 value.
+func Float64PtrToAny(v *float64) any {
+	if v == nil {
+		return nil
+	}
+	return *v
+}
+
+// BoolPtrToAny converts a *bool to any: nil pointer → nil (map will carry null), non-nil → bool value.
+func BoolPtrToAny(v *bool) any {
+	if v == nil {
+		return nil
+	}
+	return *v
+}
+
+// ReorderByKey reorders apiItems to match the order of stateOrder using keyFn to
+// derive a stable string key per element. Elements in apiItems not in stateOrder
+// are appended at the end. Use this in PostReadProcess to eliminate perpetual diffs
+// caused by the API returning list elements in a different order.
+func ReorderByKey[T any](stateOrder []T, apiItems []T, keyFn func(T) string) []T {
+	if len(stateOrder) == 0 {
+		return apiItems
+	}
+	used := make([]bool, len(apiItems))
+	reordered := make([]T, 0, len(apiItems))
+	for _, state := range stateOrder {
+		key := keyFn(state)
+		for i, api := range apiItems {
+			if !used[i] && keyFn(api) == key {
+				reordered = append(reordered, api)
+				used[i] = true
+				break
+			}
+		}
+	}
+	for i, api := range apiItems {
+		if !used[i] {
+			reordered = append(reordered, api)
+		}
+	}
+	return reordered
 }
 
 // Parses a float to a string. Use this method to ensure consistency.

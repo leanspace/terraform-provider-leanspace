@@ -1,59 +1,53 @@
 package service_accounts
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 func (serviceAccount *ServiceAccount) ToMap() map[string]any {
-	serviceAccountMap := make(map[string]any)
-	serviceAccountMap["id"] = serviceAccount.ID
-	serviceAccountMap["name"] = serviceAccount.Name
-	serviceAccountMap["policy_ids"] = serviceAccount.PolicyIds
+	serviceAccountMap := serviceAccount.ToAuditMap()
+	serviceAccountMap["name"] = helper.NilIfEmpty(serviceAccount.Name)
+	serviceAccountMap["policy_ids"] = helper.NilIfEmpty(serviceAccount.PolicyIds)
 	serviceAccountMap["credentials"] = []any{serviceAccount.Credentials.ToMap()}
 	serviceAccountMap["tags"] = helper.ParseToMaps(serviceAccount.Tags)
-	serviceAccountMap["created_at"] = serviceAccount.CreatedAt
-	serviceAccountMap["created_by"] = serviceAccount.CreatedBy
-	serviceAccountMap["last_modified_at"] = serviceAccount.LastModifiedAt
-	serviceAccountMap["last_modified_by"] = serviceAccount.LastModifiedBy
 	return serviceAccountMap
 }
 
 func (credential *Credentials) FromMap(credentialMap map[string]any) error {
-	credential.ClientId = credentialMap["client_id"].(string)
-	credential.ClientSecret = credentialMap["client_secret"].(string)
+	credential.ClientId = helper.CastString(credentialMap, "client_id")
+	credential.ClientSecret = helper.CastString(credentialMap, "client_secret")
 	return nil
 }
 
 func (credential *Credentials) ToMap() map[string]any {
 	credentialMap := make(map[string]any)
-	credentialMap["client_id"] = credential.ClientId
-	credentialMap["client_secret"] = credential.ClientSecret
+	credentialMap["client_id"] = helper.NilIfEmpty(credential.ClientId)
+	credentialMap["client_secret"] = helper.NilIfEmpty(credential.ClientSecret)
 	return credentialMap
 }
 
 func (serviceAccount *ServiceAccount) FromMap(serviceAccountMap map[string]any) error {
-	serviceAccount.ID = serviceAccountMap["id"].(string)
-	serviceAccount.Name = serviceAccountMap["name"].(string)
-	serviceAccount.PolicyIds = make([]string, serviceAccountMap["policy_ids"].(*schema.Set).Len())
-	for i, value := range serviceAccountMap["policy_ids"].(*schema.Set).List() {
+	serviceAccount.ID = helper.CastString(serviceAccountMap, "id")
+	serviceAccount.Name = helper.CastString(serviceAccountMap, "name")
+	serviceAccount.PolicyIds = make([]string, len(helper.CastSlice(serviceAccountMap, "policy_ids")))
+	for i, value := range helper.CastSlice(serviceAccountMap, "policy_ids") {
 		serviceAccount.PolicyIds[i] = value.(string)
 	}
-	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](serviceAccountMap["tags"].(*schema.Set).List()); err != nil {
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](helper.CastSlice(serviceAccountMap, "tags")); err != nil {
 		return err
 	} else {
 		serviceAccount.Tags = tags
 	}
-	if len(serviceAccountMap["credentials"].([]any)) > 0 {
-		if err := serviceAccount.Credentials.FromMap(serviceAccountMap["credentials"].([]any)[0].(map[string]any)); err != nil {
+	if len(helper.CastSlice(serviceAccountMap, "credentials")) > 0 {
+		if err := serviceAccount.Credentials.FromMap(helper.CastSlice(serviceAccountMap, "credentials")[0].(map[string]any)); err != nil {
 			return err
 		}
 	}
-	serviceAccount.CreatedAt = serviceAccountMap["created_at"].(string)
-	serviceAccount.CreatedBy = serviceAccountMap["created_by"].(string)
-	serviceAccount.LastModifiedAt = serviceAccountMap["last_modified_at"].(string)
-	serviceAccount.LastModifiedBy = serviceAccountMap["last_modified_by"].(string)
+	serviceAccount.CreatedAt = helper.CastString(serviceAccountMap, "created_at")
+	serviceAccount.CreatedBy = helper.CastString(serviceAccountMap, "created_by")
+	serviceAccount.LastModifiedAt = helper.CastString(serviceAccountMap, "last_modified_at")
+	serviceAccount.LastModifiedBy = helper.CastString(serviceAccountMap, "last_modified_by")
 
 	return nil
 }

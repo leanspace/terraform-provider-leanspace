@@ -11,75 +11,70 @@ import (
 func (paginatedList *PaginatedList[T, PT]) ToMap() map[string]any {
 	paginatedListMap := make(map[string]any)
 	paginatedListMap["content"] = helper.ParseToMaps[T, PT](paginatedList.Content)
-	paginatedListMap["total_elements"] = paginatedList.TotalElements
-	paginatedListMap["total_pages"] = paginatedList.TotalPages
-	paginatedListMap["number_of_elements"] = paginatedList.NumberOfElements
-	paginatedListMap["number"] = paginatedList.Number
-	paginatedListMap["size"] = paginatedList.Size
+	paginatedListMap["total_elements"] = helper.NilIfEmpty(paginatedList.TotalElements)
+	paginatedListMap["total_pages"] = helper.NilIfEmpty(paginatedList.TotalPages)
+	paginatedListMap["number_of_elements"] = helper.NilIfEmpty(paginatedList.NumberOfElements)
+	paginatedListMap["number"] = helper.NilIfEmpty(paginatedList.Number)
+	paginatedListMap["size"] = helper.NilIfEmpty(paginatedList.Size)
 	paginatedListMap["sort"] = helper.ParseToMaps(paginatedList.Sort)
-	paginatedListMap["first"] = paginatedList.First
-	paginatedListMap["last"] = paginatedList.Last
-	paginatedListMap["empty"] = paginatedList.Empty
+	paginatedListMap["first"] = helper.NilIfEmpty(paginatedList.First)
+	paginatedListMap["last"] = helper.NilIfEmpty(paginatedList.Last)
+	paginatedListMap["empty"] = helper.NilIfEmpty(paginatedList.Empty)
 	paginatedListMap["pageable"] = []any{paginatedList.Pageable.ToMap()}
 	return paginatedListMap
 }
 
 func (keyValue *KeyValue) ToMap() map[string]any {
 	keyValueMap := make(map[string]any)
-	keyValueMap["key"] = keyValue.Key
-	keyValueMap["value"] = keyValue.Value
+	keyValueMap["key"] = helper.NilIfEmpty(keyValue.Key)
+	keyValueMap["value"] = helper.NilIfEmpty(keyValue.Value)
 	return keyValueMap
 }
 
 func (sort *Sort) ToMap() map[string]any {
 	sortMap := make(map[string]any)
-	sortMap["direction"] = sort.Direction
-	sortMap["property"] = sort.Property
-	sortMap["ignore_case"] = sort.IgnoreCase
-	sortMap["null_handling"] = sort.NullHandling
-	sortMap["ascending"] = sort.Ascending
-	sortMap["descending"] = sort.Descending
+	sortMap["direction"] = helper.NilIfEmpty(sort.Direction)
+	sortMap["property"] = helper.NilIfEmpty(sort.Property)
+	sortMap["ignore_case"] = helper.NilIfEmpty(sort.IgnoreCase)
+	sortMap["null_handling"] = helper.NilIfEmpty(sort.NullHandling)
+	sortMap["ascending"] = helper.NilIfEmpty(sort.Ascending)
+	sortMap["descending"] = helper.NilIfEmpty(sort.Descending)
 	return sortMap
 }
 
 func (pageable *Pageable) ToMap() map[string]any {
 	pageableMap := make(map[string]any)
 	pageableMap["sort"] = helper.ParseToMaps(pageable.Sort)
-	pageableMap["offset"] = pageable.Offset
-	pageableMap["page_number"] = pageable.PageNumber
-	pageableMap["page_size"] = pageable.PageSize
-	pageableMap["paged"] = pageable.Paged
-	pageableMap["unpaged"] = pageable.Unpaged
+	pageableMap["offset"] = helper.NilIfEmpty(pageable.Offset)
+	pageableMap["page_number"] = helper.NilIfEmpty(pageable.PageNumber)
+	pageableMap["page_size"] = helper.NilIfEmpty(pageable.PageSize)
+	pageableMap["paged"] = helper.NilIfEmpty(pageable.Paged)
+	pageableMap["unpaged"] = helper.NilIfEmpty(pageable.Unpaged)
 	return pageableMap
 }
 
 func (attribute *ValueAttribute[T]) ToMap() map[string]any {
 	attributeMap := make(map[string]any)
-	attributeMap["type"] = attribute.Type
-	attributeMap["data_type"] = attribute.DataType
+	attributeMap["type"] = helper.NilIfEmpty(attribute.Type)
+	attributeMap["data_type"] = helper.NilIfEmpty(attribute.DataType)
 	switch attribute.Type {
 	case "NUMERIC":
 		attributeMap["value"] = helper.ParseFloat(any(attribute.Value).(float64))
-		attributeMap["unit_id"] = attribute.UnitId
+		attributeMap["unit_id"] = helper.NilIfEmpty(attribute.UnitId)
 	case "TEXT", "TIMESTAMP", "DATE", "TIME", "BINARY":
-		attributeMap["value"] = attribute.Value
+		attributeMap["value"] = helper.NilIfEmpty(attribute.Value)
 	case "BOOLEAN":
 		attributeMap["value"] = strconv.FormatBool(any(attribute.Value).(bool))
 	case "GEOPOINT":
 		if attribute.Fields != nil {
-			fieldList := make([]map[string]any, 1)
 			fieldMap := make(map[string]any)
-			elevationList := make([]map[string]any, 1)
-			elevationList[0] = (&attribute.Fields.Elevation).ToMap()
-			fieldMap["elevation"] = elevationList
-			latitudeList := make([]map[string]any, 1)
-			latitudeList[0] = (&attribute.Fields.Latitude).ToMap()
-			fieldMap["latitude"] = latitudeList
-			longitudeList := make([]map[string]any, 1)
-			longitudeList[0] = (&attribute.Fields.Longitude).ToMap()
-			fieldMap["longitude"] = longitudeList
-			fieldList[0] = fieldMap
-			attributeMap["fields"] = fieldList
+			elevationMap := (&attribute.Fields.Elevation).ToMap()
+			fieldMap["elevation"] = elevationMap
+			latitudeMap := (&attribute.Fields.Latitude).ToMap()
+			fieldMap["latitude"] = latitudeMap
+			longitudeMap := (&attribute.Fields.Longitude).ToMap()
+			fieldMap["longitude"] = longitudeMap
+			attributeMap["fields"] = fieldMap
 		}
 	case "ARRAY":
 		if any(attribute.Value) != nil {
@@ -96,111 +91,102 @@ func (attribute *ValueAttribute[T]) ToMap() map[string]any {
 }
 
 func (paginatedList *PaginatedList[T, PT]) FromMap(paginatedListMap map[string]any) error {
-	if content, err := helper.ParseFromMaps[T, PT](paginatedListMap["content"].([]any)); err != nil {
+	if content, err := helper.ParseFromMaps[T, PT](helper.CastSlice(paginatedListMap, "content")); err != nil {
 		return err
 	} else {
 		paginatedList.Content = content
 	}
-	paginatedList.TotalElements = paginatedListMap["total_elements"].(int)
-	paginatedList.TotalPages = paginatedListMap["total_pages"].(int)
-	paginatedList.NumberOfElements = paginatedListMap["number_of_elements"].(int)
-	paginatedList.Number = paginatedListMap["number"].(int)
-	paginatedList.Size = paginatedListMap["size"].(int)
-	if sort, err := helper.ParseFromMaps[Sort](paginatedListMap["sort"].([]any)); err != nil {
+	paginatedList.TotalElements = helper.CastInt(paginatedListMap, "total_elements")
+	paginatedList.TotalPages = helper.CastInt(paginatedListMap, "total_pages")
+	paginatedList.NumberOfElements = helper.CastInt(paginatedListMap, "number_of_elements")
+	paginatedList.Number = helper.CastInt(paginatedListMap, "number")
+	paginatedList.Size = helper.CastInt(paginatedListMap, "size")
+	if sort, err := helper.ParseFromMaps[Sort](helper.CastSlice(paginatedListMap, "sort")); err != nil {
 		return err
 	} else {
 		paginatedList.Sort = sort
 	}
-	paginatedList.First = paginatedListMap["first"].(bool)
-	paginatedList.Last = paginatedListMap["last"].(bool)
-	paginatedList.Empty = paginatedListMap["empty"].(bool)
-	if len(paginatedListMap["pageable"].([]any)) > 0 {
-		if err := paginatedList.Pageable.FromMap(paginatedListMap["pageable"].([]any)[0].(map[string]any)); err != nil {
-			return err
-		}
+	paginatedList.First = helper.CastBool(paginatedListMap, "first")
+	paginatedList.Last = helper.CastBool(paginatedListMap, "last")
+	paginatedList.Empty = helper.CastBool(paginatedListMap, "empty")
+	if err := paginatedList.Pageable.FromMap(helper.CastMapAny(paginatedListMap, "pageable")); err != nil {
+		return err
 	}
 	return nil
 }
 
 func (keyValue *KeyValue) FromMap(keyValueMap map[string]any) error {
-	keyValue.Key = keyValueMap["key"].(string)
-	keyValue.Value = keyValueMap["value"].(string)
+	keyValue.Key = helper.CastString(keyValueMap, "key")
+	keyValue.Value = helper.CastString(keyValueMap, "value")
 	return nil
 }
 
 func (sort *Sort) FromMap(sortMap map[string]any) error {
-	sort.Direction = sortMap["direction"].(string)
-	sort.Property = sortMap["property"].(string)
-	sort.NullHandling = sortMap["null_handling"].(string)
-	sort.IgnoreCase = sortMap["ignore_case"].(bool)
-	sort.Ascending = sortMap["ascending"].(bool)
-	sort.Descending = sortMap["descending"].(bool)
+	sort.Direction = helper.CastString(sortMap, "direction")
+	sort.Property = helper.CastString(sortMap, "property")
+	sort.NullHandling = helper.CastString(sortMap, "null_handling")
+	sort.IgnoreCase = helper.CastBool(sortMap, "ignore_case")
+	sort.Ascending = helper.CastBool(sortMap, "ascending")
+	sort.Descending = helper.CastBool(sortMap, "descending")
 	return nil
 }
 
 func (pageable *Pageable) FromMap(pageableMap map[string]any) error {
-	if sorts, err := helper.ParseFromMaps[Sort](pageableMap["sorts"].([]any)); err != nil {
+	if sorts, err := helper.ParseFromMaps[Sort](helper.CastSlice(pageableMap, "sorts")); err != nil {
 		return err
 	} else {
 		pageableMap["sorts"] = sorts
 	}
-	pageable.Offset = pageableMap["offset"].(int)
-	pageable.PageNumber = pageableMap["page_number"].(int)
-	pageable.PageSize = pageableMap["page_size"].(int)
-	pageable.Paged = pageableMap["paged"].(bool)
-	pageable.Unpaged = pageableMap["unpaged"].(bool)
+	pageable.Offset = helper.CastInt(pageableMap, "offset")
+	pageable.PageNumber = helper.CastInt(pageableMap, "page_number")
+	pageable.PageSize = helper.CastInt(pageableMap, "page_size")
+	pageable.Paged = helper.CastBool(pageableMap, "paged")
+	pageable.Unpaged = helper.CastBool(pageableMap, "unpaged")
 	return nil
 }
 
 func (attribute *DefinitionAttribute[T]) FromMap(attributeMap map[string]any) error {
-	attribute.Type = attributeMap["type"].(string)
-	if value, ok := attributeMap["required"]; ok {
-		b := value.(bool)
-		attribute.Required = &b
-	}
+	attribute.Type = helper.CastString(attributeMap, "type")
+	attribute.Required = helper.CastBoolPtr(attributeMap, "required")
 	switch attribute.Type {
 	case "NUMERIC":
-		attribute.Min = attributeMap["min"].(float64)
-		attribute.Max = attributeMap["max"].(float64)
-		attribute.Scale = attributeMap["scale"].(int)
-		attribute.Precision = attributeMap["precision"].(int)
-		attribute.UnitId = attributeMap["unit_id"].(string)
+		attribute.Min = helper.CastFloat64Ptr(attributeMap, "min")
+		attribute.Max = helper.CastFloat64Ptr(attributeMap, "max")
+		attribute.Scale = helper.CastIntPtr(attributeMap, "scale")
+		attribute.Precision = helper.CastIntPtr(attributeMap, "precision")
+		attribute.UnitId = helper.CastString(attributeMap, "unit_id")
 	case "ENUM":
 		if attributeMap["options"] != nil {
-			option := attributeMap["options"].(map[string]any)
+			option := helper.CastMapAny(attributeMap, "options")
 			attribute.Options = &option
 		}
 	case "TEXT":
-		attribute.MinLength = attributeMap["min_length"].(int)
-		attribute.MaxLength = attributeMap["max_length"].(int)
-		attribute.Pattern = attributeMap["pattern"].(string)
+		attribute.MinLength = helper.CastIntPtr(attributeMap, "min_length")
+		attribute.MaxLength = helper.CastIntPtr(attributeMap, "max_length")
+		attribute.Pattern = helper.CastString(attributeMap, "pattern")
 	case "BINARY":
-		attribute.MinLength = attributeMap["min_length"].(int)
-		attribute.MaxLength = attributeMap["max_length"].(int)
+		attribute.MinLength = helper.CastIntPtr(attributeMap, "min_length")
+		attribute.MaxLength = helper.CastIntPtr(attributeMap, "max_length")
 	case "TIMESTAMP", "DATE", "TIME":
-		attribute.Before = attributeMap["before"].(string)
-		attribute.After = attributeMap["after"].(string)
+		attribute.Before = helper.CastString(attributeMap, "before")
+		attribute.After = helper.CastString(attributeMap, "after")
 	case "BOOLEAN":
 		// no extra field
 	case "GEOPOINT":
 		if attributeMap["fields"] != nil {
 			attribute.Fields = &FieldsDef{}
-			if len(attributeMap["fields"].([]any)) > 0 {
-				fields := attributeMap["fields"].([]any)[0].(map[string]any)
-				attribute.Fields.Elevation.FromMap(fields["elevation"].([]any)[0].(map[string]any))
-				attribute.Fields.Latitude.FromMap(fields["latitude"].([]any)[0].(map[string]any))
-				attribute.Fields.Longitude.FromMap(fields["longitude"].([]any)[0].(map[string]any))
-			}
+			fields := helper.CastMapAny(attributeMap, "fields")
+			attribute.Fields.Elevation.FromMap(helper.CastMapAny(fields, "elevation"))
+			attribute.Fields.Latitude.FromMap(helper.CastMapAny(fields, "latitude"))
+			attribute.Fields.Longitude.FromMap(helper.CastMapAny(fields, "longitude"))
 		}
 	case "ARRAY":
-		attribute.MinSize = attributeMap["min_size"].(int)
-		attribute.MaxSize = attributeMap["max_size"].(int)
-		attribute.Unique = attributeMap["unique"].(bool)
-		if len(attributeMap["constraint"].([]any)) > 0 {
-			err := attribute.Constraint.FromMap(attributeMap["constraint"].([]any)[0].(map[string]any))
-			if err != nil {
-				return err
-			}
+		attribute.MinSize = helper.CastIntPtr(attributeMap, "min_size")
+		attribute.MaxSize = helper.CastIntPtr(attributeMap, "max_size")
+		attribute.Unique = helper.CastBool(attributeMap, "unique")
+		err := attribute.Constraint.FromMap(helper.CastMapAny(attributeMap, "constraint"))
+		if err != nil {
+			return err
 		}
 
 	}
@@ -229,56 +215,56 @@ func (attribute *DefinitionAttribute[T]) FromMap(attributeMap map[string]any) er
 			}
 			attribute.DefaultValue = any(interfaceOfDefaultValues).(T)
 		} else {
-			attribute.DefaultValue = defaultValue.(T)
+			if defaultValue != nil {
+				attribute.DefaultValue = defaultValue.(T)
+			}
 		}
 	}
 	return nil
 }
 
 func (constraint *ArrayConstraint[T]) FromMap(constraintMap map[string]any) error {
-	constraint.Type = constraintMap["type"].(string)
-	if value, ok := constraintMap["required"]; ok {
-		b := value.(bool)
-		constraint.Required = &b
-	}
+	constraint.Type = helper.CastString(constraintMap, "type")
+	constraint.Required = helper.CastBoolPtr(constraintMap, "required")
 	switch constraint.Type {
 	case "NUMERIC":
-		constraint.Min = constraintMap["min"].(float64)
-		constraint.Max = constraintMap["max"].(float64)
-		constraint.Scale = constraintMap["scale"].(int)
-		constraint.Precision = constraintMap["precision"].(int)
-		constraint.UnitId = constraintMap["unit_id"].(string)
+		constraint.Min = helper.CastFloat64Ptr(constraintMap, "min")
+		constraint.Max = helper.CastFloat64Ptr(constraintMap, "max")
+		constraint.Scale = helper.CastIntPtr(constraintMap, "scale")
+		constraint.Precision = helper.CastIntPtr(constraintMap, "precision")
+		constraint.UnitId = helper.CastString(constraintMap, "unit_id")
 	case "ENUM":
 		if constraintMap["options"] != nil {
-			option := constraintMap["options"].(map[string]any)
+			option := helper.CastMapAny(constraintMap, "options")
 			constraint.Options = &option
 		}
 	case "TEXT":
-		constraint.MinLength = constraintMap["min_length"].(int)
-		constraint.MaxLength = constraintMap["max_length"].(int)
-		constraint.Pattern = constraintMap["pattern"].(string)
+		constraint.MinLength = helper.CastIntPtr(constraintMap, "min_length")
+		constraint.MaxLength = helper.CastIntPtr(constraintMap, "max_length")
+		constraint.Pattern = helper.CastString(constraintMap, "pattern")
 	case "TIMESTAMP", "DATE", "TIME":
-		constraint.Before = constraintMap["before"].(string)
-		constraint.After = constraintMap["after"].(string)
+		constraint.Before = helper.CastString(constraintMap, "before")
+		constraint.After = helper.CastString(constraintMap, "after")
 	case "BOOLEAN":
 		// no extra field
 	case "BINARY":
-		constraint.MinLength = constraintMap["min_length"].(int)
-		constraint.MaxLength = constraintMap["max_length"].(int)
+		constraint.MinLength = helper.CastIntPtr(constraintMap, "min_length")
+		constraint.MaxLength = helper.CastIntPtr(constraintMap, "max_length")
 	}
 	return nil
 }
 
 func (attribute *ValueAttribute[T]) FromMap(attributeMap map[string]any) error {
-
-	attribute.Value = attributeMap["value"].(T)
-	attribute.Type = attributeMap["type"].(string)
-	attribute.DataType = attributeMap["data_type"].(string)
+	if attributeMap["value"] != nil {
+		attribute.Value = attributeMap["value"].(T)
+	}
+	attribute.Type = helper.CastString(attributeMap, "type")
+	attribute.DataType = helper.CastString(attributeMap, "data_type")
 	if attributeMap["type"] == "NUMERIC" {
-		attribute.UnitId = attributeMap["unit_id"].(string)
+		attribute.UnitId = helper.CastString(attributeMap, "unit_id")
 	}
 	if attributeMap["type"] == "ARRAY" {
-		var stringValues []string = strings.Split(attributeMap["value"].(string), ",")
+		var stringValues []string = strings.Split(helper.CastString(attributeMap, "value"), ",")
 		var interfaceOfValues []interface{}
 		for _, str := range stringValues {
 			var stringValue = strings.TrimSpace(str)
@@ -289,11 +275,11 @@ func (attribute *ValueAttribute[T]) FromMap(attributeMap map[string]any) error {
 	}
 	if attributeMap["type"] == "GEOPOINT" {
 		if attributeMap["fields"] != nil {
-			fields := attributeMap["fields"].([]any)[0].(map[string]any)
+			fields := helper.CastMapAny(attributeMap, "fields")
 			attribute.Fields = &Fields{}
-			attribute.Fields.Elevation.FromMap(fields["elevation"].([]any)[0].(map[string]any))
-			attribute.Fields.Latitude.FromMap(fields["latitude"].([]any)[0].(map[string]any))
-			attribute.Fields.Longitude.FromMap(fields["longitude"].([]any)[0].(map[string]any))
+			attribute.Fields.Elevation.FromMap(helper.CastMapAny(fields, "elevation"))
+			attribute.Fields.Latitude.FromMap(helper.CastMapAny(fields, "latitude"))
+			attribute.Fields.Longitude.FromMap(helper.CastMapAny(fields, "longitude"))
 		}
 	}
 	return nil
@@ -302,45 +288,43 @@ func (attribute *ValueAttribute[T]) FromMap(attributeMap map[string]any) error {
 func (attribute *DefinitionAttribute[T]) ToMap() map[string]any {
 	attributeMap := make(map[string]any)
 
-	attributeMap["type"] = attribute.Type
+	attributeMap["type"] = helper.NilIfEmpty(attribute.Type)
 
-	if attribute.Required != nil {
-		attributeMap["required"] = attribute.Required
-	}
+	attributeMap["required"] = helper.BoolPtrToAny(attribute.Required)
 
 	switch attribute.Type {
 	case "TEXT":
 		if any(attribute.DefaultValue) != nil {
-			attributeMap["default_value"] = attribute.DefaultValue
+			attributeMap["default_value"] = helper.NilIfEmpty(attribute.DefaultValue)
 		}
-		attributeMap["min_length"] = attribute.MinLength
-		attributeMap["max_length"] = attribute.MaxLength
-		attributeMap["pattern"] = attribute.Pattern
+		attributeMap["min_length"] = helper.IntPtrToAny(attribute.MinLength)
+		attributeMap["max_length"] = helper.IntPtrToAny(attribute.MaxLength)
+		attributeMap["pattern"] = helper.NilIfEmpty(attribute.Pattern)
 	case "BINARY":
 		if any(attribute.DefaultValue) != nil {
-			attributeMap["default_value"] = attribute.DefaultValue
+			attributeMap["default_value"] = helper.NilIfEmpty(attribute.DefaultValue)
 		}
-		attributeMap["min_length"] = attribute.MinLength
-		attributeMap["max_length"] = attribute.MaxLength
+		attributeMap["min_length"] = helper.IntPtrToAny(attribute.MinLength)
+		attributeMap["max_length"] = helper.IntPtrToAny(attribute.MaxLength)
 	case "NUMERIC":
 		if any(attribute.DefaultValue) != nil {
 			attributeMap["default_value"] = helper.ParseFloat(any(attribute.DefaultValue).(float64))
 		}
-		attributeMap["min"] = attribute.Min
-		attributeMap["max"] = attribute.Max
-		attributeMap["scale"] = attribute.Scale
-		attributeMap["precision"] = attribute.Precision
-		attributeMap["unit_id"] = attribute.UnitId
+		attributeMap["min"] = helper.Float64PtrToAny(attribute.Min)
+		attributeMap["max"] = helper.Float64PtrToAny(attribute.Max)
+		attributeMap["scale"] = helper.IntPtrToAny(attribute.Scale)
+		attributeMap["precision"] = helper.IntPtrToAny(attribute.Precision)
+		attributeMap["unit_id"] = helper.NilIfEmpty(attribute.UnitId)
 	case "BOOLEAN":
 		if any(attribute.DefaultValue) != nil {
 			attributeMap["default_value"] = strconv.FormatBool(any(attribute.DefaultValue).(bool))
 		}
 	case "TIMESTAMP", "DATE", "TIME":
 		if any(attribute.DefaultValue) != nil {
-			attributeMap["default_value"] = attribute.DefaultValue
+			attributeMap["default_value"] = helper.NilIfEmpty(attribute.DefaultValue)
 		}
-		attributeMap["before"] = attribute.Before
-		attributeMap["after"] = attribute.After
+		attributeMap["before"] = helper.NilIfEmpty(attribute.Before)
+		attributeMap["after"] = helper.NilIfEmpty(attribute.After)
 	case "ENUM":
 		if any(attribute.DefaultValue) != nil {
 			attributeMap["default_value"] = helper.ParseFloat(any(attribute.DefaultValue).(float64))
@@ -350,25 +334,20 @@ func (attribute *DefinitionAttribute[T]) ToMap() map[string]any {
 		}
 	case "GEOPOINT":
 		if attribute.Fields != nil {
-			fieldList := make([]map[string]any, 1)
 			fieldMap := make(map[string]any)
-			elevationList := make([]map[string]any, 1)
-			elevationList[0] = (&attribute.Fields.Elevation).ToMap()
-			fieldMap["elevation"] = elevationList
-			latitudeList := make([]map[string]any, 1)
-			latitudeList[0] = (&attribute.Fields.Latitude).ToMap()
-			fieldMap["latitude"] = latitudeList
-			longitudeList := make([]map[string]any, 1)
-			longitudeList[0] = (&attribute.Fields.Longitude).ToMap()
-			fieldMap["longitude"] = longitudeList
-			fieldList[0] = fieldMap
-			attributeMap["fields"] = fieldList
+			elevationMap := (&attribute.Fields.Elevation).ToMap()
+			fieldMap["elevation"] = elevationMap
+			latitudeMap := (&attribute.Fields.Latitude).ToMap()
+			fieldMap["latitude"] = latitudeMap
+			longitudeMap := (&attribute.Fields.Longitude).ToMap()
+			fieldMap["longitude"] = longitudeMap
+			attributeMap["fields"] = fieldMap
 		}
 	case "ARRAY":
-		attributeMap["min_size"] = attribute.MinSize
-		attributeMap["max_size"] = attribute.MaxSize
-		attributeMap["unique"] = attribute.Unique
-		attributeMap["constraint"] = []any{attribute.Constraint.ToMap()}
+		attributeMap["min_size"] = helper.IntPtrToAny(attribute.MinSize)
+		attributeMap["max_size"] = helper.IntPtrToAny(attribute.MaxSize)
+		attributeMap["unique"] = helper.NilIfEmpty(attribute.Unique)
+		attributeMap["constraint"] = attribute.Constraint.ToMap()
 		if any(attribute.DefaultValue) != nil {
 			var defaultValue string
 			var interfaceArrayDefaultValues []interface{} = any(attribute.DefaultValue).([]interface{})
@@ -384,31 +363,29 @@ func (attribute *DefinitionAttribute[T]) ToMap() map[string]any {
 func (constraint *ArrayConstraint[T]) ToMap() map[string]any {
 	constraintMap := make(map[string]any)
 
-	constraintMap["type"] = constraint.Type
+	constraintMap["type"] = helper.NilIfEmpty(constraint.Type)
 
-	if constraint.Required != nil {
-		constraintMap["required"] = constraint.Required
-	}
+	constraintMap["required"] = helper.BoolPtrToAny(constraint.Required)
 
 	switch constraint.Type {
 	case "TEXT":
-		constraintMap["min_length"] = constraint.MinLength
-		constraintMap["max_length"] = constraint.MaxLength
-		constraintMap["pattern"] = constraint.Pattern
+		constraintMap["min_length"] = helper.IntPtrToAny(constraint.MinLength)
+		constraintMap["max_length"] = helper.IntPtrToAny(constraint.MaxLength)
+		constraintMap["pattern"] = helper.NilIfEmpty(constraint.Pattern)
 	case "BINARY":
-		constraintMap["min_length"] = constraint.MinLength
-		constraintMap["max_length"] = constraint.MaxLength
+		constraintMap["min_length"] = helper.IntPtrToAny(constraint.MinLength)
+		constraintMap["max_length"] = helper.IntPtrToAny(constraint.MaxLength)
 	case "NUMERIC":
-		constraintMap["min"] = constraint.Min
-		constraintMap["max"] = constraint.Max
-		constraintMap["scale"] = constraint.Scale
-		constraintMap["precision"] = constraint.Precision
-		constraintMap["unit_id"] = constraint.UnitId
+		constraintMap["min"] = helper.Float64PtrToAny(constraint.Min)
+		constraintMap["max"] = helper.Float64PtrToAny(constraint.Max)
+		constraintMap["scale"] = helper.IntPtrToAny(constraint.Scale)
+		constraintMap["precision"] = helper.IntPtrToAny(constraint.Precision)
+		constraintMap["unit_id"] = helper.NilIfEmpty(constraint.UnitId)
 	case "BOOLEAN":
 		//nothing
 	case "TIMESTAMP", "DATE", "TIME":
-		constraintMap["before"] = constraint.Before
-		constraintMap["after"] = constraint.After
+		constraintMap["before"] = helper.NilIfEmpty(constraint.Before)
+		constraintMap["after"] = helper.NilIfEmpty(constraint.After)
 	case "ENUM":
 		if constraint.Options != nil {
 			constraintMap["options"] = *constraint.Options
@@ -424,21 +401,21 @@ func (field *FieldDef[T]) ToMap() map[string]any {
 	if any(field.DefaultValue) != nil {
 		fieldMap["default_value"] = helper.ParseFloat(any(field.DefaultValue).(float64))
 	}
-	fieldMap["min"] = field.Min
-	fieldMap["max"] = field.Max
-	fieldMap["scale"] = field.Scale
-	fieldMap["precision"] = field.Precision
-	fieldMap["unit_id"] = field.UnitId
+	fieldMap["min"] = helper.Float64PtrToAny(field.Min)
+	fieldMap["max"] = helper.Float64PtrToAny(field.Max)
+	fieldMap["scale"] = helper.IntPtrToAny(field.Scale)
+	fieldMap["precision"] = helper.IntPtrToAny(field.Precision)
+	fieldMap["unit_id"] = helper.NilIfEmpty(field.UnitId)
 	return fieldMap
 }
 
 func (field *FieldDef[T]) FromMap(fieldMap map[string]any) error {
 	field.DefaultValue = fieldMap["default_value"].(T)
-	field.Min = fieldMap["min"].(float64)
-	field.Max = fieldMap["max"].(float64)
-	field.Scale = fieldMap["scale"].(int)
-	field.Precision = fieldMap["precision"].(int)
-	field.UnitId = fieldMap["unit_id"].(string)
+	field.Min = helper.CastFloat64Ptr(fieldMap, "min")
+	field.Max = helper.CastFloat64Ptr(fieldMap, "max")
+	field.Scale = helper.CastIntPtr(fieldMap, "scale")
+	field.Precision = helper.CastIntPtr(fieldMap, "precision")
+	field.UnitId = helper.CastString(fieldMap, "unit_id")
 	return nil
 }
 
@@ -449,21 +426,21 @@ func (field *Field[T]) ToMap() map[string]any {
 	if any(field.Value) != nil {
 		fieldMap["value"] = helper.ParseFloat(any(field.Value).(float64))
 	}
-	fieldMap["min"] = field.Min
-	fieldMap["max"] = field.Max
-	fieldMap["scale"] = field.Scale
-	fieldMap["precision"] = field.Precision
-	fieldMap["unit_id"] = field.UnitId
+	fieldMap["min"] = helper.Float64PtrToAny(field.Min)
+	fieldMap["max"] = helper.Float64PtrToAny(field.Max)
+	fieldMap["scale"] = helper.IntPtrToAny(field.Scale)
+	fieldMap["precision"] = helper.IntPtrToAny(field.Precision)
+	fieldMap["unit_id"] = helper.NilIfEmpty(field.UnitId)
 	return fieldMap
 }
 
 func (field *Field[T]) FromMap(fieldMap map[string]any) error {
 	field.Value = fieldMap["value"].(T)
-	field.Min = fieldMap["min"].(float64)
-	field.Max = fieldMap["max"].(float64)
-	field.Scale = fieldMap["scale"].(int)
-	field.Precision = fieldMap["precision"].(int)
-	field.UnitId = fieldMap["unit_id"].(string)
+	field.Min = helper.CastFloat64Ptr(fieldMap, "min")
+	field.Max = helper.CastFloat64Ptr(fieldMap, "max")
+	field.Scale = helper.CastIntPtr(fieldMap, "scale")
+	field.Precision = helper.CastIntPtr(fieldMap, "precision")
+	field.UnitId = helper.CastString(fieldMap, "unit_id")
 	return nil
 }
 

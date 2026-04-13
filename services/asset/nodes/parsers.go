@@ -1,7 +1,6 @@
 package nodes
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/properties"
@@ -12,54 +11,46 @@ var INTERNATIONAL_DESIGNATOR = "International Designator"
 var LOCATION_COORDINATES = "Location Coordinates"
 
 func (node *Node) ToMap() map[string]any {
-	nodeMap := make(map[string]any)
+	nodeMap := node.ToAuditMap()
 
-	nodeMap["id"] = node.ID
-	nodeMap["name"] = node.Name
-	nodeMap["description"] = node.Description
-	nodeMap["created_at"] = node.CreatedAt
-	nodeMap["created_by"] = node.CreatedBy
-	nodeMap["parent_node_id"] = node.ParentNodeId
-	nodeMap["last_modified_at"] = node.LastModifiedAt
-	nodeMap["last_modified_by"] = node.LastModifiedBy
-	nodeMap["type"] = node.Type
-	nodeMap["kind"] = node.Kind
-	nodeMap["number_of_children"] = node.NumberOfChildren
+	nodeMap["name"] = helper.NilIfEmpty(node.Name)
+	nodeMap["description"] = helper.NilIfEmpty(node.Description)
+	nodeMap["parent_node_id"] = helper.NilIfEmpty(node.ParentNodeId)
+	nodeMap["type"] = helper.NilIfEmpty(node.Type)
+	nodeMap["kind"] = helper.NilIfEmpty(node.Kind)
+	nodeMap["number_of_children"] = helper.NilIfEmpty(node.NumberOfChildren)
 	nodeMap["tags"] = helper.ParseToMaps(node.Tags)
 
 	if node.Kind == "SATELLITE" {
-		nodeMap["norad_id"] = node.NoradId
-		nodeMap["international_designator"] = node.InternationalDesignator
-		nodeMap["tle"] = node.Tle
+		nodeMap["norad_id"] = helper.NilIfEmpty(node.NoradId)
+		nodeMap["international_designator"] = helper.NilIfEmpty(node.InternationalDesignator)
+		nodeMap["tle"] = helper.NilIfEmpty(node.Tle)
 	}
 	if node.Kind == "GROUND_STATION" {
-		nodeMap["latitude"] = node.Latitude
-		nodeMap["longitude"] = node.Longitude
-		nodeMap["elevation"] = node.Elevation
+		nodeMap["latitude"] = helper.NilIfEmpty(node.Latitude)
+		nodeMap["longitude"] = helper.NilIfEmpty(node.Longitude)
+		nodeMap["elevation"] = helper.NilIfEmpty(node.Elevation)
 	}
 
 	return nodeMap
 }
 
 func (node *Node) FromMap(nodeMap map[string]any) error {
-	node.Name = nodeMap["name"].(string)
-	node.Description = nodeMap["description"].(string)
-	node.CreatedAt = nodeMap["created_at"].(string)
-	node.CreatedBy = nodeMap["created_by"].(string)
-	node.ParentNodeId = nodeMap["parent_node_id"].(string)
-	node.LastModifiedAt = nodeMap["last_modified_at"].(string)
-	node.LastModifiedBy = nodeMap["last_modified_by"].(string)
-	node.Type = nodeMap["type"].(string)
-	node.Kind = nodeMap["kind"].(string)
-	node.NumberOfChildren = nodeMap["number_of_children"].(int)
-	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](nodeMap["tags"].(*schema.Set).List()); err != nil {
+	node.FromAuditMap(nodeMap)
+	node.Name = helper.CastString(nodeMap, "name")
+	node.Description = helper.CastString(nodeMap, "description")
+	node.ParentNodeId = helper.CastString(nodeMap, "parent_node_id")
+	node.Type = helper.CastString(nodeMap, "type")
+	node.Kind = helper.CastString(nodeMap, "kind")
+	node.NumberOfChildren = helper.CastInt(nodeMap, "number_of_children")
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](helper.CastSlice(nodeMap, "tags")); err != nil {
 		return err
 	} else {
 		node.Tags = tags
 	}
 	if nodeMap["nodes"] != nil {
-		node.Nodes = make([]Node, nodeMap["nodes"].(*schema.Set).Len())
-		for i, subNode := range nodeMap["nodes"].(*schema.Set).List() {
+		node.Nodes = make([]Node, len(helper.CastSlice(nodeMap, "nodes")))
+		for i, subNode := range helper.CastSlice(nodeMap, "nodes") {
 			err := node.Nodes[i].FromMap(subNode.(map[string]any))
 			if err != nil {
 				return err
@@ -67,17 +58,17 @@ func (node *Node) FromMap(nodeMap map[string]any) error {
 		}
 	}
 	var propertylist []properties.Property[any]
-	if nodeMap["norad_id"] != "" {
+	if helper.CastString(nodeMap, "norad_id") != "" {
 		noradInfo := properties.Property[any]{}
 		noradInfo.Attributes.Type = "TEXT"
-		noradInfo.Attributes.Value = nodeMap["norad_id"].(string)
+		noradInfo.Attributes.Value = helper.CastString(nodeMap, "norad_id")
 		noradInfo.Name = NORAD_ID
 		propertylist = append(propertylist, noradInfo)
 	}
-	if nodeMap["international_designator"] != "" {
+	if helper.CastString(nodeMap, "international_designator") != "" {
 		internationalDesignatorInfo := properties.Property[any]{}
 		internationalDesignatorInfo.Attributes.Type = "TEXT"
-		internationalDesignatorInfo.Attributes.Value = nodeMap["international_designator"].(string)
+		internationalDesignatorInfo.Attributes.Value = helper.CastString(nodeMap, "international_designator")
 		internationalDesignatorInfo.Name = INTERNATIONAL_DESIGNATOR
 		propertylist = append(propertylist, internationalDesignatorInfo)
 	}
@@ -85,7 +76,7 @@ func (node *Node) FromMap(nodeMap map[string]any) error {
 		tleInfo := properties.Property[any]{}
 		tleInfo.Attributes.Type = "TLE"
 		tleInfo.Name = "TLE"
-		var stringTleValues = nodeMap["tle"].([]interface{})
+		var stringTleValues = helper.CastSlice(nodeMap, "tle")
 		if len(stringTleValues) == 2 {
 			var interfaceOfTleValues []interface{}
 			for _, str := range stringTleValues {
@@ -101,7 +92,7 @@ func (node *Node) FromMap(nodeMap map[string]any) error {
 		groundStationInfo := properties.Property[any]{}
 		groundStationInfo.Attributes.Type = "GEOPOINT"
 		groundStationInfo.Name = LOCATION_COORDINATES
-		groundStationInfo.Attributes.Fields = &properties.Fields{}
+		groundStationInfo.Attributes.Fields = &general_objects.Fields{}
 		groundStationInfo.Attributes.Fields.Latitude.Value = nodeMap["latitude"]
 		groundStationInfo.Attributes.Fields.Longitude.Value = nodeMap["longitude"]
 		groundStationInfo.Attributes.Fields.Elevation.Value = nodeMap["elevation"]

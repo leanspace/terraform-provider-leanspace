@@ -17,6 +17,7 @@ import (
 var validPropertyTypes = []string{"NUMERIC", "ENUM", "TEXT", "TIMESTAMP", "DATE", "TIME", "BOOLEAN", "GEOPOINT", "TLE"}
 var validNodeTypes = []string{"ASSET", "GROUP", "COMPONENT"}
 var validNodeKinds = []string{"GENERIC", "SATELLITE", "GROUND_STATION"}
+var validPropertyCategories = []string{"BUILT_IN_PROPERTIES_ONLY", "USER_PROPERTIES_ONLY", "ALL_PROPERTIES"}
 
 var propertySchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"name": resourceschema.StringAttribute{
@@ -104,12 +105,12 @@ var propertySchema = general_objects.ResourceSchemaWith(map[string]resourceschem
 var dataSourceFilterSchema = general_objects.AuditFilterFieldsWithTagsAndSingularBy(map[string]datasourceschema.Attribute{
 	"category": datasourceschema.StringAttribute{
 		Optional:    true,
-		Description: "Allowed values : BUILT_IN_PROPERTIES_ONLY, USER_PROPERTIES_ONLY, ALL_PROPERTIES",
+		Description: helper.AllowedValuesToDescription(validPropertyCategories),
 	},
-	"kinds": datasourceschema.ListAttribute{
+	"node_kinds": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
-		Description: "Allowed values : GENERIC, SATELLITE, GROUND_STATION",
+		Description: helper.AllowedValuesToDescription(validNodeKinds),
 	},
 	"node_ids": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
@@ -119,5 +120,6 @@ var dataSourceFilterSchema = general_objects.AuditFilterFieldsWithTagsAndSingula
 	"node_types": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
+		Description: helper.AllowedValuesToDescription(validNodeTypes),
 	},
 })

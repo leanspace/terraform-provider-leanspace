@@ -7,6 +7,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
@@ -34,21 +37,24 @@ var monitorSchema = general_objects.ResourceSchemaWith(map[string]resourceschema
 		Optional: true,
 	},
 	"status": resourceschema.StringAttribute{
-		Computed: true,
+		Computed:      true,
+		PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 	},
 	"metric_id": resourceschema.StringAttribute{
 		Required:   true,
 		Validators: helper.ValidUUID(),
 	},
 	"node_id": resourceschema.StringAttribute{
-		Computed: true,
+		Computed:      true,
+		PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 	},
 	"rule": resourceschema.SingleNestedAttribute{
 		Required:   true,
 		Attributes: ruleSchema,
 	},
 	"action_templates": resourceschema.SetNestedAttribute{
-		Computed: true,
+		Computed:      true,
+		PlanModifiers: []planmodifier.Set{setplanmodifier.UseStateForUnknown()},
 		NestedObject: resourceschema.NestedAttributeObject{
 			Attributes: actionTemplateSchema,
 		},
@@ -61,8 +67,9 @@ var monitorSchema = general_objects.ResourceSchemaWith(map[string]resourceschema
 	},
 	"tags": general_objects.KeyValuesSchema,
 	"type": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Represent the type of the monitor. This field is deprecated and it will be removed soon. Please use only this type: REALTIME.",
+		Computed:      true,
+		Description:   "Represent the type of the monitor. This field is deprecated and it will be removed soon. Please use only this type: REALTIME.",
+		PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 	},
 })
 

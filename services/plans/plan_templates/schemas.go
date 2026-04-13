@@ -82,14 +82,14 @@ var activityConfigResultSchema = map[string]resourceschema.Attribute{
 		Validators: []validator.String{stringvalidator.RegexMatches(nameRegex, "Must be a valid name")},
 	},
 
-	"arguments": resourceschema.SetNestedAttribute{
+	"arguments": resourceschema.ListNestedAttribute{
 		Optional: true,
 		NestedObject: resourceschema.NestedAttributeObject{
 			Attributes: argumentSchema,
 		},
 	},
 
-	"resource_function_formulas": resourceschema.SetNestedAttribute{
+	"resource_function_formulas": resourceschema.ListNestedAttribute{
 		Optional: true,
 		NestedObject: resourceschema.NestedAttributeObject{
 			Attributes: resourceFunctionFormulaOverloadSchema,
@@ -102,7 +102,7 @@ var activityConfigResultSchema = map[string]resourceschema.Attribute{
 		Computed: true,
 	},
 
-	"invalid_definition_link_reasons": resourceschema.SetNestedAttribute{
+	"invalid_definition_link_reasons": resourceschema.ListNestedAttribute{
 		Computed: true,
 		NestedObject: resourceschema.NestedAttributeObject{
 			Attributes: invalidDefinitionLinkReasonSchema,

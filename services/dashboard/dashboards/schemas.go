@@ -40,6 +40,9 @@ var dashboardSchema = general_objects.ResourceSchemaWith(map[string]resourcesche
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
+	"timestamp_format": resourceschema.StringAttribute{
+		Optional: true,
+	},
 })
 
 var widgetInfoSchema = map[string]resourceschema.Attribute{

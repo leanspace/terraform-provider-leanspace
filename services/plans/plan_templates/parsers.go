@@ -1,45 +1,38 @@
 package plan_templates
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 func (planTemplate *PlanTemplate) ToMap() map[string]any {
-	planTemplateMap := make(map[string]any)
-	planTemplateMap["id"] = planTemplate.ID
-	planTemplateMap["asset_id"] = planTemplate.AssetId
-	planTemplateMap["name"] = planTemplate.Name
-	planTemplateMap["description"] = planTemplate.Description
-	planTemplateMap["integrity_status"] = planTemplate.IntegrityStatus
+	planTemplateMap := planTemplate.ToAuditMap()
+	planTemplateMap["asset_id"] = helper.NilIfEmpty(planTemplate.AssetId)
+	planTemplateMap["name"] = helper.NilIfEmpty(planTemplate.Name)
+	planTemplateMap["description"] = helper.NilIfEmpty(planTemplate.Description)
+	planTemplateMap["integrity_status"] = helper.NilIfEmpty(planTemplate.IntegrityStatus)
 
 	if planTemplate.ActivityConfigs != nil {
 		planTemplateMap["activity_configs"] = helper.ParseToMaps(planTemplate.ActivityConfigs)
 	}
 
-	planTemplateMap["estimated_duration_in_seconds"] = planTemplate.EstimatedDurationInSeconds
+	planTemplateMap["estimated_duration_in_seconds"] = helper.NilIfEmpty(planTemplate.EstimatedDurationInSeconds)
 
 	if planTemplate.InvalidPlanTemplateReasons != nil {
 		planTemplateMap["invalid_plan_template_reasons"] = helper.ParseToMaps(planTemplate.InvalidPlanTemplateReasons)
 	}
-
-	planTemplateMap["created_at"] = planTemplate.CreatedAt
-	planTemplateMap["created_by"] = planTemplate.CreatedBy
-	planTemplateMap["last_modified_at"] = planTemplate.LastModifiedAt
-	planTemplateMap["last_modified_by"] = planTemplate.LastModifiedBy
 
 	return planTemplateMap
 }
 
 func (activityConfigResult *ActivityConfigResult) ToMap() map[string]any {
 	activityConfigResultMap := make(map[string]any)
-	activityConfigResultMap["activity_definition_id"] = activityConfigResult.ActivityDefinitionId
-	activityConfigResultMap["delay_reference_on_predecessor"] = activityConfigResult.DelayReferenceOnPredecessor
-	activityConfigResultMap["position"] = activityConfigResult.Position
-	activityConfigResultMap["delay_in_seconds"] = activityConfigResult.DelayInSeconds
-	activityConfigResultMap["estimated_duration_in_seconds"] = activityConfigResult.EstimatedDurationInSeconds
-	activityConfigResultMap["name"] = activityConfigResult.Name
+	activityConfigResultMap["activity_definition_id"] = helper.NilIfEmpty(activityConfigResult.ActivityDefinitionId)
+	activityConfigResultMap["delay_reference_on_predecessor"] = helper.NilIfEmpty(activityConfigResult.DelayReferenceOnPredecessor)
+	activityConfigResultMap["position"] = helper.NilIfEmpty(activityConfigResult.Position)
+	activityConfigResultMap["delay_in_seconds"] = helper.NilIfEmpty(activityConfigResult.DelayInSeconds)
+	activityConfigResultMap["estimated_duration_in_seconds"] = helper.IntPtrToAny(activityConfigResult.EstimatedDurationInSeconds)
+	activityConfigResultMap["name"] = helper.NilIfEmpty(activityConfigResult.Name)
 
 	if activityConfigResult.Arguments != nil {
 		activityConfigResultMap["arguments"] = helper.ParseToMaps(activityConfigResult.Arguments)
@@ -50,7 +43,7 @@ func (activityConfigResult *ActivityConfigResult) ToMap() map[string]any {
 	}
 
 	activityConfigResultMap["tags"] = helper.ParseToMaps(activityConfigResult.Tags)
-	activityConfigResultMap["definition_link_status"] = activityConfigResult.DefinitionLinkStatus
+	activityConfigResultMap["definition_link_status"] = helper.NilIfEmpty(activityConfigResult.DefinitionLinkStatus)
 
 	activityConfigResultMap["invalid_definition_link_reasons"] = helper.ParseToMaps(activityConfigResult.InvalidDefinitionLinkReasons)
 
@@ -60,14 +53,14 @@ func (activityConfigResult *ActivityConfigResult) ToMap() map[string]any {
 
 func (invalidPlanTemplateReason *InvalidPlanTemplateReason) ToMap() map[string]any {
 	invalidPlanTemplateReasonMap := make(map[string]any)
-	invalidPlanTemplateReasonMap["code"] = invalidPlanTemplateReason.Code
-	invalidPlanTemplateReasonMap["message"] = invalidPlanTemplateReason.Message
+	invalidPlanTemplateReasonMap["code"] = helper.NilIfEmpty(invalidPlanTemplateReason.Code)
+	invalidPlanTemplateReasonMap["message"] = helper.NilIfEmpty(invalidPlanTemplateReason.Message)
 	return invalidPlanTemplateReasonMap
 }
 
 func (argument *Argument) ToMap() map[string]any {
 	argumentMap := make(map[string]any)
-	argumentMap["name"] = argument.Name
+	argumentMap["name"] = helper.NilIfEmpty(argument.Name)
 	argumentMap["attributes"] = []any{argument.Attributes.ToMap()}
 
 	return argumentMap
@@ -75,7 +68,7 @@ func (argument *Argument) ToMap() map[string]any {
 
 func (resourceFunctionFormulaOverload *ResourceFunctionFormulaOverload) ToMap() map[string]any {
 	resourceFunctionFormulaOverloadMap := make(map[string]any)
-	resourceFunctionFormulaOverloadMap["resource_function_id"] = resourceFunctionFormulaOverload.ResourceFunctionId
+	resourceFunctionFormulaOverloadMap["resource_function_id"] = helper.NilIfEmpty(resourceFunctionFormulaOverload.ResourceFunctionId)
 	resourceFunctionFormulaOverloadMap["formula"] = []map[string]any{resourceFunctionFormulaOverload.Formula.ToMap()}
 	return resourceFunctionFormulaOverloadMap
 }
@@ -83,16 +76,16 @@ func (resourceFunctionFormulaOverload *ResourceFunctionFormulaOverload) ToMap() 
 func (formula *ResourceFunctionFormula) ToMap() map[string]any {
 	formulaMap := make(map[string]any)
 
-	formulaMap["type"] = formula.Type
+	formulaMap["type"] = helper.NilIfEmpty(formula.Type)
 
 	if formula.Type == "LINEAR" {
-		formulaMap["constant"] = formula.Constant
-		formulaMap["rate"] = formula.Rate
-		formulaMap["time_unit"] = formula.TimeUnit
+		formulaMap["constant"] = helper.NilIfEmpty(formula.Constant)
+		formulaMap["rate"] = helper.NilIfEmpty(formula.Rate)
+		formulaMap["time_unit"] = helper.NilIfEmpty(formula.TimeUnit)
 	}
 
 	if formula.Type == "RECTANGULAR" {
-		formulaMap["amplitude"] = formula.Amplitude
+		formulaMap["amplitude"] = helper.NilIfEmpty(formula.Amplitude)
 	}
 
 	return formulaMap
@@ -100,22 +93,22 @@ func (formula *ResourceFunctionFormula) ToMap() map[string]any {
 
 func (invalidDefinitionLinkReason *InvalidDefinitionLinkReason) ToMap() map[string]any {
 	invalidDefinitionLinkMap := make(map[string]any)
-	invalidDefinitionLinkMap["code"] = invalidDefinitionLinkReason.Code
-	invalidDefinitionLinkMap["message"] = invalidDefinitionLinkReason.Message
+	invalidDefinitionLinkMap["code"] = helper.NilIfEmpty(invalidDefinitionLinkReason.Code)
+	invalidDefinitionLinkMap["message"] = helper.NilIfEmpty(invalidDefinitionLinkReason.Message)
 	return invalidDefinitionLinkMap
 }
 
 func (planTemplate *PlanTemplate) FromMap(planTemplateMap map[string]any) error {
 
-	planTemplate.ID = planTemplateMap["id"].(string)
-	planTemplate.AssetId = planTemplateMap["asset_id"].(string)
-	planTemplate.Name = planTemplateMap["name"].(string)
-	planTemplate.Description = planTemplateMap["description"].(string)
-	planTemplate.IntegrityStatus = planTemplateMap["integrity_status"].(string)
+	planTemplate.FromAuditMap(planTemplateMap)
+	planTemplate.AssetId = helper.CastString(planTemplateMap, "asset_id")
+	planTemplate.Name = helper.CastString(planTemplateMap, "name")
+	planTemplate.Description = helper.CastString(planTemplateMap, "description")
+	planTemplate.IntegrityStatus = helper.CastString(planTemplateMap, "integrity_status")
 
 	if planTemplateMap["activity_configs"] != nil {
 		if activityConfigs, err := helper.ParseFromMaps[ActivityConfigResult](
-			planTemplateMap["activity_configs"].([]any),
+			helper.CastSlice(planTemplateMap, "activity_configs"),
 		); err != nil {
 			return err
 		} else {
@@ -123,11 +116,11 @@ func (planTemplate *PlanTemplate) FromMap(planTemplateMap map[string]any) error 
 		}
 	}
 
-	planTemplate.EstimatedDurationInSeconds = planTemplateMap["estimated_duration_in_seconds"].(int)
+	planTemplate.EstimatedDurationInSeconds = helper.CastInt(planTemplateMap, "estimated_duration_in_seconds")
 
 	if planTemplateMap["invalid_plan_template_reasons"] != nil {
 		if invalidPlanTemplateReason, err := helper.ParseFromMaps[InvalidPlanTemplateReason](
-			planTemplateMap["invalid_plan_template_reasons"].([]any),
+			helper.CastSlice(planTemplateMap, "invalid_plan_template_reasons"),
 		); err != nil {
 			return err
 		} else {
@@ -135,26 +128,21 @@ func (planTemplate *PlanTemplate) FromMap(planTemplateMap map[string]any) error 
 		}
 	}
 
-	planTemplate.CreatedAt = planTemplateMap["created_at"].(string)
-	planTemplate.CreatedBy = planTemplateMap["created_by"].(string)
-	planTemplate.LastModifiedAt = planTemplateMap["last_modified_at"].(string)
-	planTemplate.LastModifiedBy = planTemplateMap["last_modified_by"].(string)
-
 	return nil
 }
 
 func (activityConfigResult *ActivityConfigResult) FromMap(activityConfigResultMap map[string]any) error {
 
-	activityConfigResult.ActivityDefinitionId = activityConfigResultMap["activity_definition_id"].(string)
-	activityConfigResult.DelayReferenceOnPredecessor = activityConfigResultMap["delay_reference_on_predecessor"].(string)
-	activityConfigResult.Position = activityConfigResultMap["position"].(int)
-	activityConfigResult.DelayInSeconds = activityConfigResultMap["delay_in_seconds"].(int)
-	activityConfigResult.EstimatedDurationInSeconds = activityConfigResultMap["estimated_duration_in_seconds"].(int)
-	activityConfigResult.Name = activityConfigResultMap["name"].(string)
+	activityConfigResult.ActivityDefinitionId = helper.CastString(activityConfigResultMap, "activity_definition_id")
+	activityConfigResult.DelayReferenceOnPredecessor = helper.CastString(activityConfigResultMap, "delay_reference_on_predecessor")
+	activityConfigResult.Position = helper.CastInt(activityConfigResultMap, "position")
+	activityConfigResult.DelayInSeconds = helper.CastInt(activityConfigResultMap, "delay_in_seconds")
+	activityConfigResult.EstimatedDurationInSeconds = helper.CastIntPtr(activityConfigResultMap, "estimated_duration_in_seconds")
+	activityConfigResult.Name = helper.CastString(activityConfigResultMap, "name")
 
 	if activityConfigResultMap["arguments"] != nil {
 		if arguments, err := helper.ParseFromMaps[Argument](
-			activityConfigResultMap["arguments"].(*schema.Set).List(),
+			helper.CastSlice(activityConfigResultMap, "arguments"),
 		); err != nil {
 			return err
 		} else {
@@ -164,7 +152,7 @@ func (activityConfigResult *ActivityConfigResult) FromMap(activityConfigResultMa
 
 	if activityConfigResultMap["resource_function_formulas"] != nil {
 		if resourceFunctionFormulaOverload, err := helper.ParseFromMaps[ResourceFunctionFormulaOverload](
-			activityConfigResultMap["resource_function_formulas"].(*schema.Set).List(),
+			helper.CastSlice(activityConfigResultMap, "resource_function_formulas"),
 		); err != nil {
 			return err
 		} else {
@@ -172,15 +160,15 @@ func (activityConfigResult *ActivityConfigResult) FromMap(activityConfigResultMa
 		}
 	}
 
-	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](activityConfigResultMap["tags"].(*schema.Set).List()); err != nil {
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](helper.CastSlice(activityConfigResultMap, "tags")); err != nil {
 		return err
 	} else {
 		activityConfigResult.Tags = tags
 	}
 
-	activityConfigResult.DefinitionLinkStatus = activityConfigResultMap["definition_link_status"].(string)
+	activityConfigResult.DefinitionLinkStatus = helper.CastString(activityConfigResultMap, "definition_link_status")
 
-	if invalidDefinitionLinkReasons, err := helper.ParseFromMaps[InvalidDefinitionLinkReason](activityConfigResultMap["invalid_definition_link_reasons"].(*schema.Set).List()); err != nil {
+	if invalidDefinitionLinkReasons, err := helper.ParseFromMaps[InvalidDefinitionLinkReason](helper.CastSlice(activityConfigResultMap, "invalid_definition_link_reasons")); err != nil {
 		return err
 	} else {
 		activityConfigResult.InvalidDefinitionLinkReasons = invalidDefinitionLinkReasons
@@ -190,17 +178,17 @@ func (activityConfigResult *ActivityConfigResult) FromMap(activityConfigResultMa
 }
 
 func (invalidPlanTemplateReason *InvalidPlanTemplateReason) FromMap(invalidPlanTemplateReasonMap map[string]any) error {
-	invalidPlanTemplateReason.Code = invalidPlanTemplateReasonMap["code"].(string)
-	invalidPlanTemplateReason.Message = invalidPlanTemplateReasonMap["message"].(string)
+	invalidPlanTemplateReason.Code = helper.CastString(invalidPlanTemplateReasonMap, "code")
+	invalidPlanTemplateReason.Message = helper.CastString(invalidPlanTemplateReasonMap, "message")
 	return nil
 }
 
 func (argument *Argument) FromMap(argumentMap map[string]any) error {
 
-	argument.Name = argumentMap["name"].(string)
+	argument.Name = helper.CastString(argumentMap, "name")
 
-	if len(argumentMap["attributes"].(*schema.Set).List()) > 0 {
-		if err := argument.Attributes.FromMap(argumentMap["attributes"].(*schema.Set).List()[0].(map[string]any)); err != nil {
+	if len(helper.CastSlice(argumentMap, "attributes")) > 0 {
+		if err := argument.Attributes.FromMap(helper.CastSlice(argumentMap, "attributes")[0].(map[string]any)); err != nil {
 			return err
 		}
 	}
@@ -209,11 +197,11 @@ func (argument *Argument) FromMap(argumentMap map[string]any) error {
 }
 
 func (resourceFunctionFormulaOverload *ResourceFunctionFormulaOverload) FromMap(resourceFunctionFormulaOverloadMap map[string]any) error {
-	resourceFunctionFormulaOverload.ResourceFunctionId = resourceFunctionFormulaOverloadMap["resource_function_id"].(string)
+	resourceFunctionFormulaOverload.ResourceFunctionId = helper.CastString(resourceFunctionFormulaOverloadMap, "resource_function_id")
 
-	if len(resourceFunctionFormulaOverloadMap["formula"].(*schema.Set).List()) > 0 && resourceFunctionFormulaOverloadMap["formula"].(*schema.Set).List()[0] != nil {
+	if len(helper.CastSlice(resourceFunctionFormulaOverloadMap, "formula")) > 0 && helper.CastSlice(resourceFunctionFormulaOverloadMap, "formula")[0] != nil {
 		resourceFunctionFormulaOverload.Formula = new(ResourceFunctionFormula)
-		if err := resourceFunctionFormulaOverload.Formula.FromMap(resourceFunctionFormulaOverloadMap["formula"].(*schema.Set).List()[0].(map[string]any)); err != nil {
+		if err := resourceFunctionFormulaOverload.Formula.FromMap(helper.CastSlice(resourceFunctionFormulaOverloadMap, "formula")[0].(map[string]any)); err != nil {
 			return err
 		}
 	}
@@ -222,23 +210,23 @@ func (resourceFunctionFormulaOverload *ResourceFunctionFormulaOverload) FromMap(
 }
 
 func (formula *ResourceFunctionFormula) FromMap(formulaMap map[string]any) error {
-	formula.Type = formulaMap["type"].(string)
+	formula.Type = helper.CastString(formulaMap, "type")
 
 	if formula.Type == "LINEAR" {
-		formula.Constant = formulaMap["constant"].(float64)
-		formula.Rate = formulaMap["rate"].(float64)
-		formula.TimeUnit = formulaMap["time_unit"].(string)
+		formula.Constant = helper.CastFloat64(formulaMap, "constant")
+		formula.Rate = helper.CastFloat64(formulaMap, "rate")
+		formula.TimeUnit = helper.CastString(formulaMap, "time_unit")
 	}
 
 	if formula.Type == "RECTANGULAR" {
-		formula.Amplitude = formulaMap["amplitude"].(float64)
+		formula.Amplitude = helper.CastFloat64(formulaMap, "amplitude")
 	}
 
 	return nil
 }
 
 func (invalidDefinitionLinkReason *InvalidDefinitionLinkReason) FromMap(invalidDefinitionLinReasonMap map[string]any) error {
-	invalidDefinitionLinkReason.Code = invalidDefinitionLinReasonMap["code"].(string)
-	invalidDefinitionLinkReason.Message = invalidDefinitionLinReasonMap["message"].(string)
+	invalidDefinitionLinkReason.Code = helper.CastString(invalidDefinitionLinReasonMap, "code")
+	invalidDefinitionLinkReason.Message = helper.CastString(invalidDefinitionLinReasonMap, "message")
 	return nil
 }

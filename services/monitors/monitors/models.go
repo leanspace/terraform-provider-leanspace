@@ -18,9 +18,9 @@ type Monitor struct {
 }
 
 type Rule struct {
-	ComparisonOperator string  `json:"comparisonOperator"`
-	ComparisonValue    float64 `json:"comparisonValue"`
-	Tolerance          float64 `json:"tolerance,omitempty"`
+	ComparisonOperator string   `json:"comparisonOperator"`
+	ComparisonValue    float64  `json:"comparisonValue"`
+	Tolerance          *float64 `json:"tolerance,omitempty"`
 }
 
 type ActionTemplateLink struct {

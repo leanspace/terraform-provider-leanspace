@@ -1,26 +1,19 @@
 package contact_reservation_status_mappings
 
-func (contactReservationStatusMapping *ContactReservationStatusMapping) ToMap() map[string]any {
-	contactReservatrionStatusMappingMap := make(map[string]any)
-	contactReservatrionStatusMappingMap["id"] = contactReservationStatusMapping.ID
-	contactReservatrionStatusMappingMap["contact_state_id"] = contactReservationStatusMapping.ContactStateId
-	contactReservatrionStatusMappingMap["leafspace_status"] = contactReservationStatusMapping.LeafspaceStatus
-	contactReservatrionStatusMappingMap["created_at"] = contactReservationStatusMapping.CreatedAt
-	contactReservatrionStatusMappingMap["created_by"] = contactReservationStatusMapping.CreatedBy
-	contactReservatrionStatusMappingMap["last_modified_at"] = contactReservationStatusMapping.LastModifiedAt
-	contactReservatrionStatusMappingMap["last_modified_by"] = contactReservationStatusMapping.LastModifiedBy
+import (
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+)
 
+func (contactReservationStatusMapping *ContactReservationStatusMapping) ToMap() map[string]any {
+	contactReservatrionStatusMappingMap := contactReservationStatusMapping.ToAuditMap()
+	contactReservatrionStatusMappingMap["contact_state_id"] = helper.NilIfEmpty(contactReservationStatusMapping.ContactStateId)
+	contactReservatrionStatusMappingMap["leafspace_status"] = helper.NilIfEmpty(contactReservationStatusMapping.LeafspaceStatus)
 	return contactReservatrionStatusMappingMap
 }
 
 func (contactReservationStatusMapping *ContactReservationStatusMapping) FromMap(leafSpaceIntegrationMap map[string]any) error {
-	contactReservationStatusMapping.ID = leafSpaceIntegrationMap["id"].(string)
-	contactReservationStatusMapping.ContactStateId = leafSpaceIntegrationMap["contact_state_id"].(string)
-	contactReservationStatusMapping.LeafspaceStatus = leafSpaceIntegrationMap["leafspace_status"].(string)
-	contactReservationStatusMapping.CreatedAt = leafSpaceIntegrationMap["created_at"].(string)
-	contactReservationStatusMapping.CreatedBy = leafSpaceIntegrationMap["created_by"].(string)
-	contactReservationStatusMapping.LastModifiedAt = leafSpaceIntegrationMap["last_modified_at"].(string)
-	contactReservationStatusMapping.LastModifiedBy = leafSpaceIntegrationMap["last_modified_by"].(string)
-
+	contactReservationStatusMapping.FromAuditMap(leafSpaceIntegrationMap)
+	contactReservationStatusMapping.ContactStateId = helper.CastString(leafSpaceIntegrationMap, "contact_state_id")
+	contactReservationStatusMapping.LeafspaceStatus = helper.CastString(leafSpaceIntegrationMap, "leafspace_status")
 	return nil
 }

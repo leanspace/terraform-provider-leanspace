@@ -61,7 +61,7 @@ resource "leanspace_widgets" "test_line" {
     }
   }
   metadata {
-    y_axis_range_max = [100]
+    y_axis_range_max = 100
     y_axis_label     = "This is a label"
   }
   tags {
@@ -89,7 +89,7 @@ resource "leanspace_widgets" "test_enum" {
     }
   }
   metadata {
-    y_axis_range_max = [100]
+    y_axis_range_max = 100
     y_axis_label     = "This is a label"
   }
   tags {
@@ -109,7 +109,7 @@ resource "leanspace_widgets" "test_earth" {
     aggregation = "count"
   }
   metadata {
-    y_axis_range_max = [100]
+    y_axis_range_max = 100
     y_axis_label     = "This is a label"
   }
   tags {
@@ -132,7 +132,7 @@ resource "leanspace_widgets" "test_gauge" {
     aggregation = "avg"
   }
   metadata {
-    y_axis_range_max = [100]
+    y_axis_range_max = 100
     y_axis_label     = "This is a label"
     thresholds {
       to    = 49
@@ -173,8 +173,8 @@ resource "leanspace_widgets" "test_bar" {
     }
   }
   metadata {
-    y_axis_range_min = [200]
-    y_axis_range_max = [600]
+    y_axis_range_min = 200
+    y_axis_range_max = 600
   }
   tags {
     key   = "Mission"

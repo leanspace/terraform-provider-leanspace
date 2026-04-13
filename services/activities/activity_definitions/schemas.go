@@ -3,6 +3,8 @@ package activity_definitions
 import (
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -13,6 +15,8 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
+
+var allowedMappingStatuses = []string{"IN_SYNC", "OUT_OF_SYNC"}
 
 var activityDefinitionSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 	"node_id": resourceschema.StringAttribute{
@@ -28,7 +32,7 @@ var activityDefinitionSchema = general_objects.ResourceSchemaWith(map[string]res
 	},
 	"mapping_status": resourceschema.StringAttribute{
 		Computed:    true,
-		Description: "Mapping status with Command definition arguments. Can be IN_SYNC or OUT_OF_SYNC",
+		Description: helper.AllowedValuesToDescription(allowedMappingStatuses),
 	},
 	"estimated_duration": resourceschema.Int64Attribute{
 		Optional:   true,
@@ -121,7 +125,7 @@ var argumentMappingSchema = map[string]resourceschema.Attribute{
 	},
 	"mapping_status": resourceschema.StringAttribute{
 		Computed:    true,
-		Description: "Mapping status with the Command definition argument. Can be IN_SYNC or OUT_OF_SYNC",
+		Description: helper.AllowedValuesToDescription(allowedMappingStatuses),
 	},
 }
 
@@ -134,7 +138,7 @@ var metadataMappingSchema = map[string]resourceschema.Attribute{
 	},
 	"mapping_status": resourceschema.StringAttribute{
 		Computed:    true,
-		Description: "Mapping status with the Command definition argument. Can be IN_SYNC or OUT_OF_SYNC",
+		Description: helper.AllowedValuesToDescription(allowedMappingStatuses),
 	},
 }
 
@@ -144,6 +148,18 @@ var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 		Optional:    true,
 		Validators: []validator.List{
 			listvalidator.ValueStringsAre(helper.ValidUUID()...),
+		},
+	},
+	"with_arguments_metadata_and_command_mappings": datasourceschema.BoolAttribute{
+		Optional:    true,
+		Description: "Whether to include arguments, metadata and command mappings in the response. Setting this to true can significantly increase the response time.",
+	},
+	"mapping_statuses": datasourceschema.SetAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Description: helper.AllowedValuesToDescription(allowedMappingStatuses),
+		Validators: []validator.Set{
+			setvalidator.ValueStringsAre(stringvalidator.OneOf(allowedMappingStatuses...)),
 		},
 	},
 }

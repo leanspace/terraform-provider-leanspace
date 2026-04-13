@@ -6,55 +6,48 @@ import (
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func (stream *Stream) ToMap() map[string]any {
-	streamMap := make(map[string]any)
-	streamMap["id"] = stream.ID
-	streamMap["version"] = stream.Version
-	streamMap["name"] = stream.Name
-	streamMap["description"] = stream.Description
+	streamMap := stream.ToAuditMap()
+	streamMap["version"] = helper.NilIfEmpty(stream.Version)
+	streamMap["name"] = helper.NilIfEmpty(stream.Name)
+	streamMap["description"] = helper.NilIfEmpty(stream.Description)
 	streamMap["tags"] = helper.ParseToMaps(stream.Tags)
-	streamMap["asset_id"] = stream.AssetId
-	streamMap["configuration"] = []any{stream.Configuration.ToMap()}
+	streamMap["asset_id"] = helper.NilIfEmpty(stream.AssetId)
+	streamMap["configuration"] = stream.Configuration.ToMap()
 	streamMap["mappings"] = helper.ParseToMaps(stream.Mappings)
-	streamMap["created_at"] = stream.CreatedAt
-	streamMap["created_by"] = stream.CreatedBy
-	streamMap["last_modified_at"] = stream.LastModifiedAt
-	streamMap["last_modified_by"] = stream.LastModifiedBy
 	return streamMap
 }
 
 func (configuration *Configuration) ToMap() map[string]any {
 	configMap := make(map[string]any)
-	configMap["endianness"] = configuration.Endianness
-	configMap["structure"] = []any{configuration.Structure.ToMap()}
-	configMap["metadata"] = []any{configuration.Metadata.ToMap()}
-	configMap["computations"] = []any{configuration.Computations.ToMap()}
+	configMap["endianness"] = helper.NilIfEmpty(configuration.Endianness)
+	configMap["structure"] = configuration.Structure.ToMap()
+	configMap["metadata"] = configuration.Metadata.ToMap()
+	configMap["computations"] = configuration.Computations.ToMap()
 	return configMap
 }
 
 func (streamComp *StreamComponent) ToMap() map[string]any {
 	streamCompMap := make(map[string]any)
-	streamCompMap["name"] = streamComp.Name
-	streamCompMap["order"] = streamComp.Order
-	streamCompMap["path"] = streamComp.Path
-	streamCompMap["type"] = streamComp.Type
+	streamCompMap["name"] = helper.NilIfEmpty(streamComp.Name)
+	streamCompMap["order"] = helper.NilIfEmpty(streamComp.Order)
+	streamCompMap["path"] = helper.NilIfEmpty(streamComp.Path)
+	streamCompMap["type"] = helper.NilIfEmpty(streamComp.Type)
 
 	if streamComp.Repetitive != nil {
-		streamCompMap["repetitive"] = []map[string]any{streamComp.Repetitive.ToMap()}
+		streamCompMap["repetitive"] = streamComp.Repetitive.ToMap()
 	}
 
 	if streamComp.Type == "FIELD" {
-		streamCompMap["length"] = []map[string]any{streamComp.Length.ToMap()}
-		streamCompMap["processor"] = streamComp.Processor
-		streamCompMap["data_type"] = streamComp.DataType
-		streamCompMap["endianness"] = streamComp.Endianness
+		streamCompMap["length"] = streamComp.Length.ToMap()
+		streamCompMap["processor"] = helper.NilIfEmpty(streamComp.Processor)
+		streamCompMap["data_type"] = helper.NilIfEmpty(streamComp.DataType)
+		streamCompMap["endianness"] = helper.NilIfEmpty(streamComp.Endianness)
 	}
 	if streamComp.Type == "SWITCH" {
-		streamCompMap["expression"] = []any{streamComp.Expression.ToMap()}
+		streamCompMap["expression"] = streamComp.Expression.ToMap()
 	}
 	if streamComp.Type == "SWITCH" || streamComp.Type == "CONTAINER" {
 		streamCompMap["elements"] = helper.ParseToMaps(streamComp.Elements)
@@ -66,40 +59,40 @@ func (streamComp *StreamComponent) ToMap() map[string]any {
 func (repetitive *Repetitive) ToMap() map[string]any {
 	repetitiveMap := make(map[string]any)
 	if repetitive != nil && repetitive.Value != 0 {
-		repetitiveMap["value"] = repetitive.Value
+		repetitiveMap["value"] = helper.NilIfEmpty(repetitive.Value)
 	}
 	if repetitive != nil && repetitive.Path != "" {
-		repetitiveMap["path"] = repetitive.Path
+		repetitiveMap["path"] = helper.NilIfEmpty(repetitive.Path)
 	}
 	return repetitiveMap
 }
 
 func (length *Length) ToMap() map[string]any {
 	lengthMap := make(map[string]any)
-	lengthMap["type"] = length.Type
-	lengthMap["unit"] = length.Unit
-	lengthMap["value"] = length.Value
-	lengthMap["path"] = length.Path
+	lengthMap["type"] = helper.NilIfEmpty(length.Type)
+	lengthMap["unit"] = helper.NilIfEmpty(length.Unit)
+	lengthMap["value"] = helper.NilIfEmpty(length.Value)
+	lengthMap["path"] = helper.NilIfEmpty(length.Path)
 	return lengthMap
 }
 
 func (switchExp *SwitchExpression) ToMap() map[string]any {
 	switchExpMap := make(map[string]any)
-	switchExpMap["switch_on"] = switchExp.SwitchOn
+	switchExpMap["switch_on"] = helper.NilIfEmpty(switchExp.SwitchOn)
 	switchExpMap["options"] = helper.ParseToMaps(switchExp.Options)
 	return switchExpMap
 }
 
 func (switchOption *SwitchOption) ToMap() map[string]any {
 	switchOptionMap := make(map[string]any)
-	switchOptionMap["value"] = []any{switchOption.Value.ToMap()}
-	switchOptionMap["component"] = switchOption.Component
+	switchOptionMap["value"] = switchOption.Value.ToMap()
+	switchOptionMap["component"] = helper.NilIfEmpty(switchOption.Component)
 	return switchOptionMap
 }
 
 func (switchValue *SwitchValue[T]) ToMap() map[string]any {
 	switchValueMap := make(map[string]any)
-	switchValueMap["data_type"] = switchValue.DataType
+	switchValueMap["data_type"] = helper.NilIfEmpty(switchValue.DataType)
 	switch switchValue.DataType {
 	case "INTEGER", "UINTEGER", "DECIMAL":
 		switchValueMap["data"] = helper.ParseFloat(any(switchValue.Data).(float64))
@@ -113,13 +106,13 @@ func (switchValue *SwitchValue[T]) ToMap() map[string]any {
 
 func (metadata *Metadata) ToMap() map[string]any {
 	metadataMap := make(map[string]any)
-	metadataMap["timestamp"] = []any{metadata.Timestamp.ToMap()}
+	metadataMap["timestamp"] = metadata.Timestamp.ToMap()
 	return metadataMap
 }
 
 func (timestampDef *TimestampDefinition) ToMap() map[string]any {
 	timestampDefMap := make(map[string]any)
-	timestampDefMap["expression"] = timestampDef.Expression
+	timestampDefMap["expression"] = helper.NilIfEmpty(timestampDef.Expression)
 	return timestampDefMap
 }
 
@@ -132,109 +125,95 @@ func (elementList *ElementList[T, PT]) ToMap() map[string]any {
 func (elementList *ElementListWithValid[T, PT]) ToMap() map[string]any {
 	elementListMap := make(map[string]any)
 	elementListMap["elements"] = helper.ParseToMaps[T, PT](elementList.Elements)
-	elementListMap["valid"] = elementList.Valid
+	elementListMap["valid"] = helper.NilIfEmpty(elementList.Valid)
 	return elementListMap
 }
 
 func (computation *Computation) ToMap() map[string]any {
 	computationMap := make(map[string]any)
-	computationMap["name"] = computation.Name
-	computationMap["order"] = computation.Order
-	computationMap["type"] = computation.Type
-	computationMap["data_type"] = computation.DataType
-	computationMap["expression"] = computation.Expression
+	computationMap["name"] = helper.NilIfEmpty(computation.Name)
+	computationMap["order"] = helper.NilIfEmpty(computation.Order)
+	computationMap["type"] = helper.NilIfEmpty(computation.Type)
+	computationMap["data_type"] = helper.NilIfEmpty(computation.DataType)
+	computationMap["expression"] = helper.NilIfEmpty(computation.Expression)
 	return computationMap
 }
 
 func (mapping *Mapping) ToMap() map[string]any {
 	mappingMap := make(map[string]any)
-	mappingMap["metric_id"] = mapping.MetricId
-	mappingMap["expression"] = mapping.Expression
+	mappingMap["metric_id"] = helper.NilIfEmpty(mapping.MetricId)
+	mappingMap["expression"] = helper.NilIfEmpty(mapping.Expression)
 	return mappingMap
 }
 
 func (stream *Stream) FromMap(streamMap map[string]any) error {
-	stream.ID = streamMap["id"].(string)
-	stream.Version = streamMap["version"].(int)
-	stream.Name = streamMap["name"].(string)
-	stream.Description = streamMap["description"].(string)
-	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](streamMap["tags"].(*schema.Set).List()); err != nil {
+	stream.FromAuditMap(streamMap)
+	stream.Version = helper.CastInt(streamMap, "version")
+	stream.Name = helper.CastString(streamMap, "name")
+	stream.Description = helper.CastString(streamMap, "description")
+	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](helper.CastSlice(streamMap, "tags")); err != nil {
 		return err
 	} else {
 		stream.Tags = tags
 	}
-	stream.AssetId = streamMap["asset_id"].(string)
-	if len(streamMap["configuration"].([]any)) > 0 {
-		if err := stream.Configuration.FromMap(streamMap["configuration"].([]any)[0].(map[string]any)); err != nil {
-			return err
-		}
+	stream.AssetId = helper.CastString(streamMap, "asset_id")
+	if err := stream.Configuration.FromMap(helper.CastMapAny(streamMap, "configuration")); err != nil {
+		return err
 	}
-	if mappings, err := helper.ParseFromMaps[Mapping](streamMap["mappings"].(*schema.Set).List()); err != nil {
+	if mappings, err := helper.ParseFromMaps[Mapping](helper.CastSlice(streamMap, "mappings")); err != nil {
 		return err
 	} else {
 		stream.Mappings = mappings
 	}
-	stream.CreatedAt = streamMap["created_at"].(string)
-	stream.CreatedBy = streamMap["created_by"].(string)
-	stream.LastModifiedAt = streamMap["last_modified_at"].(string)
-	stream.LastModifiedBy = streamMap["last_modified_by"].(string)
-
 	return nil
 }
 
 func (configuration *Configuration) FromMap(configMap map[string]any) error {
-	configuration.Endianness = configMap["endianness"].(string)
-	if len(configMap["structure"].([]any)) > 0 {
-		if err := configuration.Structure.FromMap(configMap["structure"].([]any)[0].(map[string]any)); err != nil {
-			return err
-		}
+	configuration.Endianness = helper.CastString(configMap, "endianness")
+	if err := configuration.Structure.FromMap(helper.CastMapAny(configMap, "structure")); err != nil {
+		return err
 	}
-	if len(configMap["metadata"].([]any)) > 0 {
-		if err := configuration.Metadata.FromMap(configMap["metadata"].([]any)[0].(map[string]any)); err != nil {
-			return err
-		}
+	if err := configuration.Metadata.FromMap(helper.CastMapAny(configMap, "metadata")); err != nil {
+		return err
 	}
-	if len(configMap["computations"].([]any)) > 0 {
-		if err := configuration.Computations.FromMap(configMap["computations"].([]any)[0].(map[string]any)); err != nil {
-			return err
-		}
+	if err := configuration.Computations.FromMap(helper.CastMapAny(configMap, "computations")); err != nil {
+		return err
 	}
 	return nil
 }
 
 func (streamComp *StreamComponent) FromMap(streamCompMap map[string]any) error {
-	streamComp.Name = streamCompMap["name"].(string)
-	streamComp.Order = streamCompMap["order"].(int)
-	streamComp.Path = streamCompMap["path"].(string)
-	streamComp.Type = streamCompMap["type"].(string)
-	if len(streamCompMap["repetitive"].([]any)) > 0 && streamCompMap["repetitive"].([]any)[0] != nil {
-		streamComp.Repetitive = new(Repetitive)
-		if err := streamComp.Repetitive.FromMap(streamCompMap["repetitive"].([]any)[0].(map[string]any)); err != nil {
+	streamComp.Name = helper.CastString(streamCompMap, "name")
+	streamComp.Order = helper.CastInt(streamCompMap, "order")
+	streamComp.Path = helper.CastString(streamCompMap, "path")
+	streamComp.Type = helper.CastString(streamCompMap, "type")
+	if streamCompMap["repetitive"] != nil {
+		streamComp.Repetitive = &Repetitive{}
+		if err := streamComp.Repetitive.FromMap(helper.CastMapAny(streamCompMap, "repetitive")); err != nil {
 			return err
 		}
 	}
 
 	if streamComp.Type == "FIELD" {
-		if len(streamCompMap["length"].([]any)) > 0 && streamCompMap["length"].([]any)[0] != nil {
-			streamComp.Length = new(Length)
-			if err := streamComp.Length.FromMap(streamCompMap["length"].([]any)[0].(map[string]any)); err != nil {
-				return err
-			}
+		streamComp.Length = new(Length)
+		if err := streamComp.Length.FromMap(helper.CastMapAny(streamCompMap, "length")); err != nil {
+			return err
 		}
-		streamComp.Processor = streamCompMap["processor"].(string)
-		streamComp.DataType = streamCompMap["data_type"].(string)
-		streamComp.Endianness = streamCompMap["endianness"].(string)
+		streamComp.Processor = helper.CastString(streamCompMap, "processor")
+		streamComp.DataType = helper.CastString(streamCompMap, "data_type")
+		streamComp.Endianness = helper.CastString(streamCompMap, "endianness")
 	}
 	if streamComp.Type == "SWITCH" {
-		if len(streamCompMap["expression"].([]any)) > 0 {
-			if err := streamComp.Expression.FromMap(streamCompMap["expression"].([]any)[0].(map[string]any)); err != nil {
-				return err
-			}
+		if streamComp.Expression == nil {
+			streamComp.Expression = &SwitchExpression{}
+		}
+		if err := streamComp.Expression.FromMap(helper.CastMapAny(streamCompMap, "expression")); err != nil {
+			return err
 		}
 	}
 	if streamComp.Type == "SWITCH" || streamComp.Type == "CONTAINER" {
-		if len(streamCompMap["elements"].([]any)) > 0 {
-			elements, err := helper.ParseFromMaps[StreamComponent](streamCompMap["elements"].([]any))
+		if len(helper.CastSlice(streamCompMap, "elements")) > 0 {
+			elements, err := helper.ParseFromMaps[StreamComponent](helper.CastSlice(streamCompMap, "elements"))
 			streamComp.Elements = elements
 			if err != nil {
 				return err
@@ -245,22 +224,22 @@ func (streamComp *StreamComponent) FromMap(streamCompMap map[string]any) error {
 }
 
 func (repetitive *Repetitive) FromMap(repetitiveMap map[string]any) error {
-	repetitive.Value = repetitiveMap["value"].(int)
-	repetitive.Path = repetitiveMap["path"].(string)
+	repetitive.Value = helper.CastInt(repetitiveMap, "value")
+	repetitive.Path = helper.CastString(repetitiveMap, "path")
 	return nil
 }
 
 func (length *Length) FromMap(lengthMap map[string]any) error {
-	length.Type = lengthMap["type"].(string)
-	length.Unit = lengthMap["unit"].(string)
-	length.Value = lengthMap["value"].(int)
-	length.Path = lengthMap["path"].(string)
+	length.Type = helper.CastString(lengthMap, "type")
+	length.Unit = helper.CastString(lengthMap, "unit")
+	length.Value = helper.CastInt(lengthMap, "value")
+	length.Path = helper.CastString(lengthMap, "path")
 	return nil
 }
 
 func (switchExp *SwitchExpression) FromMap(switchExpMap map[string]any) error {
-	switchExp.SwitchOn = switchExpMap["switch_on"].(string)
-	if options, err := helper.ParseFromMaps[SwitchOption](switchExpMap["options"].([]any)); err != nil {
+	switchExp.SwitchOn = helper.CastString(switchExpMap, "switch_on")
+	if options, err := helper.ParseFromMaps[SwitchOption](helper.CastSlice(switchExpMap, "options")); err != nil {
 		return err
 	} else {
 		switchExp.Options = options
@@ -269,35 +248,33 @@ func (switchExp *SwitchExpression) FromMap(switchExpMap map[string]any) error {
 }
 
 func (switchOption *SwitchOption) FromMap(switchOptionMap map[string]any) error {
-	if err := switchOption.Value.FromMap(switchOptionMap["value"].([]any)[0].(map[string]any)); err != nil {
+	if err := switchOption.Value.FromMap(helper.CastMapAny(switchOptionMap, "value")); err != nil {
 		return err
 	}
-	switchOption.Component = switchOptionMap["component"].(string)
+	switchOption.Component = helper.CastString(switchOptionMap, "component")
 	return nil
 }
 
 func (switchValue *SwitchValue[T]) FromMap(switchValueMap map[string]any) error {
-	switchValue.DataType = switchValueMap["data_type"].(string)
+	switchValue.DataType = helper.CastString(switchValueMap, "data_type")
 	switchValue.Data = switchValueMap["data"].(T)
 	return nil
 }
 
 func (metadata *Metadata) FromMap(metadataMap map[string]any) error {
-	if len(metadataMap["timestamp"].([]any)) > 0 {
-		if err := metadata.Timestamp.FromMap(metadataMap["timestamp"].([]any)[0].(map[string]any)); err != nil {
-			return err
-		}
+	if err := metadata.Timestamp.FromMap(helper.CastMapAny(metadataMap, "timestamp")); err != nil {
+		return err
 	}
 	return nil
 }
 
 func (timestampDef *TimestampDefinition) FromMap(timestampDefMap map[string]any) error {
-	timestampDef.Expression = timestampDefMap["expression"].(string)
+	timestampDef.Expression = helper.CastString(timestampDefMap, "expression")
 	return nil
 }
 
 func (elementList *ElementList[T, PT]) FromMap(elementListMap map[string]any) error {
-	if elems, err := helper.ParseFromMaps[T, PT](elementListMap["elements"].([]any)); err != nil {
+	if elems, err := helper.ParseFromMaps[T, PT](helper.CastSlice(elementListMap, "elements")); err != nil {
 		return err
 	} else {
 		elementList.Elements = elems
@@ -306,27 +283,27 @@ func (elementList *ElementList[T, PT]) FromMap(elementListMap map[string]any) er
 }
 
 func (elementList *ElementListWithValid[T, PT]) FromMap(elementListMap map[string]any) error {
-	if elems, err := helper.ParseFromMaps[T, PT](elementListMap["elements"].([]any)); err != nil {
+	if elems, err := helper.ParseFromMaps[T, PT](helper.CastSlice(elementListMap, "elements")); err != nil {
 		return err
 	} else {
 		elementList.Elements = elems
 	}
-	elementList.Valid = elementListMap["valid"].(bool)
+	elementList.Valid = helper.CastBool(elementListMap, "valid")
 	return nil
 }
 
 func (computation *Computation) FromMap(computationMap map[string]any) error {
-	computation.Name = computationMap["name"].(string)
-	computation.Order = computationMap["order"].(int)
-	computation.Type = computationMap["type"].(string)
-	computation.DataType = computationMap["data_type"].(string)
-	computation.Expression = computationMap["expression"].(string)
+	computation.Name = helper.CastString(computationMap, "name")
+	computation.Order = helper.CastInt(computationMap, "order")
+	computation.Type = helper.CastString(computationMap, "type")
+	computation.DataType = helper.CastString(computationMap, "data_type")
+	computation.Expression = helper.CastString(computationMap, "expression")
 	return nil
 }
 
 func (mapping *Mapping) FromMap(mappingMap map[string]any) error {
-	mapping.MetricId = mappingMap["metric_id"].(string)
-	mapping.Expression = mappingMap["expression"].(string)
+	mapping.MetricId = helper.CastString(mappingMap, "metric_id")
+	mapping.Expression = helper.CastString(mappingMap, "expression")
 	return nil
 }
 

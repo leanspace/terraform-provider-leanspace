@@ -1,6 +1,7 @@
 package resource_functions
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -66,5 +67,17 @@ var dataSourceFilterSchema = general_objects.AuditFilterFieldsWithTags(map[strin
 	"resource_ids": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
+	},
+	"time_units": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Description: helper.AllowedValuesToDescription(validResourceFunctionTimeUnits),
+		Validators:  []validator.List{listvalidator.ValueStringsAre(stringvalidator.OneOf(validResourceFunctionTimeUnits...))},
+	},
+	"types": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Description: helper.AllowedValuesToDescription(validFormulaTypes),
+		Validators:  []validator.List{listvalidator.ValueStringsAre(stringvalidator.OneOf(validFormulaTypes...))},
 	},
 })

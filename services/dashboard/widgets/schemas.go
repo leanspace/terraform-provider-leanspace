@@ -4,7 +4,6 @@ import (
 	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
-	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -62,11 +61,9 @@ var widgetSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.
 			Attributes: seriesSchema,
 		},
 	},
-	"metadata": resourceschema.ListNestedAttribute{
-		Optional: true,
-		NestedObject: resourceschema.NestedAttributeObject{
-			Attributes: metadataSchema,
-		},
+	"metadata": resourceschema.SingleNestedAttribute{
+		Optional:   true,
+		Attributes: metadataSchema,
 	},
 	"dashboards": resourceschema.SetNestedAttribute{
 		Computed: true,
@@ -95,12 +92,12 @@ var seriesSchema = map[string]resourceschema.Attribute{
 		Description: helper.AllowedValuesToDescription(validAggregations),
 		Validators:  []validator.String{stringvalidator.OneOf(validAggregations...)},
 	},
-	"filters": resourceschema.SetNestedAttribute{
+	"filters": resourceschema.ListNestedAttribute{ // workaround: we need a list instead of a set
 		Optional: true,
 		NestedObject: resourceschema.NestedAttributeObject{
 			Attributes: filterSchema,
 		},
-		Validators: []validator.Set{setvalidator.SizeAtMost(3)},
+		Validators: []validator.List{listvalidator.SizeAtMost(3)},
 	},
 }
 

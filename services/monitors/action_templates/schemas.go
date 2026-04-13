@@ -29,30 +29,33 @@ var baseActionTemplateSchema = MakeActionTemplateSchema(false)
 func MakeActionTemplateSchema(includeTriggeredOn bool) map[string]resourceschema.Attribute {
 	baseSchema := general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 		"name": resourceschema.StringAttribute{
-			Required: true,
+			Required: !includeTriggeredOn,
+			Computed: includeTriggeredOn,
 		},
 		"type": resourceschema.StringAttribute{
-			Optional:    true,
+			Optional:    !includeTriggeredOn,
 			Computed:    true,
 			Default:     stringdefault.StaticString("WEBHOOK"),
 			Description: helper.AllowedValuesToDescription(validTypes),
 			Validators:  []validator.String{stringvalidator.OneOf(validTypes...)},
 		},
 		"url": resourceschema.StringAttribute{
-			Optional: true,
+			Optional: !includeTriggeredOn,
+			Computed: includeTriggeredOn,
 			Validators: []validator.String{
 				stringvalidator.RegexMatches(regexp.MustCompile(`^https?://`), "must be a valid URL starting with http:// or https://"),
 			},
 		},
 		"payload": resourceschema.StringAttribute{
-			Optional: true,
+			Optional: !includeTriggeredOn,
+			Computed: includeTriggeredOn,
 		},
 		"content": resourceschema.StringAttribute{
 			Computed: true,
 		},
 		"headers": resourceschema.MapAttribute{
 			ElementType: types.StringType,
-			Optional:    true,
+			Optional:    !includeTriggeredOn,
 			Computed:    true,
 			Default:     mapdefault.StaticValue(types.MapValueMust(types.StringType, map[string]attr.Value{})),
 		},
@@ -60,7 +63,7 @@ func MakeActionTemplateSchema(includeTriggeredOn bool) map[string]resourceschema
 
 	if includeTriggeredOn {
 		baseSchema["triggered_on"] = resourceschema.SetAttribute{
-			Optional:    true,
+			Computed:    true,
 			ElementType: types.StringType,
 			Description: helper.AllowedValuesToDescription(ValidTriggeredOn),
 		}

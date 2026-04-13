@@ -22,7 +22,7 @@ data "leanspace_properties" "all" {
     from_last_modified_at = null
     to_last_modified_at   = null
     ids                   = []
-    kinds                 = []
+    node_kinds                 = []
     node_types            = []
     query                 = ""
     tags                  = []

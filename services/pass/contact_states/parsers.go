@@ -1,26 +1,17 @@
 package contact_states
 
-func (state *ContactState) ToMap() map[string]any {
-	stateMap := make(map[string]any)
-	stateMap["id"] = state.ID
-	stateMap["name"] = state.Name
-	stateMap["read_only"] = state.ReadOnly
-	stateMap["created_at"] = state.CreatedAt
-	stateMap["created_by"] = state.CreatedBy
-	stateMap["last_modified_at"] = state.LastModifiedAt
-	stateMap["last_modified_by"] = state.LastModifiedBy
+import "github.com/leanspace/terraform-provider-leanspace/helper"
 
+func (state *ContactState) ToMap() map[string]any {
+	stateMap := state.ToAuditMap()
+	stateMap["name"] = helper.NilIfEmpty(state.Name)
+	stateMap["read_only"] = helper.NilIfEmpty(state.ReadOnly)
 	return stateMap
 }
 
 func (state *ContactState) FromMap(stateMap map[string]any) error {
-	state.ID = stateMap["id"].(string)
-	state.Name = stateMap["name"].(string)
-	state.ReadOnly = stateMap["read_only"].(bool)
-	state.CreatedAt = stateMap["created_at"].(string)
-	state.CreatedBy = stateMap["created_by"].(string)
-	state.LastModifiedAt = stateMap["last_modified_at"].(string)
-	state.LastModifiedBy = stateMap["last_modified_by"].(string)
-
+	state.FromAuditMap(stateMap)
+	state.Name = helper.CastString(stateMap, "name")
+	state.ReadOnly = helper.CastBool(stateMap, "read_only")
 	return nil
 }

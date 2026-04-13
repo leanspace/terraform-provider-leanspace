@@ -21,7 +21,6 @@ type GenericPlugin struct {
 	FileSha        string         `json:"source_code_sha"`
 }
 
-func (genericPlugin GenericPlugin) GetID() string     { return genericPlugin.ID }
 func (genericPlugin GenericPlugin) GetStatus() string { return genericPlugin.Status }
 func (genericPlugin *GenericPlugin) SetStatus(status string) {
 	genericPlugin.Status = status

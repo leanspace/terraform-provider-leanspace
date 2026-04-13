@@ -1,41 +1,30 @@
 package command_queues
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 )
 
 func (queue *CommandQueue) ToMap() map[string]any {
-	queueMap := make(map[string]any)
-	queueMap["id"] = queue.ID
-	queueMap["asset_id"] = queue.AssetId
-	queueMap["name"] = queue.Name
-	queueMap["ground_station_ids"] = queue.GroundStationIds
-	queueMap["command_transformer_plugin_id"] = queue.CommandTransformerPluginId
-	queueMap["protocol_transformer_plugin_id"] = queue.ProtocolTransformerPluginId
-	queueMap["protocol_transformer_init_data"] = queue.ProtocolTransformerInitData
-	queueMap["created_at"] = queue.CreatedAt
-	queueMap["created_by"] = queue.CreatedBy
-	queueMap["last_modified_at"] = queue.LastModifiedAt
-	queueMap["last_modified_by"] = queue.LastModifiedBy
-
+	queueMap := queue.ToAuditMap()
+	queueMap["asset_id"] = helper.NilIfEmpty(queue.AssetId)
+	queueMap["name"] = helper.NilIfEmpty(queue.Name)
+	queueMap["ground_station_ids"] = helper.NilIfEmpty(queue.GroundStationIds)
+	queueMap["command_transformer_plugin_id"] = helper.NilIfEmpty(queue.CommandTransformerPluginId)
+	queueMap["protocol_transformer_plugin_id"] = helper.NilIfEmpty(queue.ProtocolTransformerPluginId)
+	queueMap["protocol_transformer_init_data"] = helper.NilIfEmpty(queue.ProtocolTransformerInitData)
 	return queueMap
 }
 
 func (queue *CommandQueue) FromMap(queueMap map[string]any) error {
-	queue.ID = queueMap["id"].(string)
-	queue.AssetId = queueMap["asset_id"].(string)
-	queue.Name = queueMap["name"].(string)
-	queue.GroundStationIds = make([]string, queueMap["ground_station_ids"].(*schema.Set).Len())
-	for i, value := range queueMap["ground_station_ids"].(*schema.Set).List() {
+	queue.FromAuditMap(queueMap)
+	queue.AssetId = helper.CastString(queueMap, "asset_id")
+	queue.Name = helper.CastString(queueMap, "name")
+	queue.GroundStationIds = make([]string, len(helper.CastSlice(queueMap, "ground_station_ids")))
+	for i, value := range helper.CastSlice(queueMap, "ground_station_ids") {
 		queue.GroundStationIds[i] = value.(string)
 	}
-	queue.CommandTransformerPluginId = queueMap["command_transformer_plugin_id"].(string)
-	queue.ProtocolTransformerPluginId = queueMap["protocol_transformer_plugin_id"].(string)
-	queue.ProtocolTransformerInitData = queueMap["protocol_transformer_init_data"].(string)
-	queue.CreatedAt = queueMap["created_at"].(string)
-	queue.CreatedBy = queueMap["created_by"].(string)
-	queue.LastModifiedAt = queueMap["last_modified_at"].(string)
-	queue.LastModifiedBy = queueMap["last_modified_by"].(string)
-
+	queue.CommandTransformerPluginId = helper.CastString(queueMap, "command_transformer_plugin_id")
+	queue.ProtocolTransformerPluginId = helper.CastString(queueMap, "protocol_transformer_plugin_id")
+	queue.ProtocolTransformerInitData = helper.CastString(queueMap, "protocol_transformer_init_data")
 	return nil
 }
