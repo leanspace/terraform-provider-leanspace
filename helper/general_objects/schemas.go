@@ -275,27 +275,8 @@ func CreateGeoPointFieldsSchema(isValueField bool) map[string]resourceschema.Att
 	}
 }
 
-func createGeoPointFieldsSchemaDS(isValueField bool) map[string]datasourceschema.Attribute {
-	return map[string]datasourceschema.Attribute{
-		"latitude": datasourceschema.SingleNestedAttribute{
-			Computed:   true,
-			Attributes: baseAttributeFieldSchemaDS(isValueField),
-		},
-		"longitude": datasourceschema.SingleNestedAttribute{
-			Computed:   true,
-			Attributes: baseAttributeFieldSchemaDS(isValueField),
-		},
-		"elevation": datasourceschema.SingleNestedAttribute{
-			Computed:   true,
-			Attributes: baseAttributeFieldSchemaDS(isValueField),
-		},
-	}
-}
-
 var geoPointFieldsDefSchema = CreateGeoPointFieldsSchema(false)
 var geoPointFieldsSchema = CreateGeoPointFieldsSchema(true)
-var geoPointFieldsDefSchemaDS = createGeoPointFieldsSchemaDS(false)
-var geoPointFieldsSchemaDS = createGeoPointFieldsSchemaDS(true)
 
 func baseAttributeFieldSchema(isValueField bool, isGeoPoint bool) map[string]resourceschema.Attribute {
 	baseSchema := map[string]resourceschema.Attribute{
@@ -340,43 +321,6 @@ func baseAttributeFieldSchema(isValueField bool, isGeoPoint bool) map[string]res
 	return baseSchema
 }
 
-func baseAttributeFieldSchemaDS(isValueField bool) map[string]datasourceschema.Attribute {
-	baseSchema := map[string]datasourceschema.Attribute{
-		"scale": datasourceschema.Int64Attribute{
-			Computed:    true,
-			Description: "Property field with numeric type only: the scale required.",
-		},
-		"unit_id": datasourceschema.StringAttribute{
-			Computed:    true,
-			Description: "Property field with numeric type only",
-		},
-		"precision": datasourceschema.Int64Attribute{
-			Computed:    true,
-			Description: "Property field with numeric type only: How many values after the comma should be accepted",
-		},
-		"min": datasourceschema.Float64Attribute{
-			Computed:    true,
-			Description: "Property field with numeric type only: the minimum value allowed.",
-		},
-		"max": datasourceschema.Float64Attribute{
-			Computed:    true,
-			Description: "Property field with numeric type only: the maximum value allowed.",
-		},
-	}
-
-	if isValueField {
-		baseSchema["value"] = datasourceschema.StringAttribute{
-			Computed: true,
-		}
-	} else {
-		baseSchema["default_value"] = datasourceschema.StringAttribute{
-			Computed: true,
-		}
-	}
-
-	return baseSchema
-}
-
 // KeyValuesSchema returns a SetNestedAttribute for key-value tags (resource schema).
 var KeyValuesSchema = resourceschema.SetNestedAttribute{
 	Optional: true,
@@ -387,21 +331,6 @@ var KeyValuesSchema = resourceschema.SetNestedAttribute{
 			},
 			"value": resourceschema.StringAttribute{
 				Optional: true,
-			},
-		},
-	},
-}
-
-// KeyValuesSchemaDS returns a SetNestedAttribute for key-value tags (data source schema).
-var KeyValuesSchemaDS = datasourceschema.SetNestedAttribute{
-	Computed: true,
-	NestedObject: datasourceschema.NestedAttributeObject{
-		Attributes: map[string]datasourceschema.Attribute{
-			"key": datasourceschema.StringAttribute{
-				Computed: true,
-			},
-			"value": datasourceschema.StringAttribute{
-				Computed: true,
 			},
 		},
 	},
@@ -420,36 +349,26 @@ func contains(slice []string, value string) bool {
 	return false
 }
 
-func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string, forceNew bool) map[string]resourceschema.Attribute {
-	validTypes := []string{}
-	for _, value := range ValidAttributeSchemaTypes {
-		if contains(excludeTypes, value) {
-			continue
+// filterDefinitionTypes returns the slice of valid attribute types with the given types removed.
+func filterDefinitionTypes(excludeTypes []string) []string {
+	validTypes := make([]string, 0, len(ValidAttributeSchemaTypes))
+	for _, v := range ValidAttributeSchemaTypes {
+		if !contains(excludeTypes, v) {
+			validTypes = append(validTypes, v)
 		}
-		validTypes = append(validTypes, value)
 	}
+	return validTypes
+}
 
-	var typePlanModifiers []planmodifier.String
-	if forceNew {
-		typePlanModifiers = []planmodifier.String{stringplanmodifier.RequiresReplace()}
-	}
-
-	attribute := map[string]resourceschema.Attribute{
-		// Common fields
-		"type": resourceschema.StringAttribute{
-			Required:      true,
-			Description:   helper.AllowedValuesToDescription(validTypes),
-			Validators:    []validator.String{stringvalidator.OneOf(validTypes...)},
-			PlanModifiers: typePlanModifiers,
-		},
+// sharedDefinitionConstraintFields returns the attribute constraint fields common to both
+// DefinitionAttributeSchema and DefinitionAttributeArrayConstraintSchema: the required bool
+// plus all per-type constraint fields (text, numeric, time/date, enum).
+func sharedDefinitionConstraintFields() map[string]resourceschema.Attribute {
+	return map[string]resourceschema.Attribute{
 		"required": resourceschema.BoolAttribute{
 			Optional: true,
 			Computed: true,
 			Default:  booldefault.StaticBool(false),
-		},
-		"default_value": resourceschema.StringAttribute{
-			Optional:    true,
-			Description: "The default value can be of any type. In case of an array type, please surround the list values with double quotes and use the comma separator.",
 		},
 		// Text & Binary
 		"min_length": resourceschema.Int64Attribute{
@@ -506,35 +425,56 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string, fo
 			Optional:    true,
 			Description: "Enum only: The allowed values for the enum in the format 1 = \"value\"",
 		},
-		// Geopoint only
-		"fields": resourceschema.SingleNestedAttribute{
-			Optional:    true,
-			Attributes:  geoPointFieldsDefSchema,
-			Description: "Geopoint only",
-		},
-		// Array
-		"min_size": resourceschema.Int64Attribute{
-			Optional:    true,
-			Description: "Array only: The minimum number of elements allowed",
-		},
-		"max_size": resourceschema.Int64Attribute{
-			Optional:    true,
-			Description: "Array only: The maximum number of elements allowed",
-		},
-		"unique": resourceschema.BoolAttribute{
-			Optional:      true,
-			Computed:      true,
-			Description:   "Array only: No duplicated elements are allowed",
-			PlanModifiers: []planmodifier.Bool{boolplanmodifier.UseStateForUnknown()},
-		},
-		"constraint": resourceschema.SingleNestedAttribute{
-			Optional:    true,
-			Description: "Array only: Constraint applied to all elements in the array",
-			Attributes: DefinitionAttributeArrayConstraintSchema(
-				[]string{"ARRAY", "STRUCTURE", "GEOPOINT", "TLE"},
-				[]string{"default_value"},
-			),
-		},
+	}
+}
+
+func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string, forceNew bool) map[string]resourceschema.Attribute {
+	validTypes := filterDefinitionTypes(excludeTypes)
+
+	var typePlanModifiers []planmodifier.String
+	if forceNew {
+		typePlanModifiers = []planmodifier.String{stringplanmodifier.RequiresReplace()}
+	}
+
+	attribute := sharedDefinitionConstraintFields()
+	attribute["type"] = resourceschema.StringAttribute{
+		Required:      true,
+		Description:   helper.AllowedValuesToDescription(validTypes),
+		Validators:    []validator.String{stringvalidator.OneOf(validTypes...)},
+		PlanModifiers: typePlanModifiers,
+	}
+	attribute["default_value"] = resourceschema.StringAttribute{
+		Optional:    true,
+		Description: "The default value can be of any type. In case of an array type, please surround the list values with double quotes and use the comma separator.",
+	}
+	// Geopoint only
+	attribute["fields"] = resourceschema.SingleNestedAttribute{
+		Optional:    true,
+		Attributes:  geoPointFieldsDefSchema,
+		Description: "Geopoint only",
+	}
+	// Array
+	attribute["min_size"] = resourceschema.Int64Attribute{
+		Optional:    true,
+		Description: "Array only: The minimum number of elements allowed",
+	}
+	attribute["max_size"] = resourceschema.Int64Attribute{
+		Optional:    true,
+		Description: "Array only: The maximum number of elements allowed",
+	}
+	attribute["unique"] = resourceschema.BoolAttribute{
+		Optional:      true,
+		Computed:      true,
+		Description:   "Array only: No duplicated elements are allowed",
+		PlanModifiers: []planmodifier.Bool{boolplanmodifier.UseStateForUnknown()},
+	}
+	attribute["constraint"] = resourceschema.SingleNestedAttribute{
+		Optional:    true,
+		Description: "Array only: Constraint applied to all elements in the array",
+		Attributes: DefinitionAttributeArrayConstraintSchema(
+			[]string{"ARRAY", "STRUCTURE", "GEOPOINT", "TLE"},
+			nil,
+		),
 	}
 
 	for _, field := range excludeFields {
@@ -545,77 +485,15 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string, fo
 }
 
 func DefinitionAttributeArrayConstraintSchema(excludeTypes []string, excludeFields []string) map[string]resourceschema.Attribute {
-	validTypes := []string{}
-	for _, value := range ValidAttributeSchemaTypes {
-		if contains(excludeTypes, value) {
-			continue
-		}
-		validTypes = append(validTypes, value)
-	}
+	validTypes := filterDefinitionTypes(excludeTypes)
 
-	attribute := map[string]resourceschema.Attribute{
-		"type": resourceschema.StringAttribute{
-			Optional:    true,
-			Description: helper.AllowedValuesToDescription(validTypes),
-			Validators: []validator.String{
-				stringvalidator.OneOf(validTypes...),
-				helper.RequiredIfParentConfigured(),
-			},
-		},
-		"required": resourceschema.BoolAttribute{
-			Optional: true,
-			Computed: true,
-			Default:  booldefault.StaticBool(false),
-		},
-		"max_length": resourceschema.Int64Attribute{
-			Optional:    true,
-			Description: "Only array elements with text type: Maximum length of this text (at least 1)",
-			Validators:  []validator.Int64{int64validator.AtLeast(1)},
-		},
-		"min_length": resourceschema.Int64Attribute{
-			Optional:    true,
-			Description: "Only array elements with text type: Minimum length of this text (at least 1)",
-			Validators:  []validator.Int64{int64validator.AtLeast(1)},
-		},
-		"pattern": resourceschema.StringAttribute{
-			Optional:    true,
-			Description: "Only array elements with text type: Regex defined the allowed pattern of this text",
-		},
-		"max": resourceschema.Float64Attribute{
-			Optional:    true,
-			Description: "Only array elements with numeric type : maximum value allowed",
-		},
-		"precision": resourceschema.Int64Attribute{
-			Optional:    true,
-			Description: "Only array elements with numeric type : how many values after the comma should be accepted",
-		},
-		"min": resourceschema.Float64Attribute{
-			Optional:    true,
-			Description: "Only array elements with numeric type : minimum value allowed",
-		},
-		"unit_id": resourceschema.StringAttribute{
-			Optional:    true,
-			Description: "Only array elements with numeric type",
-			Validators:  helper.ValidUUID(),
-		},
-		"scale": resourceschema.Int64Attribute{
-			Optional:    true,
-			Description: "Only array elements with numeric type",
-		},
-		"options": resourceschema.MapAttribute{
-			ElementType: types.StringType,
-			Optional:    true,
-			Description: "Only array elements with enum type : The allowed values for the enum in the format 1 = \"value\"",
-		},
-		"after": resourceschema.StringAttribute{
-			Optional:    true,
-			Description: "Only array elements with time/date/timestamp type : Minimum date allowed",
-			Validators:  helper.IsValidTimeDateOrTimestamp(),
-		},
-		"before": resourceschema.StringAttribute{
-			Optional:    true,
-			Description: "Only array elements with time/date/timestamp type : Maximum date allowed",
-			Validators:  helper.IsValidTimeDateOrTimestamp(),
+	attribute := sharedDefinitionConstraintFields()
+	attribute["type"] = resourceschema.StringAttribute{
+		Optional:    true,
+		Description: helper.AllowedValuesToDescription(validTypes),
+		Validators: []validator.String{
+			stringvalidator.OneOf(validTypes...),
+			helper.RequiredIfParentConfigured(),
 		},
 	}
 

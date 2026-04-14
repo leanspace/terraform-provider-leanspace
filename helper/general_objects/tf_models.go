@@ -555,8 +555,8 @@ func PageableToTF(p *Pageable) *PageableTF {
 }
 
 // PaginatedDataSourceTF is the TF model for paginated data source responses.
-// It is the same for ALL paginated data sources (content items are empty objects
-// since DataSourceSchema is never set by any service).
+// Content items are returned as empty objects; the schema is always derived
+// from the resource schema via ResourceSchemaToDataSource.
 type PaginatedDataSourceTF struct {
 	ID               types.String `tfsdk:"id"`
 	Content          types.List   `tfsdk:"content"`
@@ -574,8 +574,8 @@ type PaginatedDataSourceTF struct {
 }
 
 // ToDataSourceTF converts a PaginatedList API response into a PaginatedDataSourceTF
-// suitable for State.Set(). Content items become empty objects (matching the nil
-// DataSourceSchema convention). Filters are passed through from the config.
+// suitable for State.Set(). Content items become empty objects (the full schema is
+// derived automatically from the resource schema). Filters are passed through from the config.
 func (pl *PaginatedList[T, PT]) ToDataSourceTF(filters types.Object) PaginatedDataSourceTF {
 	// Build content as a list of empty objects
 	emptyObjType := types.ObjectType{AttrTypes: map[string]attr.Type{}}
