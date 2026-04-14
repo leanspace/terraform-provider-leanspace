@@ -1,6 +1,8 @@
 package general_objects
 
 import (
+	"context"
+
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
@@ -16,6 +18,33 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 )
+
+// serverManagedTimestampModifier marks a Computed-only timestamp field as unknown
+// whenever the resource is being updated (i.e. any other attribute has changed).
+// This prevents the "inconsistent result after apply" error caused by the server
+// updating the timestamp on every write while the plan kept the old known value.
+type serverManagedTimestampModifier struct{}
+
+func (m serverManagedTimestampModifier) Description(_ context.Context) string {
+	return "Marks the field as (known after apply) when the resource is being updated."
+}
+func (m serverManagedTimestampModifier) MarkdownDescription(ctx context.Context) string {
+	return m.Description(ctx)
+}
+func (m serverManagedTimestampModifier) PlanModifyString(_ context.Context, req planmodifier.StringRequest, resp *planmodifier.StringResponse) {
+	// During create the value is already unknown — nothing to do.
+	if req.StateValue.IsNull() {
+		return
+	}
+	// If the entire plan equals the current state, this is a no-op plan.
+	// Keep the known value so no spurious "(known after apply)" diff is shown.
+	if req.Plan.Raw.Equal(req.State.Raw) {
+		return
+	}
+	// Something is changing — the server will update the timestamp, so mark it
+	// as unknown to accept whatever value comes back after apply.
+	resp.PlanValue = types.StringUnknown()
+}
 
 func PaginatedListSchemaDS(content map[string]datasourceschema.Attribute, filters map[string]datasourceschema.Attribute) map[string]datasourceschema.Attribute {
 	return map[string]datasourceschema.Attribute{
@@ -645,8 +674,8 @@ func ResourceSchemaWith(fields map[string]resourceschema.Attribute) map[string]r
 	result["id"] = resourceschema.StringAttribute{Computed: true, PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()}}
 	result["created_at"] = resourceschema.StringAttribute{Computed: true, Description: "When it was created", PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()}}
 	result["created_by"] = resourceschema.StringAttribute{Computed: true, Description: "Who created it", PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()}}
-	result["last_modified_at"] = resourceschema.StringAttribute{Computed: true, Description: "When it was last modified", PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()}}
-	result["last_modified_by"] = resourceschema.StringAttribute{Computed: true, Description: "Who modified it the last", PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()}}
+	result["last_modified_at"] = resourceschema.StringAttribute{Computed: true, Description: "When it was last modified", PlanModifiers: []planmodifier.String{serverManagedTimestampModifier{}}}
+	result["last_modified_by"] = resourceschema.StringAttribute{Computed: true, Description: "Who modified it the last", PlanModifiers: []planmodifier.String{serverManagedTimestampModifier{}}}
 	for k, v := range fields {
 		result[k] = v
 	}
