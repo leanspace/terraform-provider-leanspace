@@ -64,14 +64,6 @@ func AllowedValuesToDescription(allowedValues []string) string {
 	return "it must be one of these values: " + strings.Join(allowedValues, ", ")
 }
 
-func AllowedIntValuesToDescription(allowedValues []int) string {
-	return "it must be one of these values: " + strings.Trim(strings.Join(strings.Fields(fmt.Sprint(allowedValues)), ", "), "[]")
-}
-
-func Ptr[T any](value T) *T {
-	return &value
-}
-
 func FileAndDataToMultipart(filePath string, data []byte) (io.Reader, string, error) {
 	return FileAndDatasToMultipart(filePath, "file", map[string]any{"command": string(data)})
 }
@@ -130,12 +122,6 @@ func SnakeToCamelCase(str string) string {
 		base += strings.Title(parts[i])
 	}
 	return base
-}
-
-func Implements[T any, I any]() bool {
-	var ptr *T
-	_, isInstance := any(ptr).(I)
-	return isInstance
 }
 
 const Debug = false

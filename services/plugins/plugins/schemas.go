@@ -52,7 +52,7 @@ var pluginSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.
 	"sdk_version": resourceschema.StringAttribute{
 		Optional:    true,
 		Description: "SDK version in the semantic version format with major versions 1 or 2.",
-		Validators:  helper.IsValidSemVer(),
+		Validators:  isValidSemVerForPlugins(),
 	},
 	"sdk_version_family": resourceschema.StringAttribute{
 		Computed:    true,

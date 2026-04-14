@@ -3,6 +3,7 @@ package general_objects
 import (
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
@@ -81,6 +82,7 @@ func FilterSchemaDS(filters map[string]datasourceschema.Attribute) map[string]da
 		"ids": datasourceschema.ListAttribute{
 			Optional:    true,
 			ElementType: types.StringType,
+			Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 		},
 		"query": datasourceschema.StringAttribute{
 			Optional: true,
@@ -222,62 +224,6 @@ var PageableSchemaDS = map[string]datasourceschema.Attribute{
 		Description: "True if this query is paged",
 	},
 	"unpaged": datasourceschema.BoolAttribute{
-		Computed:    true,
-		Description: "True if this query is unpaged",
-	},
-}
-
-var SortSchemaR = map[string]resourceschema.Attribute{
-	"direction": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Direction of the sorting, either DESC or ASC",
-	},
-	"property": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "Property used to sort by",
-	},
-	"ignore_case": resourceschema.BoolAttribute{
-		Computed:    true,
-		Description: "True if the search ignores case",
-	},
-	"null_handling": resourceschema.StringAttribute{
-		Computed:    true,
-		Description: "How null values are handled",
-	},
-	"ascending": resourceschema.BoolAttribute{
-		Computed:    true,
-		Description: "True if the direction of the sorting is ascending",
-	},
-	"descending": resourceschema.BoolAttribute{
-		Computed:    true,
-		Description: "True if the direction of the sorting is descending",
-	},
-}
-
-var PageableSchemaR = map[string]resourceschema.Attribute{
-	"sort": resourceschema.ListNestedAttribute{
-		Computed: true,
-		NestedObject: resourceschema.NestedAttributeObject{
-			Attributes: SortSchemaR,
-		},
-	},
-	"offset": resourceschema.Int64Attribute{
-		Computed:    true,
-		Description: "Number of elements in previous pages",
-	},
-	"page_number": resourceschema.Int64Attribute{
-		Computed:    true,
-		Description: "Page number",
-	},
-	"page_size": resourceschema.Int64Attribute{
-		Computed:    true,
-		Description: "Size of this page",
-	},
-	"paged": resourceschema.BoolAttribute{
-		Computed:    true,
-		Description: "True if this query is paged",
-	},
-	"unpaged": resourceschema.BoolAttribute{
 		Computed:    true,
 		Description: "True if this query is unpaged",
 	},
@@ -569,49 +515,6 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string, fo
 	return attribute
 }
 
-// DefinitionAttributeSchemaDS generates the datasource schema for typed definition attributes (all computed).
-func DefinitionAttributeSchemaDS(excludeTypes []string, excludeFields []string) map[string]datasourceschema.Attribute {
-	s := map[string]datasourceschema.Attribute{
-		"type":          datasourceschema.StringAttribute{Computed: true},
-		"required":      datasourceschema.BoolAttribute{Computed: true},
-		"default_value": datasourceschema.StringAttribute{Computed: true},
-		"min_length":    datasourceschema.Int64Attribute{Computed: true},
-		"max_length":    datasourceschema.Int64Attribute{Computed: true},
-		"pattern":       datasourceschema.StringAttribute{Computed: true},
-		"min":           datasourceschema.Float64Attribute{Computed: true},
-		"max":           datasourceschema.Float64Attribute{Computed: true},
-		"scale":         datasourceschema.Int64Attribute{Computed: true},
-		"precision":     datasourceschema.Int64Attribute{Computed: true},
-		"unit_id":       datasourceschema.StringAttribute{Computed: true},
-		"before":        datasourceschema.StringAttribute{Computed: true},
-		"after":         datasourceschema.StringAttribute{Computed: true},
-		"options": datasourceschema.MapAttribute{
-			ElementType: types.StringType,
-			Computed:    true,
-		},
-		"fields": datasourceschema.SingleNestedAttribute{
-			Computed:   true,
-			Attributes: geoPointFieldsDefSchemaDS,
-		},
-		"min_size": datasourceschema.Int64Attribute{Computed: true},
-		"max_size": datasourceschema.Int64Attribute{Computed: true},
-		"unique":   datasourceschema.BoolAttribute{Computed: true},
-		"constraint": datasourceschema.SingleNestedAttribute{
-			Computed: true,
-			Attributes: DefinitionAttributeArrayConstraintSchemaDS(
-				[]string{"ARRAY", "STRUCTURE", "GEOPOINT", "TLE"},
-				[]string{"default_value"},
-			),
-		},
-	}
-
-	for _, field := range excludeFields {
-		delete(s, field)
-	}
-
-	return s
-}
-
 func DefinitionAttributeArrayConstraintSchema(excludeTypes []string, excludeFields []string) map[string]resourceschema.Attribute {
 	validTypes := []string{}
 	for _, value := range ValidAttributeSchemaTypes {
@@ -694,33 +597,6 @@ func DefinitionAttributeArrayConstraintSchema(excludeTypes []string, excludeFiel
 	return attribute
 }
 
-func DefinitionAttributeArrayConstraintSchemaDS(excludeTypes []string, excludeFields []string) map[string]datasourceschema.Attribute {
-	s := map[string]datasourceschema.Attribute{
-		"type":       datasourceschema.StringAttribute{Computed: true},
-		"required":   datasourceschema.BoolAttribute{Computed: true},
-		"max_length": datasourceschema.Int64Attribute{Computed: true},
-		"min_length": datasourceschema.Int64Attribute{Computed: true},
-		"pattern":    datasourceschema.StringAttribute{Computed: true},
-		"max":        datasourceschema.Float64Attribute{Computed: true},
-		"precision":  datasourceschema.Int64Attribute{Computed: true},
-		"min":        datasourceschema.Float64Attribute{Computed: true},
-		"unit_id":    datasourceschema.StringAttribute{Computed: true},
-		"scale":      datasourceschema.Int64Attribute{Computed: true},
-		"options": datasourceschema.MapAttribute{
-			ElementType: types.StringType,
-			Computed:    true,
-		},
-		"after":  datasourceschema.StringAttribute{Computed: true},
-		"before": datasourceschema.StringAttribute{Computed: true},
-	}
-
-	for _, field := range excludeFields {
-		delete(s, field)
-	}
-
-	return s
-}
-
 var validMetadataTypes = []string{
 	"NUMERIC", "BOOLEAN", "TEXT", "DATE", "TIME", "TIMESTAMP", "ENUM", "BINARY", "ARRAY", "TLE", "GEOPOINT", "STRUCTURE",
 }
@@ -760,19 +636,6 @@ func ValueAttributeSchema(excludeTypes []string) map[string]resourceschema.Attri
 			Optional:    true,
 			Attributes:  geoPointFieldsSchema,
 			Description: "Geopoint only",
-		},
-	}
-}
-
-func ValueAttributeSchemaDS(excludeTypes []string) map[string]datasourceschema.Attribute {
-	return map[string]datasourceschema.Attribute{
-		"value":     datasourceschema.StringAttribute{Computed: true},
-		"type":      datasourceschema.StringAttribute{Computed: true},
-		"data_type": datasourceschema.StringAttribute{Computed: true},
-		"unit_id":   datasourceschema.StringAttribute{Computed: true},
-		"fields": datasourceschema.SingleNestedAttribute{
-			Computed:   true,
-			Attributes: geoPointFieldsSchemaDS,
 		},
 	}
 }
