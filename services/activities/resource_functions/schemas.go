@@ -63,10 +63,12 @@ var dataSourceFilterSchema = general_objects.AuditFilterFieldsWithTags(map[strin
 	"activity_definition_ids": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
 	"resource_ids": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
 	"time_units": datasourceschema.ListAttribute{
 		ElementType: types.StringType,

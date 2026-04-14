@@ -321,7 +321,6 @@ func baseAttributeFieldSchema(isValueField, isGeoPoint bool) map[string]resource
 	return baseSchema
 }
 
-// KeyValuesSchema returns a SetNestedAttribute for key-value tags (resource schema).
 var KeyValuesSchema = resourceschema.SetNestedAttribute{
 	Optional: true,
 	NestedObject: resourceschema.NestedAttributeObject{

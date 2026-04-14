@@ -9,8 +9,7 @@ import (
 // any non-Computed nested attributes (ListNested, SetNested, SingleNested) into the Blocks map.
 // This preserves HCL block syntax compatibility with the old SDK v2 provider.
 // Computed-only nested attributes remain as attributes since blocks cannot be Computed.
-// SetNestedAttribute with no Computed element fields becomes SetNestedBlock (order-independent);
-// those with Computed element fields become ListNestedBlock (avoids unknown-hash plan failures).
+// SetNestedAttribute with no Computed element fields becomes ListNestedBlock (avoids unknown-hash plan failures)
 func SplitResourceSchemaBlocks(attrs map[string]resourceschema.Attribute) (map[string]resourceschema.Attribute, map[string]resourceschema.Block) {
 	outAttrs := make(map[string]resourceschema.Attribute)
 	outBlocks := make(map[string]resourceschema.Block)
@@ -35,7 +34,7 @@ func SplitResourceSchemaBlocks(attrs map[string]resourceschema.Attribute) (map[s
 				continue
 			}
 			childAttrs, childBlocks := SplitResourceSchemaBlocks(v.NestedObject.Attributes)
-			outBlocks[key] = resourceschema.ListNestedBlock{
+			outBlocks[key] = resourceschema.ListNestedBlock{ // TODO: evaluate if we can use SetNestedBlock here instead
 				NestedObject: resourceschema.NestedBlockObject{
 					Attributes: childAttrs,
 					Blocks:     childBlocks,

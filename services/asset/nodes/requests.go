@@ -9,6 +9,10 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
+var NORAD_ID = "NORAD ID"
+var INTERNATIONAL_DESIGNATOR = "International Designator"
+var LOCATION_COORDINATES = "Location Coordinates"
+
 type apiShiftNodeInfo struct {
 	TargetParentNodeId string `json:"targetParentNodeId"`
 }

@@ -29,10 +29,7 @@ func (d *GenericDataSource[T, PT]) Metadata(_ context.Context, req datasource.Me
 }
 
 func (d *GenericDataSource[T, PT]) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
-	dsSchema := d.dataType.DataSourceSchema
-	if dsSchema == nil {
-		dsSchema = ResourceSchemaToDataSource(d.dataType.Schema)
-	}
+	dsSchema := ResourceSchemaToDataSource(d.dataType.Schema)
 	if d.dataType.IsUnique {
 		dsAttrs := make(map[string]datasourceschema.Attribute)
 		for k, v := range d.dataType.FilterSchema {

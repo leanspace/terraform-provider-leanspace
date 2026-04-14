@@ -174,10 +174,12 @@ var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 	"dashboard_ids": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
 	"datasource_ids": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
 	"datasources": datasourceschema.ListAttribute{
 		ElementType: types.StringType,

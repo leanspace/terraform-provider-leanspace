@@ -1,11 +1,14 @@
 package groundstation_links
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 )
 
 var leafSpaceGroundStationLink = map[string]resourceschema.Attribute{
@@ -41,5 +44,6 @@ var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 		ElementType: types.StringType,
 		Optional:    true,
 		Description: "list of the leanspace ground station ids",
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
 }

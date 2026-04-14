@@ -11,7 +11,6 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 )
 
-// AuditModelTF is the Terraform model for AuditModel.
 // Embed this (without a tfsdk tag) in service TF models that use AuditModel.
 type AuditModelTF struct {
 	ID             types.String `tfsdk:"id"`
@@ -250,8 +249,8 @@ func ArrayConstraintToTF(c *ArrayConstraint[any]) *ArrayConstraintTF {
 		return nil
 	}
 	tf := &ArrayConstraintTF{
-		Type:      helper.TFStringValue(c.Type),
-		Required:  helper.TFBoolPtrValue(c.Required),
+		Type:     helper.TFStringValue(c.Type),
+		Required: helper.TFBoolPtrValue(c.Required),
 		MinLength: helper.TFIntPtrValue(c.MinLength),
 		MaxLength: helper.TFIntPtrValue(c.MaxLength),
 		Pattern:   helper.TFStringValue(c.Pattern),
@@ -326,8 +325,8 @@ type DefinitionAttributeTF struct {
 
 func DefinitionAttributeToTF(a *DefinitionAttribute[any]) DefinitionAttributeTF {
 	tf := DefinitionAttributeTF{
-		Type:      helper.TFStringValue(a.Type),
-		Required:  helper.TFBoolPtrValue(a.Required),
+		Type:     helper.TFStringValue(a.Type),
+		Required: helper.TFBoolPtrValue(a.Required),
 		MinLength: helper.TFIntPtrValue(a.MinLength),
 		MaxLength: helper.TFIntPtrValue(a.MaxLength),
 		Pattern:   helper.TFStringValue(a.Pattern),
@@ -339,9 +338,9 @@ func DefinitionAttributeToTF(a *DefinitionAttribute[any]) DefinitionAttributeTF 
 		Before:    helper.TFStringValue(a.Before),
 		After:     helper.TFStringValue(a.After),
 		Fields:    FieldsDefToTF(a.Fields),
-		MinSize:   helper.TFIntPtrValue(a.MinSize),
-		MaxSize:   helper.TFIntPtrValue(a.MaxSize),
-		Unique:    helper.TFBoolValue(a.Unique),
+		MinSize: helper.TFIntPtrValue(a.MinSize),
+		MaxSize: helper.TFIntPtrValue(a.MaxSize),
+		Unique:  helper.TFBoolValue(a.Unique),
 	}
 	if any(a.DefaultValue) != nil {
 		switch v := a.DefaultValue.(type) {
@@ -554,9 +553,6 @@ func PageableToTF(p *Pageable) *PageableTF {
 	}
 }
 
-// PaginatedDataSourceTF is the TF model for paginated data source responses.
-// Content items are returned as empty objects; the schema is always derived
-// from the resource schema via ResourceSchemaToDataSource.
 type PaginatedDataSourceTF struct {
 	ID               types.String `tfsdk:"id"`
 	Content          types.List   `tfsdk:"content"`
@@ -573,9 +569,7 @@ type PaginatedDataSourceTF struct {
 	Filters          types.Object `tfsdk:"filters"`
 }
 
-// ToDataSourceTF converts a PaginatedList API response into a PaginatedDataSourceTF
-// suitable for State.Set(). Content items become empty objects (the full schema is
-// derived automatically from the resource schema). Filters are passed through from the config.
+// Filters are passed through from the config.
 func (pl *PaginatedList[T, PT]) ToDataSourceTF(filters types.Object) PaginatedDataSourceTF {
 	// Build content as a list of empty objects
 	emptyObjType := types.ObjectType{AttrTypes: map[string]attr.Type{}}
@@ -602,8 +596,6 @@ func (pl *PaginatedList[T, PT]) ToDataSourceTF(filters types.Object) PaginatedDa
 	}
 }
 
-// FilterObjectToMap converts a types.Object (from data source config filters)
-// into a map[string]any suitable for building API query parameters.
 // Filter values are always simple types: strings, ints, bools, or lists of strings.
 func FilterObjectToMap(filtersObj types.Object) map[string]any {
 	if filtersObj.IsNull() || filtersObj.IsUnknown() {

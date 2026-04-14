@@ -1,6 +1,7 @@
 package release_queues
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -52,10 +53,12 @@ var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 	"asset_ids": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
 	"command_transformer_plugin_ids": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
 	"command_transformation_strategy": datasourceschema.StringAttribute{
 		Optional:    true,

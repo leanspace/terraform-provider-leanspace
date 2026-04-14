@@ -1,6 +1,7 @@
 package command_queues
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -49,17 +50,21 @@ var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 	"asset_ids": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
 	"ground_station_ids": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
 	"command_transformer_plugin_ids": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
 	"protocol_transformer_plugin_ids": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
 }

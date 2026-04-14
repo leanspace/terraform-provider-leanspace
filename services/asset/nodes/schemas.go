@@ -19,8 +19,8 @@ import (
 var nodeSchema = makeNodeSchema(nil)            // no sub nodes
 var rootNodeSchema = makeNodeSchema(nodeSchema) // max depth 1
 
-var validNodeTypes = []string{"ASSET", "GROUP", "COMPONENT"}
-var validNodeKinds = []string{"GENERIC", "SATELLITE", "GROUND_STATION"}
+var ValidNodeTypes = []string{"ASSET", "GROUP", "COMPONENT"}
+var ValidNodeKinds = []string{"GENERIC", "SATELLITE", "GROUND_STATION"}
 
 var tle1stLineRegex = regexp.MustCompile(`^1 (?P<noradId>[ 0-9]{5})[A-Z] [ 0-9]{5}[ A-Z]{3} [ 0-9]{5}[.][ 0-9]{8} (?:(?:[ 0+-][.][ 0-9]{8})|(?: [ +-][.][ 0-9]{7})) [ +-][ 0-9]{5}[+-][ 0-9] [ +-][ 0-9]{5}[+-][ 0-9] [ 0-9] [ 0-9]{4}[ 0-9]$`)
 var tle2ndLineRegex = regexp.MustCompile(`^2 (?P<noradId>[ 0-9]{5}) [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{7} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{2}[.][ 0-9]{13}[ 0-9]$`)
@@ -43,14 +43,14 @@ func makeNodeSchema(recursiveNodes map[string]resourceschema.Attribute) map[stri
 		},
 		"type": resourceschema.StringAttribute{
 			Required:      true,
-			Description:   helper.AllowedValuesToDescription(validNodeTypes),
-			Validators:    []validator.String{stringvalidator.OneOf(validNodeTypes...)},
+			Description:   helper.AllowedValuesToDescription(ValidNodeTypes),
+			Validators:    []validator.String{stringvalidator.OneOf(ValidNodeTypes...)},
 			PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 		},
 		"kind": resourceschema.StringAttribute{
 			Optional:      true,
-			Description:   helper.AllowedValuesToDescription(validNodeKinds),
-			Validators:    []validator.String{stringvalidator.OneOf(validNodeKinds...)},
+			Description:   helper.AllowedValuesToDescription(ValidNodeKinds),
+			Validators:    []validator.String{stringvalidator.OneOf(ValidNodeKinds...)},
 			PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 		},
 		"tags": general_objects.KeyValuesSchema,
@@ -118,6 +118,7 @@ var dataSourceFilterSchema = general_objects.AuditFilterFieldsWithTagsAndSingula
 	"parent_node_ids": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
 	"types": datasourceschema.ListAttribute{
 		ElementType: types.StringType,

@@ -1,14 +1,18 @@
 package command_definitions
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+	"github.com/leanspace/terraform-provider-leanspace/services/asset/nodes"
 )
 
 var commandDefinitionSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
@@ -83,16 +87,19 @@ var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
 	"node_ids": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
 	"node_types": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
 		Description: "Filter on the Node type. Allowed values : GROUP, ASSET, COMPONENT",
+		Validators:  []validator.List{listvalidator.ValueStringsAre(stringvalidator.OneOf(nodes.ValidNodeTypes...))},
 	},
 	"node_kinds": datasourceschema.ListAttribute{
 		ElementType: types.StringType,
 		Optional:    true,
 		Description: "Filter on the Node kind. Allowed values : GENERIC, SATELLITE, GROUND_STATION",
+		Validators:  []validator.List{listvalidator.ValueStringsAre(stringvalidator.OneOf(nodes.ValidNodeKinds...))},
 	},
 	"with_arguments_and_metadata": datasourceschema.BoolAttribute{
 		Optional: true,

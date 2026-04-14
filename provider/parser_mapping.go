@@ -143,8 +143,6 @@ type DataSourceType[T any, PT ParseableModel[T]] struct {
 	CreateFunction func(*Client, PT) (PT, error)
 	// The schema to represent the data as a managed resource
 	Schema map[string]resourceschema.Attribute
-	// The schema to represent the data as a data source (derived from Schema if nil)
-	DataSourceSchema map[string]datasourceschema.Attribute
 	// The filters used for this resource's data source. The only allowed fields are primitives and lists of
 	// strings. Note that some fields are already declared and don't need to be redefined: ids, query, page, size, sort.
 	// A value of nil is treated as an empty map, and only the fields specified previously will be usable.
@@ -154,7 +152,7 @@ type DataSourceType[T any, PT ParseableModel[T]] struct {
 	// Optional. Factory that returns a pointer to a new empty TF model struct (e.g. &NodeTF{}).
 	// When set, GenericResource uses the direct TF conversion path (Plan.Get/State.Set)
 	// instead of the map[string]any intermediary.
-	NewTFModel func() any
+	NewTFModel func() any // TODO: rename
 }
 
 func (dataSource DataSourceType[T, PT]) convert(client *Client) GenericClient[T, PT] {

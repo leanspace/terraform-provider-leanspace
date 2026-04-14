@@ -7,7 +7,7 @@ import "github.com/hashicorp/terraform-plugin-framework/types"
 // TFStringValue converts a Go string to types.String.
 // Empty strings become null (matching the NilIfEmpty convention).
 func TFStringValue(s string) types.String {
-	if s == "" {
+	if s == "" { // TODO: check if this should be removed and another method for pointers to be added, since some fields might want to allow empty strings as valid values
 		return types.StringNull()
 	}
 	return types.StringValue(s)

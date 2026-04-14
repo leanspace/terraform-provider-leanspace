@@ -46,7 +46,7 @@ func (monitor *Monitor) removeActionTemplate(actionTemplateLink ActionTemplateLi
 	return monitor.actionTemplateChange("DELETE", actionTemplateLink, client)
 }
 
-func (monitor *Monitor) PostReadProcess(client *provider.Client, freshRaw any) error {
+func (monitor *Monitor) PostReadProcess(client *provider.Client, freshRaw any) error { // TODO: this is bullshit, remove
 	fresh := freshRaw.(*Monitor)
 	// PostUnmarshallProcess populated fresh.ActionTemplateLinks from API data,
 	// which may include server-defaulted triggered_on values the user never set.

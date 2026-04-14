@@ -9,7 +9,9 @@ import (
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
@@ -66,6 +68,16 @@ func MakeActionTemplateSchema(includeTriggeredOn bool) map[string]resourceschema
 			Computed:    true,
 			ElementType: types.StringType,
 			Description: helper.AllowedValuesToDescription(ValidTriggeredOn),
+		}
+		baseSchema["last_modified_at"] = resourceschema.StringAttribute{
+			Computed:      true,
+			Description:   "When it was last modified",
+			PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+		}
+		baseSchema["last_modified_by"] = resourceschema.StringAttribute{
+			Computed:      true,
+			Description:   "Who modified it the last",
+			PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 		}
 	}
 
