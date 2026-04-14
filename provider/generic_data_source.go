@@ -29,6 +29,10 @@ func (d *GenericDataSource[T, PT]) Metadata(_ context.Context, req datasource.Me
 }
 
 func (d *GenericDataSource[T, PT]) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+	dsSchema := d.dataType.DataSourceSchema
+	if dsSchema == nil {
+		dsSchema = ResourceSchemaToDataSource(d.dataType.Schema)
+	}
 	if d.dataType.IsUnique {
 		dsAttrs := make(map[string]datasourceschema.Attribute)
 		for k, v := range d.dataType.FilterSchema {
@@ -44,7 +48,7 @@ func (d *GenericDataSource[T, PT]) Schema(_ context.Context, _ datasource.Schema
 			Blocks:     blocks,
 		}
 	} else {
-		allAttrs := general_objects.PaginatedListSchemaDS(d.dataType.DataSourceSchema, d.dataType.FilterSchema)
+		allAttrs := general_objects.PaginatedListSchemaDS(dsSchema, d.dataType.FilterSchema)
 		attrs, blocks := SplitDatasourceSchemaBlocks(allAttrs)
 		resp.Schema = datasourceschema.Schema{
 			Attributes: attrs,
@@ -114,6 +118,33 @@ func (d *GenericDataSource[T, PT]) readPaginated(ctx context.Context, req dataso
 		return
 	}
 
+	// Build content items by calling ToTF() on each API model.
+	tfModels := make([]any, len(values.Content))
+	for i := range values.Content {
+		if apiToTF, ok := any(&values.Content[i]).(APIToTF); ok {
+			tfModels[i] = apiToTF.ToTF()
+		}
+	}
+
+	// Set all non-content state fields from the paginated metadata.
 	result := values.ToDataSourceTF(filtersObj)
-	resp.Diagnostics.Append(resp.State.Set(ctx, &result)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), result.ID)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("total_elements"), result.TotalElements)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("total_pages"), result.TotalPages)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("number_of_elements"), result.NumberOfElements)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("number"), result.Number)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("size"), result.Size)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("sort"), result.Sort)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("first"), result.First)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("last"), result.Last)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("empty"), result.Empty)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("pageable"), result.Pageable)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("filters"), result.Filters)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// Set content separately so the framework uses the schema's nested-attribute type
+	// to reflect each ToTF() struct into a properly typed object.
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("content"), tfModels)...)
 }

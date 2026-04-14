@@ -8,9 +8,9 @@ import (
 
 type ResourceFunctionTF struct {
 	general_objects.AuditModelTF
-	ActivityDefinitionId types.String              `tfsdk:"activity_definition_id"`
-	ResourceId           types.String              `tfsdk:"resource_id"`
-	Name                 types.String              `tfsdk:"name"`
+	ActivityDefinitionId types.String               `tfsdk:"activity_definition_id"`
+	ResourceId           types.String               `tfsdk:"resource_id"`
+	Name                 types.String               `tfsdk:"name"`
 	Formula              *ResourceFunctionFormulaTF `tfsdk:"formula"`
 }
 

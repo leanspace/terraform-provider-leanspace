@@ -59,6 +59,57 @@ func SplitResourceSchemaBlocks(attrs map[string]resourceschema.Attribute) (map[s
 	return outAttrs, outBlocks
 }
 
+// ResourceSchemaToDataSource converts a resource attribute map to a datasource attribute map.
+// Every attribute becomes Computed:true (data sources are read-only).
+// Validators, plan modifiers and defaults are dropped since they are irrelevant for data sources.
+func ResourceSchemaToDataSource(attrs map[string]resourceschema.Attribute) map[string]datasourceschema.Attribute {
+	out := make(map[string]datasourceschema.Attribute, len(attrs))
+	for k, a := range attrs {
+		out[k] = resourceAttrToDS(a)
+	}
+	return out
+}
+
+func resourceAttrToDS(a resourceschema.Attribute) datasourceschema.Attribute {
+	switch v := a.(type) {
+	case resourceschema.StringAttribute:
+		return datasourceschema.StringAttribute{Computed: true}
+	case resourceschema.BoolAttribute:
+		return datasourceschema.BoolAttribute{Computed: true}
+	case resourceschema.Int64Attribute:
+		return datasourceschema.Int64Attribute{Computed: true}
+	case resourceschema.Float64Attribute:
+		return datasourceschema.Float64Attribute{Computed: true}
+	case resourceschema.ListAttribute:
+		return datasourceschema.ListAttribute{Computed: true, ElementType: v.ElementType}
+	case resourceschema.SetAttribute:
+		return datasourceschema.SetAttribute{Computed: true, ElementType: v.ElementType}
+	case resourceschema.MapAttribute:
+		return datasourceschema.MapAttribute{Computed: true, ElementType: v.ElementType}
+	case resourceschema.ListNestedAttribute:
+		return datasourceschema.ListNestedAttribute{
+			Computed: true,
+			NestedObject: datasourceschema.NestedAttributeObject{
+				Attributes: ResourceSchemaToDataSource(v.NestedObject.Attributes),
+			},
+		}
+	case resourceschema.SetNestedAttribute:
+		return datasourceschema.SetNestedAttribute{
+			Computed: true,
+			NestedObject: datasourceschema.NestedAttributeObject{
+				Attributes: ResourceSchemaToDataSource(v.NestedObject.Attributes),
+			},
+		}
+	case resourceschema.SingleNestedAttribute:
+		return datasourceschema.SingleNestedAttribute{
+			Computed:   true,
+			Attributes: ResourceSchemaToDataSource(v.Attributes),
+		}
+	default:
+		return datasourceschema.StringAttribute{Computed: true}
+	}
+}
+
 // SplitDatasourceSchemaBlocks does the same as SplitResourceSchemaBlocks but for datasource schemas.
 func SplitDatasourceSchemaBlocks(attrs map[string]datasourceschema.Attribute) (map[string]datasourceschema.Attribute, map[string]datasourceschema.Block) {
 	outAttrs := make(map[string]datasourceschema.Attribute)
