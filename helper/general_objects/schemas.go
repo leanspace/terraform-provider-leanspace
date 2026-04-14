@@ -46,7 +46,7 @@ func (m serverManagedTimestampModifier) PlanModifyString(_ context.Context, req 
 	resp.PlanValue = types.StringUnknown()
 }
 
-func PaginatedListSchemaDS(content map[string]datasourceschema.Attribute, filters map[string]datasourceschema.Attribute) map[string]datasourceschema.Attribute {
+func PaginatedListSchemaDS(content, filters map[string]datasourceschema.Attribute) map[string]datasourceschema.Attribute {
 	return map[string]datasourceschema.Attribute{
 		"id": datasourceschema.StringAttribute{
 			Computed: true,
@@ -278,7 +278,7 @@ func CreateGeoPointFieldsSchema(isValueField bool) map[string]resourceschema.Att
 var geoPointFieldsDefSchema = CreateGeoPointFieldsSchema(false)
 var geoPointFieldsSchema = CreateGeoPointFieldsSchema(true)
 
-func baseAttributeFieldSchema(isValueField bool, isGeoPoint bool) map[string]resourceschema.Attribute {
+func baseAttributeFieldSchema(isValueField, isGeoPoint bool) map[string]resourceschema.Attribute {
 	baseSchema := map[string]resourceschema.Attribute{
 		"scale": resourceschema.Int64Attribute{
 			Computed:    isGeoPoint,
@@ -484,7 +484,7 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string, fo
 	return attribute
 }
 
-func DefinitionAttributeArrayConstraintSchema(excludeTypes []string, excludeFields []string) map[string]resourceschema.Attribute {
+func DefinitionAttributeArrayConstraintSchema(excludeTypes, excludeFields []string) map[string]resourceschema.Attribute {
 	validTypes := filterDefinitionTypes(excludeTypes)
 
 	attribute := sharedDefinitionConstraintFields()

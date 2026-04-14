@@ -287,8 +287,8 @@ func (c hasLengthCondition) eval(v map[string]any) bool {
 	if list, isList := val.([]string); isList {
 		return len(list) == c.length
 	}
-	if map_, isMap := val.(map[string]any); isMap {
-		return len(map_) == c.length
+	if mapObj, isMap := val.(map[string]any); isMap {
+		return len(mapObj) == c.length
 	}
 	if rv.Kind() == reflect.Slice || rv.Kind() == reflect.Map {
 		return rv.Len() == c.length
