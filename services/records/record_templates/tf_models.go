@@ -53,7 +53,7 @@ func (x *RecordTemplate) ToTF() any {
 	return &RecordTemplateTF{
 		AuditModelTF:         general_objects.AuditModelToTF(&x.AuditModel),
 		Name:                 helper.TFStringValue(x.Name),
-		Description:          helper.TFStringValue(x.Description),
+		Description:          helper.TFStringPtrValue(x.Description),
 		StreamId:             helper.TFStringValue(x.StreamId),
 		DefaultParsers:       defaultParsers,
 		NodeIds:              helper.TFStringsValue(x.NodeIds),
@@ -78,7 +78,7 @@ func (tf *RecordTemplateTF) ToAPI() any {
 	return &RecordTemplate{
 		AuditModel:           general_objects.AuditModelFromTF(tf.AuditModelTF),
 		Name:                 helper.FromTFString(tf.Name),
-		Description:          helper.FromTFString(tf.Description),
+		Description:          helper.FromTFStringPtr(tf.Description),
 		StreamId:             helper.FromTFString(tf.StreamId),
 		NodeIds:              helper.FromTFStrings(tf.NodeIds),
 		MetricIds:            helper.FromTFStrings(tf.MetricIds),

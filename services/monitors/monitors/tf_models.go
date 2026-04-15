@@ -114,7 +114,7 @@ func (x *Monitor) ToTF() any {
 	return &MonitorTF{
 		AuditModelTF:        general_objects.AuditModelToTF(&x.AuditModel),
 		Name:                helper.TFStringValue(x.Name),
-		Description:         helper.TFStringValue(x.Description),
+		Description:         helper.TFStringPtrValue(x.Description),
 		Status:              helper.TFStringValue(x.Status),
 		MetricId:            helper.TFStringValue(x.MetricId),
 		NodeId:              helper.TFStringValue(x.NodeId),
@@ -146,7 +146,7 @@ func (tf *MonitorTF) ToAPI() any {
 	return &Monitor{
 		AuditModel:          general_objects.AuditModelFromTF(tf.AuditModelTF),
 		Name:                helper.FromTFString(tf.Name),
-		Description:         helper.FromTFString(tf.Description),
+		Description:         helper.FromTFStringPtr(tf.Description),
 		Status:              helper.FromTFString(tf.Status),
 		MetricId:            helper.FromTFString(tf.MetricId),
 		NodeId:              helper.FromTFString(tf.NodeId),

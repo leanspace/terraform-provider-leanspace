@@ -2,7 +2,6 @@ package request_states
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
@@ -12,15 +11,9 @@ type RequestStateTF struct {
 }
 
 func (s *RequestState) ToTF() any {
-	return &RequestStateTF{
-		AuditModelTF: general_objects.AuditModelToTF(&s.AuditModel),
-		Name:         helper.TFStringValue(s.Name),
-	}
+	return general_objects.ReflectToTF[RequestStateTF](s)
 }
 
 func (tf *RequestStateTF) ToAPI() any {
-	return &RequestState{
-		AuditModel: general_objects.AuditModelFromTF(tf.AuditModelTF),
-		Name:       helper.FromTFString(tf.Name),
-	}
+	return general_objects.ReflectFromTF[RequestState](tf)
 }

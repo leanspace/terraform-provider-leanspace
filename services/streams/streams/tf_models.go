@@ -241,7 +241,7 @@ func (x *Stream) ToTF() interface{} {
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
 		Version:      helper.TFInt64Value(x.Version),
 		Name:         helper.TFStringValue(x.Name),
-		Description:  helper.TFStringValue(x.Description),
+		Description:  helper.TFStringPtrValue(x.Description),
 		Tags:         general_objects.KeyValuesToTF(x.Tags),
 		AssetId:      helper.TFStringValue(x.AssetId),
 		Configuration: &ConfigurationTF{
@@ -324,7 +324,7 @@ func (tf *StreamTF) ToAPI() interface{} {
 		AuditModel:    general_objects.AuditModelFromTF(tf.AuditModelTF),
 		Version:       helper.FromTFInt64(tf.Version),
 		Name:          helper.FromTFString(tf.Name),
-		Description:   helper.FromTFString(tf.Description),
+		Description:   helper.FromTFStringPtr(tf.Description),
 		Tags:          general_objects.KeyValuesFromTF(tf.Tags),
 		AssetId:       helper.FromTFString(tf.AssetId),
 		Configuration: config,

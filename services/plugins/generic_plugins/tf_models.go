@@ -38,7 +38,7 @@ func (x *GenericPlugin) ToTF() any {
 	return &GenericPluginTF{
 		AuditModelTF:   general_objects.AuditModelToTF(&x.AuditModel),
 		Name:           helper.TFStringValue(x.Name),
-		Description:    helper.TFStringValue(x.Description),
+		Description:    helper.TFStringPtrValue(x.Description),
 		Type:           helper.TFStringValue(x.Type),
 		Language:       helper.TFStringValue(x.Language),
 		SourceCodeLink: sourceCodeLink,
@@ -52,7 +52,7 @@ func (tf *GenericPluginTF) ToAPI() any {
 	gp := &GenericPlugin{
 		AuditModel:  general_objects.AuditModelFromTF(tf.AuditModelTF),
 		Name:        helper.FromTFString(tf.Name),
-		Description: helper.FromTFString(tf.Description),
+		Description: helper.FromTFStringPtr(tf.Description),
 		Type:        helper.FromTFString(tf.Type),
 		Language:    helper.FromTFString(tf.Language),
 		Status:      helper.FromTFString(tf.Status),

@@ -9,7 +9,7 @@ type Stream struct {
 	general_objects.AuditModel
 	Version       int                        `json:"version"`
 	Name          string                     `json:"name"`
-	Description   string                     `json:"description"`
+	Description   *string                    `json:"description"`
 	Tags          []general_objects.KeyValue `json:"tags,omitempty"`
 	AssetId       string                     `json:"assetId"`
 	Configuration Configuration              `json:"configuration"`

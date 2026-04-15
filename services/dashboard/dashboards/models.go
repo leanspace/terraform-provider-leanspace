@@ -30,7 +30,7 @@ type WidgetInfo struct {
 type DashboardWidget struct {
 	general_objects.AuditModel
 	Name                 string                     `json:"name"`
-	Description          string                     `json:"description,omitempty"`
+	Description          *string                    `json:"description,omitempty"`
 	Type                 string                     `json:"type"`
 	Granularity          string                     `json:"granularity"`
 	QueryTimeDimension   string                     `json:"queryTimeDimension"`

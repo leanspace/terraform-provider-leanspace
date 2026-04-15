@@ -3,6 +3,7 @@ package pass_delay_configuration
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 type PassDelayConfigurationTF struct {
@@ -13,21 +14,11 @@ type PassDelayConfigurationTF struct {
 }
 
 func (s *PassDelayConfiguration) ToTF() any {
-	return &PassDelayConfigurationTF{
-		ID:                    helper.TFStringValue(s.ID),
-		Name:                  helper.TFStringValue(s.Name),
-		AosDelayInMillisecond: helper.TFFloat64Value(s.AosDelayInMillisecond),
-		LosDelayInMillisecond: helper.TFFloat64Value(s.LosDelayInMillisecond),
-	}
+	return general_objects.ReflectToTF[PassDelayConfigurationTF](s)
 }
 
 func (tf *PassDelayConfigurationTF) ToAPI() any {
-	return &PassDelayConfiguration{
-		ID:                    helper.FromTFString(tf.ID),
-		Name:                  helper.FromTFString(tf.Name),
-		AosDelayInMillisecond: helper.FromTFFloat64(tf.AosDelayInMillisecond),
-		LosDelayInMillisecond: helper.FromTFFloat64(tf.LosDelayInMillisecond),
-	}
+	return general_objects.ReflectFromTF[PassDelayConfiguration](tf)
 }
 
 // PassDelayConfigurationDSTF is the data-source TF model for unique reads.

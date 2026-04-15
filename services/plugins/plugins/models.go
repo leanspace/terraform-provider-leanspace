@@ -11,16 +11,16 @@ import (
 
 type Plugin struct {
 	general_objects.AuditModel
-	Type                             string `json:"type"`
-	ImplementationClassName          string `json:"implementationClassName"`
-	Name                             string `json:"name"`
-	Description                      string `json:"description"`
-	SourceCodeFileDownloadAuthorized bool   `json:"sourceCodeFileDownloadAuthorized,omitempty"`
-	FilePath                         string `json:"filePath"`
-	SdkVersion                       string `json:"sdkVersion,omitempty"`
-	SdkVersionFamily                 string `json:"sdkVersionFamily"`
-	Status                           string `json:"status"`
-	FileSha                          string `json:"fileSha"`
+	Type                             string  `json:"type"`
+	ImplementationClassName          string  `json:"implementationClassName"`
+	Name                             string  `json:"name"`
+	Description                      *string `json:"description,omitempty"`
+	SourceCodeFileDownloadAuthorized bool    `json:"sourceCodeFileDownloadAuthorized,omitempty"`
+	FilePath                         string  `json:"filePath"`
+	SdkVersion                       string  `json:"sdkVersion,omitempty"`
+	SdkVersionFamily                 string  `json:"sdkVersionFamily"`
+	Status                           string  `json:"status"`
+	FileSha                          string  `json:"fileSha"`
 }
 
 func (plugin Plugin) GetStatus() string { return plugin.Status }

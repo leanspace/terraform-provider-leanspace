@@ -2,7 +2,6 @@ package command_queues
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
@@ -17,25 +16,9 @@ type CommandQueueTF struct {
 }
 
 func (x *CommandQueue) ToTF() any {
-	return &CommandQueueTF{
-		AuditModelTF:                general_objects.AuditModelToTF(&x.AuditModel),
-		AssetId:                     helper.TFStringValue(x.AssetId),
-		Name:                        helper.TFStringValue(x.Name),
-		GroundStationIds:            helper.TFStringsValue(x.GroundStationIds),
-		CommandTransformerPluginId:  helper.TFStringPtrValue(x.CommandTransformerPluginId),
-		ProtocolTransformerPluginId: helper.TFStringPtrValue(x.ProtocolTransformerPluginId),
-		ProtocolTransformerInitData: helper.TFStringPtrValue(x.ProtocolTransformerInitData),
-	}
+	return general_objects.ReflectToTF[CommandQueueTF](x)
 }
 
 func (tf *CommandQueueTF) ToAPI() any {
-	return &CommandQueue{
-		AuditModel:                  general_objects.AuditModelFromTF(tf.AuditModelTF),
-		AssetId:                     helper.FromTFString(tf.AssetId),
-		Name:                        helper.FromTFString(tf.Name),
-		GroundStationIds:            helper.FromTFStrings(tf.GroundStationIds),
-		CommandTransformerPluginId:  helper.FromTFStringPtr(tf.CommandTransformerPluginId),
-		ProtocolTransformerPluginId: helper.FromTFStringPtr(tf.ProtocolTransformerPluginId),
-		ProtocolTransformerInitData: helper.FromTFStringPtr(tf.ProtocolTransformerInitData),
-	}
+	return general_objects.ReflectFromTF[CommandQueue](tf)
 }

@@ -41,11 +41,18 @@ func (validators Validators) CheckValue(v any) error {
 }
 
 // camelToSnakeCase converts a PascalCase or camelCase identifier to snake_case.
+// Consecutive uppercase letters (acronyms) are treated as a single word, e.g.
+// "URL" → "url", "MyURL" → "my_url", "URLPath" → "url_path".
 func camelToSnakeCase(s string) string {
 	var result []rune
-	for i, r := range s {
+	runes := []rune(s)
+	for i, r := range runes {
 		if unicode.IsUpper(r) && i > 0 {
-			result = append(result, '_')
+			prevIsLower := unicode.IsLower(runes[i-1])
+			nextIsLower := i+1 < len(runes) && unicode.IsLower(runes[i+1])
+			if prevIsLower || (unicode.IsUpper(runes[i-1]) && nextIsLower) {
+				result = append(result, '_')
+			}
 		}
 		result = append(result, unicode.ToLower(r))
 	}

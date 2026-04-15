@@ -2,7 +2,6 @@ package activity_states
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
@@ -13,17 +12,9 @@ type ActivityStateTF struct {
 }
 
 func (s *ActivityState) ToTF() any {
-	return &ActivityStateTF{
-		AuditModelTF: general_objects.AuditModelToTF(&s.AuditModel),
-		Name:         helper.TFStringValue(s.Name),
-		ReadOnly:     helper.TFBoolValue(s.ReadOnly),
-	}
+	return general_objects.ReflectToTF[ActivityStateTF](s)
 }
 
 func (tf *ActivityStateTF) ToAPI() any {
-	return &ActivityState{
-		AuditModel: general_objects.AuditModelFromTF(tf.AuditModelTF),
-		Name:       helper.FromTFString(tf.Name),
-		ReadOnly:   helper.FromTFBool(tf.ReadOnly),
-	}
+	return general_objects.ReflectFromTF[ActivityState](tf)
 }

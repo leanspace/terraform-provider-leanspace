@@ -9,7 +9,7 @@ import (
 func (genericPlugin *GenericPlugin) CustomEncoding(data []byte, isUpdating bool) (io.Reader, string, error) {
 	multipartMap := map[string]any{
 		"name":        genericPlugin.Name,
-		"description": genericPlugin.Description,
+		"description": *genericPlugin.Description,
 		"type":        genericPlugin.Type,
 		"language":    genericPlugin.Language,
 	}

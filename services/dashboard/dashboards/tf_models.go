@@ -185,7 +185,7 @@ func (x *Dashboard) ToTF() any {
 			"last_modified_at":       am.LastModifiedAt,
 			"last_modified_by":       am.LastModifiedBy,
 			"name":                   helper.TFStringValue(w.Name),
-			"description":            helper.TFStringValue(w.Description),
+			"description":            helper.TFStringPtrValue(w.Description),
 			"type":                   helper.TFStringValue(w.Type),
 			"granularity":            helper.TFStringValue(w.Granularity),
 			"query_time_dimension":   helper.TFStringValue(w.QueryTimeDimension),

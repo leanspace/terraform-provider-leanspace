@@ -12,7 +12,7 @@ import (
 type GenericPlugin struct {
 	general_objects.AuditModel
 	Name           string         `json:"name"`
-	Description    string         `json:"description"`
+	Description    *string        `json:"description,omitempty"`
 	Type           string         `json:"type"`
 	Language       string         `json:"language"`
 	SourceCodeLink SourceCodeLink `json:"sourceCodeLink"`

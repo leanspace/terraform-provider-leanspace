@@ -31,7 +31,7 @@ func (x *AccessPolicy) ToTF() any {
 	return &AccessPolicyTF{
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
 		Name:         helper.TFStringValue(x.Name),
-		Description:  helper.TFStringValue(x.Description),
+		Description:  helper.TFStringPtrValue(x.Description),
 		ReadOnly:     helper.TFBoolValue(x.ReadOnly),
 		Statements:   statements,
 		Tags:         general_objects.KeyValuesToTF(x.Tags),
@@ -49,7 +49,7 @@ func (tf *AccessPolicyTF) ToAPI() any {
 	return &AccessPolicy{
 		AuditModel:  general_objects.AuditModelFromTF(tf.AuditModelTF),
 		Name:        helper.FromTFString(tf.Name),
-		Description: helper.FromTFString(tf.Description),
+		Description: helper.FromTFStringPtr(tf.Description),
 		ReadOnly:    helper.FromTFBool(tf.ReadOnly),
 		Statements:  statements,
 		Tags:        general_objects.KeyValuesFromTF(tf.Tags),
