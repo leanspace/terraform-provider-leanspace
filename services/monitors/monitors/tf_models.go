@@ -101,9 +101,13 @@ func (x *Monitor) ToTF() any {
 
 	actionTemplateLinks := make([]ActionTemplateLinkTF, len(x.ActionTemplateLinks))
 	for i, atl := range x.ActionTemplateLinks {
+		var triggeredOn []string
+		if len(atl.TriggeredOn) > 0 {
+			triggeredOn = atl.TriggeredOn
+		}
 		actionTemplateLinks[i] = ActionTemplateLinkTF{
 			ID:          helper.TFStringValue(atl.ID),
-			TriggeredOn: helper.TFStringsValue(atl.TriggeredOn),
+			TriggeredOn: helper.TFStringsValue(triggeredOn),
 		}
 	}
 

@@ -46,23 +46,6 @@ func (monitor *Monitor) removeActionTemplate(actionTemplateLink ActionTemplateLi
 	return monitor.actionTemplateChange("DELETE", actionTemplateLink, client)
 }
 
-func (monitor *Monitor) PostReadProcess(client *provider.Client, freshRaw any) error { // TODO: this is bullshit, remove
-	fresh := freshRaw.(*Monitor)
-	// PostUnmarshallProcess populated fresh.ActionTemplateLinks from API data,
-	// which may include server-defaulted triggered_on values the user never set.
-	// Preserve the prior-state triggered_on for each matching link so the user's
-	// configured value (or absence of one) is round-tripped cleanly.
-	for i, freshLink := range fresh.ActionTemplateLinks {
-		for _, priorLink := range monitor.ActionTemplateLinks {
-			if freshLink.ID == priorLink.ID {
-				fresh.ActionTemplateLinks[i].TriggeredOn = priorLink.TriggeredOn
-				break
-			}
-		}
-	}
-	return nil
-}
-
 func (monitor *Monitor) PostCreateProcess(client *provider.Client, monitorRaw any) error {
 	createdMonitor := monitorRaw.(*Monitor)
 	expectedActionTemplates := monitor.ActionTemplateLinks

@@ -3,7 +3,6 @@ package plugins
 import "github.com/leanspace/terraform-provider-leanspace/provider"
 
 type AbstractPlugin interface {
-	GetID() string
 	GetStatus() string
 	SetStatus(status string)
 	GetFilePath() string
