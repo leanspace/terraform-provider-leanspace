@@ -55,6 +55,9 @@ endif
 
 default: install
 
+generate:
+	go generate ./services/...
+
 build:
 	go build -o ${BINARY} ${FLAGS}
 

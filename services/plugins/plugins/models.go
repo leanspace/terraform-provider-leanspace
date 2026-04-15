@@ -1,5 +1,7 @@
 package plugins
 
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct Plugin
+
 import (
 	"fmt"
 	"net/http"

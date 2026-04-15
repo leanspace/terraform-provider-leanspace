@@ -1,5 +1,7 @@
 package plan_states
 
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct PlanState
+
 import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 type PlanState struct {

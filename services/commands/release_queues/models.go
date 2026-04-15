@@ -1,5 +1,7 @@
 package release_queues
 
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct ReleaseQueue
+
 import (
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )

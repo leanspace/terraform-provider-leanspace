@@ -1,5 +1,7 @@
 package command_queues
 
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct CommandQueue
+
 import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 type CommandQueue struct {

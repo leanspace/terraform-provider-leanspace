@@ -1,5 +1,7 @@
 package resource_functions
 
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct ResourceFunction
+
 import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 type ResourceFunction struct {

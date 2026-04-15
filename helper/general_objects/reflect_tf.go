@@ -44,9 +44,15 @@ var (
 // Use this for flat structs with purely mechanical conversions; write a hand-coded
 // ToTF when custom logic (conditional branches, types.List, etc.) is needed.
 func ReflectToTF[TF any](apiPtr any) *TF {
+	if apiPtr == nil {
+		return nil
+	}
 	tf := new(TF)
 	apiVal := reflect.ValueOf(apiPtr)
 	if apiVal.Kind() == reflect.Pointer {
+		if apiVal.IsNil() {
+			return nil
+		}
 		apiVal = apiVal.Elem()
 	}
 	tfVal := reflect.ValueOf(tf).Elem()
@@ -82,9 +88,15 @@ func ReflectToTF[TF any](apiPtr any) *TF {
 // ReflectFromTF maps a flat TF struct (or pointer) back to a new API struct.
 // See ReflectToTF for the list of supported field type pairs.
 func ReflectFromTF[API any](tfPtr any) *API {
+	if tfPtr == nil {
+		return nil
+	}
 	api := new(API)
 	tfVal := reflect.ValueOf(tfPtr)
 	if tfVal.Kind() == reflect.Pointer {
+		if tfVal.IsNil() {
+			return nil
+		}
 		tfVal = tfVal.Elem()
 	}
 	apiVal := reflect.ValueOf(api).Elem()
