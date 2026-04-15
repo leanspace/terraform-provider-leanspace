@@ -7,5 +7,5 @@ var WidgetDataType = provider.DataSourceType[Widget, *Widget]{
 	Path:               "dashboard-repository/widgets",
 	Schema:             widgetSchema,
 	FilterSchema:       dataSourceFilterSchema,
-	NewTFModel:         func() any { return &WidgetTF{} },
+	TFModelFactory:     func() any { return &WidgetTF{} },
 }

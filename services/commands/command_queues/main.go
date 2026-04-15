@@ -7,5 +7,5 @@ var CommandQueueDataType = provider.DataSourceType[CommandQueue, *CommandQueue]{
 	Path:               "commands-repository/command-queues",
 	Schema:             commandQueueSchema,
 	FilterSchema:       dataSourceFilterSchema,
-	NewTFModel:         func() any { return &CommandQueueTF{} },
+	TFModelFactory:     func() any { return &CommandQueueTF{} },
 }

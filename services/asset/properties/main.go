@@ -14,5 +14,5 @@ var PropertyDataType = provider.DataSourceType[Property[any], *Property[any]]{
 	CreatePath: func(p *Property[any]) string {
 		return fmt.Sprintf("asset-repository/nodes/%s/properties/v2", p.NodeId)
 	},
-	NewTFModel: func() any { return &PropertyTF{} },
+	TFModelFactory: func() any { return &PropertyTF{} },
 }

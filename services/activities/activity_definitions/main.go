@@ -7,5 +7,5 @@ var ActivityDefinitionDataType = provider.DataSourceType[ActivityDefinition, *Ac
 	Path:               "activities-repository/activity-definitions",
 	Schema:             activityDefinitionSchema,
 	FilterSchema:       dataSourceFilterSchema,
-	NewTFModel:         func() any { return &ActivityDefinitionTF{} },
+	TFModelFactory:     func() any { return &ActivityDefinitionTF{} },
 }

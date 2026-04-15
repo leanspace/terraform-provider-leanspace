@@ -7,5 +7,5 @@ var ResourceFunctionDataType = provider.DataSourceType[ResourceFunction, *Resour
 	Path:               "activities-repository/activity-definitions/resource-functions",
 	Schema:             resourceFunctionSchema,
 	FilterSchema:       dataSourceFilterSchema,
-	NewTFModel:         func() any { return &ResourceFunctionTF{} },
+	TFModelFactory:     func() any { return &ResourceFunctionTF{} },
 }

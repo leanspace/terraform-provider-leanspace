@@ -7,5 +7,5 @@ var CommandStateDataType = provider.DataSourceType[CommandState, *CommandState]{
 	Path:               "commands-repository/command-sequences/commands/states",
 	Schema:             commandStateSchema,
 	FilterSchema:       nil,
-	NewTFModel:         func() any { return &CommandStateTF{} },
+	TFModelFactory:     func() any { return &CommandStateTF{} },
 }

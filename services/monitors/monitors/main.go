@@ -7,5 +7,5 @@ var MonitorDataType = provider.DataSourceType[Monitor, *Monitor]{
 	Path:               "monitors-repository/monitors",
 	Schema:             monitorSchema,
 	FilterSchema:       dataSourceFilterSchema,
-	NewTFModel:         func() any { return &MonitorTF{} },
+	TFModelFactory:     func() any { return &MonitorTF{} },
 }

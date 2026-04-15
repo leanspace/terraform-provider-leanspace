@@ -7,5 +7,5 @@ var DashboardDataType = provider.DataSourceType[Dashboard, *Dashboard]{
 	Path:               "dashboard-repository/dashboards",
 	Schema:             dashboardSchema,
 	FilterSchema:       dataSourceFilterSchema,
-	NewTFModel:         func() any { return &DashboardTF{} },
+	TFModelFactory:     func() any { return &DashboardTF{} },
 }

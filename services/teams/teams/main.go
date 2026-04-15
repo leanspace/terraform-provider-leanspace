@@ -9,5 +9,5 @@ var TeamDataType = provider.DataSourceType[Team, *Team]{
 	Path:               "teams-repository/teams",
 	Schema:             teamSchema,
 	FilterSchema:       dataSourceFilterSchema,
-	NewTFModel:         func() any { return &TeamTF{} },
+	TFModelFactory:     func() any { return &TeamTF{} },
 }

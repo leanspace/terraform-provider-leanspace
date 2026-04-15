@@ -7,5 +7,5 @@ var ServiceAccountDataType = provider.DataSourceType[ServiceAccount, *ServiceAcc
 	Path:               "teams-repository/service-accounts",
 	Schema:             serviceAccountSchema,
 	FilterSchema:       dataSourceFilterSchema,
-	NewTFModel:         func() any { return &ServiceAccountTF{} },
+	TFModelFactory:     func() any { return &ServiceAccountTF{} },
 }

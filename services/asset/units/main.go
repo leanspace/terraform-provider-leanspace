@@ -8,5 +8,5 @@ var UnitDataType = provider.DataSourceType[Unit, *Unit]{
 	ResourceIdentifier: "leanspace_units",
 	Path:               "asset-repository/units",
 	Schema:             unitSchema,
-	NewTFModel:         func() any { return &UnitTF{} },
+	TFModelFactory:     func() any { return &UnitTF{} },
 }

@@ -9,5 +9,5 @@ var LeafSpaceGroundStationLinkDataType = provider.DataSourceType[LeafSpaceGround
 	Path:               "integration-leafspace/ground-stations/links",
 	Schema:             leafSpaceGroundStationLink,
 	FilterSchema:       dataSourceFilterSchema,
-	NewTFModel:         func() any { return &LeafSpaceGroundStationLinkTF{} },
+	TFModelFactory:     func() any { return &LeafSpaceGroundStationLinkTF{} },
 }

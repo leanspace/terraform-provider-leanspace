@@ -18,8 +18,8 @@ var LeafSpaceConnectionDataType = provider.DataSourceType[LeafSpaceConnection, *
 	UpdatePath: func(id string) string {
 		return path
 	},
-	IsUnique:   true,
-	NewTFModel: func() any { return &LeafSpaceConnectionTF{} },
+	IsUnique:       true,
+	TFModelFactory: func() any { return &LeafSpaceConnectionTF{} },
 }
 
 var path = "integration-leafspace/connections"

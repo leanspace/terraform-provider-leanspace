@@ -47,7 +47,7 @@ func (r *GenericResource[T, PT]) Configure(_ context.Context, req resource.Confi
 }
 
 func (r *GenericResource[T, PT]) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	tfModel := r.dataType.NewTFModel()
+	tfModel := r.dataType.TFModelFactory()
 	resp.Diagnostics.Append(req.Plan.Get(ctx, tfModel)...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -90,7 +90,7 @@ func (r *GenericResource[T, PT]) Read(ctx context.Context, req resource.ReadRequ
 	}
 
 	var readElement PT
-	tfModel := r.dataType.NewTFModel()
+	tfModel := r.dataType.TFModelFactory()
 	if d := req.State.Get(ctx, tfModel); !d.HasError() {
 		if conv, ok := tfModel.(TFToAPI); ok {
 			readElement = conv.ToAPI().(PT)
@@ -112,7 +112,7 @@ func (r *GenericResource[T, PT]) Read(ctx context.Context, req resource.ReadRequ
 }
 
 func (r *GenericResource[T, PT]) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	tfModel := r.dataType.NewTFModel()
+	tfModel := r.dataType.TFModelFactory()
 	resp.Diagnostics.Append(req.Plan.Get(ctx, tfModel)...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -162,7 +162,7 @@ func (r *GenericResource[T, PT]) Delete(ctx context.Context, req resource.Delete
 	}
 
 	var element PT
-	tfModel := r.dataType.NewTFModel()
+	tfModel := r.dataType.TFModelFactory()
 	if d := req.State.Get(ctx, tfModel); !d.HasError() {
 		if conv, ok := tfModel.(TFToAPI); ok {
 			element = conv.ToAPI().(PT)

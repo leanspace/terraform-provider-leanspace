@@ -7,5 +7,5 @@ var RouteDataType = provider.DataSourceType[Route, *Route]{
 	Path:               "routes-repository/routes",
 	Schema:             routeSchema,
 	FilterSchema:       dataSourceFilterSchema,
-	NewTFModel:         func() any { return &RouteTF{} },
+	TFModelFactory:     func() any { return &RouteTF{} },
 }

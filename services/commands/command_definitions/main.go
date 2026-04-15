@@ -7,5 +7,5 @@ var CommandDataType = provider.DataSourceType[CommandDefinition, *CommandDefinit
 	Path:               "commands-repository/command-definitions",
 	Schema:             commandDefinitionSchema,
 	FilterSchema:       dataSourceFilterSchema,
-	NewTFModel:         func() any { return &CommandDefinitionTF{} },
+	TFModelFactory:     func() any { return &CommandDefinitionTF{} },
 }

@@ -9,5 +9,5 @@ var LeafSpaceContactReservationStatusMappingDataType = provider.DataSourceType[C
 	Path:               "integration-leafspace/contact-reservations/status/mappings",
 	Schema:             contactReservationStatusMappingSchema,
 	FilterSchema:       dataSourceFilterSchema,
-	NewTFModel:         func() any { return &ContactReservationStatusMappingTF{} },
+	TFModelFactory:     func() any { return &ContactReservationStatusMappingTF{} },
 }

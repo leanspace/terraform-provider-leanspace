@@ -7,5 +7,5 @@ var ActionTemplateDataType = provider.DataSourceType[ActionTemplate, *ActionTemp
 	Path:               "monitors-repository/action-templates",
 	Schema:             baseActionTemplateSchema,
 	FilterSchema:       dataSourceFilterSchema,
-	NewTFModel:         func() any { return &ActionTemplateTF{} },
+	TFModelFactory:     func() any { return &ActionTemplateTF{} },
 }

@@ -7,5 +7,5 @@ var MetricDataType = provider.DataSourceType[Metric[any], *Metric[any]]{
 	Path:               "metrics-repository/metrics",
 	Schema:             metricSchema,
 	FilterSchema:       dataSourceFilterSchema,
-	NewTFModel:         func() any { return &MetricTF{} },
+	TFModelFactory:     func() any { return &MetricTF{} },
 }

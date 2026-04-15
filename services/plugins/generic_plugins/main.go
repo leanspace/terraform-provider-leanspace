@@ -9,5 +9,5 @@ var GenericPluginDataType = provider.DataSourceType[GenericPlugin, *GenericPlugi
 	Path:               "plugins-repository/generic-plugins",
 	Schema:             genericPluginSchema,
 	FilterSchema:       dataSourceFilterSchema,
-	NewTFModel:         func() any { return &GenericPluginTF{} },
+	TFModelFactory:     func() any { return &GenericPluginTF{} },
 }

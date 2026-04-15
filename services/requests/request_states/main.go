@@ -7,5 +7,5 @@ var RequestStateDataType = provider.DataSourceType[RequestState, *RequestState]{
 	Path:               "requests-repository/requests/states",
 	Schema:             requestStateSchema,
 	FilterSchema:       nil,
-	NewTFModel:         func() any { return &RequestStateTF{} },
+	TFModelFactory:     func() any { return &RequestStateTF{} },
 }

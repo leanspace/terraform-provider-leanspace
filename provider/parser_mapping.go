@@ -149,10 +149,9 @@ type DataSourceType[T any, PT ParseableModel[T]] struct {
 	FilterSchema map[string]datasourceschema.Attribute
 	// If the filet endpoint is paginated or not. Defaults to true.
 	IsUnique bool `default:"false"`
-	// Optional. Factory that returns a pointer to a new empty TF model struct (e.g. &NodeTF{}).
-	// When set, GenericResource uses the direct TF conversion path (Plan.Get/State.Set)
-	// instead of the map[string]any intermediary.
-	NewTFModel func() any // TODO: rename
+	// Factory that returns a pointer to a new empty TF model struct (e.g. &NodeTF{}).
+	// GenericResource uses the direct TF conversion path (Plan.Get/State.Set)
+	TFModelFactory func() any
 }
 
 func (dataSource DataSourceType[T, PT]) convert(client *Client) GenericClient[T, PT] {
