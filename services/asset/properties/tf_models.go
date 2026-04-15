@@ -38,7 +38,7 @@ func (x *Property[T]) ToTF() interface{} {
 	tf := &PropertyTF{
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
 		Name:         helper.TFStringValue(x.Name),
-		Description:  helper.TFStringValue(x.Description),
+		Description:  helper.TFStringPtrValue(x.Description),
 		IsBuiltIn:    helper.TFBoolValue(x.IsBuiltIn),
 		NodeId:       helper.TFStringValue(x.NodeId),
 		Tags:         general_objects.KeyValuesToTF(x.Tags),
@@ -47,12 +47,12 @@ func (x *Property[T]) ToTF() interface{} {
 		Max:          helper.TFFloat64PtrValue(x.Attributes.Max),
 		Scale:        helper.TFIntPtrValue(x.Attributes.Scale),
 		Precision:    helper.TFIntPtrValue(x.Attributes.Precision),
-		UnitId:       helper.TFStringValue(x.Attributes.UnitId),
+		UnitId:       helper.TFStringPtrValue(x.Attributes.UnitId),
 		MinLength:    helper.TFIntPtrValue(x.Attributes.MinLength),
 		MaxLength:    helper.TFIntPtrValue(x.Attributes.MaxLength),
-		Pattern:      helper.TFStringValue(x.Attributes.Pattern),
-		Before:       helper.TFStringValue(x.Attributes.Before),
-		After:        helper.TFStringValue(x.Attributes.After),
+		Pattern:      helper.TFStringPtrValue(x.Attributes.Pattern),
+		Before:       helper.TFStringPtrValue(x.Attributes.Before),
+		After:        helper.TFStringPtrValue(x.Attributes.After),
 		Fields:       general_objects.FieldsToTF(x.Attributes.Fields),
 	}
 	// Value handling by type
@@ -98,7 +98,7 @@ func (tf *PropertyTF) ToAPI() interface{} {
 	p := &Property[interface{}]{
 		AuditModel:  general_objects.AuditModelFromTF(tf.AuditModelTF),
 		Name:        helper.FromTFString(tf.Name),
-		Description: helper.FromTFString(tf.Description),
+		Description: helper.FromTFStringPtr(tf.Description),
 		IsBuiltIn:   helper.FromTFBool(tf.IsBuiltIn),
 		NodeId:      helper.FromTFString(tf.NodeId),
 		Tags:        general_objects.KeyValuesFromTF(tf.Tags),
@@ -108,12 +108,12 @@ func (tf *PropertyTF) ToAPI() interface{} {
 	p.Attributes.Max = helper.FromTFFloat64Ptr(tf.Max)
 	p.Attributes.Scale = helper.FromTFIntPtr(tf.Scale)
 	p.Attributes.Precision = helper.FromTFIntPtr(tf.Precision)
-	p.Attributes.UnitId = helper.FromTFString(tf.UnitId)
+	p.Attributes.UnitId = helper.FromTFStringPtr(tf.UnitId)
 	p.Attributes.MinLength = helper.FromTFIntPtr(tf.MinLength)
 	p.Attributes.MaxLength = helper.FromTFIntPtr(tf.MaxLength)
-	p.Attributes.Pattern = helper.FromTFString(tf.Pattern)
-	p.Attributes.Before = helper.FromTFString(tf.Before)
-	p.Attributes.After = helper.FromTFString(tf.After)
+	p.Attributes.Pattern = helper.FromTFStringPtr(tf.Pattern)
+	p.Attributes.Before = helper.FromTFStringPtr(tf.Before)
+	p.Attributes.After = helper.FromTFStringPtr(tf.After)
 	p.Attributes.Fields = general_objects.FieldsFromTF(tf.Fields)
 	if !tf.Value.IsNull() && !tf.Value.IsUnknown() {
 		p.Attributes.Value = tf.Value.ValueString()

@@ -5,7 +5,7 @@ import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects
 type Widget struct {
 	general_objects.AuditModel
 	Name                 string                     `json:"name"`
-	Description          string                     `json:"description,omitempty"`
+	Description          *string                    `json:"description,omitempty"`
 	Type                 string                     `json:"type"`
 	Granularity          string                     `json:"granularity"`
 	QueryTimeDimension   string                     `json:"queryTimeDimension"`
@@ -18,7 +18,7 @@ type Widget struct {
 
 type Series struct {
 	ID          string   `json:"id"`
-	Name        string   `json:"name"`
+	Name        *string  `json:"name,omitempty"`
 	Datasource  string   `json:"datasource"`
 	Aggregation string   `json:"aggregation"`
 	Filters     []Filter `json:"filters"`
@@ -31,7 +31,7 @@ type Filter struct {
 }
 
 type Metadata struct {
-	YAxisLabel string      `json:"yAxisLabel"`
+	YAxisLabel *string     `json:"yAxisLabel,omitempty"`
 	YAxisRange []*float64  `json:"yAxisRange"`
 	Thresholds []Threshold `json:"thresholds"`
 }

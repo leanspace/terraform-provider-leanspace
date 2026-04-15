@@ -8,9 +8,9 @@ type Resource struct {
 	general_objects.AuditModel
 	AssetId      string                     `json:"assetId"`
 	UnitId       string                     `json:"unitId"`
-	MetricId     string                     `json:"metricId"`
+	MetricId     *string                    `json:"metricId,omitempty"`
 	Name         string                     `json:"name"`
-	Description  string                     `json:"description"`
+	Description  *string                    `json:"description,omitempty"`
 	DefaultLevel float64                    `json:"defaultLevel"`
 	LowerLimit   *float64                   `json:"lowerLimit"`
 	UpperLimit   *float64                   `json:"upperLimit"`
@@ -20,7 +20,7 @@ type Resource struct {
 
 type ResourceThreshold struct {
 	Kind                 string  `json:"kind"`
-	Name                 string  `json:"name,omitempty"`
+	Name                 *string `json:"name,omitempty"`
 	ViolationWhenReached bool    `json:"violationWhenReached"`
 	Value                float64 `json:"value"`
 }

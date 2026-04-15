@@ -7,8 +7,8 @@ type EventsDefinition struct {
 	Name        string                     `json:"name"`
 	Source      string                     `json:"source"`
 	State       string                     `json:"state"`
-	Description string                     `json:"description,omitempty"`
-	Criticality string                     `json:"criticality,omitempty"`
+	Description *string                    `json:"description,omitempty"`
+	Criticality *string                    `json:"criticality,omitempty"`
 	Rules       []Rules[any]               `json:"rules,omitempty"`
 	Tags        []general_objects.KeyValue `json:"tags,omitempty"`
 }

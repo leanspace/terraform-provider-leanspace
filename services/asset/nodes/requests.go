@@ -18,8 +18,12 @@ type apiShiftNodeInfo struct {
 }
 
 func (node *Node) toAPIFormat() ([]byte, error) {
+	var parentId string
+	if node.ParentNodeId != nil {
+		parentId = *node.ParentNodeId
+	}
 	shiftNode := apiShiftNodeInfo{
-		TargetParentNodeId: node.ParentNodeId,
+		TargetParentNodeId: parentId,
 	}
 	return json.Marshal(shiftNode)
 }
@@ -69,7 +73,8 @@ func (node *Node) setPropertiesFromAttributes() (err error) {
 	for _, property := range node.PropertyList {
 		if property.Name == NORAD_ID {
 			if property.Attributes.Value != nil {
-				node.NoradId = property.Attributes.Value.(string)
+				v := property.Attributes.Value.(string)
+				node.NoradId = &v
 			}
 		}
 		if property.Name == "TLE" {
@@ -88,7 +93,8 @@ func (node *Node) setPropertiesFromAttributes() (err error) {
 		}
 		if property.Name == INTERNATIONAL_DESIGNATOR {
 			if property.Attributes.Value != nil {
-				node.InternationalDesignator = property.Attributes.Value.(string)
+				v := property.Attributes.Value.(string)
+				node.InternationalDesignator = &v
 			}
 		}
 		if property.Name == LOCATION_COORDINATES {
@@ -224,7 +230,8 @@ func (node *Node) PostReadProcess(client *provider.Client, destNodeRaw any) erro
 		if property.(map[string]any)["name"] == NORAD_ID {
 			attributeProperites := property.(map[string]any)["attributes"].(map[string]any)
 			if attributeProperites["value"] != nil {
-				createdNode.NoradId = attributeProperites["value"].(string)
+				v := attributeProperites["value"].(string)
+				createdNode.NoradId = &v
 			}
 		}
 		if property.(map[string]any)["name"] == "TLE" {
@@ -245,7 +252,8 @@ func (node *Node) PostReadProcess(client *provider.Client, destNodeRaw any) erro
 		if property.(map[string]any)["name"] == INTERNATIONAL_DESIGNATOR {
 			attributeProperites := property.(map[string]any)["attributes"].(map[string]any)
 			if attributeProperites["value"] != nil {
-				createdNode.InternationalDesignator = attributeProperites["value"].(string)
+				v := attributeProperites["value"].(string)
+				createdNode.InternationalDesignator = &v
 			}
 		}
 		if property.(map[string]any)["name"] == LOCATION_COORDINATES {

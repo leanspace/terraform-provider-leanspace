@@ -199,7 +199,7 @@ func (x *RequestDefinition) ToTF() interface{} {
 			defAttr := general_objects.DefinitionAttributeToTF(&a.Attributes)
 			argDefObj, _ := types.ObjectValue(rdArgDefAttrTypes, map[string]attr.Value{
 				"name":        helper.TFStringValue(a.Name),
-				"description": helper.TFStringValue(a.Description),
+				"description": helper.TFStringPtrValue(a.Description),
 				"attributes":  buildDefinitionAttributeAttrValue(&defAttr),
 			})
 			argDefElems[j] = argDefObj
@@ -213,7 +213,7 @@ func (x *RequestDefinition) ToTF() interface{} {
 			LastModifiedAt:      helper.TFStringValue(fcd.AuditModel.LastModifiedAt),
 			LastModifiedBy:      helper.TFStringValue(fcd.AuditModel.LastModifiedBy),
 			Name:                helper.TFStringValue(fcd.Name),
-			Description:         helper.TFStringValue(fcd.Description),
+			Description:         helper.TFStringPtrValue(fcd.Description),
 			Required:            helper.TFBoolValue(fcd.Required),
 			ArgumentDefinitions: argDefList,
 		}
@@ -224,7 +224,7 @@ func (x *RequestDefinition) ToTF() interface{} {
 		attrVal := general_objects.DefinitionAttributeToTF(&a.Attributes)
 		configArgDefs[i] = activity_definitions.ArgumentDefinitionTF{
 			Name:        helper.TFStringValue(a.Name),
-			Description: helper.TFStringValue(a.Description),
+			Description: helper.TFStringPtrValue(a.Description),
 			Attributes:  &attrVal,
 		}
 	}
@@ -242,7 +242,7 @@ func (x *RequestDefinition) ToTF() interface{} {
 	return &RequestDefinitionTF{
 		AuditModelTF:                     general_objects.AuditModelToTF(&x.AuditModel),
 		Name:                             helper.TFStringValue(x.Name),
-		Description:                      helper.TFStringValue(x.Description),
+		Description:                      helper.TFStringPtrValue(x.Description),
 		PlanTemplateIds:                  helper.TFStringsValue(x.PlanTemplateIds),
 		FeasibilityConstraintDefinitions: fcds,
 		ConfigurationArgumentDefinitions: configArgDefs,
@@ -262,7 +262,7 @@ func (tf *RequestDefinitionTF) ToAPI() interface{} {
 				LastModifiedBy: helper.FromTFString(fcd.LastModifiedBy),
 			},
 			Name:        helper.FromTFString(fcd.Name),
-			Description: helper.FromTFString(fcd.Description),
+			Description: helper.FromTFStringPtr(fcd.Description),
 			Required:    helper.FromTFBool(fcd.Required),
 		}
 	}
@@ -271,7 +271,7 @@ func (tf *RequestDefinitionTF) ToAPI() interface{} {
 	for i, a := range tf.ConfigurationArgumentDefinitions {
 		configArgDefs[i] = activity_definitions.ArgumentDefinition[any]{
 			Name:        helper.FromTFString(a.Name),
-			Description: helper.FromTFString(a.Description),
+			Description: helper.FromTFStringPtr(a.Description),
 		}
 		if a.Attributes != nil {
 			configArgDefs[i].Attributes = general_objects.DefinitionAttributeFromTF(*a.Attributes)
@@ -291,7 +291,7 @@ func (tf *RequestDefinitionTF) ToAPI() interface{} {
 	return &RequestDefinition{
 		AuditModel:                       general_objects.AuditModelFromTF(tf.AuditModelTF),
 		Name:                             helper.FromTFString(tf.Name),
-		Description:                      helper.FromTFString(tf.Description),
+		Description:                      helper.FromTFStringPtr(tf.Description),
 		PlanTemplateIds:                  helper.FromTFStrings(tf.PlanTemplateIds),
 		FeasibilityConstraintDefinitions: fcds,
 		ConfigurationArgumentDefinitions: configArgDefs,

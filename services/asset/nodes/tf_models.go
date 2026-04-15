@@ -60,23 +60,23 @@ func (x *Node) ToTF() any {
 	tf := &NodeTF{
 		AuditModelTF:     general_objects.AuditModelToTF(&x.AuditModel),
 		Name:             helper.TFStringValue(x.Name),
-		Description:      helper.TFStringValue(x.Description),
-		ParentNodeId:     helper.TFStringValue(x.ParentNodeId),
+		Description:      helper.TFStringPtrValue(x.Description),
+		ParentNodeId:     helper.TFStringPtrValue(x.ParentNodeId),
 		Type:             helper.TFStringValue(x.Type),
-		Kind:             helper.TFStringValue(x.Kind),
+		Kind:             helper.TFStringPtrValue(x.Kind),
 		Tags:             general_objects.KeyValuesToTF(x.Tags),
 		NumberOfChildren: helper.TFInt64Value(x.NumberOfChildren),
 		// nodes is Computed-only; set empty set so the framework does not see a null→value diff.
 		Nodes: types.SetValueMust(types.ObjectType{AttrTypes: nodeObjectAttrTypes}, []attr.Value{}),
 	}
 
-	if x.Kind == "SATELLITE" {
-		tf.NoradId = helper.TFStringValue(x.NoradId)
-		tf.InternationalDesignator = helper.TFStringValue(x.InternationalDesignator)
+	if x.Kind != nil && *x.Kind == "SATELLITE" {
+		tf.NoradId = helper.TFStringPtrValue(x.NoradId)
+		tf.InternationalDesignator = helper.TFStringPtrValue(x.InternationalDesignator)
 		tf.Tle = helper.TFStringsValue(x.Tle)
 	}
 
-	if x.Kind == "GROUND_STATION" {
+	if x.Kind != nil && *x.Kind == "GROUND_STATION" {
 		tf.Latitude = helper.TFFloat64Value(x.Latitude)
 		tf.Longitude = helper.TFFloat64Value(x.Longitude)
 		tf.Elevation = helper.TFFloat64Value(x.Elevation)
@@ -89,14 +89,14 @@ func (tf *NodeTF) ToAPI() any {
 	node := &Node{
 		AuditModel:              general_objects.AuditModelFromTF(tf.AuditModelTF),
 		Name:                    helper.FromTFString(tf.Name),
-		Description:             helper.FromTFString(tf.Description),
-		ParentNodeId:            helper.FromTFString(tf.ParentNodeId),
+		Description:             helper.FromTFStringPtr(tf.Description),
+		ParentNodeId:            helper.FromTFStringPtr(tf.ParentNodeId),
 		Type:                    helper.FromTFString(tf.Type),
-		Kind:                    helper.FromTFString(tf.Kind),
+		Kind:                    helper.FromTFStringPtr(tf.Kind),
 		Tags:                    general_objects.KeyValuesFromTF(tf.Tags),
 		NumberOfChildren:        helper.FromTFInt64(tf.NumberOfChildren),
-		NoradId:                 helper.FromTFString(tf.NoradId),
-		InternationalDesignator: helper.FromTFString(tf.InternationalDesignator),
+		NoradId:                 helper.FromTFStringPtr(tf.NoradId),
+		InternationalDesignator: helper.FromTFStringPtr(tf.InternationalDesignator),
 		Tle:                     helper.FromTFStrings(tf.Tle),
 		Latitude:                helper.FromTFFloat64(tf.Latitude),
 		Longitude:               helper.FromTFFloat64(tf.Longitude),
@@ -105,17 +105,17 @@ func (tf *NodeTF) ToAPI() any {
 
 	// Build PropertyList from the flattened fields (same logic as FromMap)
 	var propertyList []properties.Property[any]
-	if node.NoradId != "" {
+	if node.NoradId != nil {
 		noradInfo := properties.Property[any]{}
 		noradInfo.Attributes.Type = "TEXT"
-		noradInfo.Attributes.Value = node.NoradId
+		noradInfo.Attributes.Value = *node.NoradId
 		noradInfo.Name = NORAD_ID
 		propertyList = append(propertyList, noradInfo)
 	}
-	if node.InternationalDesignator != "" {
+	if node.InternationalDesignator != nil {
 		intlDesig := properties.Property[any]{}
 		intlDesig.Attributes.Type = "TEXT"
-		intlDesig.Attributes.Value = node.InternationalDesignator
+		intlDesig.Attributes.Value = *node.InternationalDesignator
 		intlDesig.Name = INTERNATIONAL_DESIGNATOR
 		propertyList = append(propertyList, intlDesig)
 	}
@@ -130,7 +130,7 @@ func (tf *NodeTF) ToAPI() any {
 		tleInfo.Attributes.Value = interfaceValues
 		propertyList = append(propertyList, tleInfo)
 	}
-	if node.Kind == "GROUND_STATION" {
+	if node.Kind != nil && *node.Kind == "GROUND_STATION" {
 		gsInfo := properties.Property[any]{}
 		gsInfo.Attributes.Type = "GEOPOINT"
 		gsInfo.Name = LOCATION_COORDINATES

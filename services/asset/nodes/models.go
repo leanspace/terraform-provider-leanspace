@@ -11,16 +11,16 @@ import (
 type Node struct {
 	general_objects.AuditModel
 	Name                    string                     `json:"name"`
-	Description             string                     `json:"description,omitempty"`
-	ParentNodeId            string                     `json:"parentNodeId,omitempty"`
+	Description             *string                    `json:"description,omitempty"`
+	ParentNodeId            *string                    `json:"parentNodeId,omitempty"`
 	Tags                    []general_objects.KeyValue `json:"tags,omitempty"`
 	Nodes                   []Node                     `json:"nodes,omitempty"`
 	Type                    string                     `json:"type"`
-	Kind                    string                     `json:"kind,omitempty"`
+	Kind                    *string                    `json:"kind,omitempty"`
 	Latitude                float64                    `json:"latitude,omitempty"`
-	NoradId                 string                     `json:"noradId,omitempty"`
+	NoradId                 *string                    `json:"noradId,omitempty"`
 	Tle                     []string                   `json:"tle,omitempty"`
-	InternationalDesignator string                     `json:"internationalDesignator,omitempty"`
+	InternationalDesignator *string                    `json:"internationalDesignator,omitempty"`
 	Longitude               float64                    `json:"longitude,omitempty"`
 	Elevation               float64                    `json:"elevation,omitempty"`
 	NumberOfChildren        int                        `json:"numberOfChildren"`

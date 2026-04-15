@@ -8,7 +8,7 @@ import (
 type RequestDefinition struct {
 	general_objects.AuditModel
 	Name                             string                                         `json:"name"`
-	Description                      string                                         `json:"description,omitempty"`
+	Description                      *string                                        `json:"description,omitempty"`
 	PlanTemplateIds                  []string                                       `json:"planTemplateIds"`
 	FeasibilityConstraintDefinitions []FeasibilityConstraintDefinition              `json:"feasibilityConstraintDefinitions"`
 	ConfigurationArgumentDefinitions []activity_definitions.ArgumentDefinition[any] `json:"configurationArgumentDefinitions,omitempty"`
@@ -18,7 +18,7 @@ type RequestDefinition struct {
 type FeasibilityConstraintDefinition struct {
 	general_objects.AuditModel
 	Name                string                                         `json:"name"`
-	Description         string                                         `json:"description,omitempty"`
+	Description         *string                                        `json:"description,omitempty"`
 	Required            bool                                           `json:"required"`
 	ArgumentDefinitions []activity_definitions.ArgumentDefinition[any] `json:"argumentDefinitions,omitempty"`
 }

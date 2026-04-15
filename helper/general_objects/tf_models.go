@@ -54,7 +54,7 @@ func KeyValuesToTF(kvs []KeyValue) []KeyValueTF {
 	for i, kv := range kvs {
 		result[i] = KeyValueTF{
 			Key:   helper.TFStringValue(kv.Key),
-			Value: helper.TFStringValue(kv.Value),
+			Value: helper.TFStringPtrValue(kv.Value),
 		}
 	}
 	return result
@@ -68,7 +68,7 @@ func KeyValuesFromTF(tfs []KeyValueTF) []KeyValue {
 	for i, tf := range tfs {
 		result[i] = KeyValue{
 			Key:   helper.FromTFString(tf.Key),
-			Value: helper.FromTFString(tf.Value),
+			Value: helper.FromTFStringPtr(tf.Value),
 		}
 	}
 	return result
@@ -121,7 +121,7 @@ func FieldDefToTF(f *FieldDef[any]) FieldDefTF {
 		Max:          helper.TFFloat64PtrValue(f.Max),
 		Scale:        helper.TFIntPtrValue(f.Scale),
 		Precision:    helper.TFIntPtrValue(f.Precision),
-		UnitId:       helper.TFStringValue(f.UnitId),
+		UnitId:       helper.TFStringPtrValue(f.UnitId),
 	}
 }
 
@@ -136,7 +136,7 @@ func FieldDefFromTF(tf FieldDefTF) FieldDef[any] {
 		Max:          helper.FromTFFloat64Ptr(tf.Max),
 		Scale:        helper.FromTFIntPtr(tf.Scale),
 		Precision:    helper.FromTFIntPtr(tf.Precision),
-		UnitId:       helper.FromTFString(tf.UnitId),
+		UnitId:       helper.FromTFStringPtr(tf.UnitId),
 	}
 }
 
@@ -153,7 +153,7 @@ func FieldToTF(f *Field[any]) FieldTF {
 		Max:       helper.TFFloat64PtrValue(f.Max),
 		Scale:     helper.TFIntPtrValue(f.Scale),
 		Precision: helper.TFIntPtrValue(f.Precision),
-		UnitId:    helper.TFStringValue(f.UnitId),
+		UnitId:    helper.TFStringPtrValue(f.UnitId),
 	}
 }
 
@@ -168,7 +168,7 @@ func FieldFromTF(tf FieldTF) Field[any] {
 		Max:       helper.FromTFFloat64Ptr(tf.Max),
 		Scale:     helper.FromTFIntPtr(tf.Scale),
 		Precision: helper.FromTFIntPtr(tf.Precision),
-		UnitId:    helper.FromTFString(tf.UnitId),
+		UnitId:    helper.FromTFStringPtr(tf.UnitId),
 	}
 }
 
@@ -253,14 +253,14 @@ func ArrayConstraintToTF(c *ArrayConstraint[any]) *ArrayConstraintTF {
 		Required: helper.TFBoolPtrValue(c.Required),
 		MinLength: helper.TFIntPtrValue(c.MinLength),
 		MaxLength: helper.TFIntPtrValue(c.MaxLength),
-		Pattern:   helper.TFStringValue(c.Pattern),
+		Pattern:   helper.TFStringPtrValue(c.Pattern),
 		Min:       helper.TFFloat64PtrValue(c.Min),
 		Max:       helper.TFFloat64PtrValue(c.Max),
 		Scale:     helper.TFIntPtrValue(c.Scale),
 		Precision: helper.TFIntPtrValue(c.Precision),
-		UnitId:    helper.TFStringValue(c.UnitId),
-		Before:    helper.TFStringValue(c.Before),
-		After:     helper.TFStringValue(c.After),
+		UnitId:    helper.TFStringPtrValue(c.UnitId),
+		Before:    helper.TFStringPtrValue(c.Before),
+		After:     helper.TFStringPtrValue(c.After),
 	}
 	if c.Options != nil {
 		tf.Options = make(map[string]types.String, len(*c.Options))
@@ -280,14 +280,14 @@ func ArrayConstraintFromTF(tf *ArrayConstraintTF) ArrayConstraint[any] {
 		Required:  helper.FromTFBoolPtr(tf.Required),
 		MinLength: helper.FromTFIntPtr(tf.MinLength),
 		MaxLength: helper.FromTFIntPtr(tf.MaxLength),
-		Pattern:   helper.FromTFString(tf.Pattern),
+		Pattern:   helper.FromTFStringPtr(tf.Pattern),
 		Min:       helper.FromTFFloat64Ptr(tf.Min),
 		Max:       helper.FromTFFloat64Ptr(tf.Max),
 		Scale:     helper.FromTFIntPtr(tf.Scale),
 		Precision: helper.FromTFIntPtr(tf.Precision),
-		UnitId:    helper.FromTFString(tf.UnitId),
-		Before:    helper.FromTFString(tf.Before),
-		After:     helper.FromTFString(tf.After),
+		UnitId:    helper.FromTFStringPtr(tf.UnitId),
+		Before:    helper.FromTFStringPtr(tf.Before),
+		After:     helper.FromTFStringPtr(tf.After),
 	}
 	if tf.Options != nil {
 		opts := make(map[string]any, len(tf.Options))
@@ -329,14 +329,14 @@ func DefinitionAttributeToTF(a *DefinitionAttribute[any]) DefinitionAttributeTF 
 		Required: helper.TFBoolPtrValue(a.Required),
 		MinLength: helper.TFIntPtrValue(a.MinLength),
 		MaxLength: helper.TFIntPtrValue(a.MaxLength),
-		Pattern:   helper.TFStringValue(a.Pattern),
+		Pattern:   helper.TFStringPtrValue(a.Pattern),
 		Min:       helper.TFFloat64PtrValue(a.Min),
 		Max:       helper.TFFloat64PtrValue(a.Max),
 		Scale:     helper.TFIntPtrValue(a.Scale),
 		Precision: helper.TFIntPtrValue(a.Precision),
-		UnitId:    helper.TFStringValue(a.UnitId),
-		Before:    helper.TFStringValue(a.Before),
-		After:     helper.TFStringValue(a.After),
+		UnitId:    helper.TFStringPtrValue(a.UnitId),
+		Before:    helper.TFStringPtrValue(a.Before),
+		After:     helper.TFStringPtrValue(a.After),
 		Fields:    FieldsDefToTF(a.Fields),
 		MinSize: helper.TFIntPtrValue(a.MinSize),
 		MaxSize: helper.TFIntPtrValue(a.MaxSize),
@@ -376,14 +376,14 @@ func DefinitionAttributeFromTF(tf DefinitionAttributeTF) DefinitionAttribute[any
 		Required:  helper.FromTFBoolPtr(tf.Required),
 		MinLength: helper.FromTFIntPtr(tf.MinLength),
 		MaxLength: helper.FromTFIntPtr(tf.MaxLength),
-		Pattern:   helper.FromTFString(tf.Pattern),
+		Pattern:   helper.FromTFStringPtr(tf.Pattern),
 		Min:       helper.FromTFFloat64Ptr(tf.Min),
 		Max:       helper.FromTFFloat64Ptr(tf.Max),
 		Scale:     helper.FromTFIntPtr(tf.Scale),
 		Precision: helper.FromTFIntPtr(tf.Precision),
-		UnitId:    helper.FromTFString(tf.UnitId),
-		Before:    helper.FromTFString(tf.Before),
-		After:     helper.FromTFString(tf.After),
+		UnitId:    helper.FromTFStringPtr(tf.UnitId),
+		Before:    helper.FromTFStringPtr(tf.Before),
+		After:     helper.FromTFStringPtr(tf.After),
 		Fields:    FieldsDefFromTF(tf.Fields),
 		MinSize:   helper.FromTFIntPtr(tf.MinSize),
 		MaxSize:   helper.FromTFIntPtr(tf.MaxSize),
@@ -446,8 +446,8 @@ type ValueAttributeTF struct {
 func ValueAttributeToTF(a *ValueAttribute[any]) ValueAttributeTF {
 	tf := ValueAttributeTF{
 		Type:     helper.TFStringValue(a.Type),
-		DataType: helper.TFStringValue(a.DataType),
-		UnitId:   helper.TFStringValue(a.UnitId),
+		DataType: helper.TFStringPtrValue(a.DataType),
+		UnitId:   helper.TFStringPtrValue(a.UnitId),
 		Fields:   FieldsToTF(a.Fields),
 	}
 	if any(a.Value) != nil {
@@ -474,8 +474,8 @@ func ValueAttributeToTF(a *ValueAttribute[any]) ValueAttributeTF {
 func ValueAttributeFromTF(tf ValueAttributeTF) ValueAttribute[any] {
 	a := ValueAttribute[any]{
 		Type:     helper.FromTFString(tf.Type),
-		DataType: helper.FromTFString(tf.DataType),
-		UnitId:   helper.FromTFString(tf.UnitId),
+		DataType: helper.FromTFStringPtr(tf.DataType),
+		UnitId:   helper.FromTFStringPtr(tf.UnitId),
 		Fields:   FieldsFromTF(tf.Fields),
 	}
 	if !tf.Value.IsNull() && !tf.Value.IsUnknown() {

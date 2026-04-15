@@ -25,9 +25,9 @@ func (x *ActionTemplate) ToTF() any {
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
 		Name:         helper.TFStringValue(x.Name),
 		Type:         helper.TFStringValue(x.Type),
-		URL:          helper.TFStringValue(x.URL),
-		Payload:      helper.TFStringValue(x.Payload),
-		Content:      helper.TFStringValue(x.Content),
+		URL:          helper.TFStringPtrValue(x.URL),
+		Payload:      helper.TFStringPtrValue(x.Payload),
+		Content:      helper.TFStringPtrValue(x.Content),
 		Headers:      headers,
 	}
 }
@@ -44,9 +44,9 @@ func (tf *ActionTemplateTF) ToAPI() any {
 		AuditModel: general_objects.AuditModelFromTF(tf.AuditModelTF),
 		Name:       helper.FromTFString(tf.Name),
 		Type:       helper.FromTFString(tf.Type),
-		URL:        helper.FromTFString(tf.URL),
-		Payload:    helper.FromTFString(tf.Payload),
-		Content:    helper.FromTFString(tf.Content),
+		URL:        helper.FromTFStringPtr(tf.URL),
+		Payload:    helper.FromTFStringPtr(tf.Payload),
+		Content:    helper.FromTFStringPtr(tf.Content),
 		Headers:    headers,
 	}
 }

@@ -20,7 +20,7 @@ func (x *FeasibilityConstraintDefinition) ToTF() interface{} {
 		attr := general_objects.DefinitionAttributeToTF(&a.Attributes)
 		argDefs[i] = activity_definitions.ArgumentDefinitionTF{
 			Name:        helper.TFStringValue(a.Name),
-			Description: helper.TFStringValue(a.Description),
+			Description: helper.TFStringPtrValue(a.Description),
 			Attributes:  &attr,
 		}
 	}
@@ -28,7 +28,7 @@ func (x *FeasibilityConstraintDefinition) ToTF() interface{} {
 	return &FeasibilityConstraintDefinitionTF{
 		AuditModelTF:        general_objects.AuditModelToTF(&x.AuditModel),
 		Name:                helper.TFStringValue(x.Name),
-		Description:         helper.TFStringValue(x.Description),
+		Description:         helper.TFStringPtrValue(x.Description),
 		ArgumentDefinitions: argDefs,
 	}
 }
@@ -38,7 +38,7 @@ func (tf *FeasibilityConstraintDefinitionTF) ToAPI() interface{} {
 	for i, a := range tf.ArgumentDefinitions {
 		argDefs[i] = activity_definitions.ArgumentDefinition[any]{
 			Name:        helper.FromTFString(a.Name),
-			Description: helper.FromTFString(a.Description),
+			Description: helper.FromTFStringPtr(a.Description),
 		}
 		if a.Attributes != nil {
 			argDefs[i].Attributes = general_objects.DefinitionAttributeFromTF(*a.Attributes)
@@ -48,7 +48,7 @@ func (tf *FeasibilityConstraintDefinitionTF) ToAPI() interface{} {
 	return &FeasibilityConstraintDefinition{
 		AuditModel:          general_objects.AuditModelFromTF(tf.AuditModelTF),
 		Name:                helper.FromTFString(tf.Name),
-		Description:         helper.FromTFString(tf.Description),
+		Description:         helper.FromTFStringPtr(tf.Description),
 		ArgumentDefinitions: argDefs,
 	}
 }

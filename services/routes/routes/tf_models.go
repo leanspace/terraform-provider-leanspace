@@ -44,7 +44,7 @@ func (x *Route) ToTF() any {
 	errElems := make([]attr.Value, len(x.Definition.Errors))
 	for i, e := range x.Definition.Errors {
 		eObj, _ := types.ObjectValue(errorAttrTypes, map[string]attr.Value{
-			"code":    helper.TFStringValue(e.Code),
+		"code":    helper.TFStringValue(e.Code),
 			"message": helper.TFStringValue(e.Message),
 		})
 		errElems[i] = eObj
@@ -55,12 +55,12 @@ func (x *Route) ToTF() any {
 	for i, ri := range x.RouteInstances {
 		riObj, _ := types.ObjectValue(routeInstanceAttrTypes, map[string]attr.Value{
 			"status":                        helper.TFStringValue(ri.Status),
-			"last_status_at":                helper.TFStringValue(ri.LastStatusAt),
+			"last_status_at":                helper.TFStringPtrValue(ri.LastStatusAt),
 			"container_id":                  helper.TFStringValue(ri.ContainerId),
-			"last_message_start_process_at": helper.TFStringValue(ri.LastMessageStartProcessAt),
-			"last_message_end_process_at":   helper.TFStringValue(ri.LastMessageEndProcessAt),
+			"last_message_start_process_at": helper.TFStringPtrValue(ri.LastMessageStartProcessAt),
+			"last_message_end_process_at":   helper.TFStringPtrValue(ri.LastMessageEndProcessAt),
 			"number_of_messages_processed":  helper.TFInt64Value(ri.NumberOfMessagesProcessed),
-			"camel_route_id":                helper.TFStringValue(ri.CamelRouteId),
+			"camel_route_id":                helper.TFStringPtrValue(ri.CamelRouteId),
 		})
 		riElems[i] = riObj
 	}
@@ -69,13 +69,13 @@ func (x *Route) ToTF() any {
 	return &RouteTF{
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
 		Name:         helper.TFStringValue(x.Name),
-		Description:  helper.TFStringValue(x.Description),
+		Description:  helper.TFStringPtrValue(x.Description),
 		Tags:         general_objects.KeyValuesToTF(x.Tags),
 		Definition: &DefinitionTF{
 			Configuration:    helper.TFStringValue(x.Definition.Configuration),
 			LogLevel:         helper.TFStringValue(x.Definition.LogLevel),
 			Valid:            helper.TFBoolValue(x.Definition.Valid),
-			ServiceAccountId: helper.TFStringValue(x.Definition.ServiceAccountId),
+			ServiceAccountId: helper.TFStringPtrValue(x.Definition.ServiceAccountId),
 			Errors:           errors,
 		},
 		RouteInstances: routeInstances,
@@ -90,14 +90,14 @@ func (tf *RouteTF) ToAPI() any {
 			Configuration:    helper.FromTFString(tf.Definition.Configuration),
 			LogLevel:         helper.FromTFString(tf.Definition.LogLevel),
 			Valid:            helper.FromTFBool(tf.Definition.Valid),
-			ServiceAccountId: helper.FromTFString(tf.Definition.ServiceAccountId),
+			ServiceAccountId: helper.FromTFStringPtr(tf.Definition.ServiceAccountId),
 		}
 	}
 
 	return &Route{
 		AuditModel:   general_objects.AuditModelFromTF(tf.AuditModelTF),
 		Name:         helper.FromTFString(tf.Name),
-		Description:  helper.FromTFString(tf.Description),
+		Description:  helper.FromTFStringPtr(tf.Description),
 		Tags:         general_objects.KeyValuesFromTF(tf.Tags),
 		Definition:   def,
 		ProcessorIds: helper.FromTFStrings(tf.ProcessorIds),

@@ -105,15 +105,15 @@ func streamComponentToTF(sc StreamComponent) StreamComponentTF {
 		Order:      helper.TFInt64Value(sc.Order),
 		Path:       helper.TFStringValue(sc.Path),
 		Type:       helper.TFStringValue(sc.Type),
-		Processor:  helper.TFStringValue(sc.Processor),
-		DataType:   helper.TFStringValue(sc.DataType),
-		Endianness: helper.TFStringValue(sc.Endianness),
+		Processor:  helper.TFStringPtrValue(sc.Processor),
+		DataType:   helper.TFStringPtrValue(sc.DataType),
+		Endianness: helper.TFStringPtrValue(sc.Endianness),
 	}
 
 	if sc.Repetitive != nil {
 		tf.Repetitive = &RepetitiveTF{
 			Value: helper.TFInt64Value(sc.Repetitive.Value),
-			Path:  helper.TFStringValue(sc.Repetitive.Path),
+			Path:  helper.TFStringPtrValue(sc.Repetitive.Path),
 		}
 	}
 
@@ -122,7 +122,7 @@ func streamComponentToTF(sc StreamComponent) StreamComponentTF {
 			Type:  helper.TFStringValue(sc.Length.Type),
 			Unit:  helper.TFStringValue(sc.Length.Unit),
 			Value: helper.TFInt64Value(sc.Length.Value),
-			Path:  helper.TFStringValue(sc.Length.Path),
+			Path:  helper.TFStringPtrValue(sc.Length.Path),
 		}
 	}
 
@@ -159,15 +159,15 @@ func streamComponentFromTF(tf StreamComponentTF) StreamComponent {
 		Order:      helper.FromTFInt64(tf.Order),
 		Path:       helper.FromTFString(tf.Path),
 		Type:       helper.FromTFString(tf.Type),
-		Processor:  helper.FromTFString(tf.Processor),
-		DataType:   helper.FromTFString(tf.DataType),
-		Endianness: helper.FromTFString(tf.Endianness),
+		Processor:  helper.FromTFStringPtr(tf.Processor),
+		DataType:   helper.FromTFStringPtr(tf.DataType),
+		Endianness: helper.FromTFStringPtr(tf.Endianness),
 	}
 
 	if tf.Repetitive != nil {
 		sc.Repetitive = &Repetitive{
 			Value: helper.FromTFInt64(tf.Repetitive.Value),
-			Path:  helper.FromTFString(tf.Repetitive.Path),
+			Path:  helper.FromTFStringPtr(tf.Repetitive.Path),
 		}
 	}
 
@@ -176,7 +176,7 @@ func streamComponentFromTF(tf StreamComponentTF) StreamComponent {
 			Type:  helper.FromTFString(tf.Length.Type),
 			Unit:  helper.FromTFString(tf.Length.Unit),
 			Value: helper.FromTFInt64(tf.Length.Value),
-			Path:  helper.FromTFString(tf.Length.Path),
+			Path:  helper.FromTFStringPtr(tf.Length.Path),
 		}
 	}
 
@@ -233,7 +233,7 @@ func (x *Stream) ToTF() interface{} {
 	for i, m := range x.Mappings {
 		mappings[i] = MappingTF{
 			MetricId:   helper.TFStringValue(m.MetricId),
-			Expression: helper.TFStringValue(m.Expression),
+			Expression: helper.TFStringPtrValue(m.Expression),
 		}
 	}
 
@@ -301,7 +301,7 @@ func (tf *StreamTF) ToAPI() interface{} {
 	for i, m := range tf.Mappings {
 		mappings[i] = Mapping{
 			MetricId:   helper.FromTFString(m.MetricId),
-			Expression: helper.FromTFString(m.Expression),
+			Expression: helper.FromTFStringPtr(m.Expression),
 		}
 	}
 

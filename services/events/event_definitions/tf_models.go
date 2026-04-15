@@ -52,8 +52,8 @@ func (x *EventsDefinition) ToTF() interface{} {
 		Name:         helper.TFStringValue(x.Name),
 		Source:       helper.TFStringValue(x.Source),
 		State:        helper.TFStringValue(x.State),
-		Description:  helper.TFStringValue(x.Description),
-		Criticality:  helper.TFStringValue(x.Criticality),
+		Description:  helper.TFStringPtrValue(x.Description),
+		Criticality:  helper.TFStringPtrValue(x.Criticality),
 		Rules:        rules,
 		Tags:         general_objects.KeyValuesToTF(x.Tags),
 	}
@@ -79,8 +79,8 @@ func (tf *EventsDefinitionTF) ToAPI() interface{} {
 		Name:        helper.FromTFString(tf.Name),
 		Source:      helper.FromTFString(tf.Source),
 		State:       helper.FromTFString(tf.State),
-		Description: helper.FromTFString(tf.Description),
-		Criticality: helper.FromTFString(tf.Criticality),
+		Description:  helper.FromTFStringPtr(tf.Description),
+		Criticality: helper.FromTFStringPtr(tf.Criticality),
 		Rules:       rules,
 		Tags:        general_objects.KeyValuesFromTF(tf.Tags),
 	}

@@ -20,7 +20,7 @@ func (x *Processor) ToTF() any {
 	return &ProcessorTF{
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
 		Name:         helper.TFStringValue(x.Name),
-		Description:  helper.TFStringValue(x.Description),
+		Description:  helper.TFStringPtrValue(x.Description),
 		Version:      helper.TFStringValue(x.Version),
 		Type:         helper.TFStringValue(x.Type),
 		FilePath:     helper.TFStringValue(x.FilePath),
@@ -32,7 +32,7 @@ func (tf *ProcessorTF) ToAPI() any {
 	return &Processor{
 		AuditModel:  general_objects.AuditModelFromTF(tf.AuditModelTF),
 		Name:        helper.FromTFString(tf.Name),
-		Description: helper.FromTFString(tf.Description),
+		Description: helper.FromTFStringPtr(tf.Description),
 		Version:     helper.FromTFString(tf.Version),
 		Type:        helper.FromTFString(tf.Type),
 		FilePath:    helper.FromTFString(tf.FilePath),

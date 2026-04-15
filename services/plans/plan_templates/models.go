@@ -6,7 +6,7 @@ type PlanTemplate struct {
 	general_objects.AuditModel
 	AssetId                    string                      `json:"assetId"`
 	Name                       string                      `json:"name"`
-	Description                string                      `json:"description,omitempty"`
+	Description                *string                     `json:"description,omitempty"`
 	IntegrityStatus            string                      `json:"integrityStatus"`
 	ActivityConfigs            []ActivityConfigResult      `json:"activityConfigs,omitempty"`
 	EstimatedDurationInSeconds int                         `json:"estimatedDurationInSeconds"`
@@ -15,15 +15,15 @@ type PlanTemplate struct {
 
 type ActivityConfigResult struct {
 	ActivityDefinitionId         string                            `json:"activityDefinitionId"`
-	DelayReferenceOnPredecessor  string                            `json:"delayReferenceOnPredecessor,omitempty"`
+	DelayReferenceOnPredecessor  *string                           `json:"delayReferenceOnPredecessor,omitempty"`
 	Position                     int                               `json:"position"`
 	DelayInSeconds               int                               `json:"delayInSeconds"`
 	EstimatedDurationInSeconds   *int                              `json:"estimatedDurationInSeconds,omitempty"`
-	Name                         string                            `json:"name,omitempty"`
+	Name                         *string                           `json:"name,omitempty"`
 	Arguments                    []Argument                        `json:"arguments,omitempty"`
 	ResourceFunctionFormulas     []ResourceFunctionFormulaOverload `json:"resourceFunctionFormulas,omitempty"`
 	Tags                         []general_objects.KeyValue        `json:"tags,omitempty"`
-	DefinitionLinkStatus         string                            `json:"definitionLinkStatus,omitempty"`
+	DefinitionLinkStatus         *string                           `json:"definitionLinkStatus,omitempty"`
 	InvalidDefinitionLinkReasons []InvalidDefinitionLinkReason     `json:"invalidDefinitionLinkReasons,omitempty"`
 }
 
@@ -38,7 +38,7 @@ type Argument struct {
 }
 
 type ResourceFunctionFormulaOverload struct {
-	ResourceFunctionId string                   `json:"resourceFunctionId,omitempty"`
+	ResourceFunctionId *string                  `json:"resourceFunctionId,omitempty"`
 	Formula            *ResourceFunctionFormula `json:"formula,omitempty"`
 }
 
@@ -47,7 +47,7 @@ type ResourceFunctionFormula struct {
 	Amplitude *float64 `json:"amplitude,omitempty"`
 	Constant  *float64 `json:"constant,omitempty"`
 	Rate      *float64 `json:"rate,omitempty"`
-	TimeUnit  string   `json:"timeUnit,omitempty"`
+	TimeUnit  *string  `json:"timeUnit,omitempty"`
 }
 
 type InvalidDefinitionLinkReason struct {

@@ -68,7 +68,7 @@ func (x *Widget) ToTF() any {
 		}
 		series[i] = SeriesTF{
 			ID:          helper.TFStringValue(s.ID),
-			Name:        helper.TFStringValue(s.Name),
+			Name:        helper.TFStringPtrValue(s.Name),
 			Datasource:  helper.TFStringValue(s.Datasource),
 			Aggregation: helper.TFStringValue(s.Aggregation),
 			Filters:     filters,
@@ -78,7 +78,7 @@ func (x *Widget) ToTF() any {
 	var metadata *MetadataTF
 	if x.Metadata != nil {
 		md := &MetadataTF{
-			YAxisLabel: helper.TFStringValue(x.Metadata.YAxisLabel),
+			YAxisLabel: helper.TFStringPtrValue(x.Metadata.YAxisLabel),
 		}
 		if x.Metadata.YAxisRange != nil && len(x.Metadata.YAxisRange) == 2 {
 			if x.Metadata.YAxisRange[0] != nil {
@@ -102,7 +102,7 @@ func (x *Widget) ToTF() any {
 		md.Thresholds = thresholds
 
 		// Only set metadata if there's actual content
-		if x.Metadata.YAxisLabel != "" || (x.Metadata.YAxisRange != nil && len(x.Metadata.YAxisRange) == 2 && (x.Metadata.YAxisRange[0] != nil || x.Metadata.YAxisRange[1] != nil)) || len(x.Metadata.Thresholds) > 0 {
+		if x.Metadata.YAxisLabel != nil || (x.Metadata.YAxisRange != nil && len(x.Metadata.YAxisRange) == 2 && (x.Metadata.YAxisRange[0] != nil || x.Metadata.YAxisRange[1] != nil)) || len(x.Metadata.Thresholds) > 0 {
 			metadata = md
 		}
 	}
@@ -120,7 +120,7 @@ func (x *Widget) ToTF() any {
 	return &WidgetTF{
 		AuditModelTF:         general_objects.AuditModelToTF(&x.AuditModel),
 		Name:                 helper.TFStringValue(x.Name),
-		Description:          helper.TFStringValue(x.Description),
+		Description:          helper.TFStringPtrValue(x.Description),
 		Type:                 helper.TFStringValue(x.Type),
 		Granularity:          helper.TFStringValue(x.Granularity),
 		QueryTimeDimension:   helper.TFStringValue(x.QueryTimeDimension),
@@ -145,7 +145,7 @@ func (tf *WidgetTF) ToAPI() any {
 		}
 		series[i] = Series{
 			ID:          helper.FromTFString(s.ID),
-			Name:        helper.FromTFString(s.Name),
+			Name:        helper.FromTFStringPtr(s.Name),
 			Datasource:  helper.FromTFString(s.Datasource),
 			Aggregation: helper.FromTFString(s.Aggregation),
 			Filters:     filters,
@@ -155,7 +155,7 @@ func (tf *WidgetTF) ToAPI() any {
 	var metadata *Metadata
 	if tf.Metadata != nil {
 		metadata = &Metadata{
-			YAxisLabel: helper.FromTFString(tf.Metadata.YAxisLabel),
+			YAxisLabel: helper.FromTFStringPtr(tf.Metadata.YAxisLabel),
 			YAxisRange: make([]*float64, 2),
 		}
 		if !tf.Metadata.YAxisRangeMin.IsNull() && !tf.Metadata.YAxisRangeMin.IsUnknown() {
@@ -187,7 +187,7 @@ func (tf *WidgetTF) ToAPI() any {
 	return &Widget{
 		AuditModel:           general_objects.AuditModelFromTF(tf.AuditModelTF),
 		Name:                 helper.FromTFString(tf.Name),
-		Description:          helper.FromTFString(tf.Description),
+		Description:          helper.FromTFStringPtr(tf.Description),
 		Type:                 helper.FromTFString(tf.Type),
 		Granularity:          helper.FromTFString(tf.Granularity),
 		QueryTimeDimension:   helper.FromTFString(tf.QueryTimeDimension),

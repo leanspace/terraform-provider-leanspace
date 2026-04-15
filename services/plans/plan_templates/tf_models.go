@@ -76,11 +76,11 @@ func (x *PlanTemplate) ToTF() any {
 					Amplitude: helper.TFFloat64PtrValue(rf.Formula.Amplitude),
 					Constant:  helper.TFFloat64PtrValue(rf.Formula.Constant),
 					Rate:      helper.TFFloat64PtrValue(rf.Formula.Rate),
-					TimeUnit:  helper.TFStringValue(rf.Formula.TimeUnit),
+					TimeUnit:  helper.TFStringPtrValue(rf.Formula.TimeUnit),
 				}}
 			}
 			formulas[j] = ResourceFunctionFormulaOverloadTF{
-				ResourceFunctionId: helper.TFStringValue(rf.ResourceFunctionId),
+				ResourceFunctionId: helper.TFStringPtrValue(rf.ResourceFunctionId),
 				Formula:            formulaSlice,
 			}
 		}
@@ -97,15 +97,15 @@ func (x *PlanTemplate) ToTF() any {
 
 		activityConfigs[i] = ActivityConfigResultTF{
 			ActivityDefinitionId:         helper.TFStringValue(ac.ActivityDefinitionId),
-			DelayReferenceOnPredecessor:  helper.TFStringValue(ac.DelayReferenceOnPredecessor),
+			DelayReferenceOnPredecessor:  helper.TFStringPtrValue(ac.DelayReferenceOnPredecessor),
 			Position:                     helper.TFInt64Value(ac.Position),
 			DelayInSeconds:               helper.TFInt64Value(ac.DelayInSeconds),
 			EstimatedDurationInSeconds:   helper.TFIntPtrValue(ac.EstimatedDurationInSeconds),
-			Name:                         helper.TFStringValue(ac.Name),
+			Name:                         helper.TFStringPtrValue(ac.Name),
 			Arguments:                    arguments,
 			ResourceFunctionFormulas:     formulas,
 			Tags:                         general_objects.KeyValuesToTF(ac.Tags),
-			DefinitionLinkStatus:         helper.TFStringValue(ac.DefinitionLinkStatus),
+			DefinitionLinkStatus:         helper.TFStringPtrValue(ac.DefinitionLinkStatus),
 			InvalidDefinitionLinkReasons: defLinkReasons,
 		}
 	}
@@ -124,7 +124,7 @@ func (x *PlanTemplate) ToTF() any {
 		AuditModelTF:               general_objects.AuditModelToTF(&x.AuditModel),
 		AssetId:                    helper.TFStringValue(x.AssetId),
 		Name:                       helper.TFStringValue(x.Name),
-		Description:                helper.TFStringValue(x.Description),
+		Description:                helper.TFStringPtrValue(x.Description),
 		IntegrityStatus:            helper.TFStringValue(x.IntegrityStatus),
 		ActivityConfigs:            activityConfigs,
 		EstimatedDurationInSeconds: helper.TFInt64Value(x.EstimatedDurationInSeconds),
@@ -146,7 +146,7 @@ func (tf *PlanTemplateTF) ToAPI() any {
 		formulas := make([]ResourceFunctionFormulaOverload, len(ac.ResourceFunctionFormulas))
 		for j, rf := range ac.ResourceFunctionFormulas {
 			formulas[j] = ResourceFunctionFormulaOverload{
-				ResourceFunctionId: helper.FromTFString(rf.ResourceFunctionId),
+				ResourceFunctionId: helper.FromTFStringPtr(rf.ResourceFunctionId),
 			}
 			if len(rf.Formula) > 0 {
 				f := rf.Formula[0]
@@ -155,22 +155,22 @@ func (tf *PlanTemplateTF) ToAPI() any {
 					Amplitude: helper.FromTFFloat64Ptr(f.Amplitude),
 					Constant:  helper.FromTFFloat64Ptr(f.Constant),
 					Rate:      helper.FromTFFloat64Ptr(f.Rate),
-					TimeUnit:  helper.FromTFString(f.TimeUnit),
+					TimeUnit:  helper.FromTFStringPtr(f.TimeUnit),
 				}
 			}
 		}
 
 		activityConfigs[i] = ActivityConfigResult{
 			ActivityDefinitionId:        helper.FromTFString(ac.ActivityDefinitionId),
-			DelayReferenceOnPredecessor: helper.FromTFString(ac.DelayReferenceOnPredecessor),
+			DelayReferenceOnPredecessor: helper.FromTFStringPtr(ac.DelayReferenceOnPredecessor),
 			Position:                    helper.FromTFInt64(ac.Position),
 			DelayInSeconds:              helper.FromTFInt64(ac.DelayInSeconds),
 			EstimatedDurationInSeconds:  helper.FromTFIntPtr(ac.EstimatedDurationInSeconds),
-			Name:                        helper.FromTFString(ac.Name),
+			Name:                        helper.FromTFStringPtr(ac.Name),
 			Arguments:                   arguments,
 			ResourceFunctionFormulas:    formulas,
 			Tags:                        general_objects.KeyValuesFromTF(ac.Tags),
-			DefinitionLinkStatus:        helper.FromTFString(ac.DefinitionLinkStatus),
+			DefinitionLinkStatus:        helper.FromTFStringPtr(ac.DefinitionLinkStatus),
 		}
 	}
 
@@ -178,7 +178,7 @@ func (tf *PlanTemplateTF) ToAPI() any {
 		AuditModel:                 general_objects.AuditModelFromTF(tf.AuditModelTF),
 		AssetId:                    helper.FromTFString(tf.AssetId),
 		Name:                       helper.FromTFString(tf.Name),
-		Description:                helper.FromTFString(tf.Description),
+		Description:                helper.FromTFStringPtr(tf.Description),
 		IntegrityStatus:            helper.FromTFString(tf.IntegrityStatus),
 		ActivityConfigs:            activityConfigs,
 		EstimatedDurationInSeconds: helper.FromTFInt64(tf.EstimatedDurationInSeconds),

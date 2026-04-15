@@ -30,7 +30,7 @@ func (x *ResourceFunction) ToTF() any {
 			Amplitude: helper.TFFloat64PtrValue(x.Formula.Amplitude),
 			Constant:  helper.TFFloat64PtrValue(x.Formula.Constant),
 			Rate:      helper.TFFloat64PtrValue(x.Formula.Rate),
-			TimeUnit:  helper.TFStringValue(x.Formula.TimeUnit),
+			TimeUnit:  helper.TFStringPtrValue(x.Formula.TimeUnit),
 		}
 	}
 	return &ResourceFunctionTF{
@@ -50,7 +50,7 @@ func (tf *ResourceFunctionTF) ToAPI() any {
 			Amplitude: helper.FromTFFloat64Ptr(tf.Formula.Amplitude),
 			Constant:  helper.FromTFFloat64Ptr(tf.Formula.Constant),
 			Rate:      helper.FromTFFloat64Ptr(tf.Formula.Rate),
-			TimeUnit:  helper.FromTFString(tf.Formula.TimeUnit),
+			TimeUnit:  helper.FromTFStringPtr(tf.Formula.TimeUnit),
 		}
 	}
 	return &ResourceFunction{

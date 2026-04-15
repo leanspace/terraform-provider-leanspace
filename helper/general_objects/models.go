@@ -31,8 +31,8 @@ type Pageable struct {
 }
 
 type KeyValue struct {
-	Key   string `json:"key"`
-	Value string `json:"value,omitempty"`
+	Key   string  `json:"key"`
+	Value *string `json:"value,omitempty"`
 }
 
 type PaginatedList[T any, PT helper.ParseablePointer[T]] struct {
@@ -57,16 +57,16 @@ type DefinitionAttribute[T any] struct {
 	MinLength *int `json:"minLength,omitempty"`
 	MaxLength *int `json:"maxLength,omitempty"`
 	// Text
-	Pattern string `json:"pattern,omitempty"`
+	Pattern *string `json:"pattern,omitempty"`
 	// Numeric
 	Min       *float64 `json:"min,omitempty"`
 	Max       *float64 `json:"max,omitempty"`
 	Scale     *int     `json:"scale,omitempty"`
 	Precision *int     `json:"precision,omitempty"`
-	UnitId    string   `json:"unitId,omitempty"`
+	UnitId    *string  `json:"unitId,omitempty"`
 	// Date, time, timestamp
-	Before string `json:"before,omitempty"`
-	After  string `json:"after,omitempty"`
+	Before *string `json:"before,omitempty"`
+	After  *string `json:"after,omitempty"`
 	// Enum
 	Options *map[string]any `json:"options,omitempty"`
 	// Geopoint
@@ -87,16 +87,16 @@ type ArrayConstraint[T any] struct {
 	MinLength *int `json:"minLength,omitempty"`
 	MaxLength *int `json:"maxLength,omitempty"`
 	// Text only
-	Pattern string `json:"pattern,omitempty"`
+	Pattern *string `json:"pattern,omitempty"`
 	// Numeric
 	Min       *float64 `json:"min,omitempty"`
 	Max       *float64 `json:"max,omitempty"`
 	Scale     *int     `json:"scale,omitempty"`
 	Precision *int     `json:"precision,omitempty"`
-	UnitId    string   `json:"unitId,omitempty"`
+	UnitId    *string  `json:"unitId,omitempty"`
 	// Date, time, timestamp
-	Before string `json:"before,omitempty"`
-	After  string `json:"after,omitempty"`
+	Before *string `json:"before,omitempty"`
+	After  *string `json:"after,omitempty"`
 	// Enum
 	Options *map[string]any `json:"options,omitempty"`
 }
@@ -105,11 +105,11 @@ type ValueAttribute[T any] struct {
 	Value T      `json:"value,omitempty"`
 	Type  string `json:"type"`
 	// Numeric
-	UnitId string `json:"unitId,omitempty"`
+	UnitId *string `json:"unitId,omitempty"`
 	// Geopoint
 	Fields *Fields `json:"fields,omitempty"`
 	// Array
-	DataType string `json:"dataType,omitempty"`
+	DataType *string `json:"dataType,omitempty"`
 }
 
 type FieldsDef struct {
@@ -124,7 +124,7 @@ type FieldDef[T any] struct {
 	Max          *float64 `json:"max,omitempty"`
 	Scale        *int     `json:"scale,omitempty"`
 	Precision    *int     `json:"precision,omitempty"`
-	UnitId       string   `json:"unitId,omitempty"`
+	UnitId       *string  `json:"unitId,omitempty"`
 }
 
 type Fields struct {
@@ -139,5 +139,5 @@ type Field[T any] struct {
 	Max       *float64 `json:"max,omitempty"`
 	Scale     *int     `json:"scale,omitempty"`
 	Precision *int     `json:"precision,omitempty"`
-	UnitId    string   `json:"unitId,omitempty"`
+	UnitId    *string  `json:"unitId,omitempty"`
 }

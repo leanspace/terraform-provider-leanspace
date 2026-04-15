@@ -15,5 +15,5 @@ type ResourceFunctionFormula struct {
 	Amplitude *float64 `json:"amplitude,omitempty"`
 	Constant  *float64 `json:"constant,omitempty"`
 	Rate      *float64 `json:"rate,omitempty"`
-	TimeUnit  string   `json:"timeUnit,omitempty"`
+	TimeUnit  *string  `json:"timeUnit,omitempty"`
 }

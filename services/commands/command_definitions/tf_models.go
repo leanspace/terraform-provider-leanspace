@@ -38,7 +38,7 @@ func (x *CommandDefinition) ToTF() any {
 		metadata[i] = MetadataTF{
 			ID:          helper.TFStringValue(m.ID),
 			Name:        helper.TFStringValue(m.Name),
-			Description: helper.TFStringValue(m.Description),
+			Description: helper.TFStringPtrValue(m.Description),
 			Attributes:  &attr,
 		}
 	}
@@ -50,7 +50,7 @@ func (x *CommandDefinition) ToTF() any {
 			ID:          helper.TFStringValue(a.ID),
 			Name:        helper.TFStringValue(a.Name),
 			Identifier:  helper.TFStringValue(a.Identifier),
-			Description: helper.TFStringValue(a.Description),
+			Description: helper.TFStringPtrValue(a.Description),
 			Attributes:  &attr,
 		}
 	}
@@ -59,8 +59,8 @@ func (x *CommandDefinition) ToTF() any {
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
 		NodeId:       helper.TFStringValue(x.NodeId),
 		Name:         helper.TFStringValue(x.Name),
-		Description:  helper.TFStringValue(x.Description),
-		Identifier:   helper.TFStringValue(x.Identifier),
+		Description:  helper.TFStringPtrValue(x.Description),
+		Identifier:   helper.TFStringPtrValue(x.Identifier),
 		Metadata:     metadata,
 		Arguments:    arguments,
 	}
@@ -72,7 +72,7 @@ func (tf *CommandDefinitionTF) ToAPI() any {
 		metadata[i] = Metadata[any]{
 			ID:          helper.FromTFString(m.ID),
 			Name:        helper.FromTFString(m.Name),
-			Description: helper.FromTFString(m.Description),
+			Description: helper.FromTFStringPtr(m.Description),
 		}
 		if m.Attributes != nil {
 			metadata[i].Attributes = general_objects.ValueAttributeFromTF(*m.Attributes)
@@ -85,7 +85,7 @@ func (tf *CommandDefinitionTF) ToAPI() any {
 			ID:          helper.FromTFString(a.ID),
 			Name:        helper.FromTFString(a.Name),
 			Identifier:  helper.FromTFString(a.Identifier),
-			Description: helper.FromTFString(a.Description),
+			Description: helper.FromTFStringPtr(a.Description),
 		}
 		if a.Attributes != nil {
 			arguments[i].Attributes = general_objects.DefinitionAttributeFromTF(*a.Attributes)
@@ -96,8 +96,8 @@ func (tf *CommandDefinitionTF) ToAPI() any {
 		AuditModel:  general_objects.AuditModelFromTF(tf.AuditModelTF),
 		NodeId:      helper.FromTFString(tf.NodeId),
 		Name:        helper.FromTFString(tf.Name),
-		Description: helper.FromTFString(tf.Description),
-		Identifier:  helper.FromTFString(tf.Identifier),
+		Description:  helper.FromTFStringPtr(tf.Description),
+		Identifier:   helper.FromTFStringPtr(tf.Identifier),
 		Metadata:    metadata,
 		Arguments:   arguments,
 	}

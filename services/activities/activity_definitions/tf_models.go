@@ -57,7 +57,7 @@ func (x *ActivityDefinition) ToTF() any {
 		attr := general_objects.ValueAttributeToTF(&m.Attributes)
 		metadata[i] = MetadataTF{
 			Name:        helper.TFStringValue(m.Name),
-			Description: helper.TFStringValue(m.Description),
+			Description: helper.TFStringPtrValue(m.Description),
 			Attributes:  &attr,
 		}
 	}
@@ -67,7 +67,7 @@ func (x *ActivityDefinition) ToTF() any {
 		attr := general_objects.DefinitionAttributeToTF(&a.Attributes)
 		argDefs[i] = ArgumentDefinitionTF{
 			Name:        helper.TFStringValue(a.Name),
-			Description: helper.TFStringValue(a.Description),
+			Description: helper.TFStringPtrValue(a.Description),
 			Attributes:  &attr,
 		}
 	}
@@ -79,7 +79,7 @@ func (x *ActivityDefinition) ToTF() any {
 			argMappings[j] = ArgumentMappingTF{
 				ActivityDefinitionArgumentName: helper.TFStringValue(am.ActivityDefinitionArgumentName),
 				CommandDefinitionArgumentName:  helper.TFStringValue(am.CommandDefinitionArgumentName),
-				MappingStatus:                  helper.TFStringValue(am.MappingStatus),
+				MappingStatus:                  helper.TFStringPtrValue(am.MappingStatus),
 			}
 		}
 		metaMappings := make([]MetadataMappingTF, len(cm.MetadataMappings))
@@ -87,7 +87,7 @@ func (x *ActivityDefinition) ToTF() any {
 			metaMappings[j] = MetadataMappingTF{
 				ActivityDefinitionMetadataName: helper.TFStringValue(mm.ActivityDefinitionMetadataName),
 				CommandDefinitionArgumentName:  helper.TFStringValue(mm.CommandDefinitionArgumentName),
-				MappingStatus:                  helper.TFStringValue(mm.MappingStatus),
+				MappingStatus:                  helper.TFStringPtrValue(mm.MappingStatus),
 			}
 		}
 		cmdMappings[i] = CommandMappingTF{
@@ -103,9 +103,9 @@ func (x *ActivityDefinition) ToTF() any {
 		AuditModelTF:        general_objects.AuditModelToTF(&x.AuditModel),
 		NodeId:              helper.TFStringValue(x.NodeId),
 		Name:                helper.TFStringValue(x.Name),
-		Description:         helper.TFStringValue(x.Description),
+		Description:         helper.TFStringPtrValue(x.Description),
 		EstimatedDuration:   helper.TFInt64Value(x.EstimatedDuration),
-		MappingStatus:       helper.TFStringValue(x.MappingStatus),
+		MappingStatus:       helper.TFStringPtrValue(x.MappingStatus),
 		Metadata:            metadata,
 		ArgumentDefinitions: argDefs,
 		CommandMappings:     cmdMappings,
@@ -118,7 +118,7 @@ func (tf *ActivityDefinitionTF) ToAPI() any {
 	for i, m := range tf.Metadata {
 		metadata[i] = Metadata[any]{
 			Name:        helper.FromTFString(m.Name),
-			Description: helper.FromTFString(m.Description),
+			Description: helper.FromTFStringPtr(m.Description),
 		}
 		if m.Attributes != nil {
 			metadata[i].Attributes = general_objects.ValueAttributeFromTF(*m.Attributes)
@@ -129,7 +129,7 @@ func (tf *ActivityDefinitionTF) ToAPI() any {
 	for i, a := range tf.ArgumentDefinitions {
 		argDefs[i] = ArgumentDefinition[any]{
 			Name:        helper.FromTFString(a.Name),
-			Description: helper.FromTFString(a.Description),
+			Description: helper.FromTFStringPtr(a.Description),
 		}
 		if a.Attributes != nil {
 			argDefs[i].Attributes = general_objects.DefinitionAttributeFromTF(*a.Attributes)
@@ -143,7 +143,7 @@ func (tf *ActivityDefinitionTF) ToAPI() any {
 			argMappings[j] = ArgumentMapping{
 				ActivityDefinitionArgumentName: helper.FromTFString(am.ActivityDefinitionArgumentName),
 				CommandDefinitionArgumentName:  helper.FromTFString(am.CommandDefinitionArgumentName),
-				MappingStatus:                  helper.FromTFString(am.MappingStatus),
+				MappingStatus:                  helper.FromTFStringPtr(am.MappingStatus),
 			}
 		}
 		metaMappings := make([]MetadataMapping, len(cm.MetadataMappings))
@@ -151,7 +151,7 @@ func (tf *ActivityDefinitionTF) ToAPI() any {
 			metaMappings[j] = MetadataMapping{
 				ActivityDefinitionMetadataName: helper.FromTFString(mm.ActivityDefinitionMetadataName),
 				CommandDefinitionArgumentName:  helper.FromTFString(mm.CommandDefinitionArgumentName),
-				MappingStatus:                  helper.FromTFString(mm.MappingStatus),
+				MappingStatus:                  helper.FromTFStringPtr(mm.MappingStatus),
 			}
 		}
 		cmdMappings[i] = CommandMapping{
@@ -167,9 +167,9 @@ func (tf *ActivityDefinitionTF) ToAPI() any {
 		AuditModel:          general_objects.AuditModelFromTF(tf.AuditModelTF),
 		NodeId:              helper.FromTFString(tf.NodeId),
 		Name:                helper.FromTFString(tf.Name),
-		Description:         helper.FromTFString(tf.Description),
+		Description:         helper.FromTFStringPtr(tf.Description),
 		EstimatedDuration:   helper.FromTFInt64(tf.EstimatedDuration),
-		MappingStatus:       helper.FromTFString(tf.MappingStatus),
+		MappingStatus:       helper.FromTFStringPtr(tf.MappingStatus),
 		Metadata:            metadata,
 		ArgumentDefinitions: argDefs,
 		CommandMappings:     cmdMappings,

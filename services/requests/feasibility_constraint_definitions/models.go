@@ -8,6 +8,6 @@ import (
 type FeasibilityConstraintDefinition struct {
 	general_objects.AuditModel
 	Name                string                                         `json:"name"`
-	Description         string                                         `json:"description,omitempty"`
+	Description         *string                                        `json:"description,omitempty"`
 	ArgumentDefinitions []activity_definitions.ArgumentDefinition[any] `json:"argumentDefinitions,omitempty"`
 }

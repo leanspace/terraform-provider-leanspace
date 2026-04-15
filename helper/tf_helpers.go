@@ -4,13 +4,15 @@ import "github.com/hashicorp/terraform-plugin-framework/types"
 
 // Go → TF (API model field to TF model field)
 
-// TFStringValue converts a Go string to types.String.
-// Empty strings become null (matching the NilIfEmpty convention).
 func TFStringValue(s string) types.String {
-	if s == "" { // TODO: check if this should be removed and another method for pointers to be added, since some fields might want to allow empty strings as valid values
+	return types.StringValue(s)
+}
+
+func TFStringPtrValue(s *string) types.String {
+	if s == nil {
 		return types.StringNull()
 	}
-	return types.StringValue(s)
+	return types.StringValue(*s)
 }
 
 func TFBoolValue(b bool) types.Bool {
@@ -64,6 +66,14 @@ func FromTFString(s types.String) string {
 		return ""
 	}
 	return s.ValueString()
+}
+
+func FromTFStringPtr(s types.String) *string {
+	if s.IsNull() || s.IsUnknown() {
+		return nil
+	}
+	v := s.ValueString()
+	return &v
 }
 
 func FromTFBool(b types.Bool) bool {

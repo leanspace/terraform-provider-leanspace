@@ -8,12 +8,12 @@ import (
 type Dashboard struct {
 	general_objects.AuditModel
 	Name            string                     `json:"name"`
-	Description     string                     `json:"description,omitempty"`
+	Description     *string                    `json:"description,omitempty"`
 	NodeIds         []string                   `json:"nodeIds"`
 	WidgetInfo      []WidgetInfo               `json:"widgetInfo,omitempty"`
 	Widgets         []DashboardWidget          `json:"widgets"`
 	Tags            []general_objects.KeyValue `json:"tags,omitempty"`
-	TimestampFormat string                     `json:"timestampFormat,omitempty"`
+	TimestampFormat *string                    `json:"timestampFormat,omitempty"`
 }
 
 type WidgetInfo struct {

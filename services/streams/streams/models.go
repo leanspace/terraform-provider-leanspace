@@ -33,9 +33,9 @@ type StreamComponent struct {
 
 	// Field only
 	Length     *Length `json:"length,omitempty"`
-	Processor  string  `json:"processor,omitempty"`
-	DataType   string  `json:"dataType,omitempty"`
-	Endianness string  `json:"endianness,omitempty"`
+	Processor  *string `json:"processor,omitempty"`
+	DataType   *string `json:"dataType,omitempty"`
+	Endianness *string `json:"endianness,omitempty"`
 
 	// Switch only
 	Expression *SwitchExpression `json:"expression,omitempty"`
@@ -85,8 +85,8 @@ type Computation struct {
 }
 
 type Mapping struct {
-	MetricId   string `json:"metricId"`
-	Expression string `json:"expression,omitempty"`
+	MetricId   string  `json:"metricId"`
+	Expression *string `json:"expression,omitempty"`
 }
 
 type Repetitive struct {
@@ -94,7 +94,7 @@ type Repetitive struct {
 	Value int `json:"value,omitempty"`
 
 	// Dynamic
-	Path string `json:"path,omitempty"`
+	Path *string `json:"path,omitempty"`
 }
 
 type Length struct {
@@ -105,5 +105,5 @@ type Length struct {
 	Value int `json:"value,omitempty"`
 
 	// Dynamic
-	Path string `json:"path,omitempty"`
+	Path *string `json:"path,omitempty"`
 }

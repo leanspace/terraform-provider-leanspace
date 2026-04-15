@@ -5,7 +5,7 @@ import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects
 type Route struct {
 	general_objects.AuditModel
 	Name           string                     `json:"name"`
-	Description    string                     `json:"description,omitempty"`
+	Description    *string                    `json:"description,omitempty"`
 	Tags           []general_objects.KeyValue `json:"tags,omitempty"`
 	Definition     Definition                 `json:"definition"`
 	RouteInstances []RouteInstance            `json:"routeInstances,omitempty"`
@@ -16,7 +16,7 @@ type Definition struct {
 	Configuration    string  `json:"configuration"`
 	LogLevel         string  `json:"logLevel"`
 	Valid            bool    `json:"valid,omitempty"`
-	ServiceAccountId string  `json:"serviceAccountId,omitempty"`
+	ServiceAccountId *string `json:"serviceAccountId,omitempty"`
 	Errors           []Error `json:"errors,omitempty"`
 }
 
@@ -26,11 +26,11 @@ type Error struct {
 }
 
 type RouteInstance struct {
-	Status                    string `json:"status"`
-	LastStatusAt              string `json:"lastStatusAt,omitempty"`
-	ContainerId               string `json:"containerId"`
-	LastMessageStartProcessAt string `json:"lastMessageStartProcessAt,omitempty"`
-	LastMessageEndProcessAt   string `json:"lastMessageEndProcessAt,omitempty"`
-	NumberOfMessagesProcessed int    `json:"numberOfMessagesProcessed,omitempty"`
-	CamelRouteId              string `json:"camelRouteId,omitempty"`
+	Status                    string  `json:"status"`
+	LastStatusAt              *string `json:"lastStatusAt,omitempty"`
+	ContainerId               string  `json:"containerId"`
+	LastMessageStartProcessAt *string `json:"lastMessageStartProcessAt,omitempty"`
+	LastMessageEndProcessAt   *string `json:"lastMessageEndProcessAt,omitempty"`
+	NumberOfMessagesProcessed int     `json:"numberOfMessagesProcessed,omitempty"`
+	CamelRouteId              *string `json:"camelRouteId,omitempty"`
 }

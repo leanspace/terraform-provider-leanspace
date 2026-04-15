@@ -26,12 +26,18 @@ var nodeValidators = Validators{
 }
 
 func (node *Node) Validate() error {
+	derefStr := func(s *string) any {
+		if s == nil {
+			return nil
+		}
+		return *s
+	}
 	obj := map[string]any{
 		"type":                     node.Type,
-		"kind":                     node.Kind,
+		"kind":                     derefStr(node.Kind),
 		"tle":                      node.Tle,
-		"norad_id":                 node.NoradId,
-		"international_designator": node.InternationalDesignator,
+		"norad_id":                 derefStr(node.NoradId),
+		"international_designator": derefStr(node.InternationalDesignator),
 		"latitude":                 node.Latitude,
 		"longitude":                node.Longitude,
 		"elevation":                node.Elevation,
@@ -39,7 +45,7 @@ func (node *Node) Validate() error {
 	if err := nodeValidators.Check(obj); err != nil {
 		return err
 	}
-	if node.Kind == "SATELLITE" && node.Tle != nil && len(node.Tle) >= 2 {
+	if node.Kind != nil && *node.Kind == "SATELLITE" && node.Tle != nil && len(node.Tle) >= 2 {
 		if !tle1stLineRegex.MatchString(node.Tle[0]) {
 			return fmt.Errorf("TLE first line must match %q, got: %q", tle1stLineRegex, node.Tle[0])
 		}

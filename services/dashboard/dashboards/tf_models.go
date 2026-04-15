@@ -116,7 +116,7 @@ func (x *Dashboard) ToTF() any {
 			filtersSet, _ := types.SetValue(types.ObjectType{AttrTypes: dashFilterAttrTypes}, filterElems)
 			sObj, _ := types.ObjectValue(dashSeriesAttrTypes, map[string]attr.Value{
 				"id":          helper.TFStringValue(s.ID),
-				"name":        helper.TFStringValue(s.Name),
+				"name":        helper.TFStringPtrValue(s.Name),
 				"datasource":  helper.TFStringValue(s.Datasource),
 				"aggregation": helper.TFStringValue(s.Aggregation),
 				"filters":     filtersSet,
@@ -127,7 +127,7 @@ func (x *Dashboard) ToTF() any {
 
 		// Build metadata list
 		var metadataElems []attr.Value
-		hasMetadata := w.Metadata.YAxisLabel != "" || len(w.Metadata.Thresholds) > 0 ||
+		hasMetadata := w.Metadata.YAxisLabel != nil || len(w.Metadata.Thresholds) > 0 ||
 			(w.Metadata.YAxisRange != nil && len(w.Metadata.YAxisRange) == 2)
 		if hasMetadata {
 			thresholdElems := make([]attr.Value, len(w.Metadata.Thresholds))
@@ -154,7 +154,7 @@ func (x *Dashboard) ToTF() any {
 			maxList, _ := types.ListValue(types.Float64Type, maxElems)
 
 			mdObj, _ := types.ObjectValue(dashMetadataAttrTypes, map[string]attr.Value{
-				"y_axis_label":     helper.TFStringValue(w.Metadata.YAxisLabel),
+				"y_axis_label":     helper.TFStringPtrValue(w.Metadata.YAxisLabel),
 				"y_axis_range_min": minList,
 				"y_axis_range_max": maxList,
 				"thresholds":       thresholdList,
@@ -171,7 +171,7 @@ func (x *Dashboard) ToTF() any {
 		for j, t := range w.Tags {
 			tObj, _ := types.ObjectValue(dashTagAttrTypes, map[string]attr.Value{
 				"key":   helper.TFStringValue(t.Key),
-				"value": helper.TFStringValue(t.Value),
+				"value": helper.TFStringPtrValue(t.Value),
 			})
 			tagElems[j] = tObj
 		}
@@ -202,12 +202,12 @@ func (x *Dashboard) ToTF() any {
 	return &DashboardTF{
 		AuditModelTF:    general_objects.AuditModelToTF(&x.AuditModel),
 		Name:            helper.TFStringValue(x.Name),
-		Description:     helper.TFStringValue(x.Description),
+		Description:     helper.TFStringPtrValue(x.Description),
 		NodeIds:         helper.TFStringsValue(x.NodeIds),
 		WidgetInfo:      widgetInfos,
 		Widgets:         dashWidgets,
 		Tags:            general_objects.KeyValuesToTF(x.Tags),
-		TimestampFormat: helper.TFStringValue(x.TimestampFormat),
+		TimestampFormat: helper.TFStringPtrValue(x.TimestampFormat),
 	}
 }
 
@@ -231,10 +231,10 @@ func (tf *DashboardTF) ToAPI() any {
 	return &Dashboard{
 		AuditModel:      general_objects.AuditModelFromTF(tf.AuditModelTF),
 		Name:            helper.FromTFString(tf.Name),
-		Description:     helper.FromTFString(tf.Description),
+		Description:     helper.FromTFStringPtr(tf.Description),
 		NodeIds:         nodeIds,
 		WidgetInfo:      widgetInfos,
 		Tags:            general_objects.KeyValuesFromTF(tf.Tags),
-		TimestampFormat: helper.FromTFString(tf.TimestampFormat),
+		TimestampFormat: helper.FromTFStringPtr(tf.TimestampFormat),
 	}
 }

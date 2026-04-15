@@ -22,9 +22,9 @@ func (x *CommandQueue) ToTF() any {
 		AssetId:                     helper.TFStringValue(x.AssetId),
 		Name:                        helper.TFStringValue(x.Name),
 		GroundStationIds:            helper.TFStringsValue(x.GroundStationIds),
-		CommandTransformerPluginId:  helper.TFStringValue(x.CommandTransformerPluginId),
-		ProtocolTransformerPluginId: helper.TFStringValue(x.ProtocolTransformerPluginId),
-		ProtocolTransformerInitData: helper.TFStringValue(x.ProtocolTransformerInitData),
+		CommandTransformerPluginId:  helper.TFStringPtrValue(x.CommandTransformerPluginId),
+		ProtocolTransformerPluginId: helper.TFStringPtrValue(x.ProtocolTransformerPluginId),
+		ProtocolTransformerInitData: helper.TFStringPtrValue(x.ProtocolTransformerInitData),
 	}
 }
 
@@ -34,8 +34,8 @@ func (tf *CommandQueueTF) ToAPI() any {
 		AssetId:                     helper.FromTFString(tf.AssetId),
 		Name:                        helper.FromTFString(tf.Name),
 		GroundStationIds:            helper.FromTFStrings(tf.GroundStationIds),
-		CommandTransformerPluginId:  helper.FromTFString(tf.CommandTransformerPluginId),
-		ProtocolTransformerPluginId: helper.FromTFString(tf.ProtocolTransformerPluginId),
-		ProtocolTransformerInitData: helper.FromTFString(tf.ProtocolTransformerInitData),
+		CommandTransformerPluginId:  helper.FromTFStringPtr(tf.CommandTransformerPluginId),
+		ProtocolTransformerPluginId: helper.FromTFStringPtr(tf.ProtocolTransformerPluginId),
+		ProtocolTransformerInitData: helper.FromTFStringPtr(tf.ProtocolTransformerInitData),
 	}
 }
