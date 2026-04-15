@@ -12,10 +12,5 @@ var monitorRuleValidators = Validators{
 }
 
 func (monitor *Monitor) Validate() error {
-	ruleMap := map[string]any{
-		"comparison_operator": monitor.Rule.ComparisonOperator,
-		"comparison_value":    monitor.Rule.ComparisonValue,
-		"tolerance":           monitor.Rule.Tolerance,
-	}
-	return monitorRuleValidators.Check(ruleMap)
+	return monitorRuleValidators.CheckValue(monitor)
 }

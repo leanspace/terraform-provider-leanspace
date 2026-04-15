@@ -34,7 +34,7 @@ func SplitResourceSchemaBlocks(attrs map[string]resourceschema.Attribute) (map[s
 				continue
 			}
 			childAttrs, childBlocks := SplitResourceSchemaBlocks(v.NestedObject.Attributes)
-			outBlocks[key] = resourceschema.ListNestedBlock{ // TODO: evaluate if we can use SetNestedBlock here instead
+			outBlocks[key] = resourceschema.ListNestedBlock{ // implemented as list nested block to avoid unknown hash plan failures (since set with no computed fields cannot be tracked)
 				NestedObject: resourceschema.NestedBlockObject{
 					Attributes: childAttrs,
 					Blocks:     childBlocks,

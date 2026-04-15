@@ -26,23 +26,7 @@ var nodeValidators = Validators{
 }
 
 func (node *Node) Validate() error {
-	derefStr := func(s *string) any {
-		if s == nil {
-			return nil
-		}
-		return *s
-	}
-	obj := map[string]any{
-		"type":                     node.Type,
-		"kind":                     derefStr(node.Kind),
-		"tle":                      node.Tle,
-		"norad_id":                 derefStr(node.NoradId),
-		"international_designator": derefStr(node.InternationalDesignator),
-		"latitude":                 node.Latitude,
-		"longitude":                node.Longitude,
-		"elevation":                node.Elevation,
-	}
-	if err := nodeValidators.Check(obj); err != nil {
+	if err := nodeValidators.CheckValue(node); err != nil {
 		return err
 	}
 	if node.Kind != nil && *node.Kind == "SATELLITE" && node.Tle != nil && len(node.Tle) >= 2 {

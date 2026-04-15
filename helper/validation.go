@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -30,6 +31,68 @@ type Condition interface {
 // A slice of Conditions. It can be evaluated against a map[string]any, and all
 // errors will be aggregated together.
 type Validators []Condition
+
+// CheckValue is like Check but accepts any struct and converts it to a map[string]any
+// automatically using reflection. PascalCase field names are mapped to snake_case keys,
+// pointer values are dereferenced (nil pointers become nil), and anonymous embedded
+// struct fields are flattened into the top-level map.
+func (validators Validators) CheckValue(v any) error {
+	return validators.Check(structToMap(v))
+}
+
+// camelToSnakeCase converts a PascalCase or camelCase identifier to snake_case.
+func camelToSnakeCase(s string) string {
+	var result []rune
+	for i, r := range s {
+		if unicode.IsUpper(r) && i > 0 {
+			result = append(result, '_')
+		}
+		result = append(result, unicode.ToLower(r))
+	}
+	return string(result)
+}
+
+// derefValue dereferences a reflect.Value through any number of pointer indirections,
+// returning nil if any pointer in the chain is nil.
+func derefValue(rv reflect.Value) any {
+	for rv.Kind() == reflect.Ptr {
+		if rv.IsNil() {
+			return nil
+		}
+		rv = rv.Elem()
+	}
+	return rv.Interface()
+}
+
+// structToMap converts a struct (or pointer to struct) to a map[string]any.
+// Field names are converted from PascalCase to snake_case. Anonymous embedded
+// struct fields are flattened into the top-level map.
+func structToMap(v any) map[string]any {
+	result := make(map[string]any)
+	rv := reflect.ValueOf(v)
+	for rv.Kind() == reflect.Ptr {
+		if rv.IsNil() {
+			return result
+		}
+		rv = rv.Elem()
+	}
+	if rv.Kind() != reflect.Struct {
+		return result
+	}
+	rt := rv.Type()
+	for i := 0; i < rt.NumField(); i++ {
+		field := rt.Field(i)
+		fieldVal := rv.Field(i)
+		if field.Anonymous {
+			for k, val := range structToMap(fieldVal.Interface()) {
+				result[k] = val
+			}
+			continue
+		}
+		result[camelToSnakeCase(field.Name)] = derefValue(fieldVal)
+	}
+	return result
+}
 
 // Will check these conditions, and ensure they all evaluate to true for the given object.
 // If all tests pass, returns nil.

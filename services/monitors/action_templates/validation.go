@@ -12,10 +12,5 @@ var actionTemplateValidator = Validators{
 }
 
 func (actionTemplate *ActionTemplate) Validate() error {
-	obj := map[string]any{
-		"type":    actionTemplate.Type,
-		"url":     actionTemplate.URL,
-		"payload": actionTemplate.Payload,
-	}
-	return actionTemplateValidator.Check(obj)
+	return actionTemplateValidator.CheckValue(actionTemplate)
 }
