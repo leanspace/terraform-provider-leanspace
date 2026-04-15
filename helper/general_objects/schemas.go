@@ -3,6 +3,7 @@ package general_objects
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
@@ -20,7 +21,7 @@ import (
 )
 
 // serverManagedTimestampModifier marks a Computed-only timestamp field as unknown
-// whenever the resource is being updated (i.e. any other attribute has changed).
+// whenever the resource is being updated (i.e. any user-configurable attribute has changed).
 // This prevents the "inconsistent result after apply" error caused by the server
 // updating the timestamp on every write while the plan kept the old known value.
 type serverManagedTimestampModifier struct{}
@@ -36,14 +37,94 @@ func (m serverManagedTimestampModifier) PlanModifyString(_ context.Context, req 
 	if req.StateValue.IsNull() {
 		return
 	}
-	// If the entire plan equals the current state, this is a no-op plan.
-	// Keep the known value so no spurious "(known after apply)" diff is shown.
-	if req.Plan.Raw.Equal(req.State.Raw) {
+	// Check for a no-op plan using a comparison that treats unknown plan values as equal
+	// to their state counterparts. Unknown values appear for Optional+Computed attributes
+	// whose UseStateForUnknown modifier hasn't run yet — they are not user-initiated changes.
+	isNoOp := noOpPlan(req.Plan.Raw, req.State.Raw)
+	if isNoOp {
+		// Restore the known state value even if something earlier already set the plan to
+		// unknown (e.g. another plan modifier upstream). On a no-op plan the server will not
+		// touch this field, so we can safely keep the prior known value.
+		resp.PlanValue = req.StateValue
 		return
 	}
 	// Something is changing — the server will update the timestamp, so mark it
 	// as unknown to accept whatever value comes back after apply.
 	resp.PlanValue = types.StringUnknown()
+}
+
+// noOpPlan returns true if plan and state are effectively equal, treating unknown
+// plan values as equal to whatever the state has. Unknown values in the plan arise
+// for Optional+Computed attributes whose UseStateForUnknown plan modifier hasn't
+// executed yet; they do not represent a user-driven change to the resource.
+func noOpPlan(plan, state tftypes.Value) bool {
+	if plan.Equal(state) {
+		return true
+	}
+	// Unknown in plan → will be preserved from state by UseStateForUnknown → treat as equal.
+	if !plan.IsKnown() {
+		return true
+	}
+	if plan.IsNull() != state.IsNull() {
+		return false
+	}
+	if plan.IsNull() {
+		return true // both null
+	}
+	// Both known and non-null but not bitwise equal: recurse into compound types.
+	typ := plan.Type()
+	switch {
+	case typ.Is(tftypes.Object{}):
+		planAttrs := map[string]tftypes.Value{}
+		stateAttrs := map[string]tftypes.Value{}
+		_ = plan.As(&planAttrs)
+		_ = state.As(&stateAttrs)
+		for k, pv := range planAttrs {
+			sv, ok := stateAttrs[k]
+			if !ok {
+				return false
+			}
+			if !noOpPlan(pv, sv) {
+				return false
+			}
+		}
+		return true
+	case typ.Is(tftypes.List{}) || typ.Is(tftypes.Set{}) || typ.Is(tftypes.Tuple{}):
+		planElems := []tftypes.Value{}
+		stateElems := []tftypes.Value{}
+		_ = plan.As(&planElems)
+		_ = state.As(&stateElems)
+		if len(planElems) != len(stateElems) {
+			return false
+		}
+		for i := range planElems {
+			if !noOpPlan(planElems[i], stateElems[i]) {
+				return false
+			}
+		}
+		return true
+	case typ.Is(tftypes.Map{}):
+		planMap := map[string]tftypes.Value{}
+		stateMap := map[string]tftypes.Value{}
+		_ = plan.As(&planMap)
+		_ = state.As(&stateMap)
+		if len(planMap) != len(stateMap) {
+			return false
+		}
+		for k, pv := range planMap {
+			sv, ok := stateMap[k]
+			if !ok {
+				return false
+			}
+			if !noOpPlan(pv, sv) {
+				return false
+			}
+		}
+		return true
+	default:
+		// Primitive types: plan is known and non-null but not equal to state.
+		return false
+	}
 }
 
 func PaginatedListSchemaDS(content, filters map[string]datasourceschema.Attribute) map[string]datasourceschema.Attribute {
