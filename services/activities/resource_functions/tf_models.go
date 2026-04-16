@@ -57,6 +57,13 @@ func resourceFunctionFormulaFromTF(tf *ResourceFunctionFormulaTF) *ResourceFunct
 	return general_objects.ReflectFromTF[ResourceFunctionFormula](tf)
 }
 
+func resourceFunctionFormulaValueFromTF(tf *ResourceFunctionFormulaTF) ResourceFunctionFormula {
+	if v := resourceFunctionFormulaFromTF(tf); v != nil {
+		return *v
+	}
+	return ResourceFunctionFormula{}
+}
+
 func resourceFunctionFormulaSliceToTF(xs []ResourceFunctionFormula) []ResourceFunctionFormulaTF {
 	result := make([]ResourceFunctionFormulaTF, len(xs))
 	for i := range xs {

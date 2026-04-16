@@ -1,5 +1,7 @@
 package generic_plugins
 
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct GenericPlugin
+
 import (
 	"io"
 	"net/http"
@@ -15,7 +17,7 @@ type GenericPlugin struct {
 	Description    *string        `json:"description,omitempty"`
 	Type           string         `json:"type"`
 	Language       string         `json:"language"`
-	SourceCodeLink SourceCodeLink `json:"sourceCodeLink"`
+	SourceCodeLink SourceCodeLink `json:"sourceCodeLink" tf:"object"`
 	Status         string         `json:"status"`
 	FilePath       string         `json:"source_code_path"`
 	FileSha        string         `json:"source_code_sha"`

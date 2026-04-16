@@ -131,3 +131,25 @@ func FromTFStrings(ts []types.String) []string {
 	}
 	return result
 }
+
+func MapStringToTF(m map[string]string) map[string]types.String {
+	if m == nil {
+		return nil
+	}
+	result := make(map[string]types.String, len(m))
+	for k, v := range m {
+		result[k] = types.StringValue(v)
+	}
+	return result
+}
+
+func MapStringFromTF(m map[string]types.String) map[string]string {
+	if m == nil {
+		return nil
+	}
+	result := make(map[string]string, len(m))
+	for k, v := range m {
+		result[k] = v.ValueString()
+	}
+	return result
+}

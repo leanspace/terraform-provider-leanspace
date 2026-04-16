@@ -80,7 +80,7 @@ func (x *Widget) ToTF() any {
 		md := &MetadataTF{
 			YAxisLabel: helper.TFStringPtrValue(x.Metadata.YAxisLabel),
 		}
-		if x.Metadata.YAxisRange != nil && len(x.Metadata.YAxisRange) == 2 {
+		if len(x.Metadata.YAxisRange) == 2 {
 			if x.Metadata.YAxisRange[0] != nil {
 				md.YAxisRangeMin = helper.TFFloat64PtrValue(x.Metadata.YAxisRange[0])
 			}
@@ -102,7 +102,7 @@ func (x *Widget) ToTF() any {
 		md.Thresholds = thresholds
 
 		// Only set metadata if there's actual content
-		if x.Metadata.YAxisLabel != nil || (x.Metadata.YAxisRange != nil && len(x.Metadata.YAxisRange) == 2 && (x.Metadata.YAxisRange[0] != nil || x.Metadata.YAxisRange[1] != nil)) || len(x.Metadata.Thresholds) > 0 {
+		if x.Metadata.YAxisLabel != nil || (len(x.Metadata.YAxisRange) == 2 && (x.Metadata.YAxisRange[0] != nil || x.Metadata.YAxisRange[1] != nil)) || len(x.Metadata.Thresholds) > 0 {
 			metadata = md
 		}
 	}

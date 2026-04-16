@@ -21,11 +21,9 @@ var serviceAccountSchema = general_objects.ResourceSchemaWith(map[string]resourc
 		Required:    true,
 		Validators:  []validator.Set{setvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
-	"credentials": resourceschema.ListNestedAttribute{
-		Computed: true,
-		NestedObject: resourceschema.NestedAttributeObject{
-			Attributes: credentialSchema,
-		},
+	"credentials": resourceschema.SingleNestedAttribute{
+		Computed:   true,
+		Attributes: credentialSchema,
 	},
 	"tags": general_objects.KeyValuesSchema,
 })

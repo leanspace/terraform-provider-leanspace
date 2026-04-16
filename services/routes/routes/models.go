@@ -1,5 +1,7 @@
 package routes
 
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct Route
+
 import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 type Route struct {
@@ -8,7 +10,7 @@ type Route struct {
 	Description    *string                    `json:"description,omitempty"`
 	Tags           []general_objects.KeyValue `json:"tags,omitempty"`
 	Definition     Definition                 `json:"definition"`
-	RouteInstances []RouteInstance            `json:"routeInstances,omitempty"`
+	RouteInstances []RouteInstance            `json:"routeInstances,omitempty" tf:"list"`
 	ProcessorIds   []string                   `json:"processorIds,omitempty"`
 }
 
@@ -17,7 +19,7 @@ type Definition struct {
 	LogLevel         string  `json:"logLevel"`
 	Valid            bool    `json:"valid,omitempty"`
 	ServiceAccountId *string `json:"serviceAccountId,omitempty"`
-	Errors           []Error `json:"errors,omitempty"`
+	Errors           []Error `json:"errors,omitempty" tf:"list"`
 }
 
 type Error struct {

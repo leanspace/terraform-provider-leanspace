@@ -106,17 +106,13 @@ var dashboardWidgetSchema = general_objects.ResourceSchemaWith(map[string]resour
 			Attributes: seriesSchema,
 		},
 	},
-	"metadata": resourceschema.ListNestedAttribute{
-		Computed: true,
-		NestedObject: resourceschema.NestedAttributeObject{
-			Attributes: metadataSchema,
-		},
+	"metadata": resourceschema.SingleNestedAttribute{
+		Computed:   true,
+		Attributes: metadataSchema,
 	},
-	"view": resourceschema.ListNestedAttribute{
-		Computed: true,
-		NestedObject: resourceschema.NestedAttributeObject{
-			Attributes: dashboardInfoSchema,
-		},
+	"view": resourceschema.SingleNestedAttribute{
+		Computed:   true,
+		Attributes: dashboardInfoSchema,
 	},
 	"tags": general_objects.KeyValuesSchema,
 })

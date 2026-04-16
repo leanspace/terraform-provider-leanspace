@@ -1,5 +1,7 @@
 package access_policies
 
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct AccessPolicy
+
 import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 type AccessPolicy struct {

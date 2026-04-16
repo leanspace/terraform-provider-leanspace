@@ -1,5 +1,7 @@
 package passive_resource_functions
 
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct PassiveResourceFunction
+
 import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 type PassiveResourceFunction struct {

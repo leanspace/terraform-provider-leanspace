@@ -1,5 +1,7 @@
 package resources
 
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct Resource
+
 import (
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )

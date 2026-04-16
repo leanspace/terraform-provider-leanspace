@@ -12,13 +12,28 @@
 //	float64 / *float64         → types.Float64
 //	[]string                   → []types.String
 //	[]general_objects.KeyValue → []general_objects.KeyValueTF
+//	map[string]string          → map[string]types.String
 //	general_objects.AuditModel → general_objects.AuditModelTF  (embedded)
 //	*LocalStruct               → *LocalStructTF   (struct defined in same file)
 //	[]LocalStruct              → []LocalStructTF  (struct defined in same file)
+//	LocalStruct (tf:"object")  → types.Object     (for Computed-only SingleNestedAttribute)
+//	[]LocalStruct (tf:"list")  → types.List       (for Computed-only ListNestedAttribute)
+//
+// When a local struct field is annotated with tf:"object" (e.g.
+//
+//	Credentials Credentials `json:"credentials" tf:"object"`
+//
+// ) the generator emits types.Object instead of *CredentialsTF. This is required
+// when the corresponding schema attribute is Computed-only (no Required/Optional),
+// because Terraform sets purely-computed attributes to unknown during plan and
+// only types.Object can represent unknown object values.
+//
+// Similarly, tf:"list" on a []LocalStruct field emits types.List instead of
+// []LocalStructTF, for the same reason (Computed-only ListNestedAttribute).
 //
 // When nested local struct fields are present the generator emits full ToTF/ToAPI
-// bodies and nil-safe helper functions. Nested structs themselves must be flat.
-// Generic structs are rejected.
+// bodies and nil-safe helper functions. Nesting is resolved recursively: a nested
+// struct may itself reference further local structs. Generic structs are rejected.
 package main
 
 import (
@@ -37,19 +52,23 @@ import (
 
 // kind constants for fieldInfo
 const (
-	kindEmbed      = "embed"
-	kindString     = "string"
-	kindPtrString  = "*string"
-	kindBool       = "bool"
-	kindPtrBool    = "*bool"
-	kindInt        = "int"
-	kindPtrInt     = "*int"
-	kindFloat64    = "float64"
-	kindPtrFloat64 = "*float64"
-	kindStrings    = "[]string"
-	kindKeyValues  = "[]KeyValue"
-	kindPtrLocal   = "*local"
-	kindSliceLocal = "[]local"
+	kindEmbed           = "embed"
+	kindString          = "string"
+	kindPtrString       = "*string"
+	kindBool            = "bool"
+	kindPtrBool         = "*bool"
+	kindInt             = "int"
+	kindPtrInt          = "*int"
+	kindFloat64         = "float64"
+	kindPtrFloat64      = "*float64"
+	kindStrings         = "[]string"
+	kindKeyValues       = "[]KeyValue"
+	kindMapStringString = "map[string]string"
+	kindLocal           = "local"
+	kindPtrLocal        = "*local"
+	kindSliceLocal      = "[]local"
+	kindObjectLocal     = "object_local" // local struct annotated with tf:"object"
+	kindListLocal       = "list_local"   // []local struct annotated with tf:"list"
 )
 
 // fieldInfo holds derived metadata for a single TF struct field.
@@ -182,38 +201,131 @@ func generateTFModel(pkg string, f *ast.File, structName string) ([]byte, error)
 		return nil, err
 	}
 
-	// Collect nested local struct names referenced by root
-	nestedNames := collectNestedNames(fields)
+	// Collect object-local struct names (tf:"object" annotated, handled as types.Object).
+	objectLocalNames := collectObjectLocalNames(fields)
 
-	if len(nestedNames) == 0 {
+	// Transitively collect all nested local struct references (recursive).
+	// kindObjectLocal and kindListLocal fields are excluded from this traversal.
+	nestedOrder, nestedFields, nestedComplex, err := collectAllNested(fields, locals)
+	if err != nil {
+		return nil, err
+	}
+
+	// Collect list-local struct names (tf:"list" annotated, handled as types.List).
+	// Must happen after collectAllNested so nested struct fields are available.
+	listLocalNames := collectAllListLocalNames(fields, nestedFields)
+
+	if len(nestedOrder) == 0 && len(objectLocalNames) == 0 && len(listLocalNames) == 0 && !hasNonReflectFields(fields) {
 		return renderFileFlat(pkg, structName, fields)
 	}
 
-	// Parse nested struct fields (they must be flat — no further local references)
-	nestedFields := make(map[string][]fieldInfo)
-	for name := range nestedNames {
-		st, exists := locals[name]
-		if !exists {
-			return nil, fmt.Errorf("referenced local struct %s not found in file", name)
-		}
-		nf, err := parseFields(st, nil) // nil = no local struct references allowed in nested
-		if err != nil {
-			return nil, fmt.Errorf("nested struct %s: %w", name, err)
-		}
-		nestedFields[name] = nf
-	}
-
-	return renderFileFull(pkg, structName, fields, nestedFields)
+	return renderFileFull(pkg, structName, fields, nestedOrder, nestedFields, nestedComplex, objectLocalNames, listLocalNames, locals)
 }
 
 func collectNestedNames(fields []fieldInfo) map[string]bool {
 	result := make(map[string]bool)
 	for _, f := range fields {
-		if f.kind == kindPtrLocal || f.kind == kindSliceLocal {
+		if f.kind == kindLocal || f.kind == kindPtrLocal || f.kind == kindSliceLocal {
 			result[f.localName] = true
 		}
 	}
 	return result
+}
+
+// hasNonReflectFields reports whether any field requires an explicit conversion
+// that ReflectToTF/ReflectFromTF cannot handle (e.g. map[string]string).
+func hasNonReflectFields(fields []fieldInfo) bool {
+	for _, f := range fields {
+		if f.kind == kindMapStringString || f.kind == kindLocal || f.kind == kindObjectLocal || f.kind == kindListLocal {
+			return true
+		}
+	}
+	return false
+}
+
+// collectObjectLocalNames returns the names of all local structs referenced via kindObjectLocal fields.
+func collectObjectLocalNames(fields []fieldInfo) map[string]bool {
+	result := make(map[string]bool)
+	for _, f := range fields {
+		if f.kind == kindObjectLocal {
+			result[f.localName] = true
+		}
+	}
+	return result
+}
+
+// collectAllListLocalNames collects names of all local structs referenced via kindListLocal
+// from both root fields and all nested struct fields.
+func collectAllListLocalNames(rootFields []fieldInfo, nestedFields map[string][]fieldInfo) map[string]bool {
+	result := make(map[string]bool)
+	for _, f := range rootFields {
+		if f.kind == kindListLocal {
+			result[f.localName] = true
+		}
+	}
+	for _, fields := range nestedFields {
+		for _, f := range fields {
+			if f.kind == kindListLocal {
+				result[f.localName] = true
+			}
+		}
+	}
+	return result
+}
+
+// collectAllNested transitively collects all local struct names referenced from
+// rootFields via BFS. Returns:
+//   - topoOrder: topological order (innermost/leaf structs first)
+//   - fieldsMap: parsed fields for each nested struct
+//   - complexMap: whether a nested struct itself references further local structs
+func collectAllNested(rootFields []fieldInfo, locals map[string]*ast.StructType) (topoOrder []string, fieldsMap map[string][]fieldInfo, complexMap map[string]bool, err error) {
+	fieldsMap = make(map[string][]fieldInfo)
+	complexMap = make(map[string]bool)
+	seen := map[string]bool{}
+	var bfsOrder []string
+
+	// Seed queue from root-level fields.
+	var queue []string
+	for name := range collectNestedNames(rootFields) {
+		if !seen[name] {
+			queue = append(queue, name)
+			seen[name] = true
+		}
+	}
+
+	for len(queue) > 0 {
+		name := queue[0]
+		queue = queue[1:]
+		bfsOrder = append(bfsOrder, name)
+
+		st, exists := locals[name]
+		if !exists {
+			err = fmt.Errorf("referenced local struct %s not found in file", name)
+			return
+		}
+		var nf []fieldInfo
+		if nf, err = parseFields(st, locals); err != nil {
+			err = fmt.Errorf("nested struct %s: %w", name, err)
+			return
+		}
+		fieldsMap[name] = nf
+
+		childNames := collectNestedNames(nf)
+		complexMap[name] = len(childNames) > 0 || hasNonReflectFields(nf)
+		for child := range childNames {
+			if !seen[child] {
+				queue = append(queue, child)
+				seen[child] = true
+			}
+		}
+	}
+
+	// Reverse BFS order for topological order (leaf structs first).
+	topoOrder = make([]string, len(bfsOrder))
+	for i, name := range bfsOrder {
+		topoOrder[len(bfsOrder)-1-i] = name
+	}
+	return
 }
 
 // parseFields parses all struct fields. locals is the set of known local struct
@@ -255,7 +367,8 @@ func parseEmbedded(field *ast.Field) (fieldInfo, error) {
 
 func parseNamedField(field *ast.Field, locals map[string]*ast.StructType) (fieldInfo, error) {
 	goName := field.Names[0].Name
-	kind, localName, tfType, err := resolveType(field.Type, locals)
+	tfTag := extractTFTag(field.Tag)
+	kind, localName, tfType, err := resolveType(field.Type, locals, tfTag)
 	if err != nil {
 		return fieldInfo{}, err
 	}
@@ -266,8 +379,26 @@ func parseNamedField(field *ast.Field, locals map[string]*ast.StructType) (field
 	return fieldInfo{goName: goName, tfType: tfType, tfsdk: tfsdk, kind: kind, localName: localName}, nil
 }
 
+// extractTFTag returns the value of the tf struct tag (e.g. tf:"object" → "object").
+func extractTFTag(tag *ast.BasicLit) string {
+	if tag == nil {
+		return ""
+	}
+	raw := strings.Trim(tag.Value, "`")
+	for _, pair := range strings.Fields(raw) {
+		if !strings.HasPrefix(pair, `tf:"`) {
+			continue
+		}
+		val := strings.TrimPrefix(pair, `tf:"`)
+		val = strings.TrimSuffix(val, `"`)
+		return val
+	}
+	return ""
+}
+
 // resolveType maps an AST type expression to (kind, localName, tfTypeStr, error).
-func resolveType(expr ast.Expr, locals map[string]*ast.StructType) (string, string, string, error) {
+// tfTag is the value of the `tf:"..."` struct tag on the field (empty if absent).
+func resolveType(expr ast.Expr, locals map[string]*ast.StructType, tfTag string) (string, string, string, error) {
 	switch t := expr.(type) {
 	case *ast.Ident:
 		switch t.Name {
@@ -279,6 +410,14 @@ func resolveType(expr ast.Expr, locals map[string]*ast.StructType) (string, stri
 			return kindInt, "", "types.Int64", nil
 		case "float64":
 			return kindFloat64, "", "types.Float64", nil
+		}
+		if locals != nil {
+			if _, ok := locals[t.Name]; ok {
+				if tfTag == "object" {
+					return kindObjectLocal, t.Name, "types.Object", nil
+				}
+				return kindLocal, t.Name, "*" + t.Name + "TF", nil
+			}
 		}
 	case *ast.StarExpr:
 		inner, ok := t.X.(*ast.Ident)
@@ -308,6 +447,9 @@ func resolveType(expr ast.Expr, locals map[string]*ast.StructType) (string, stri
 			}
 			if locals != nil {
 				if _, ok := locals[el.Name]; ok {
+					if tfTag == "list" {
+						return kindListLocal, el.Name, "types.List", nil
+					}
 					return kindSliceLocal, el.Name, "[]" + el.Name + "TF", nil
 				}
 			}
@@ -319,6 +461,12 @@ func resolveType(expr ast.Expr, locals map[string]*ast.StructType) (string, stri
 			if pkg.Name == "general_objects" && el.Sel.Name == "KeyValue" {
 				return kindKeyValues, "", "[]general_objects.KeyValueTF", nil
 			}
+		}
+	case *ast.MapType:
+		key, ok1 := t.Key.(*ast.Ident)
+		val, ok2 := t.Value.(*ast.Ident)
+		if ok1 && ok2 && key.Name == "string" && val.Name == "string" {
+			return kindMapStringString, "", "map[string]types.String", nil
 		}
 	}
 	return "", "", "", fmt.Errorf("unsupported type — write tf_models.go by hand or extend the generator")
@@ -401,21 +549,25 @@ func renderFileFlat(pkg, structName string, fields []fieldInfo) ([]byte, error) 
 
 // ---- Full (with nested local structs) ----
 
-func renderFileFull(pkg, structName string, fields []fieldInfo, nestedFields map[string][]fieldInfo) ([]byte, error) {
+func renderFileFull(pkg, structName string, fields []fieldInfo, nestedOrder []string, nestedFields map[string][]fieldInfo, nestedComplex map[string]bool, objectLocalNames map[string]bool, listLocalNames map[string]bool, locals map[string]*ast.StructType) ([]byte, error) {
 	tfName := structName + "TF"
 
 	var buf bytes.Buffer
 	fmt.Fprintf(&buf, "// Code generated by gen_tf_models. DO NOT EDIT.\n")
 	fmt.Fprintf(&buf, "package %s\n\n", pkg)
 	fmt.Fprintf(&buf, "import (\n")
+	needAttr := len(objectLocalNames) > 0 || len(listLocalNames) > 0
+	if needAttr {
+		fmt.Fprintf(&buf, "\t\"github.com/hashicorp/terraform-plugin-framework/attr\"\n")
+	}
 	fmt.Fprintf(&buf, "\t\"github.com/hashicorp/terraform-plugin-framework/types\"\n")
 	fmt.Fprintf(&buf, "\t\"github.com/leanspace/terraform-provider-leanspace/helper\"\n")
 	fmt.Fprintf(&buf, "\t\"github.com/leanspace/terraform-provider-leanspace/helper/general_objects\"\n")
 	fmt.Fprintf(&buf, ")\n\n")
 
-	// Nested TF struct declarations
-	for name, nf := range nestedFields {
-		writeStructDecl(&buf, name+"TF", nf)
+	// Nested TF struct declarations in topological order (innermost first).
+	for _, name := range nestedOrder {
+		writeStructDecl(&buf, name+"TF", nestedFields[name])
 	}
 
 	// Root TF struct
@@ -445,32 +597,157 @@ func renderFileFull(pkg, structName string, fields []fieldInfo, nestedFields map
 	}
 	fmt.Fprintf(&buf, "\t}\n}\n\n")
 
-	// Helper functions for each nested local struct
-	for name := range nestedFields {
+	// Helper functions for each nested local struct.
+	for _, name := range nestedOrder {
 		lc := lcFirst(name)
+		nf := nestedFields[name]
+		isComplex := nestedComplex[name]
 
-		fmt.Fprintf(&buf, "func %sToTF(x *%s) *%sTF {\n", lc, name, name)
-		fmt.Fprintf(&buf, "\tif x == nil {\n\t\treturn nil\n\t}\n")
-		fmt.Fprintf(&buf, "\treturn general_objects.ReflectToTF[%sTF](x)\n", name)
-		fmt.Fprintf(&buf, "}\n\n")
+		if isComplex {
+			// Complex nested struct: emit explicit field-level bodies.
+			fmt.Fprintf(&buf, "func %sToTF(x *%s) *%sTF {\n", lc, name, name)
+			fmt.Fprintf(&buf, "\tif x == nil {\n\t\treturn nil\n\t}\n")
+			fmt.Fprintf(&buf, "\treturn &%sTF{\n", name)
+			for _, f := range nf {
+				if f.isEmbed {
+					fmt.Fprintf(&buf, "\t\tAuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),\n")
+				} else {
+					fmt.Fprintf(&buf, "\t\t%s: %s,\n", f.goName, toTFExpr(f, "x"))
+				}
+			}
+			fmt.Fprintf(&buf, "\t}\n}\n\n")
 
-		fmt.Fprintf(&buf, "func %sFromTF(tf *%sTF) *%s {\n", lc, name, name)
-		fmt.Fprintf(&buf, "\tif tf == nil {\n\t\treturn nil\n\t}\n")
-		fmt.Fprintf(&buf, "\treturn general_objects.ReflectFromTF[%s](tf)\n", name)
-		fmt.Fprintf(&buf, "}\n\n")
+			fmt.Fprintf(&buf, "func %sFromTF(tf *%sTF) *%s {\n", lc, name, name)
+			fmt.Fprintf(&buf, "\tif tf == nil {\n\t\treturn nil\n\t}\n")
+			fmt.Fprintf(&buf, "\treturn &%s{\n", name)
+			for _, f := range nf {
+				if f.isEmbed {
+					fmt.Fprintf(&buf, "\t\tAuditModel: general_objects.AuditModelFromTF(tf.AuditModelTF),\n")
+				} else {
+					fmt.Fprintf(&buf, "\t\t%s: %s,\n", f.goName, fromTFExpr(f, "tf"))
+				}
+			}
+			fmt.Fprintf(&buf, "\t}\n}\n\n")
+		} else {
+			// Flat nested struct: delegate to ReflectToTF.
+			fmt.Fprintf(&buf, "func %sToTF(x *%s) *%sTF {\n", lc, name, name)
+			fmt.Fprintf(&buf, "\tif x == nil {\n\t\treturn nil\n\t}\n")
+			fmt.Fprintf(&buf, "\treturn general_objects.ReflectToTF[%sTF](x)\n", name)
+			fmt.Fprintf(&buf, "}\n\n")
 
+			fmt.Fprintf(&buf, "func %sFromTF(tf *%sTF) *%s {\n", lc, name, name)
+			fmt.Fprintf(&buf, "\tif tf == nil {\n\t\treturn nil\n\t}\n")
+			fmt.Fprintf(&buf, "\treturn general_objects.ReflectFromTF[%s](tf)\n", name)
+			fmt.Fprintf(&buf, "}\n\n")
+		}
+
+		// Slice helpers reuse the pointer helpers above.
+		fmt.Fprintf(&buf, "func %sValueFromTF(tf *%sTF) %s {\n", lc, name, name)
+		fmt.Fprintf(&buf, "\tif v := %sFromTF(tf); v != nil {\n", lc)
+		fmt.Fprintf(&buf, "\t\treturn *v\n\t}\n")
+		fmt.Fprintf(&buf, "\treturn %s{}\n}\n\n", name)
+
+		// Slice helpers reuse the pointer helpers above.
 		fmt.Fprintf(&buf, "func %sSliceToTF(xs []%s) []%sTF {\n", lc, name, name)
 		fmt.Fprintf(&buf, "\tresult := make([]%sTF, len(xs))\n", name)
 		fmt.Fprintf(&buf, "\tfor i := range xs {\n")
-		fmt.Fprintf(&buf, "\t\tresult[i] = *general_objects.ReflectToTF[%sTF](&xs[i])\n", name)
+		if isComplex {
+			fmt.Fprintf(&buf, "\t\tresult[i] = *%sToTF(&xs[i])\n", lc)
+		} else {
+			fmt.Fprintf(&buf, "\t\tresult[i] = *general_objects.ReflectToTF[%sTF](&xs[i])\n", name)
+		}
 		fmt.Fprintf(&buf, "\t}\n")
 		fmt.Fprintf(&buf, "\treturn result\n}\n\n")
 
 		fmt.Fprintf(&buf, "func %sSliceFromTF(tfs []%sTF) []%s {\n", lc, name, name)
 		fmt.Fprintf(&buf, "\tresult := make([]%s, len(tfs))\n", name)
 		fmt.Fprintf(&buf, "\tfor i := range tfs {\n")
-		fmt.Fprintf(&buf, "\t\tresult[i] = *general_objects.ReflectFromTF[%s](&tfs[i])\n", name)
+		if isComplex {
+			fmt.Fprintf(&buf, "\t\tresult[i] = *%sFromTF(&tfs[i])\n", lc)
+		} else {
+			fmt.Fprintf(&buf, "\t\tresult[i] = *general_objects.ReflectFromTF[%s](&tfs[i])\n", name)
+		}
 		fmt.Fprintf(&buf, "\t}\n")
+		fmt.Fprintf(&buf, "\treturn result\n}\n\n")
+	}
+
+	// Helper functions for object-local structs (tf:"object" annotated).
+	// These emit attrTypes vars and toObject/fromObject helpers instead of a TF struct.
+	for name := range objectLocalNames {
+		lc := lcFirst(name)
+		st := locals[name]
+		nf, err := parseFields(st, locals)
+		if err != nil {
+			return nil, fmt.Errorf("object-local struct %s: %w", name, err)
+		}
+
+		// attrTypes var
+		fmt.Fprintf(&buf, "var %sAttrTypes = map[string]attr.Type{\n", lc)
+		for _, f := range nf {
+			fmt.Fprintf(&buf, "\t%q: %s,\n", f.tfsdk, primitiveAttrType(f.kind))
+		}
+		fmt.Fprintf(&buf, "}\n\n")
+
+		// nameToObject
+		fmt.Fprintf(&buf, "func %sToObject(x *%s) types.Object {\n", lc, name)
+		fmt.Fprintf(&buf, "\tif x == nil {\n\t\treturn types.ObjectNull(%sAttrTypes)\n\t}\n", lc)
+		fmt.Fprintf(&buf, "\treturn types.ObjectValueMust(%sAttrTypes, map[string]attr.Value{\n", lc)
+		for _, f := range nf {
+			fmt.Fprintf(&buf, "\t\t%q: %s,\n", f.tfsdk, toTFExpr(f, "x"))
+		}
+		fmt.Fprintf(&buf, "\t})\n}\n\n")
+
+		// nameFromObject
+		fmt.Fprintf(&buf, "func %sFromObject(obj types.Object) %s {\n", lc, name)
+		fmt.Fprintf(&buf, "\tif obj.IsNull() || obj.IsUnknown() {\n\t\treturn %s{}\n\t}\n", name)
+		fmt.Fprintf(&buf, "\tattrs := obj.Attributes()\n")
+		fmt.Fprintf(&buf, "\treturn %s{\n", name)
+		for _, f := range nf {
+			fmt.Fprintf(&buf, "\t\t%s: %s,\n", f.goName, fromObjectAttrExpr(f))
+		}
+		fmt.Fprintf(&buf, "\t}\n}\n\n")
+	}
+
+	// Helper functions for list-local structs (tf:"list" annotated).
+	// These emit attrTypes vars and xToList/xFromList helpers instead of a TF struct.
+	for name := range listLocalNames {
+		lc := lcFirst(name)
+		st := locals[name]
+		nf, err := parseFields(st, locals)
+		if err != nil {
+			return nil, fmt.Errorf("list-local struct %s: %w", name, err)
+		}
+
+		// attrTypes var
+		fmt.Fprintf(&buf, "var %sAttrTypes = map[string]attr.Type{\n", lc)
+		for _, f := range nf {
+			fmt.Fprintf(&buf, "\t%q: %s,\n", f.tfsdk, primitiveAttrType(f.kind))
+		}
+		fmt.Fprintf(&buf, "}\n\n")
+
+		// xToList
+		fmt.Fprintf(&buf, "func %sToList(xs []%s) types.List {\n", lc, name)
+		fmt.Fprintf(&buf, "\telems := make([]attr.Value, len(xs))\n")
+		fmt.Fprintf(&buf, "\tfor i := range xs {\n")
+		fmt.Fprintf(&buf, "\t\telems[i] = types.ObjectValueMust(%sAttrTypes, map[string]attr.Value{\n", lc)
+		for _, f := range nf {
+			fmt.Fprintf(&buf, "\t\t\t%q: %s,\n", f.tfsdk, toTFExpr(f, "xs[i]"))
+		}
+		fmt.Fprintf(&buf, "\t\t})\n\t}\n")
+		fmt.Fprintf(&buf, "\treturn types.ListValueMust(types.ObjectType{AttrTypes: %sAttrTypes}, elems)\n}\n\n", lc)
+
+		// xFromList
+		fmt.Fprintf(&buf, "func %sFromList(list types.List) []%s {\n", lc, name)
+		fmt.Fprintf(&buf, "\tif list.IsNull() || list.IsUnknown() {\n\t\treturn nil\n\t}\n")
+		fmt.Fprintf(&buf, "\tresult := make([]%s, len(list.Elements()))\n", name)
+		fmt.Fprintf(&buf, "\tfor i, elem := range list.Elements() {\n")
+		fmt.Fprintf(&buf, "\t\tobj := elem.(types.Object)\n")
+		fmt.Fprintf(&buf, "\t\tattrs := obj.Attributes()\n")
+		fmt.Fprintf(&buf, "\t\tresult[i] = %s{\n", name)
+		for _, f := range nf {
+			fmt.Fprintf(&buf, "\t\t\t%s: %s,\n", f.goName, fromObjectAttrExpr(f))
+		}
+		fmt.Fprintf(&buf, "\t\t}\n\t}\n")
 		fmt.Fprintf(&buf, "\treturn result\n}\n\n")
 	}
 
@@ -488,6 +765,46 @@ func writeStructDecl(buf *bytes.Buffer, tfName string, fields []fieldInfo) {
 		}
 	}
 	fmt.Fprintf(buf, "}\n\n")
+}
+
+// primitiveAttrType maps a primitive kind to its attr.Type expression.
+// Used when building attrTypes maps for object-local structs.
+func primitiveAttrType(kind string) string {
+	switch kind {
+	case kindString, kindPtrString:
+		return "types.StringType"
+	case kindBool, kindPtrBool:
+		return "types.BoolType"
+	case kindInt, kindPtrInt:
+		return "types.Int64Type"
+	case kindFloat64, kindPtrFloat64:
+		return "types.Float64Type"
+	}
+	return "/* unsupported attr.Type */"
+}
+
+// fromObjectAttrExpr returns the expression to extract a field from attrs["tfsdk"] for object-local structs.
+func fromObjectAttrExpr(fi fieldInfo) string {
+	ref := `attrs["` + fi.tfsdk + `"]`
+	switch fi.kind {
+	case kindString:
+		return "helper.FromTFString(" + ref + ".(types.String))"
+	case kindPtrString:
+		return "helper.FromTFStringPtr(" + ref + ".(types.String))"
+	case kindBool:
+		return "helper.FromTFBool(" + ref + ".(types.Bool))"
+	case kindPtrBool:
+		return "helper.FromTFBoolPtr(" + ref + ".(types.Bool))"
+	case kindInt:
+		return "helper.FromTFInt64(" + ref + ".(types.Int64))"
+	case kindPtrInt:
+		return "helper.FromTFIntPtr(" + ref + ".(types.Int64))"
+	case kindFloat64:
+		return "helper.FromTFFloat64(" + ref + ".(types.Float64))"
+	case kindPtrFloat64:
+		return "helper.FromTFFloat64Ptr(" + ref + ".(types.Float64))"
+	}
+	return "/* unsupported field type for object-local struct */"
 }
 
 // toTFExpr returns the expression that converts an API field to its TF value.
@@ -514,10 +831,18 @@ func toTFExpr(fi fieldInfo, src string) string {
 		return "helper.TFStringsValue(" + ref + ")"
 	case kindKeyValues:
 		return "general_objects.KeyValuesToTF(" + ref + ")"
+	case kindMapStringString:
+		return "helper.MapStringToTF(" + ref + ")"
+	case kindLocal:
+		return lcFirst(fi.localName) + "ToTF(&" + ref + ")"
 	case kindPtrLocal:
 		return lcFirst(fi.localName) + "ToTF(" + ref + ")"
 	case kindSliceLocal:
 		return lcFirst(fi.localName) + "SliceToTF(" + ref + ")"
+	case kindObjectLocal:
+		return lcFirst(fi.localName) + "ToObject(&" + ref + ")"
+	case kindListLocal:
+		return lcFirst(fi.localName) + "ToList(" + ref + ")"
 	}
 	return "/* unknown */"
 }
@@ -546,10 +871,18 @@ func fromTFExpr(fi fieldInfo, src string) string {
 		return "helper.FromTFStrings(" + ref + ")"
 	case kindKeyValues:
 		return "general_objects.KeyValuesFromTF(" + ref + ")"
+	case kindMapStringString:
+		return "helper.MapStringFromTF(" + ref + ")"
+	case kindLocal:
+		return lcFirst(fi.localName) + "ValueFromTF(" + ref + ")"
 	case kindPtrLocal:
 		return lcFirst(fi.localName) + "FromTF(" + ref + ")"
 	case kindSliceLocal:
 		return lcFirst(fi.localName) + "SliceFromTF(" + ref + ")"
+	case kindObjectLocal:
+		return lcFirst(fi.localName) + "FromObject(" + ref + ")"
+	case kindListLocal:
+		return lcFirst(fi.localName) + "FromList(" + ref + ")"
 	}
 	return "/* unknown */"
 }

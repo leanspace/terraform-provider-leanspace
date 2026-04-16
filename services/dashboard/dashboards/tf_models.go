@@ -57,8 +57,8 @@ var dashboardWidgetAttrTypes = map[string]attr.Type{
 	"query_time_dimension":   types.StringType,
 	"display_time_dimension": types.StringType,
 	"series":                 types.ListType{ElemType: types.ObjectType{AttrTypes: dashSeriesAttrTypes}},
-	"metadata":               types.ListType{ElemType: types.ObjectType{AttrTypes: dashMetadataAttrTypes}},
-	"view":                   types.ListType{ElemType: types.ObjectType{AttrTypes: dashViewInfoAttrTypes}},
+	"metadata":               types.ObjectType{AttrTypes: dashMetadataAttrTypes},
+	"view":                   types.ObjectType{AttrTypes: dashViewInfoAttrTypes},
 	"tags":                   types.SetType{ElemType: types.ObjectType{AttrTypes: dashTagAttrTypes}},
 }
 
@@ -125,10 +125,10 @@ func (x *Dashboard) ToTF() any {
 		}
 		seriesList, _ := types.ListValue(types.ObjectType{AttrTypes: dashSeriesAttrTypes}, seriesElems)
 
-		// Build metadata list
-		var metadataElems []attr.Value
+		// Build metadata object
 		hasMetadata := w.Metadata.YAxisLabel != nil || len(w.Metadata.Thresholds) > 0 ||
-			(w.Metadata.YAxisRange != nil && len(w.Metadata.YAxisRange) == 2)
+			(len(w.Metadata.YAxisRange) == 2)
+		var metadataObj types.Object
 		if hasMetadata {
 			thresholdElems := make([]attr.Value, len(w.Metadata.Thresholds))
 			for j, t := range w.Metadata.Thresholds {
@@ -142,29 +142,29 @@ func (x *Dashboard) ToTF() any {
 			thresholdList, _ := types.ListValue(types.ObjectType{AttrTypes: dashThresholdAttrTypes}, thresholdElems)
 
 			var minElems []attr.Value
-			if w.Metadata.YAxisRange != nil && len(w.Metadata.YAxisRange) == 2 && w.Metadata.YAxisRange[0] != nil {
+			if len(w.Metadata.YAxisRange) == 2 && w.Metadata.YAxisRange[0] != nil {
 				minElems = []attr.Value{helper.TFFloat64PtrValue(w.Metadata.YAxisRange[0])}
 			}
 			minList, _ := types.ListValue(types.Float64Type, minElems)
 
 			var maxElems []attr.Value
-			if w.Metadata.YAxisRange != nil && len(w.Metadata.YAxisRange) == 2 && w.Metadata.YAxisRange[1] != nil {
+			if len(w.Metadata.YAxisRange) == 2 && w.Metadata.YAxisRange[1] != nil {
 				maxElems = []attr.Value{helper.TFFloat64PtrValue(w.Metadata.YAxisRange[1])}
 			}
 			maxList, _ := types.ListValue(types.Float64Type, maxElems)
 
-			mdObj, _ := types.ObjectValue(dashMetadataAttrTypes, map[string]attr.Value{
+			metadataObj, _ = types.ObjectValue(dashMetadataAttrTypes, map[string]attr.Value{
 				"y_axis_label":     helper.TFStringPtrValue(w.Metadata.YAxisLabel),
 				"y_axis_range_min": minList,
 				"y_axis_range_max": maxList,
 				"thresholds":       thresholdList,
 			})
-			metadataElems = []attr.Value{mdObj}
+		} else {
+			metadataObj = types.ObjectNull(dashMetadataAttrTypes)
 		}
-		metadataList, _ := types.ListValue(types.ObjectType{AttrTypes: dashMetadataAttrTypes}, metadataElems)
 
-		// Build view list (always empty — API view is complex struct not mapped here)
-		viewList, _ := types.ListValue(types.ObjectType{AttrTypes: dashViewInfoAttrTypes}, nil)
+		// Build view object (not mapped from API)
+		viewObj := types.ObjectNull(dashViewInfoAttrTypes)
 
 		// Build tags set
 		tagElems := make([]attr.Value, len(w.Tags))
@@ -191,8 +191,8 @@ func (x *Dashboard) ToTF() any {
 			"query_time_dimension":   helper.TFStringValue(w.QueryTimeDimension),
 			"display_time_dimension": helper.TFStringValue(w.DisplayTimeDimension),
 			"series":                 seriesList,
-			"metadata":               metadataList,
-			"view":                   viewList,
+			"metadata":               metadataObj,
+			"view":                   viewObj,
 			"tags":                   tagsSet,
 		})
 		widgetElems[i] = widgetObj

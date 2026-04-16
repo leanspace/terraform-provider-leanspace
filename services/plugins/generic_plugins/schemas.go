@@ -43,11 +43,9 @@ var genericPluginSchema = general_objects.ResourceSchemaWith(map[string]resource
 		Description: helper.AllowedValuesToDescription(validGenericPluginLanguages),
 		Validators:  []validator.String{stringvalidator.OneOf(validGenericPluginLanguages...)},
 	},
-	"source_code_link": resourceschema.ListNestedAttribute{
-		Computed: true,
-		NestedObject: resourceschema.NestedAttributeObject{
-			Attributes: sourceCodeLinkSchema,
-		},
+	"source_code_link": resourceschema.SingleNestedAttribute{
+		Computed:   true,
+		Attributes: sourceCodeLinkSchema,
 	},
 	"status": resourceschema.StringAttribute{
 		Computed:    true,

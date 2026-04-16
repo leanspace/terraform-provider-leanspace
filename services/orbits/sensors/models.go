@@ -1,5 +1,7 @@
 package sensors
 
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct Sensor
+
 import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 type Sensor struct {
