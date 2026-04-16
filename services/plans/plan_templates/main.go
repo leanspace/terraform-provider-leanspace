@@ -8,4 +8,6 @@ var PlanTemplateDataType = provider.DataSourceType[PlanTemplate, *PlanTemplate]{
 	Schema:             planTemplateSchema,
 	FilterSchema:       dataSourceFilterSchema,
 	TFModelFactory:     func() any { return &PlanTemplateTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(planTemplateSchema),
 }

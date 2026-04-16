@@ -8,4 +8,6 @@ var ResourceFunctionDataType = provider.DataSourceType[ResourceFunction, *Resour
 	Schema:             resourceFunctionSchema,
 	FilterSchema:       dataSourceFilterSchema,
 	TFModelFactory:     func() any { return &ResourceFunctionTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(resourceFunctionSchema),
 }

@@ -8,4 +8,6 @@ var CommandDataType = provider.DataSourceType[CommandDefinition, *CommandDefinit
 	Schema:             commandDefinitionSchema,
 	FilterSchema:       dataSourceFilterSchema,
 	TFModelFactory:     func() any { return &CommandDefinitionTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(commandDefinitionSchema),
 }

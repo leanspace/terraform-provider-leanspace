@@ -8,4 +8,6 @@ var MetricDataType = provider.DataSourceType[Metric[any], *Metric[any]]{
 	Schema:             metricSchema,
 	FilterSchema:       dataSourceFilterSchema,
 	TFModelFactory:     func() any { return &MetricTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(metricSchema),
 }

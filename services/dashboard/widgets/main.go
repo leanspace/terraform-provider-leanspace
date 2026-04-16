@@ -8,4 +8,6 @@ var WidgetDataType = provider.DataSourceType[Widget, *Widget]{
 	Schema:             widgetSchema,
 	FilterSchema:       dataSourceFilterSchema,
 	TFModelFactory:     func() any { return &WidgetTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(widgetSchema),
 }

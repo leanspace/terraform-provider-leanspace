@@ -4,6 +4,7 @@ import (
 	"io"
 
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 )
 
@@ -152,6 +153,12 @@ type DataSourceType[T any, PT ParseableModel[T]] struct {
 	// Factory that returns a pointer to a new empty TF model struct (e.g. &NodeTF{}).
 	// GenericResource uses the direct TF conversion path (Plan.Get/State.Set)
 	TFModelFactory func() any
+	// Optional. Schema version for state migration. Defaults to 0.
+	// Increment this when the schema changes in a way that requires state migration.
+	SchemaVersion int64
+	// Optional. State upgraders keyed by the source schema version.
+	// Used by GenericResource to migrate state from an older schema version to the current one.
+	StateUpgraders map[int64]resource.StateUpgrader
 }
 
 func (dataSource DataSourceType[T, PT]) convert(client *Client) GenericClient[T, PT] {

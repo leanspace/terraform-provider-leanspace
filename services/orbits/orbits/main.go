@@ -8,4 +8,6 @@ var OrbitDataType = provider.DataSourceType[Orbit, *Orbit]{
 	Schema:             orbitSchema,
 	FilterSchema:       dataSourceFilterSchema,
 	TFModelFactory:     func() any { return &OrbitTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(orbitSchema),
 }

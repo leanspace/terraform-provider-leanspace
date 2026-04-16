@@ -8,4 +8,6 @@ var ServiceAccountDataType = provider.DataSourceType[ServiceAccount, *ServiceAcc
 	Schema:             serviceAccountSchema,
 	FilterSchema:       dataSourceFilterSchema,
 	TFModelFactory:     func() any { return &ServiceAccountTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(serviceAccountSchema),
 }

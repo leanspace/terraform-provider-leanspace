@@ -15,4 +15,6 @@ var PropertyDataType = provider.DataSourceType[Property[any], *Property[any]]{
 		return fmt.Sprintf("asset-repository/nodes/%s/properties/v2", p.NodeId)
 	},
 	TFModelFactory: func() any { return &PropertyTF{} },
+	SchemaVersion:  1,
+	StateUpgraders: provider.UnwrapSingleNestedUpgraderMap(propertySchema),
 }

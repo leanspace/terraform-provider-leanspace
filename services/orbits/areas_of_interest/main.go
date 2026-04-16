@@ -8,4 +8,6 @@ var AreaOfInterestDataType = provider.DataSourceType[AreaOfInterest, *AreaOfInte
 	Schema:             areaOfInterestSchema,
 	FilterSchema:       dataSourceFilterSchema,
 	TFModelFactory:     func() any { return &AreaOfInterestTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(areaOfInterestSchema),
 }

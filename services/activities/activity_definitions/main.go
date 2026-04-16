@@ -8,4 +8,6 @@ var ActivityDefinitionDataType = provider.DataSourceType[ActivityDefinition, *Ac
 	Schema:             activityDefinitionSchema,
 	FilterSchema:       dataSourceFilterSchema,
 	TFModelFactory:     func() any { return &ActivityDefinitionTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(activityDefinitionSchema),
 }

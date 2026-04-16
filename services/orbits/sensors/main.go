@@ -8,4 +8,6 @@ var SensorDataType = provider.DataSourceType[Sensor, *Sensor]{
 	Schema:             sensorSchema,
 	FilterSchema:       dataSourceFilterSchema,
 	TFModelFactory:     func() any { return &SensorTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(sensorSchema),
 }

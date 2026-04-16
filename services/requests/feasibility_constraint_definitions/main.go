@@ -8,4 +8,6 @@ var FeasibilityConstraintDefinitionDataType = provider.DataSourceType[Feasibilit
 	Schema:             feasibilityConstraintDefinitionSchema,
 	FilterSchema:       feasibilityConstraintDefinitionFilterSchema,
 	TFModelFactory:     func() any { return &FeasibilityConstraintDefinitionTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(feasibilityConstraintDefinitionSchema),
 }

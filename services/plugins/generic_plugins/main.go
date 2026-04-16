@@ -10,4 +10,6 @@ var GenericPluginDataType = provider.DataSourceType[GenericPlugin, *GenericPlugi
 	Schema:             genericPluginSchema,
 	FilterSchema:       dataSourceFilterSchema,
 	TFModelFactory:     func() any { return &GenericPluginTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(genericPluginSchema),
 }

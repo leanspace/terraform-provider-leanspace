@@ -8,4 +8,6 @@ var DashboardDataType = provider.DataSourceType[Dashboard, *Dashboard]{
 	Schema:             dashboardSchema,
 	FilterSchema:       dataSourceFilterSchema,
 	TFModelFactory:     func() any { return &DashboardTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(dashboardSchema),
 }

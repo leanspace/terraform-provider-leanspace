@@ -29,9 +29,17 @@ func (r *GenericResource[T, PT]) Metadata(_ context.Context, req resource.Metada
 func (r *GenericResource[T, PT]) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	attrs, blocks := SplitResourceSchemaBlocks(r.dataType.Schema)
 	resp.Schema = resourceschema.Schema{
+		Version:    r.dataType.SchemaVersion,
 		Attributes: attrs,
 		Blocks:     blocks,
 	}
+}
+
+func (r *GenericResource[T, PT]) UpgradeState(_ context.Context) map[int64]resource.StateUpgrader {
+	if r.dataType.StateUpgraders == nil {
+		return map[int64]resource.StateUpgrader{}
+	}
+	return r.dataType.StateUpgraders
 }
 
 func (r *GenericResource[T, PT]) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
