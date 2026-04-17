@@ -158,7 +158,19 @@ type DataSourceType[T any, PT ParseableModel[T]] struct {
 	SchemaVersion int64
 	// Optional. State upgraders keyed by the source schema version.
 	// Used by GenericResource to migrate state from an older schema version to the current one.
+	// For resources where ordering of list elements matters (Set→List migration), prefer
+	// StateUpgraderFactory which receives the configured client and can re-read from the API.
 	StateUpgraders map[int64]resource.StateUpgrader
+	// Optional. Like StateUpgraders but receives the live *Client so the upgrader can call the
+	// API (e.g. to re-read the resource and obtain elements in the canonical API order).
+	// When both StateUpgraderFactory and StateUpgraders are set, the factory takes precedence.
+	StateUpgraderFactory func(*Client) map[int64]resource.StateUpgrader
+}
+
+// APIClient returns a GenericClient configured for this DataSourceType.
+// Use this inside StateUpgraderFactory implementations to re-read resources from the API.
+func (dataSource DataSourceType[T, PT]) APIClient(client *Client) GenericClient[T, PT] {
+	return dataSource.convert(client)
 }
 
 func (dataSource DataSourceType[T, PT]) convert(client *Client) GenericClient[T, PT] {

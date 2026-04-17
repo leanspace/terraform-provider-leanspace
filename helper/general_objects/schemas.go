@@ -10,7 +10,6 @@ import (
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -55,8 +54,11 @@ func (m serverManagedTimestampModifier) PlanModifyString(_ context.Context, req 
 
 // noOpPlan returns true if plan and state are effectively equal, treating unknown
 // plan values as equal to whatever the state has. Unknown values in the plan arise
-// for Optional+Computed attributes whose UseStateForUnknown plan modifier hasn't
-// executed yet; they do not represent a user-driven change to the resource.
+// for Optional+Computed attributes whose UseStateForUnknown modifier hasn't run yet;
+// they do not represent a user-driven change to the resource.
+// NOTE: do NOT use serverManagedTimestampModifier on resources whose Computed-only
+// attributes depend on recreated external resources — use alwaysUnknownAfterApplyModifier
+// instead to keep phase-1 and phase-2 planning consistent.
 func noOpPlan(plan, state tftypes.Value) bool {
 	if plan.Equal(state) {
 		return true
@@ -125,6 +127,167 @@ func noOpPlan(plan, state tftypes.Value) bool {
 		// Primitive types: plan is known and non-null but not equal to state.
 		return false
 	}
+}
+
+// isComputedOnly returns true when the attribute is Computed but neither Optional nor Required.
+// Such attributes are server-managed; unknown plan values for them arise from UseStateForUnknown
+// running lazily and do NOT indicate a user-driven change.
+func isComputedOnly(attr resourceschema.Attribute) bool {
+	switch a := attr.(type) {
+	case resourceschema.StringAttribute:
+		return a.Computed && !a.Optional && !a.Required
+	case resourceschema.Int64Attribute:
+		return a.Computed && !a.Optional && !a.Required
+	case resourceschema.Float64Attribute:
+		return a.Computed && !a.Optional && !a.Required
+	case resourceschema.BoolAttribute:
+		return a.Computed && !a.Optional && !a.Required
+	case resourceschema.NumberAttribute:
+		return a.Computed && !a.Optional && !a.Required
+	case resourceschema.ListAttribute:
+		return a.Computed && !a.Optional && !a.Required
+	case resourceschema.SetAttribute:
+		return a.Computed && !a.Optional && !a.Required
+	case resourceschema.ListNestedAttribute:
+		return a.Computed && !a.Optional && !a.Required
+	case resourceschema.SetNestedAttribute:
+		return a.Computed && !a.Optional && !a.Required
+	case resourceschema.SingleNestedAttribute:
+		return a.Computed && !a.Optional && !a.Required
+	default:
+		return false
+	}
+}
+
+// getNestedAttrSchema returns the child attribute schema for a nested attribute, or nil for scalars.
+func getNestedAttrSchema(schema map[string]resourceschema.Attribute, key string) map[string]resourceschema.Attribute {
+	if schema == nil {
+		return nil
+	}
+	attr, ok := schema[key]
+	if !ok {
+		return nil
+	}
+	switch a := attr.(type) {
+	case resourceschema.SingleNestedAttribute:
+		return a.Attributes
+	case resourceschema.ListNestedAttribute:
+		return a.NestedObject.Attributes
+	case resourceschema.SetNestedAttribute:
+		return a.NestedObject.Attributes
+	default:
+		return nil
+	}
+}
+
+// noOpPlanSchema is like noOpPlan but schema-aware: when a plan value is unknown,
+// it checks whether the corresponding schema attribute is Computed-only.
+//   - Computed-only unknown → UseStateForUnknown will resolve it → treat as no-op.
+//   - Required/Optional unknown → dependency being recreated → treat as potential change.
+//
+// When schema is nil the function falls back to treating all unknowns as no-ops (safe default).
+func noOpPlanSchema(plan, state tftypes.Value, schema map[string]resourceschema.Attribute) bool {
+	if plan.Equal(state) {
+		return true
+	}
+	if !plan.IsKnown() {
+		return true // whole-value unknown: very unlikely at top level, be conservative
+	}
+	if plan.IsNull() != state.IsNull() {
+		return false
+	}
+	if plan.IsNull() {
+		return true // both null
+	}
+	typ := plan.Type()
+	switch {
+	case typ.Is(tftypes.Object{}):
+		planAttrs := map[string]tftypes.Value{}
+		stateAttrs := map[string]tftypes.Value{}
+		_ = plan.As(&planAttrs)
+		_ = state.As(&stateAttrs)
+		for k, pv := range planAttrs {
+			sv, ok := stateAttrs[k]
+			if !ok {
+				return false
+			}
+			if !pv.IsKnown() {
+				// Unknown plan value: check schema to decide if it's harmless.
+				if schema != nil {
+					if attr, exists := schema[k]; exists && isComputedOnly(attr) {
+						continue // Computed-only — UseStateForUnknown will handle it
+					}
+				}
+				return false // Required/Optional unknown → dependency recreation → potential change
+			}
+			nestedSchema := getNestedAttrSchema(schema, k)
+			if !noOpPlanSchema(pv, sv, nestedSchema) {
+				return false
+			}
+		}
+		return true
+	case typ.Is(tftypes.List{}) || typ.Is(tftypes.Set{}) || typ.Is(tftypes.Tuple{}):
+		planElems := []tftypes.Value{}
+		stateElems := []tftypes.Value{}
+		_ = plan.As(&planElems)
+		_ = state.As(&stateElems)
+		if len(planElems) != len(stateElems) {
+			return false
+		}
+		// schema here is already the element-level schema (passed from the parent Object case)
+		for i := range planElems {
+			if !noOpPlanSchema(planElems[i], stateElems[i], schema) {
+				return false
+			}
+		}
+		return true
+	case typ.Is(tftypes.Map{}):
+		planMap := map[string]tftypes.Value{}
+		stateMap := map[string]tftypes.Value{}
+		_ = plan.As(&planMap)
+		_ = state.As(&stateMap)
+		if len(planMap) != len(stateMap) {
+			return false
+		}
+		for k, pv := range planMap {
+			sv, ok := stateMap[k]
+			if !ok {
+				return false
+			}
+			if !noOpPlanSchema(pv, sv, schema) {
+				return false
+			}
+		}
+		return true
+	default:
+		return false
+	}
+}
+
+// schemaAwareTimestampModifier behaves like serverManagedTimestampModifier but uses
+// noOpPlanSchema to distinguish Computed-only unknowns (harmless UseStateForUnknown)
+// from Required/Optional unknowns (dependency being recreated → potential change).
+// This makes it safe to use on resources like plan_templates where Computed-only
+// sub-attributes reference external resources that may be recreated in the same apply.
+type schemaAwareTimestampModifier struct {
+	schema map[string]resourceschema.Attribute
+}
+
+func (m schemaAwareTimestampModifier) Description(_ context.Context) string {
+	return "Marks the field as (known after apply) when the resource is being updated."
+}
+func (m schemaAwareTimestampModifier) MarkdownDescription(ctx context.Context) string {
+	return m.Description(ctx)
+}
+func (m schemaAwareTimestampModifier) PlanModifyString(_ context.Context, req planmodifier.StringRequest, resp *planmodifier.StringResponse) {
+	if req.StateValue.IsNull() {
+		return // Creating — already unknown
+	}
+	if noOpPlanSchema(req.Plan.Raw, req.State.Raw, m.schema) {
+		resp.PlanValue = req.StateValue
+		return
+	}
+	resp.PlanValue = types.StringUnknown()
 }
 
 func PaginatedListSchemaDS(content, filters map[string]datasourceschema.Attribute) map[string]datasourceschema.Attribute {
@@ -543,10 +706,10 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string, fo
 		Description: "Array only: The maximum number of elements allowed",
 	}
 	attribute["unique"] = resourceschema.BoolAttribute{
-		Optional:      true,
-		Computed:      true,
-		Description:   "Array only: No duplicated elements are allowed",
-		PlanModifiers: []planmodifier.Bool{boolplanmodifier.UseStateForUnknown()},
+		Optional:    true,
+		Computed:    true,
+		Description: "Array only: No duplicated elements are allowed",
+		Default:     booldefault.StaticBool(false),
 	}
 	attribute["constraint"] = resourceschema.SingleNestedAttribute{
 		Optional:    true,
@@ -627,15 +790,63 @@ func ValueAttributeSchema(excludeTypes []string) map[string]resourceschema.Attri
 	}
 }
 
+// ServerManagedTimestampAttribute returns a Computed string attribute whose plan
+// uses serverManagedTimestampModifier. Use this for most resources.
+// For resources whose Computed-only sub-attributes depend on recreated external
+// resources, use AlwaysUnknownAfterApplyAttribute instead.
+func ServerManagedTimestampAttribute(description string) resourceschema.StringAttribute {
+	return resourceschema.StringAttribute{
+		Computed:      true,
+		Description:   description,
+		PlanModifiers: []planmodifier.String{serverManagedTimestampModifier{}},
+	}
+}
+
+// AlwaysUnknownAfterApplyAttribute returns a Computed string attribute that is
+// always shown as (known after apply) in plans after creation. This is the safe
+// choice when serverManagedTimestampModifier would produce inconsistent results
+// between planning phase 1 and phase 2 (e.g. when Computed-only sub-attributes
+// depend on external resources being recreated in the same apply).
+func AlwaysUnknownAfterApplyAttribute(description string) resourceschema.StringAttribute {
+	return resourceschema.StringAttribute{
+		Computed:      true,
+		Description:   description,
+		PlanModifiers: []planmodifier.String{alwaysUnknownAfterApplyModifier{}},
+	}
+}
+
+// alwaysUnknownAfterApplyModifier always marks the field as (known after apply)
+// once the resource exists. Unlike serverManagedTimestampModifier it does not
+// attempt to keep the old state value on no-op plans, which makes it safe to use
+// even when the surrounding plan contains unknowns from recreated dependencies.
+type alwaysUnknownAfterApplyModifier struct{}
+
+func (m alwaysUnknownAfterApplyModifier) Description(_ context.Context) string {
+	return "Always marks the field as (known after apply) after the resource is created."
+}
+func (m alwaysUnknownAfterApplyModifier) MarkdownDescription(ctx context.Context) string {
+	return m.Description(ctx)
+}
+func (m alwaysUnknownAfterApplyModifier) PlanModifyString(_ context.Context, req planmodifier.StringRequest, resp *planmodifier.StringResponse) {
+	if req.StateValue.IsNull() {
+		return // Creating — already unknown
+	}
+	resp.PlanValue = types.StringUnknown()
+}
+
 func ResourceSchemaWith(fields map[string]resourceschema.Attribute) map[string]resourceschema.Attribute {
 	result := make(map[string]resourceschema.Attribute, len(fields)+5)
 	result["id"] = resourceschema.StringAttribute{Computed: true, PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()}}
 	result["created_at"] = resourceschema.StringAttribute{Computed: true, Description: "When it was created", PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()}}
 	result["created_by"] = resourceschema.StringAttribute{Computed: true, Description: "Who created it", PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()}}
-	result["last_modified_at"] = resourceschema.StringAttribute{Computed: true, Description: "When it was last modified", PlanModifiers: []planmodifier.String{serverManagedTimestampModifier{}}}
-	result["last_modified_by"] = resourceschema.StringAttribute{Computed: true, Description: "Who modified it the last", PlanModifiers: []planmodifier.String{serverManagedTimestampModifier{}}}
 	for k, v := range fields {
 		result[k] = v
 	}
+	// Use a schema-aware modifier that holds a reference to the (now-fully-populated) result map.
+	// This lets it distinguish Computed-only unknowns (UseStateForUnknown, harmless) from
+	// Required/Optional unknowns (dependency recreation, potential change).
+	mod := schemaAwareTimestampModifier{schema: result}
+	result["last_modified_at"] = resourceschema.StringAttribute{Computed: true, Description: "When it was last modified", PlanModifiers: []planmodifier.String{mod}}
+	result["last_modified_by"] = resourceschema.StringAttribute{Computed: true, Description: "Who modified it the last", PlanModifiers: []planmodifier.String{mod}}
 	return result
 }

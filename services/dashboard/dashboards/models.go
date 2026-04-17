@@ -11,7 +11,7 @@ type Dashboard struct {
 	Description     *string                    `json:"description,omitempty"`
 	NodeIds         []string                   `json:"nodeIds"`
 	WidgetInfo      []WidgetInfo               `json:"widgetInfo,omitempty"`
-	Widgets         []DashboardWidget          `json:"widgets"`
+	Widgets         []DashboardWidget          `json:"widgets,omitempty"`
 	Tags            []general_objects.KeyValue `json:"tags,omitempty"`
 	TimestampFormat *string                    `json:"timestampFormat,omitempty"`
 }

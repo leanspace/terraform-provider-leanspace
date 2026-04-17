@@ -36,6 +36,9 @@ func (r *GenericResource[T, PT]) Schema(_ context.Context, _ resource.SchemaRequ
 }
 
 func (r *GenericResource[T, PT]) UpgradeState(_ context.Context) map[int64]resource.StateUpgrader {
+	if r.dataType.StateUpgraderFactory != nil {
+		return r.dataType.StateUpgraderFactory(r.client)
+	}
 	if r.dataType.StateUpgraders == nil {
 		return map[int64]resource.StateUpgrader{}
 	}
