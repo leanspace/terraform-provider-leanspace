@@ -1,7 +1,7 @@
 data "leanspace_members" "all" {
   filters {
     team_ids = var.team_ids
-    states = ["ACTIVE"]
+    states   = ["ACTIVE"]
     ids      = []
     query    = ""
     page     = 0

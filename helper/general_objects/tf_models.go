@@ -249,8 +249,8 @@ func ArrayConstraintToTF(c *ArrayConstraint[any]) *ArrayConstraintTF {
 		return nil
 	}
 	tf := &ArrayConstraintTF{
-		Type:     helper.TFStringValue(c.Type),
-		Required: helper.TFBoolPtrValue(c.Required),
+		Type:      helper.TFStringValue(c.Type),
+		Required:  helper.TFBoolPtrValue(c.Required),
 		MinLength: helper.TFIntPtrValue(c.MinLength),
 		MaxLength: helper.TFIntPtrValue(c.MaxLength),
 		Pattern:   helper.TFStringPtrValue(c.Pattern),
@@ -325,8 +325,8 @@ type DefinitionAttributeTF struct {
 
 func DefinitionAttributeToTF(a *DefinitionAttribute[any]) DefinitionAttributeTF {
 	tf := DefinitionAttributeTF{
-		Type:     helper.TFStringValue(a.Type),
-		Required: helper.TFBoolPtrValue(a.Required),
+		Type:      helper.TFStringValue(a.Type),
+		Required:  helper.TFBoolPtrValue(a.Required),
 		MinLength: helper.TFIntPtrValue(a.MinLength),
 		MaxLength: helper.TFIntPtrValue(a.MaxLength),
 		Pattern:   helper.TFStringPtrValue(a.Pattern),
@@ -338,9 +338,9 @@ func DefinitionAttributeToTF(a *DefinitionAttribute[any]) DefinitionAttributeTF 
 		Before:    helper.TFStringPtrValue(a.Before),
 		After:     helper.TFStringPtrValue(a.After),
 		Fields:    FieldsDefToTF(a.Fields),
-		MinSize: helper.TFIntPtrValue(a.MinSize),
-		MaxSize: helper.TFIntPtrValue(a.MaxSize),
-		Unique:  helper.TFBoolValue(a.Unique),
+		MinSize:   helper.TFIntPtrValue(a.MinSize),
+		MaxSize:   helper.TFIntPtrValue(a.MaxSize),
+		Unique:    helper.TFBoolValue(a.Unique),
 	}
 	if any(a.DefaultValue) != nil {
 		switch v := a.DefaultValue.(type) {

@@ -79,7 +79,7 @@ func (tf *EventsDefinitionTF) ToAPI() interface{} {
 		Name:        helper.FromTFString(tf.Name),
 		Source:      helper.FromTFString(tf.Source),
 		State:       helper.FromTFString(tf.State),
-		Description:  helper.FromTFStringPtr(tf.Description),
+		Description: helper.FromTFStringPtr(tf.Description),
 		Criticality: helper.FromTFStringPtr(tf.Criticality),
 		Rules:       rules,
 		Tags:        general_objects.KeyValuesFromTF(tf.Tags),

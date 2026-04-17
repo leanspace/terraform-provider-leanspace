@@ -8,10 +8,10 @@ type Processor struct {
 	general_objects.AuditModel
 	Name        string  `json:"name"`
 	Description *string `json:"description,omitempty"`
-	Version     string `json:"version"`
-	Type        string `json:"type"`
-	FilePath    string `json:"filePath"`
-	FileSha     string `json:"fileSha"`
+	Version     string  `json:"version"`
+	Type        string  `json:"type"`
+	FilePath    string  `json:"filePath"`
+	FileSha     string  `json:"fileSha"`
 }
 
 type ProcessorUrl struct {

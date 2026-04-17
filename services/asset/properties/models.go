@@ -25,7 +25,7 @@ type PropertyAttribute[T any] struct {
 	Max       *float64 `json:"max,omitempty"`
 	Scale     *int     `json:"scale,omitempty"`
 	Precision *int     `json:"precision,omitempty"`
-	UnitId    *string `json:"unitId,omitempty"`
+	UnitId    *string  `json:"unitId,omitempty"`
 
 	// Text only
 	MinLength *int    `json:"minLength,omitempty"`

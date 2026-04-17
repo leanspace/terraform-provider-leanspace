@@ -96,8 +96,8 @@ func (tf *CommandDefinitionTF) ToAPI() any {
 		AuditModel:  general_objects.AuditModelFromTF(tf.AuditModelTF),
 		NodeId:      helper.FromTFString(tf.NodeId),
 		Name:        helper.FromTFString(tf.Name),
-		Description:  helper.FromTFStringPtr(tf.Description),
-		Identifier:   helper.FromTFStringPtr(tf.Identifier),
+		Description: helper.FromTFStringPtr(tf.Description),
+		Identifier:  helper.FromTFStringPtr(tf.Identifier),
 		Metadata:    metadata,
 		Arguments:   arguments,
 	}
