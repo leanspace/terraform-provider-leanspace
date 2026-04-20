@@ -64,6 +64,49 @@ func UnwrapSingleNestedUpgraderMap(schema map[string]resourceschema.Attribute) m
 	}
 }
 
+// StateUpgrader is a re-export of resource.StateUpgrader so callers in service
+// packages can build upgrader maps without importing the resource package.
+type StateUpgrader = resource.StateUpgrader
+
+// UnwrapSingleNestedStateUpgraderWithTransforms is like UnwrapSingleNestedStateUpgrader
+// but additionally applies zero or more raw-map transform functions after the standard
+// unwrap/strip pass.  Each transform receives the JSON-decoded state map and may
+// mutate it in place (e.g. to canonicalise list ordering).
+func UnwrapSingleNestedStateUpgraderWithTransforms(schema map[string]resourceschema.Attribute, transforms ...func(map[string]any)) resource.StateUpgrader {
+	return resource.StateUpgrader{
+		StateUpgrader: func(ctx context.Context, req resource.UpgradeStateRequest, resp *resource.UpgradeStateResponse) {
+			var raw map[string]any
+			if err := json.Unmarshal(req.RawState.JSON, &raw); err != nil {
+				resp.Diagnostics.AddError("State upgrade: failed to parse v0 state JSON", err.Error())
+				return
+			}
+
+			attrs, blocks := SplitResourceSchemaBlocks(schema)
+			processStateMap(raw, attrs, blocks)
+
+			for _, fn := range transforms {
+				fn(raw)
+			}
+
+			transformed, err := json.Marshal(raw)
+			if err != nil {
+				resp.Diagnostics.AddError("State upgrade: failed to re-marshal v1 state JSON", err.Error())
+				return
+			}
+
+			fullSchema := resourceschema.Schema{Attributes: attrs, Blocks: blocks}
+			dv := tfprotov6.DynamicValue{JSON: transformed}
+			val, err := dv.Unmarshal(fullSchema.Type().TerraformType(ctx))
+			if err != nil {
+				resp.Diagnostics.AddError("State upgrade: failed to decode transformed JSON into schema type", err.Error())
+				return
+			}
+
+			resp.State.Raw = val
+		},
+	}
+}
+
 // processStateMap performs both operations in a single tree walk:
 //  1. Strips state keys absent from the v1 schema (attrs + blocks) so that
 //     DynamicValue.Unmarshal does not fail on unknown fields.

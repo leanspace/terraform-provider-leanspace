@@ -1,7 +1,6 @@
 package widgets
 
 import (
-	"sort"
 	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -67,17 +66,6 @@ func (x *Widget) ToTF() any {
 				Value:    types.StringValue(f.Value),
 			}
 		}
-		// Sort filters canonically so list order is stable regardless of API return order.
-		sort.Slice(filters, func(a, b int) bool {
-			fa, fb := filters[a], filters[b]
-			if fa.FilterBy != fb.FilterBy {
-				return fa.FilterBy.ValueString() < fb.FilterBy.ValueString()
-			}
-			if fa.Operator != fb.Operator {
-				return fa.Operator.ValueString() < fb.Operator.ValueString()
-			}
-			return fa.Value.ValueString() < fb.Value.ValueString()
-		})
 		series[i] = SeriesTF{
 			ID:          types.StringValue(s.ID),
 			Name:        helper.TFStringPtrValue(s.Name),
