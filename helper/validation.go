@@ -668,7 +668,7 @@ func (v requiredStringIfParentConfigured) ValidateString(ctx context.Context, re
 	resp.Diagnostics.AddAttributeError(
 		req.Path,
 		"Missing Required Value",
-		"This attribute is required when the parent block is configured.",
+		fmt.Sprintf("Attribute %q is required when the parent block %q is configured.", req.Path, parentPath),
 	)
 }
 
@@ -707,7 +707,7 @@ func (v requiredFloat64IfParentConfigured) ValidateFloat64(ctx context.Context, 
 	resp.Diagnostics.AddAttributeError(
 		req.Path,
 		"Missing Required Value",
-		"This attribute is required when the parent block is configured.",
+		fmt.Sprintf("Attribute %q is required when the parent block %q is configured.", req.Path, parentPath),
 	)
 }
 
