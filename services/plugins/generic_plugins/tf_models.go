@@ -23,14 +23,14 @@ type GenericPluginTF struct {
 func (x *GenericPlugin) ToTF() any {
 	return &GenericPluginTF{
 		AuditModelTF:   general_objects.AuditModelToTF(&x.AuditModel),
-		Name:           helper.TFStringValue(x.Name),
+		Name:           types.StringValue(x.Name),
 		Description:    helper.TFStringPtrValue(x.Description),
-		Type:           helper.TFStringValue(x.Type),
-		Language:       helper.TFStringValue(x.Language),
+		Type:           types.StringValue(x.Type),
+		Language:       types.StringValue(x.Language),
 		SourceCodeLink: sourceCodeLinkToObject(&x.SourceCodeLink),
-		Status:         helper.TFStringValue(x.Status),
-		FilePath:       helper.TFStringValue(x.FilePath),
-		FileSha:        helper.TFStringValue(x.FileSha),
+		Status:         types.StringValue(x.Status),
+		FilePath:       types.StringValue(x.FilePath),
+		FileSha:        types.StringValue(x.FileSha),
 	}
 }
 
@@ -59,9 +59,9 @@ func sourceCodeLinkToObject(x *SourceCodeLink) types.Object {
 		return types.ObjectNull(sourceCodeLinkAttrTypes)
 	}
 	return types.ObjectValueMust(sourceCodeLinkAttrTypes, map[string]attr.Value{
-		"expiration_time": helper.TFStringValue(x.ExpirationTime),
-		"source_code_id":  helper.TFStringValue(x.SourceCodeId),
-		"url":             helper.TFStringValue(x.Url),
+		"expiration_time": types.StringValue(x.ExpirationTime),
+		"source_code_id":  types.StringValue(x.SourceCodeId),
+		"url":             types.StringValue(x.Url),
 	})
 }
 

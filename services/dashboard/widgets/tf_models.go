@@ -1,6 +1,7 @@
 package widgets
 
 import (
+	"sort"
 	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -61,16 +62,27 @@ func (x *Widget) ToTF() any {
 		filters := make([]FilterTF, len(s.Filters))
 		for j, f := range s.Filters {
 			filters[j] = FilterTF{
-				FilterBy: helper.TFStringValue(f.FilterBy),
-				Operator: helper.TFStringValue(f.Operator),
-				Value:    helper.TFStringValue(f.Value),
+				FilterBy: types.StringValue(f.FilterBy),
+				Operator: types.StringValue(f.Operator),
+				Value:    types.StringValue(f.Value),
 			}
 		}
+		// Sort filters canonically so list order is stable regardless of API return order.
+		sort.Slice(filters, func(a, b int) bool {
+			fa, fb := filters[a], filters[b]
+			if fa.FilterBy != fb.FilterBy {
+				return fa.FilterBy.ValueString() < fb.FilterBy.ValueString()
+			}
+			if fa.Operator != fb.Operator {
+				return fa.Operator.ValueString() < fb.Operator.ValueString()
+			}
+			return fa.Value.ValueString() < fb.Value.ValueString()
+		})
 		series[i] = SeriesTF{
-			ID:          helper.TFStringValue(s.ID),
+			ID:          types.StringValue(s.ID),
 			Name:        helper.TFStringPtrValue(s.Name),
-			Datasource:  helper.TFStringValue(s.Datasource),
-			Aggregation: helper.TFStringValue(s.Aggregation),
+			Datasource:  types.StringValue(s.Datasource),
+			Aggregation: types.StringValue(s.Aggregation),
 			Filters:     filters,
 		}
 	}
@@ -92,12 +104,12 @@ func (x *Widget) ToTF() any {
 		for j, t := range x.Metadata.Thresholds {
 			var from, to types.String
 			if t.From != nil {
-				from = helper.TFStringValue(strconv.FormatFloat(*t.From, 'g', -1, 64))
+				from = types.StringValue(strconv.FormatFloat(*t.From, 'g', -1, 64))
 			}
 			if t.To != nil {
-				to = helper.TFStringValue(strconv.FormatFloat(*t.To, 'g', -1, 64))
+				to = types.StringValue(strconv.FormatFloat(*t.To, 'g', -1, 64))
 			}
-			thresholds[j] = ThresholdTF{From: from, To: to, Color: helper.TFStringValue(t.Color)}
+			thresholds[j] = ThresholdTF{From: from, To: to, Color: types.StringValue(t.Color)}
 		}
 		md.Thresholds = thresholds
 
@@ -110,8 +122,8 @@ func (x *Widget) ToTF() any {
 	dashElems := make([]attr.Value, len(x.Dashboards))
 	for i, d := range x.Dashboards {
 		dObj, _ := types.ObjectValue(widgetDashboardInfoAttrTypes, map[string]attr.Value{
-			"id":   helper.TFStringValue(d.ID),
-			"name": helper.TFStringValue(d.Name),
+			"id":   types.StringValue(d.ID),
+			"name": types.StringValue(d.Name),
 		})
 		dashElems[i] = dObj
 	}
@@ -119,12 +131,12 @@ func (x *Widget) ToTF() any {
 
 	return &WidgetTF{
 		AuditModelTF:         general_objects.AuditModelToTF(&x.AuditModel),
-		Name:                 helper.TFStringValue(x.Name),
+		Name:                 types.StringValue(x.Name),
 		Description:          helper.TFStringPtrValue(x.Description),
-		Type:                 helper.TFStringValue(x.Type),
-		Granularity:          helper.TFStringValue(x.Granularity),
-		QueryTimeDimension:   helper.TFStringValue(x.QueryTimeDimension),
-		DisplayTimeDimension: helper.TFStringValue(x.DisplayTimeDimension),
+		Type:                 types.StringValue(x.Type),
+		Granularity:          types.StringValue(x.Granularity),
+		QueryTimeDimension:   types.StringValue(x.QueryTimeDimension),
+		DisplayTimeDimension: types.StringValue(x.DisplayTimeDimension),
 		Series:               series,
 		Metadata:             metadata,
 		Dashboards:           dashboards,

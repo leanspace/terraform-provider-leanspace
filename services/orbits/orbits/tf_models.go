@@ -56,8 +56,8 @@ type OrbitTF struct {
 func (x *Orbit) ToTF() any {
 	return &OrbitTF{
 		AuditModelTF:           general_objects.AuditModelToTF(&x.AuditModel),
-		SatelliteId:            helper.TFStringValue(x.SatelliteId),
-		Name:                   helper.TFStringValue(x.Name),
+		SatelliteId:            types.StringValue(x.SatelliteId),
+		Name:                   types.StringValue(x.Name),
 		IdealOrbit:             idealOrbitToTF(x.IdealOrbit),
 		GpsConfiguration:       gpsConfigurationToTF(x.GpsConfiguration),
 		SatelliteConfiguration: satelliteConfigurationToTF(x.SatelliteConfiguration),

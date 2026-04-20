@@ -4,10 +4,6 @@ import "github.com/hashicorp/terraform-plugin-framework/types"
 
 // Go → TF (API model field to TF model field)
 
-func TFStringValue(s string) types.String {
-	return types.StringValue(s)
-}
-
 func TFStringPtrValue(s *string) types.String {
 	if s == nil {
 		return types.StringNull()
@@ -15,16 +11,8 @@ func TFStringPtrValue(s *string) types.String {
 	return types.StringValue(*s)
 }
 
-func TFBoolValue(b bool) types.Bool {
-	return types.BoolValue(b)
-}
-
 func TFInt64Value(i int) types.Int64 {
 	return types.Int64Value(int64(i))
-}
-
-func TFFloat64Value(f float64) types.Float64 {
-	return types.Float64Value(f)
 }
 
 func TFFloat64PtrValue(f *float64) types.Float64 {

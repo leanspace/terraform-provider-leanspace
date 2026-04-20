@@ -38,8 +38,8 @@ type SensorTF struct {
 func (x *Sensor) ToTF() any {
 	return &SensorTF{
 		AuditModelTF:  general_objects.AuditModelToTF(&x.AuditModel),
-		SatelliteID:   helper.TFStringValue(x.SatelliteID),
-		Name:          helper.TFStringValue(x.Name),
+		SatelliteID:   types.StringValue(x.SatelliteID),
+		Name:          types.StringValue(x.Name),
 		ApertureShape: apertureShapeToTF(x.ApertureShape),
 		Tags:          general_objects.KeyValuesToTF(x.Tags),
 	}
@@ -134,7 +134,7 @@ func apertureShapeToTF(x *ApertureShape) *ApertureShapeTF {
 		return nil
 	}
 	return &ApertureShapeTF{
-		Type:                        helper.TFStringValue(x.Type),
+		Type:                        types.StringValue(x.Type),
 		ApertureCenter:              vector3DToTF(x.ApertureCenter),
 		HalfApertureAngle:           halfApertureAngleToTF(x.HalfApertureAngle),
 		FirstAxisVector:             vector3DToTF(x.FirstAxisVector),

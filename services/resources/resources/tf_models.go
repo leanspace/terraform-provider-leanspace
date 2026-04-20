@@ -31,12 +31,12 @@ type ResourceTF struct {
 func (x *Resource) ToTF() any {
 	return &ResourceTF{
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
-		AssetId:      helper.TFStringValue(x.AssetId),
-		UnitId:       helper.TFStringValue(x.UnitId),
+		AssetId:      types.StringValue(x.AssetId),
+		UnitId:       types.StringValue(x.UnitId),
 		MetricId:     helper.TFStringPtrValue(x.MetricId),
-		Name:         helper.TFStringValue(x.Name),
+		Name:         types.StringValue(x.Name),
 		Description:  helper.TFStringPtrValue(x.Description),
-		DefaultLevel: helper.TFFloat64Value(x.DefaultLevel),
+		DefaultLevel: types.Float64Value(x.DefaultLevel),
 		LowerLimit:   helper.TFFloat64PtrValue(x.LowerLimit),
 		UpperLimit:   helper.TFFloat64PtrValue(x.UpperLimit),
 		Thresholds:   resourceThresholdSliceToTF(x.Thresholds),

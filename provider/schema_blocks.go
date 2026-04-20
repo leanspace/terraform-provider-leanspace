@@ -72,37 +72,43 @@ func ResourceSchemaToDataSource(attrs map[string]resourceschema.Attribute) map[s
 func resourceAttrToDS(a resourceschema.Attribute) datasourceschema.Attribute {
 	switch v := a.(type) {
 	case resourceschema.StringAttribute:
-		return datasourceschema.StringAttribute{Computed: true}
+		return datasourceschema.StringAttribute{Computed: true, Description: v.Description, MarkdownDescription: v.MarkdownDescription}
 	case resourceschema.BoolAttribute:
-		return datasourceschema.BoolAttribute{Computed: true}
+		return datasourceschema.BoolAttribute{Computed: true, Description: v.Description, MarkdownDescription: v.MarkdownDescription}
 	case resourceschema.Int64Attribute:
-		return datasourceschema.Int64Attribute{Computed: true}
+		return datasourceschema.Int64Attribute{Computed: true, Description: v.Description, MarkdownDescription: v.MarkdownDescription}
 	case resourceschema.Float64Attribute:
-		return datasourceschema.Float64Attribute{Computed: true}
+		return datasourceschema.Float64Attribute{Computed: true, Description: v.Description, MarkdownDescription: v.MarkdownDescription}
 	case resourceschema.ListAttribute:
-		return datasourceschema.ListAttribute{Computed: true, ElementType: v.ElementType}
+		return datasourceschema.ListAttribute{Computed: true, ElementType: v.ElementType, Description: v.Description, MarkdownDescription: v.MarkdownDescription}
 	case resourceschema.SetAttribute:
-		return datasourceschema.SetAttribute{Computed: true, ElementType: v.ElementType}
+		return datasourceschema.SetAttribute{Computed: true, ElementType: v.ElementType, Description: v.Description, MarkdownDescription: v.MarkdownDescription}
 	case resourceschema.MapAttribute:
-		return datasourceschema.MapAttribute{Computed: true, ElementType: v.ElementType}
+		return datasourceschema.MapAttribute{Computed: true, ElementType: v.ElementType, Description: v.Description, MarkdownDescription: v.MarkdownDescription}
 	case resourceschema.ListNestedAttribute:
 		return datasourceschema.ListNestedAttribute{
-			Computed: true,
+			Computed:            true,
+			Description:         v.Description,
+			MarkdownDescription: v.MarkdownDescription,
 			NestedObject: datasourceschema.NestedAttributeObject{
 				Attributes: ResourceSchemaToDataSource(v.NestedObject.Attributes),
 			},
 		}
 	case resourceschema.SetNestedAttribute:
 		return datasourceschema.SetNestedAttribute{
-			Computed: true,
+			Computed:            true,
+			Description:         v.Description,
+			MarkdownDescription: v.MarkdownDescription,
 			NestedObject: datasourceschema.NestedAttributeObject{
 				Attributes: ResourceSchemaToDataSource(v.NestedObject.Attributes),
 			},
 		}
 	case resourceschema.SingleNestedAttribute:
 		return datasourceschema.SingleNestedAttribute{
-			Computed:   true,
-			Attributes: ResourceSchemaToDataSource(v.Attributes),
+			Computed:            true,
+			Description:         v.Description,
+			MarkdownDescription: v.MarkdownDescription,
+			Attributes:          ResourceSchemaToDataSource(v.Attributes),
 		}
 	default:
 		return datasourceschema.StringAttribute{Computed: true}

@@ -26,9 +26,9 @@ type ResourceFunctionTF struct {
 func (x *ResourceFunction) ToTF() any {
 	return &ResourceFunctionTF{
 		AuditModelTF:         general_objects.AuditModelToTF(&x.AuditModel),
-		ActivityDefinitionId: helper.TFStringValue(x.ActivityDefinitionId),
-		ResourceId:           helper.TFStringValue(x.ResourceId),
-		Name:                 helper.TFStringValue(x.Name),
+		ActivityDefinitionId: types.StringValue(x.ActivityDefinitionId),
+		ResourceId:           types.StringValue(x.ResourceId),
+		Name:                 types.StringValue(x.Name),
 		Formula:              resourceFunctionFormulaToTF(x.Formula),
 	}
 }

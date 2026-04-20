@@ -62,7 +62,7 @@ func (x *PlanTemplate) ToTF() any {
 		for j, arg := range ac.Arguments {
 			attrVal := general_objects.ValueAttributeToTF(&arg.Attributes)
 			arguments[j] = ArgumentTF{
-				Name:       helper.TFStringValue(arg.Name),
+				Name:       types.StringValue(arg.Name),
 				Attributes: []general_objects.ValueAttributeTF{attrVal},
 			}
 		}
@@ -72,7 +72,7 @@ func (x *PlanTemplate) ToTF() any {
 			var formulaSlice []ResourceFunctionFormulaTF
 			if rf.Formula != nil {
 				formulaSlice = []ResourceFunctionFormulaTF{{
-					Type:      helper.TFStringValue(rf.Formula.Type),
+					Type:      types.StringValue(rf.Formula.Type),
 					Amplitude: helper.TFFloat64PtrValue(rf.Formula.Amplitude),
 					Constant:  helper.TFFloat64PtrValue(rf.Formula.Constant),
 					Rate:      helper.TFFloat64PtrValue(rf.Formula.Rate),
@@ -88,15 +88,15 @@ func (x *PlanTemplate) ToTF() any {
 		defLinkReasonElems := make([]attr.Value, len(ac.InvalidDefinitionLinkReasons))
 		for j, r := range ac.InvalidDefinitionLinkReasons {
 			rObj, _ := types.ObjectValue(planReasonAttrTypes, map[string]attr.Value{
-				"code":    helper.TFStringValue(r.Code),
-				"message": helper.TFStringValue(r.Message),
+				"code":    types.StringValue(r.Code),
+				"message": types.StringValue(r.Message),
 			})
 			defLinkReasonElems[j] = rObj
 		}
 		defLinkReasons := types.ListValueMust(types.ObjectType{AttrTypes: planReasonAttrTypes}, defLinkReasonElems)
 
 		activityConfigs[i] = ActivityConfigResultTF{
-			ActivityDefinitionId:         helper.TFStringValue(ac.ActivityDefinitionId),
+			ActivityDefinitionId:         types.StringValue(ac.ActivityDefinitionId),
 			DelayReferenceOnPredecessor:  helper.TFStringPtrValue(ac.DelayReferenceOnPredecessor),
 			Position:                     helper.TFInt64Value(ac.Position),
 			DelayInSeconds:               helper.TFInt64Value(ac.DelayInSeconds),
@@ -113,8 +113,8 @@ func (x *PlanTemplate) ToTF() any {
 	ptReasonElems := make([]attr.Value, len(x.InvalidPlanTemplateReasons))
 	for i, r := range x.InvalidPlanTemplateReasons {
 		rObj, _ := types.ObjectValue(planReasonAttrTypes, map[string]attr.Value{
-			"code":    helper.TFStringValue(r.Code),
-			"message": helper.TFStringValue(r.Message),
+			"code":    types.StringValue(r.Code),
+			"message": types.StringValue(r.Message),
 		})
 		ptReasonElems[i] = rObj
 	}
@@ -122,10 +122,10 @@ func (x *PlanTemplate) ToTF() any {
 
 	return &PlanTemplateTF{
 		AuditModelTF:               general_objects.AuditModelToTF(&x.AuditModel),
-		AssetId:                    helper.TFStringValue(x.AssetId),
-		Name:                       helper.TFStringValue(x.Name),
+		AssetId:                    types.StringValue(x.AssetId),
+		Name:                       types.StringValue(x.Name),
 		Description:                helper.TFStringPtrValue(x.Description),
-		IntegrityStatus:            helper.TFStringValue(x.IntegrityStatus),
+		IntegrityStatus:            types.StringValue(x.IntegrityStatus),
 		ActivityConfigs:            activityConfigs,
 		EstimatedDurationInSeconds: helper.TFInt64Value(x.EstimatedDurationInSeconds),
 		InvalidPlanTemplateReasons: invalidPlanTemplateReasons,

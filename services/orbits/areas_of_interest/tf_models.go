@@ -31,7 +31,7 @@ type AreaOfInterestTF struct {
 func (x *AreaOfInterest) ToTF() any {
 	return &AreaOfInterestTF{
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
-		Name:         helper.TFStringValue(x.Name),
+		Name:         types.StringValue(x.Name),
 		Shape:        areaOfInterestShapeToTF(x.Shape),
 		Tags:         general_objects.KeyValuesToTF(x.Tags),
 	}
@@ -88,7 +88,7 @@ func areaOfInterestShapeToTF(x *AreaOfInterestShape) *AreaOfInterestShapeTF {
 		return nil
 	}
 	return &AreaOfInterestShapeTF{
-		Type:                helper.TFStringValue(x.Type),
+		Type:                types.StringValue(x.Type),
 		Geolocation:         geoPointToTF(x.Geolocation),
 		CenterGeolocation:   geoPointToTF(x.CenterGeolocation),
 		RadiusInMeters:      helper.TFFloat64PtrValue(x.RadiusInMeters),

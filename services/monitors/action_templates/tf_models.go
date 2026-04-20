@@ -19,12 +19,12 @@ type ActionTemplateTF struct {
 func (x *ActionTemplate) ToTF() any {
 	headers := make(map[string]types.String)
 	for k, v := range x.Headers {
-		headers[k] = helper.TFStringValue(v)
+		headers[k] = types.StringValue(v)
 	}
 	return &ActionTemplateTF{
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
-		Name:         helper.TFStringValue(x.Name),
-		Type:         helper.TFStringValue(x.Type),
+		Name:         types.StringValue(x.Name),
+		Type:         types.StringValue(x.Type),
 		URL:          helper.TFStringPtrValue(x.URL),
 		Payload:      helper.TFStringPtrValue(x.Payload),
 		Content:      helper.TFStringPtrValue(x.Content),

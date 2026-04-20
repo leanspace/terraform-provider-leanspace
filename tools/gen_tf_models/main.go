@@ -812,11 +812,11 @@ func toTFExpr(fi fieldInfo, src string) string {
 	ref := src + "." + fi.goName
 	switch fi.kind {
 	case kindString:
-		return "helper.TFStringValue(" + ref + ")"
+		return "types.StringValue(" + ref + ")"
 	case kindPtrString:
 		return "helper.TFStringPtrValue(" + ref + ")"
 	case kindBool:
-		return "helper.TFBoolValue(" + ref + ")"
+		return "types.BoolValue(" + ref + ")"
 	case kindPtrBool:
 		return "helper.TFBoolPtrValue(" + ref + ")"
 	case kindInt:
@@ -824,7 +824,7 @@ func toTFExpr(fi fieldInfo, src string) string {
 	case kindPtrInt:
 		return "helper.TFIntPtrValue(" + ref + ")"
 	case kindFloat64:
-		return "helper.TFFloat64Value(" + ref + ")"
+		return "types.Float64Value(" + ref + ")"
 	case kindPtrFloat64:
 		return "helper.TFFloat64PtrValue(" + ref + ")"
 	case kindStrings:

@@ -42,7 +42,7 @@ type MetricAttributeTF struct {
 
 func metricAttributeToTF(a *general_objects.DefinitionAttribute[any]) *MetricAttributeTF {
 	tf := &MetricAttributeTF{
-		Type:      helper.TFStringValue(a.Type),
+		Type:      types.StringValue(a.Type),
 		MinLength: helper.TFIntPtrValue(a.MinLength),
 		MaxLength: helper.TFIntPtrValue(a.MaxLength),
 		Pattern:   helper.TFStringPtrValue(a.Pattern),
@@ -56,12 +56,12 @@ func metricAttributeToTF(a *general_objects.DefinitionAttribute[any]) *MetricAtt
 		Fields:    general_objects.FieldsDefToTF(a.Fields),
 		MinSize:   helper.TFIntPtrValue(a.MinSize),
 		MaxSize:   helper.TFIntPtrValue(a.MaxSize),
-		Unique:    helper.TFBoolValue(a.Unique),
+		Unique:    types.BoolValue(a.Unique),
 	}
 	if a.Options != nil {
 		tf.Options = make(map[string]types.String, len(*a.Options))
 		for k, v := range *a.Options {
-			tf.Options[k] = helper.TFStringValue(fmt.Sprint(v))
+			tf.Options[k] = types.StringValue(fmt.Sprint(v))
 		}
 	}
 	tf.Constraint = general_objects.ArrayConstraintToTF(&a.Constraint)
@@ -111,9 +111,9 @@ func (x *Metric[T]) ToTF() interface{} {
 	}
 	return &MetricTF{
 		AuditModelTF:    general_objects.AuditModelToTF(&x.AuditModel),
-		Name:            helper.TFStringValue(x.Name),
+		Name:            types.StringValue(x.Name),
 		Description:     helper.TFStringPtrValue(x.Description),
-		NodeId:          helper.TFStringValue(x.NodeId),
+		NodeId:          types.StringValue(x.NodeId),
 		AncestorAssetId: helper.TFStringPtrValue(x.AncestorAssetId),
 		Tags:            general_objects.KeyValuesToTF(x.Tags),
 		Attributes:      metricAttributeToTF(&genAttr),

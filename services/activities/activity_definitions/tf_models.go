@@ -56,7 +56,7 @@ func (x *ActivityDefinition) ToTF() any {
 	for i, m := range x.Metadata {
 		attr := general_objects.ValueAttributeToTF(&m.Attributes)
 		metadata[i] = MetadataTF{
-			Name:        helper.TFStringValue(m.Name),
+			Name:        types.StringValue(m.Name),
 			Description: helper.TFStringPtrValue(m.Description),
 			Attributes:  &attr,
 		}
@@ -66,7 +66,7 @@ func (x *ActivityDefinition) ToTF() any {
 	for i, a := range x.ArgumentDefinitions {
 		attr := general_objects.DefinitionAttributeToTF(&a.Attributes)
 		argDefs[i] = ArgumentDefinitionTF{
-			Name:        helper.TFStringValue(a.Name),
+			Name:        types.StringValue(a.Name),
 			Description: helper.TFStringPtrValue(a.Description),
 			Attributes:  &attr,
 		}
@@ -77,21 +77,21 @@ func (x *ActivityDefinition) ToTF() any {
 		argMappings := make([]ArgumentMappingTF, len(cm.ArgumentMappings))
 		for j, am := range cm.ArgumentMappings {
 			argMappings[j] = ArgumentMappingTF{
-				ActivityDefinitionArgumentName: helper.TFStringValue(am.ActivityDefinitionArgumentName),
-				CommandDefinitionArgumentName:  helper.TFStringValue(am.CommandDefinitionArgumentName),
+				ActivityDefinitionArgumentName: types.StringValue(am.ActivityDefinitionArgumentName),
+				CommandDefinitionArgumentName:  types.StringValue(am.CommandDefinitionArgumentName),
 				MappingStatus:                  helper.TFStringPtrValue(am.MappingStatus),
 			}
 		}
 		metaMappings := make([]MetadataMappingTF, len(cm.MetadataMappings))
 		for j, mm := range cm.MetadataMappings {
 			metaMappings[j] = MetadataMappingTF{
-				ActivityDefinitionMetadataName: helper.TFStringValue(mm.ActivityDefinitionMetadataName),
-				CommandDefinitionArgumentName:  helper.TFStringValue(mm.CommandDefinitionArgumentName),
+				ActivityDefinitionMetadataName: types.StringValue(mm.ActivityDefinitionMetadataName),
+				CommandDefinitionArgumentName:  types.StringValue(mm.CommandDefinitionArgumentName),
 				MappingStatus:                  helper.TFStringPtrValue(mm.MappingStatus),
 			}
 		}
 		cmdMappings[i] = CommandMappingTF{
-			CommandDefinitionId: helper.TFStringValue(cm.CommandDefinitionId),
+			CommandDefinitionId: types.StringValue(cm.CommandDefinitionId),
 			Position:            helper.TFInt64Value(cm.Position),
 			DelayInMilliseconds: helper.TFInt64Value(cm.DelayInMilliseconds),
 			ArgumentMappings:    argMappings,
@@ -101,8 +101,8 @@ func (x *ActivityDefinition) ToTF() any {
 
 	return &ActivityDefinitionTF{
 		AuditModelTF:        general_objects.AuditModelToTF(&x.AuditModel),
-		NodeId:              helper.TFStringValue(x.NodeId),
-		Name:                helper.TFStringValue(x.Name),
+		NodeId:              types.StringValue(x.NodeId),
+		Name:                types.StringValue(x.Name),
 		Description:         helper.TFStringPtrValue(x.Description),
 		EstimatedDuration:   helper.TFInt64Value(x.EstimatedDuration),
 		MappingStatus:       helper.TFStringPtrValue(x.MappingStatus),

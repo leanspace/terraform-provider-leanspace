@@ -88,8 +88,8 @@ func (x *Dashboard) ToTF() any {
 	widgetInfos := make([]WidgetInfoTF, len(x.WidgetInfo))
 	for i, wi := range x.WidgetInfo {
 		widgetInfos[i] = WidgetInfoTF{
-			ID:   helper.TFStringValue(wi.ID),
-			Type: helper.TFStringValue(wi.Type),
+			ID:   types.StringValue(wi.ID),
+			Type: types.StringValue(wi.Type),
 			W:    helper.TFInt64Value(wi.W),
 			H:    helper.TFInt64Value(wi.H),
 			X:    helper.TFInt64Value(wi.X),
@@ -107,18 +107,18 @@ func (x *Dashboard) ToTF() any {
 			filterElems := make([]attr.Value, len(s.Filters))
 			for k, f := range s.Filters {
 				fObj, _ := types.ObjectValue(dashFilterAttrTypes, map[string]attr.Value{
-					"filter_by": helper.TFStringValue(f.FilterBy),
-					"operator":  helper.TFStringValue(f.Operator),
-					"value":     helper.TFStringValue(f.Value),
+					"filter_by": types.StringValue(f.FilterBy),
+					"operator":  types.StringValue(f.Operator),
+					"value":     types.StringValue(f.Value),
 				})
 				filterElems[k] = fObj
 			}
 			filtersSet, _ := types.SetValue(types.ObjectType{AttrTypes: dashFilterAttrTypes}, filterElems)
 			sObj, _ := types.ObjectValue(dashSeriesAttrTypes, map[string]attr.Value{
-				"id":          helper.TFStringValue(s.ID),
+				"id":          types.StringValue(s.ID),
 				"name":        helper.TFStringPtrValue(s.Name),
-				"datasource":  helper.TFStringValue(s.Datasource),
-				"aggregation": helper.TFStringValue(s.Aggregation),
+				"datasource":  types.StringValue(s.Datasource),
+				"aggregation": types.StringValue(s.Aggregation),
 				"filters":     filtersSet,
 			})
 			seriesElems[j] = sObj
@@ -135,7 +135,7 @@ func (x *Dashboard) ToTF() any {
 				tObj, _ := types.ObjectValue(dashThresholdAttrTypes, map[string]attr.Value{
 					"from":  types.StringNull(),
 					"to":    types.StringNull(),
-					"color": helper.TFStringValue(t.Color),
+					"color": types.StringValue(t.Color),
 				})
 				thresholdElems[j] = tObj
 			}
@@ -170,7 +170,7 @@ func (x *Dashboard) ToTF() any {
 		tagElems := make([]attr.Value, len(w.Tags))
 		for j, t := range w.Tags {
 			tObj, _ := types.ObjectValue(dashTagAttrTypes, map[string]attr.Value{
-				"key":   helper.TFStringValue(t.Key),
+				"key":   types.StringValue(t.Key),
 				"value": helper.TFStringPtrValue(t.Value),
 			})
 			tagElems[j] = tObj
@@ -184,12 +184,12 @@ func (x *Dashboard) ToTF() any {
 			"created_by":             am.CreatedBy,
 			"last_modified_at":       am.LastModifiedAt,
 			"last_modified_by":       am.LastModifiedBy,
-			"name":                   helper.TFStringValue(w.Name),
+			"name":                   types.StringValue(w.Name),
 			"description":            helper.TFStringPtrValue(w.Description),
-			"type":                   helper.TFStringValue(w.Type),
-			"granularity":            helper.TFStringValue(w.Granularity),
-			"query_time_dimension":   helper.TFStringValue(w.QueryTimeDimension),
-			"display_time_dimension": helper.TFStringValue(w.DisplayTimeDimension),
+			"type":                   types.StringValue(w.Type),
+			"granularity":            types.StringValue(w.Granularity),
+			"query_time_dimension":   types.StringValue(w.QueryTimeDimension),
+			"display_time_dimension": types.StringValue(w.DisplayTimeDimension),
 			"series":                 seriesList,
 			"metadata":               metadataObj,
 			"view":                   viewObj,
@@ -201,7 +201,7 @@ func (x *Dashboard) ToTF() any {
 
 	return &DashboardTF{
 		AuditModelTF:    general_objects.AuditModelToTF(&x.AuditModel),
-		Name:            helper.TFStringValue(x.Name),
+		Name:            types.StringValue(x.Name),
 		Description:     helper.TFStringPtrValue(x.Description),
 		NodeIds:         helper.TFStringsValue(x.NodeIds),
 		WidgetInfo:      widgetInfos,

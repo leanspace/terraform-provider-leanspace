@@ -37,12 +37,12 @@ type PropertyTF struct {
 func (x *Property[T]) ToTF() interface{} {
 	tf := &PropertyTF{
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
-		Name:         helper.TFStringValue(x.Name),
+		Name:         types.StringValue(x.Name),
 		Description:  helper.TFStringPtrValue(x.Description),
-		IsBuiltIn:    helper.TFBoolValue(x.IsBuiltIn),
-		NodeId:       helper.TFStringValue(x.NodeId),
+		IsBuiltIn:    types.BoolValue(x.IsBuiltIn),
+		NodeId:       types.StringValue(x.NodeId),
 		Tags:         general_objects.KeyValuesToTF(x.Tags),
-		Type:         helper.TFStringValue(x.Attributes.Type),
+		Type:         types.StringValue(x.Attributes.Type),
 		Min:          helper.TFFloat64PtrValue(x.Attributes.Min),
 		Max:          helper.TFFloat64PtrValue(x.Attributes.Max),
 		Scale:        helper.TFIntPtrValue(x.Attributes.Scale),
@@ -61,18 +61,18 @@ func (x *Property[T]) ToTF() interface{} {
 	case "NUMERIC", "ENUM":
 		if val != nil {
 			if f, ok := val.(float64); ok {
-				tf.Value = helper.TFStringValue(helper.ParseFloat(f))
+				tf.Value = types.StringValue(helper.ParseFloat(f))
 			}
 		}
 	case "BOOLEAN":
 		if val != nil {
 			if b, ok := val.(bool); ok {
-				tf.Value = helper.TFStringValue(strconv.FormatBool(b))
+				tf.Value = types.StringValue(strconv.FormatBool(b))
 			}
 		}
 	case "TEXT", "TIMESTAMP", "DATE", "TIME":
 		if val != nil {
-			tf.Value = helper.TFStringValue(fmt.Sprint(val))
+			tf.Value = types.StringValue(fmt.Sprint(val))
 		}
 	case "TLE":
 		if val != nil {
@@ -81,14 +81,14 @@ func (x *Property[T]) ToTF() interface{} {
 				for _, value := range tleValues {
 					tleValue = tleValue + "," + fmt.Sprint(value)
 				}
-				tf.Value = helper.TFStringValue(strings.TrimPrefix(tleValue, ","))
+				tf.Value = types.StringValue(strings.TrimPrefix(tleValue, ","))
 			}
 		}
 	}
 	if x.Attributes.Options != nil {
 		tf.Options = make(map[string]types.String, len(*x.Attributes.Options))
 		for k, v := range *x.Attributes.Options {
-			tf.Options[k] = helper.TFStringValue(fmt.Sprint(v))
+			tf.Options[k] = types.StringValue(fmt.Sprint(v))
 		}
 	}
 	return tf

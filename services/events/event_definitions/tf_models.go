@@ -36,22 +36,22 @@ func (x *EventsDefinition) ToTF() interface{} {
 		var cv *ComparisonValueTF
 		if r.ComparisonValue != nil {
 			cv = &ComparisonValueTF{
-				Value: helper.TFStringValue(fmt.Sprint(r.ComparisonValue.Value)),
-				Type:  helper.TFStringValue(r.ComparisonValue.Type),
+				Value: types.StringValue(fmt.Sprint(r.ComparisonValue.Value)),
+				Type:  types.StringValue(r.ComparisonValue.Type),
 			}
 		}
 		rules[i] = RulesTF{
-			Operator:        helper.TFStringValue(r.Operator),
-			Path:            helper.TFStringValue(r.Path),
+			Operator:        types.StringValue(r.Operator),
+			Path:            types.StringValue(r.Path),
 			ComparisonValue: cv,
 		}
 	}
 
 	return &EventsDefinitionTF{
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
-		Name:         helper.TFStringValue(x.Name),
-		Source:       helper.TFStringValue(x.Source),
-		State:        helper.TFStringValue(x.State),
+		Name:         types.StringValue(x.Name),
+		Source:       types.StringValue(x.Source),
+		State:        types.StringValue(x.State),
 		Description:  helper.TFStringPtrValue(x.Description),
 		Criticality:  helper.TFStringPtrValue(x.Criticality),
 		Rules:        rules,

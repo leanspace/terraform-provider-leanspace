@@ -24,9 +24,9 @@ type AccessPolicyTF struct {
 func (x *AccessPolicy) ToTF() any {
 	return &AccessPolicyTF{
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
-		Name:         helper.TFStringValue(x.Name),
+		Name:         types.StringValue(x.Name),
 		Description:  helper.TFStringPtrValue(x.Description),
-		ReadOnly:     helper.TFBoolValue(x.ReadOnly),
+		ReadOnly:     types.BoolValue(x.ReadOnly),
 		Statements:   statementSliceToTF(x.Statements),
 		Tags:         general_objects.KeyValuesToTF(x.Tags),
 	}

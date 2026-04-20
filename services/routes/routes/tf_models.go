@@ -29,7 +29,7 @@ type RouteTF struct {
 func (x *Route) ToTF() any {
 	return &RouteTF{
 		AuditModelTF:   general_objects.AuditModelToTF(&x.AuditModel),
-		Name:           helper.TFStringValue(x.Name),
+		Name:           types.StringValue(x.Name),
 		Description:    helper.TFStringPtrValue(x.Description),
 		Tags:           general_objects.KeyValuesToTF(x.Tags),
 		Definition:     definitionToTF(&x.Definition),
@@ -55,9 +55,9 @@ func definitionToTF(x *Definition) *DefinitionTF {
 		return nil
 	}
 	return &DefinitionTF{
-		Configuration:    helper.TFStringValue(x.Configuration),
-		LogLevel:         helper.TFStringValue(x.LogLevel),
-		Valid:            helper.TFBoolValue(x.Valid),
+		Configuration:    types.StringValue(x.Configuration),
+		LogLevel:         types.StringValue(x.LogLevel),
+		Valid:            types.BoolValue(x.Valid),
 		ServiceAccountId: helper.TFStringPtrValue(x.ServiceAccountId),
 		Errors:           errorToList(x.Errors),
 	}
@@ -113,9 +113,9 @@ func routeInstanceToList(xs []RouteInstance) types.List {
 	elems := make([]attr.Value, len(xs))
 	for i := range xs {
 		elems[i] = types.ObjectValueMust(routeInstanceAttrTypes, map[string]attr.Value{
-			"status":                        helper.TFStringValue(xs[i].Status),
+			"status":                        types.StringValue(xs[i].Status),
 			"last_status_at":                helper.TFStringPtrValue(xs[i].LastStatusAt),
-			"container_id":                  helper.TFStringValue(xs[i].ContainerId),
+			"container_id":                  types.StringValue(xs[i].ContainerId),
 			"last_message_start_process_at": helper.TFStringPtrValue(xs[i].LastMessageStartProcessAt),
 			"last_message_end_process_at":   helper.TFStringPtrValue(xs[i].LastMessageEndProcessAt),
 			"number_of_messages_processed":  helper.TFInt64Value(xs[i].NumberOfMessagesProcessed),
@@ -155,8 +155,8 @@ func errorToList(xs []Error) types.List {
 	elems := make([]attr.Value, len(xs))
 	for i := range xs {
 		elems[i] = types.ObjectValueMust(errorAttrTypes, map[string]attr.Value{
-			"code":    helper.TFStringValue(xs[i].Code),
-			"message": helper.TFStringValue(xs[i].Message),
+			"code":    types.StringValue(xs[i].Code),
+			"message": types.StringValue(xs[i].Message),
 		})
 	}
 	return types.ListValueMust(types.ObjectType{AttrTypes: errorAttrTypes}, elems)

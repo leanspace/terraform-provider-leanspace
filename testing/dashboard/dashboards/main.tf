@@ -72,16 +72,16 @@ resource "leanspace_dashboards" "test" {
     id    = var.value_widget_id
     x     = 0
     y     = 0
-    w     = 1
+    w     = 2
     h     = 5
     min_w = 1
     min_h = 5
   }
   widget_info {
     id    = var.line_widget_id
-    x     = 1
+    x     = 2
     y     = 0
-    w     = 2
+    w     = 4
     h     = 5
     min_w = 1
     min_h = 5
@@ -90,7 +90,7 @@ resource "leanspace_dashboards" "test" {
     id    = var.table_widget_id
     x     = 0
     y     = 1
-    w     = 3
+    w     = 6
     h     = 13
     min_w = 2
     min_h = 13
@@ -99,25 +99,25 @@ resource "leanspace_dashboards" "test" {
     id    = var.enum_widget_id
     x     = 0
     y     = 2
-    w     = 1
+    w     = 2
     h     = 5
     min_w = 1
     min_h = 5
   }
   widget_info {
     id    = var.earth_widget_id
-    x     = 1
+    x     = 2
     y     = 2
-    w     = 1
+    w     = 2
     h     = 5
     min_w = 1
     min_h = 5
   }
   widget_info {
     id    = var.gauge_widget_id
-    x     = 2
+    x     = 4
     y     = 2
-    w     = 1
+    w     = 2
     h     = 10
     min_w = 1
     min_h = 10
@@ -126,16 +126,16 @@ resource "leanspace_dashboards" "test" {
     id    = var.bar_widget_id
     x     = 0
     y     = 3
-    w     = 1
+    w     = 2
     h     = 5
     min_w = 1
     min_h = 5
   }
   widget_info {
     id    = var.area_widget_id
-    x     = 1
+    x     = 2
     y     = 3
-    w     = 1
+    w     = 2
     h     = 5
     min_w = 1
     min_h = 5

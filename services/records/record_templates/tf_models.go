@@ -34,8 +34,8 @@ func (x *RecordTemplate) ToTF() any {
 	dpElems := make([]attr.Value, len(x.DefaultParsers))
 	for i, dp := range x.DefaultParsers {
 		dpObj, _ := types.ObjectValue(defaultParserAttrTypes, map[string]attr.Value{
-			"id":        helper.TFStringValue(dp.ID),
-			"file_type": helper.TFStringValue(dp.FileType),
+			"id":        types.StringValue(dp.ID),
+			"file_type": types.StringValue(dp.FileType),
 		})
 		dpElems[i] = dpObj
 	}
@@ -45,16 +45,16 @@ func (x *RecordTemplate) ToTF() any {
 	for i, p := range x.Properties {
 		attrVal := general_objects.DefinitionAttributeToTF(&p.Attributes)
 		properties[i] = PropertyTF{
-			Name:       helper.TFStringValue(p.Name),
+			Name:       types.StringValue(p.Name),
 			Attributes: &attrVal,
 		}
 	}
 
 	return &RecordTemplateTF{
 		AuditModelTF:         general_objects.AuditModelToTF(&x.AuditModel),
-		Name:                 helper.TFStringValue(x.Name),
+		Name:                 types.StringValue(x.Name),
 		Description:          helper.TFStringPtrValue(x.Description),
-		StreamId:             helper.TFStringValue(x.StreamId),
+		StreamId:             types.StringValue(x.StreamId),
 		DefaultParsers:       defaultParsers,
 		NodeIds:              helper.TFStringsValue(x.NodeIds),
 		MetricIds:            helper.TFStringsValue(x.MetricIds),

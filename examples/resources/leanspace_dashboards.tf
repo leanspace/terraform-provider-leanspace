@@ -26,16 +26,16 @@ resource "leanspace_dashboards" "test" {
     id    = var.value_widget_id
     x     = 0
     y     = 0
-    w     = 1
+    w     = 2
     h     = 5
     min_w = 1
     min_h = 5
   }
   widget_info {
     id    = var.line_widget_id
-    x     = 1
+    x     = 2
     y     = 0
-    w     = 2
+    w     = 4
     h     = 5
     min_w = 1
     min_h = 5
@@ -44,7 +44,7 @@ resource "leanspace_dashboards" "test" {
     id    = var.table_widget_id
     x     = 0
     y     = 1
-    w     = 3
+    w     = 6
     h     = 13
     min_w = 2
     min_h = 13

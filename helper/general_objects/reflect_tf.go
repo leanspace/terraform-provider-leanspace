@@ -134,31 +134,19 @@ func toTFValue(v reflect.Value) reflect.Value {
 	case typeString:
 		return reflect.ValueOf(types.StringValue(v.String()))
 	case typePtrString:
-		if v.IsNil() {
-			return reflect.ValueOf(types.StringNull())
-		}
-		return reflect.ValueOf(types.StringValue(v.Elem().String()))
+		return reflect.ValueOf(helper.TFStringPtrValue(v.Interface().(*string)))
 	case typeBool:
 		return reflect.ValueOf(types.BoolValue(v.Bool()))
 	case typePtrBool:
-		if v.IsNil() {
-			return reflect.ValueOf(types.BoolNull())
-		}
-		return reflect.ValueOf(types.BoolValue(v.Elem().Bool()))
+		return reflect.ValueOf(helper.TFBoolPtrValue(v.Interface().(*bool)))
 	case typeInt:
 		return reflect.ValueOf(types.Int64Value(v.Int()))
 	case typePtrInt:
-		if v.IsNil() {
-			return reflect.ValueOf(types.Int64Null())
-		}
-		return reflect.ValueOf(types.Int64Value(v.Elem().Int()))
+		return reflect.ValueOf(helper.TFIntPtrValue(v.Interface().(*int)))
 	case typeFloat64:
 		return reflect.ValueOf(types.Float64Value(v.Float()))
 	case typePtrFloat64:
-		if v.IsNil() {
-			return reflect.ValueOf(types.Float64Null())
-		}
-		return reflect.ValueOf(types.Float64Value(v.Elem().Float()))
+		return reflect.ValueOf(helper.TFFloat64PtrValue(v.Interface().(*float64)))
 	case typeStrings:
 		return reflect.ValueOf(helper.TFStringsValue(v.Interface().([]string)))
 	case typeKeyValues:

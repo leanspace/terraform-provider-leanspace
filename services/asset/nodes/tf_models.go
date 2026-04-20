@@ -59,10 +59,10 @@ type NodeTF struct {
 func (x *Node) ToTF() any {
 	tf := &NodeTF{
 		AuditModelTF:     general_objects.AuditModelToTF(&x.AuditModel),
-		Name:             helper.TFStringValue(x.Name),
+		Name:             types.StringValue(x.Name),
 		Description:      helper.TFStringPtrValue(x.Description),
 		ParentNodeId:     helper.TFStringPtrValue(x.ParentNodeId),
-		Type:             helper.TFStringValue(x.Type),
+		Type:             types.StringValue(x.Type),
 		Kind:             helper.TFStringPtrValue(x.Kind),
 		Tags:             general_objects.KeyValuesToTF(x.Tags),
 		NumberOfChildren: helper.TFInt64Value(x.NumberOfChildren),
@@ -77,9 +77,9 @@ func (x *Node) ToTF() any {
 	}
 
 	if x.Kind != nil && *x.Kind == "GROUND_STATION" {
-		tf.Latitude = helper.TFFloat64Value(x.Latitude)
-		tf.Longitude = helper.TFFloat64Value(x.Longitude)
-		tf.Elevation = helper.TFFloat64Value(x.Elevation)
+		tf.Latitude = types.Float64Value(x.Latitude)
+		tf.Longitude = types.Float64Value(x.Longitude)
+		tf.Elevation = types.Float64Value(x.Elevation)
 	}
 
 	return tf

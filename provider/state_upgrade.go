@@ -26,13 +26,10 @@ func UnwrapSingleNestedStateUpgrader(schema map[string]resourceschema.Attribute)
 				return
 			}
 
-			// 2. Recursively unwrap list-of-1 arrays for SingleNested fields.
+			// 2. In a single tree walk: unwrap list-of-1 SDK v2 workarounds and
+			//    strip keys absent from the v1 schema (DynamicValue.Unmarshal is strict).
 			attrs, blocks := SplitResourceSchemaBlocks(schema)
-			unwrapSingleNestedInMap(raw, attrs, blocks)
-
-			// 2b. Remove keys that no longer exist in the v1 schema.
-			//     DynamicValue.Unmarshal is strict and will error on unknown keys.
-			stripUnknownKeys(raw, attrs, blocks)
+			processStateMap(raw, attrs, blocks)
 
 			// 3. Re-marshal the transformed state.
 			transformed, err := json.Marshal(raw)
@@ -67,39 +64,48 @@ func UnwrapSingleNestedUpgraderMap(schema map[string]resourceschema.Attribute) m
 	}
 }
 
-// unwrapSingleNestedInMap recursively walks a JSON-decoded state map and:
-//  1. Converts any list-of-1 values ([{...}]) into plain objects ({...}) for
-//     fields that are SingleNestedAttribute or SingleNestedBlock in the v1 schema.
-//  2. Converts any list-of-1 scalar values ([x]) into plain scalars (x) for
-//     Float64Attribute and Int64Attribute fields — these were the SDK v2 workaround
-//     for optional numeric values (e.g. "lower_limit": [5] → "lower_limit": 5).
-func unwrapSingleNestedInMap(
+// processStateMap performs both operations in a single tree walk:
+//  1. Strips state keys absent from the v1 schema (attrs + blocks) so that
+//     DynamicValue.Unmarshal does not fail on unknown fields.
+//  2. Unwraps SDK v2 list-of-1 workarounds:
+//     - ([{...}]) → {...} for SingleNestedAttribute / SingleNestedBlock fields.
+//     - ([x]) → x and ([]) → null for Float64Attribute, Int64Attribute, BoolAttribute.
+//
+// The strip pass runs first at each level, then the unwrap+recurse pass descends
+// into nested structures, so every nested object gets both operations applied.
+func processStateMap(
 	state map[string]any,
 	attrs map[string]resourceschema.Attribute,
 	blocks map[string]resourceschema.Block,
 ) {
+	// Strip keys that are absent from the v1 schema at this level.
+	for key := range state {
+		_, inAttrs := attrs[key]
+		_, inBlocks := blocks[key]
+		if !inAttrs && !inBlocks {
+			delete(state, key)
+		}
+	}
+	// Unwrap SDK v2 workarounds and recurse into nested structures.
 	for key, attr := range attrs {
 		switch v := attr.(type) {
 		case resourceschema.SingleNestedAttribute:
-			unwrapField(state, key, v.Attributes, nil)
+			processField(state, key, v.Attributes, nil)
 		case resourceschema.ListNestedAttribute:
-			// Computed-only list nested attributes stay as attributes (not blocks).
-			// Recurse into each element so nested single-objects are unwrapped.
 			if arr, ok := state[key].([]any); ok {
+				childAttrs, childBlocks := SplitResourceSchemaBlocks(v.NestedObject.Attributes)
 				for _, elem := range arr {
 					if obj, ok := elem.(map[string]any); ok {
-						childAttrs, childBlocks := SplitResourceSchemaBlocks(v.NestedObject.Attributes)
-						unwrapSingleNestedInMap(obj, childAttrs, childBlocks)
+						processStateMap(obj, childAttrs, childBlocks)
 					}
 				}
 			}
 		case resourceschema.SetNestedAttribute:
-			// Same as ListNestedAttribute — recurse into each element.
 			if arr, ok := state[key].([]any); ok {
+				childAttrs, childBlocks := SplitResourceSchemaBlocks(v.NestedObject.Attributes)
 				for _, elem := range arr {
 					if obj, ok := elem.(map[string]any); ok {
-						childAttrs, childBlocks := SplitResourceSchemaBlocks(v.NestedObject.Attributes)
-						unwrapSingleNestedInMap(obj, childAttrs, childBlocks)
+						processStateMap(obj, childAttrs, childBlocks)
 					}
 				}
 			}
@@ -114,12 +120,12 @@ func unwrapSingleNestedInMap(
 	for key, block := range blocks {
 		switch v := block.(type) {
 		case resourceschema.SingleNestedBlock:
-			unwrapField(state, key, v.Attributes, v.Blocks)
+			processField(state, key, v.Attributes, v.Blocks)
 		case resourceschema.ListNestedBlock:
 			if arr, ok := state[key].([]any); ok {
 				for _, elem := range arr {
 					if obj, ok := elem.(map[string]any); ok {
-						unwrapSingleNestedInMap(obj, v.NestedObject.Attributes, v.NestedObject.Blocks)
+						processStateMap(obj, v.NestedObject.Attributes, v.NestedObject.Blocks)
 					}
 				}
 			}
@@ -128,7 +134,7 @@ func unwrapSingleNestedInMap(
 }
 
 // unwrapScalarList converts "[x]" → x and "[]" → null for optional scalar
-// (Float64/Int64) fields that were stored as list-of-1 in SDK v2.
+// (Float64/Int64/Bool) fields that were stored as list-of-1 in SDK v2.
 func unwrapScalarList(state map[string]any, key string) {
 	raw, exists := state[key]
 	if !exists || raw == nil {
@@ -143,9 +149,12 @@ func unwrapScalarList(state map[string]any, key string) {
 	}
 }
 
-// list-of-1, it is replaced with the inner object and recursed into.  If it is
-// already a plain object it is just recursed into (idempotent).
-func unwrapField(state map[string]any,
+// processField handles a single nested field in the state map. If the current
+// value is a list-of-1 ([{...}]), it is replaced with the inner object and
+// recursed into via processStateMap. If it is already a plain object it is just
+// recursed into (idempotent).
+func processField(
+	state map[string]any,
 	key string,
 	childAttrs map[string]resourceschema.Attribute,
 	childBlocks map[string]resourceschema.Block,
@@ -157,7 +166,7 @@ func unwrapField(state map[string]any,
 	if arr, ok := raw.([]any); ok {
 		if len(arr) == 1 {
 			if obj, ok := arr[0].(map[string]any); ok {
-				unwrapSingleNestedInMap(obj, childAttrs, childBlocks)
+				processStateMap(obj, childAttrs, childBlocks)
 				state[key] = obj
 			}
 		} else {
@@ -168,67 +177,6 @@ func unwrapField(state map[string]any,
 	}
 	// Already a plain object — recurse for nested single fields.
 	if obj, ok := raw.(map[string]any); ok {
-		unwrapSingleNestedInMap(obj, childAttrs, childBlocks)
-	}
-}
-
-// stripUnknownKeys removes any keys from the state map that are not present in
-// the v1 schema (attrs + blocks).  This prevents DynamicValue.Unmarshal from
-// failing when the old SDK v2 state contained fields that were subsequently
-// removed from the schema entirely (e.g. the "constraints" field on resources).
-// It recurses into list/set nested blocks so that removed child fields are also
-// cleaned up.
-func stripUnknownKeys(
-	state map[string]any,
-	attrs map[string]resourceschema.Attribute,
-	blocks map[string]resourceschema.Block,
-) {
-	for key := range state {
-		_, inAttrs := attrs[key]
-		_, inBlocks := blocks[key]
-		if !inAttrs && !inBlocks {
-			delete(state, key)
-			continue
-		}
-		// Recurse into nested objects/blocks.
-		switch v := attrs[key].(type) {
-		case resourceschema.SingleNestedAttribute:
-			if obj, ok := state[key].(map[string]any); ok {
-				childAttrs, childBlocks := SplitResourceSchemaBlocks(v.Attributes)
-				stripUnknownKeys(obj, childAttrs, childBlocks)
-			}
-		case resourceschema.ListNestedAttribute:
-			if arr, ok := state[key].([]any); ok {
-				childAttrs, childBlocks := SplitResourceSchemaBlocks(v.NestedObject.Attributes)
-				for _, elem := range arr {
-					if obj, ok := elem.(map[string]any); ok {
-						stripUnknownKeys(obj, childAttrs, childBlocks)
-					}
-				}
-			}
-		case resourceschema.SetNestedAttribute:
-			if arr, ok := state[key].([]any); ok {
-				childAttrs, childBlocks := SplitResourceSchemaBlocks(v.NestedObject.Attributes)
-				for _, elem := range arr {
-					if obj, ok := elem.(map[string]any); ok {
-						stripUnknownKeys(obj, childAttrs, childBlocks)
-					}
-				}
-			}
-		}
-		switch v := blocks[key].(type) {
-		case resourceschema.SingleNestedBlock:
-			if obj, ok := state[key].(map[string]any); ok {
-				stripUnknownKeys(obj, v.Attributes, v.Blocks)
-			}
-		case resourceschema.ListNestedBlock:
-			if arr, ok := state[key].([]any); ok {
-				for _, elem := range arr {
-					if obj, ok := elem.(map[string]any); ok {
-						stripUnknownKeys(obj, v.NestedObject.Attributes, v.NestedObject.Blocks)
-					}
-				}
-			}
-		}
+		processStateMap(obj, childAttrs, childBlocks)
 	}
 }

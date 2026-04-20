@@ -25,8 +25,8 @@ type PassiveResourceFunctionTF struct {
 func (x *PassiveResourceFunction) ToTF() any {
 	return &PassiveResourceFunctionTF{
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
-		ResourceId:   helper.TFStringValue(x.ResourceId),
-		Name:         helper.TFStringValue(x.Name),
+		ResourceId:   types.StringValue(x.ResourceId),
+		Name:         types.StringValue(x.Name),
 		Formula:      passiveResourceFunctionFormulaToTF(x.Formula),
 		ControlBound: helper.TFFloat64PtrValue(x.ControlBound),
 		Tags:         general_objects.KeyValuesToTF(x.Tags),

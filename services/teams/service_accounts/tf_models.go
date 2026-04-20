@@ -19,7 +19,7 @@ type ServiceAccountTF struct {
 func (x *ServiceAccount) ToTF() any {
 	return &ServiceAccountTF{
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
-		Name:         helper.TFStringValue(x.Name),
+		Name:         types.StringValue(x.Name),
 		PolicyIds:    helper.TFStringsValue(x.PolicyIds),
 		Credentials:  credentialsToObject(&x.Credentials),
 		Tags:         general_objects.KeyValuesToTF(x.Tags),
@@ -46,8 +46,8 @@ func credentialsToObject(x *Credentials) types.Object {
 		return types.ObjectNull(credentialsAttrTypes)
 	}
 	return types.ObjectValueMust(credentialsAttrTypes, map[string]attr.Value{
-		"client_id":     helper.TFStringValue(x.ClientId),
-		"client_secret": helper.TFStringValue(x.ClientSecret),
+		"client_id":     types.StringValue(x.ClientId),
+		"client_secret": types.StringValue(x.ClientSecret),
 	})
 }
 

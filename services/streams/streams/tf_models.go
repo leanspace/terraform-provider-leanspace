@@ -101,10 +101,10 @@ type MappingTF struct {
 
 func streamComponentToTF(sc StreamComponent) StreamComponentTF {
 	tf := StreamComponentTF{
-		Name:       helper.TFStringValue(sc.Name),
+		Name:       types.StringValue(sc.Name),
 		Order:      helper.TFInt64Value(sc.Order),
-		Path:       helper.TFStringValue(sc.Path),
-		Type:       helper.TFStringValue(sc.Type),
+		Path:       types.StringValue(sc.Path),
+		Type:       types.StringValue(sc.Type),
 		Processor:  helper.TFStringPtrValue(sc.Processor),
 		DataType:   helper.TFStringPtrValue(sc.DataType),
 		Endianness: helper.TFStringPtrValue(sc.Endianness),
@@ -119,8 +119,8 @@ func streamComponentToTF(sc StreamComponent) StreamComponentTF {
 
 	if sc.Length != nil {
 		tf.Length = &LengthTF{
-			Type:  helper.TFStringValue(sc.Length.Type),
-			Unit:  helper.TFStringValue(sc.Length.Unit),
+			Type:  types.StringValue(sc.Length.Type),
+			Unit:  types.StringValue(sc.Length.Unit),
 			Value: helper.TFInt64Value(sc.Length.Value),
 			Path:  helper.TFStringPtrValue(sc.Length.Path),
 		}
@@ -130,15 +130,15 @@ func streamComponentToTF(sc StreamComponent) StreamComponentTF {
 		opts := make([]SwitchOptionTF, len(sc.Expression.Options))
 		for i, o := range sc.Expression.Options {
 			opts[i] = SwitchOptionTF{
-				Component: helper.TFStringValue(o.Component),
+				Component: types.StringValue(o.Component),
 				Value: &SwitchValueTF{
-					DataType: helper.TFStringValue(o.Value.DataType),
-					Data:     helper.TFStringValue(fmt.Sprint(o.Value.Data)),
+					DataType: types.StringValue(o.Value.DataType),
+					Data:     types.StringValue(fmt.Sprint(o.Value.Data)),
 				},
 			}
 		}
 		tf.Expression = &SwitchExpressionTF{
-			SwitchOn: helper.TFStringValue(sc.Expression.SwitchOn),
+			SwitchOn: types.StringValue(sc.Expression.SwitchOn),
 			Options:  opts,
 		}
 	}
@@ -220,11 +220,11 @@ func (x *Stream) ToTF() interface{} {
 	compElements := make([]ComputationTF, len(x.Configuration.Computations.Elements))
 	for i, c := range x.Configuration.Computations.Elements {
 		compElements[i] = ComputationTF{
-			Name:       helper.TFStringValue(c.Name),
+			Name:       types.StringValue(c.Name),
 			Order:      helper.TFInt64Value(c.Order),
-			Type:       helper.TFStringValue(c.Type),
-			DataType:   helper.TFStringValue(c.DataType),
-			Expression: helper.TFStringValue(c.Expression),
+			Type:       types.StringValue(c.Type),
+			DataType:   types.StringValue(c.DataType),
+			Expression: types.StringValue(c.Expression),
 		}
 	}
 
@@ -232,7 +232,7 @@ func (x *Stream) ToTF() interface{} {
 	mappings := make([]MappingTF, len(x.Mappings))
 	for i, m := range x.Mappings {
 		mappings[i] = MappingTF{
-			MetricId:   helper.TFStringValue(m.MetricId),
+			MetricId:   types.StringValue(m.MetricId),
 			Expression: helper.TFStringPtrValue(m.Expression),
 		}
 	}
@@ -240,23 +240,23 @@ func (x *Stream) ToTF() interface{} {
 	return &StreamTF{
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
 		Version:      helper.TFInt64Value(x.Version),
-		Name:         helper.TFStringValue(x.Name),
+		Name:         types.StringValue(x.Name),
 		Description:  helper.TFStringPtrValue(x.Description),
 		Tags:         general_objects.KeyValuesToTF(x.Tags),
-		AssetId:      helper.TFStringValue(x.AssetId),
+		AssetId:      types.StringValue(x.AssetId),
 		Configuration: &ConfigurationTF{
-			Endianness: helper.TFStringValue(x.Configuration.Endianness),
+			Endianness: types.StringValue(x.Configuration.Endianness),
 			Structure: &ElementListTF{
 				Elements: structElements,
 			},
 			Metadata: &MetadataTF{
 				Timestamp: &TimestampDefinitionTF{
-					Expression: helper.TFStringValue(x.Configuration.Metadata.Timestamp.Expression),
+					Expression: types.StringValue(x.Configuration.Metadata.Timestamp.Expression),
 				},
 			},
 			Computations: &ElementListWithValidTF{
 				Elements: compElements,
-				Valid:    helper.TFBoolValue(x.Configuration.Computations.Valid),
+				Valid:    types.BoolValue(x.Configuration.Computations.Valid),
 			},
 		},
 		Mappings: mappings,

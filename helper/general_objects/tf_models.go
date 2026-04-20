@@ -22,11 +22,11 @@ type AuditModelTF struct {
 
 func AuditModelToTF(a *AuditModel) AuditModelTF {
 	return AuditModelTF{
-		ID:             helper.TFStringValue(a.ID),
-		CreatedAt:      helper.TFStringValue(a.CreatedAt),
-		CreatedBy:      helper.TFStringValue(a.CreatedBy),
-		LastModifiedAt: helper.TFStringValue(a.LastModifiedAt),
-		LastModifiedBy: helper.TFStringValue(a.LastModifiedBy),
+		ID:             types.StringValue(a.ID),
+		CreatedAt:      types.StringValue(a.CreatedAt),
+		CreatedBy:      types.StringValue(a.CreatedBy),
+		LastModifiedAt: types.StringValue(a.LastModifiedAt),
+		LastModifiedBy: types.StringValue(a.LastModifiedBy),
 	}
 }
 
@@ -53,7 +53,7 @@ func KeyValuesToTF(kvs []KeyValue) []KeyValueTF {
 	result := make([]KeyValueTF, len(kvs))
 	for i, kv := range kvs {
 		result[i] = KeyValueTF{
-			Key:   helper.TFStringValue(kv.Key),
+			Key:   types.StringValue(kv.Key),
 			Value: helper.TFStringPtrValue(kv.Value),
 		}
 	}
@@ -111,7 +111,7 @@ type FieldsTF struct {
 func FieldDefToTF(f *FieldDef[any]) FieldDefTF {
 	var dv types.String
 	if any(f.DefaultValue) != nil {
-		dv = helper.TFStringValue(fmt.Sprint(f.DefaultValue))
+		dv = types.StringValue(fmt.Sprint(f.DefaultValue))
 	} else {
 		dv = types.StringNull()
 	}
@@ -143,7 +143,7 @@ func FieldDefFromTF(tf FieldDefTF) FieldDef[any] {
 func FieldToTF(f *Field[any]) FieldTF {
 	var v types.String
 	if any(f.Value) != nil {
-		v = helper.TFStringValue(fmt.Sprint(f.Value))
+		v = types.StringValue(fmt.Sprint(f.Value))
 	} else {
 		v = types.StringNull()
 	}
@@ -249,7 +249,7 @@ func ArrayConstraintToTF(c *ArrayConstraint[any]) *ArrayConstraintTF {
 		return nil
 	}
 	tf := &ArrayConstraintTF{
-		Type:      helper.TFStringValue(c.Type),
+		Type:      types.StringValue(c.Type),
 		Required:  helper.TFBoolPtrValue(c.Required),
 		MinLength: helper.TFIntPtrValue(c.MinLength),
 		MaxLength: helper.TFIntPtrValue(c.MaxLength),
@@ -265,7 +265,7 @@ func ArrayConstraintToTF(c *ArrayConstraint[any]) *ArrayConstraintTF {
 	if c.Options != nil {
 		tf.Options = make(map[string]types.String, len(*c.Options))
 		for k, v := range *c.Options {
-			tf.Options[k] = helper.TFStringValue(fmt.Sprint(v))
+			tf.Options[k] = types.StringValue(fmt.Sprint(v))
 		}
 	}
 	return tf
@@ -325,7 +325,7 @@ type DefinitionAttributeTF struct {
 
 func DefinitionAttributeToTF(a *DefinitionAttribute[any]) DefinitionAttributeTF {
 	tf := DefinitionAttributeTF{
-		Type:      helper.TFStringValue(a.Type),
+		Type:      types.StringValue(a.Type),
 		Required:  helper.TFBoolPtrValue(a.Required),
 		MinLength: helper.TFIntPtrValue(a.MinLength),
 		MaxLength: helper.TFIntPtrValue(a.MaxLength),
@@ -340,7 +340,7 @@ func DefinitionAttributeToTF(a *DefinitionAttribute[any]) DefinitionAttributeTF 
 		Fields:    FieldsDefToTF(a.Fields),
 		MinSize:   helper.TFIntPtrValue(a.MinSize),
 		MaxSize:   helper.TFIntPtrValue(a.MaxSize),
-		Unique:    helper.TFBoolValue(a.Unique),
+		Unique:    types.BoolValue(a.Unique),
 	}
 	if any(a.DefaultValue) != nil {
 		switch v := a.DefaultValue.(type) {
@@ -353,9 +353,9 @@ func DefinitionAttributeToTF(a *DefinitionAttribute[any]) DefinitionAttributeTF 
 					parts[i] = fmt.Sprint(elem)
 				}
 			}
-			tf.DefaultValue = helper.TFStringValue(strings.Join(parts, ","))
+			tf.DefaultValue = types.StringValue(strings.Join(parts, ","))
 		default:
-			tf.DefaultValue = helper.TFStringValue(fmt.Sprint(a.DefaultValue))
+			tf.DefaultValue = types.StringValue(fmt.Sprint(a.DefaultValue))
 		}
 	} else {
 		tf.DefaultValue = types.StringNull()
@@ -363,7 +363,7 @@ func DefinitionAttributeToTF(a *DefinitionAttribute[any]) DefinitionAttributeTF 
 	if a.Options != nil {
 		tf.Options = make(map[string]types.String, len(*a.Options))
 		for k, v := range *a.Options {
-			tf.Options[k] = helper.TFStringValue(fmt.Sprint(v))
+			tf.Options[k] = types.StringValue(fmt.Sprint(v))
 		}
 	}
 	tf.Constraint = ArrayConstraintToTF(&a.Constraint)
@@ -445,7 +445,7 @@ type ValueAttributeTF struct {
 
 func ValueAttributeToTF(a *ValueAttribute[any]) ValueAttributeTF {
 	tf := ValueAttributeTF{
-		Type:     helper.TFStringValue(a.Type),
+		Type:     types.StringValue(a.Type),
 		DataType: helper.TFStringPtrValue(a.DataType),
 		UnitId:   helper.TFStringPtrValue(a.UnitId),
 		Fields:   FieldsToTF(a.Fields),
@@ -461,9 +461,9 @@ func ValueAttributeToTF(a *ValueAttribute[any]) ValueAttributeTF {
 					parts[i] = fmt.Sprint(elem)
 				}
 			}
-			tf.Value = helper.TFStringValue(strings.Join(parts, ","))
+			tf.Value = types.StringValue(strings.Join(parts, ","))
 		default:
-			tf.Value = helper.TFStringValue(fmt.Sprint(a.Value))
+			tf.Value = types.StringValue(fmt.Sprint(a.Value))
 		}
 	} else {
 		tf.Value = types.StringNull()
@@ -515,12 +515,12 @@ type SortTF struct {
 
 func SortToTF(s *Sort) SortTF {
 	return SortTF{
-		Direction:    helper.TFStringValue(s.Direction),
-		Property:     helper.TFStringValue(s.Property),
-		IgnoreCase:   helper.TFBoolValue(s.IgnoreCase),
-		NullHandling: helper.TFStringValue(s.NullHandling),
-		Ascending:    helper.TFBoolValue(s.Ascending),
-		Descending:   helper.TFBoolValue(s.Descending),
+		Direction:    types.StringValue(s.Direction),
+		Property:     types.StringValue(s.Property),
+		IgnoreCase:   types.BoolValue(s.IgnoreCase),
+		NullHandling: types.StringValue(s.NullHandling),
+		Ascending:    types.BoolValue(s.Ascending),
+		Descending:   types.BoolValue(s.Descending),
 	}
 }
 
@@ -548,8 +548,8 @@ func PageableToTF(p *Pageable) *PageableTF {
 		Offset:     helper.TFInt64Value(p.Offset),
 		PageNumber: helper.TFInt64Value(p.PageNumber),
 		PageSize:   helper.TFInt64Value(p.PageSize),
-		Paged:      helper.TFBoolValue(p.Paged),
-		Unpaged:    helper.TFBoolValue(p.Unpaged),
+		Paged:      types.BoolValue(p.Paged),
+		Unpaged:    types.BoolValue(p.Unpaged),
 	}
 }
 

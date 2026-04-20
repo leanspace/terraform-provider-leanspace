@@ -36,8 +36,8 @@ func (x *CommandDefinition) ToTF() any {
 	for i, m := range x.Metadata {
 		attr := general_objects.ValueAttributeToTF(&m.Attributes)
 		metadata[i] = MetadataTF{
-			ID:          helper.TFStringValue(m.ID),
-			Name:        helper.TFStringValue(m.Name),
+			ID:          types.StringValue(m.ID),
+			Name:        types.StringValue(m.Name),
 			Description: helper.TFStringPtrValue(m.Description),
 			Attributes:  &attr,
 		}
@@ -47,9 +47,9 @@ func (x *CommandDefinition) ToTF() any {
 	for i, a := range x.Arguments {
 		attr := general_objects.DefinitionAttributeToTF(&a.Attributes)
 		arguments[i] = ArgumentTF{
-			ID:          helper.TFStringValue(a.ID),
-			Name:        helper.TFStringValue(a.Name),
-			Identifier:  helper.TFStringValue(a.Identifier),
+			ID:          types.StringValue(a.ID),
+			Name:        types.StringValue(a.Name),
+			Identifier:  types.StringValue(a.Identifier),
 			Description: helper.TFStringPtrValue(a.Description),
 			Attributes:  &attr,
 		}
@@ -57,8 +57,8 @@ func (x *CommandDefinition) ToTF() any {
 
 	return &CommandDefinitionTF{
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
-		NodeId:       helper.TFStringValue(x.NodeId),
-		Name:         helper.TFStringValue(x.Name),
+		NodeId:       types.StringValue(x.NodeId),
+		Name:         types.StringValue(x.Name),
 		Description:  helper.TFStringPtrValue(x.Description),
 		Identifier:   helper.TFStringPtrValue(x.Identifier),
 		Metadata:     metadata,

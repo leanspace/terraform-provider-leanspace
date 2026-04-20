@@ -19,7 +19,7 @@ func (x *FeasibilityConstraintDefinition) ToTF() interface{} {
 	for i, a := range x.ArgumentDefinitions {
 		attr := general_objects.DefinitionAttributeToTF(&a.Attributes)
 		argDefs[i] = activity_definitions.ArgumentDefinitionTF{
-			Name:        helper.TFStringValue(a.Name),
+			Name:        types.StringValue(a.Name),
 			Description: helper.TFStringPtrValue(a.Description),
 			Attributes:  &attr,
 		}
@@ -27,7 +27,7 @@ func (x *FeasibilityConstraintDefinition) ToTF() interface{} {
 
 	return &FeasibilityConstraintDefinitionTF{
 		AuditModelTF:        general_objects.AuditModelToTF(&x.AuditModel),
-		Name:                helper.TFStringValue(x.Name),
+		Name:                types.StringValue(x.Name),
 		Description:         helper.TFStringPtrValue(x.Description),
 		ArgumentDefinitions: argDefs,
 	}

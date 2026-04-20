@@ -61,8 +61,8 @@ type ActionTemplateTF struct {
 func (x *Monitor) ToTF() any {
 	var rule *RuleTF
 	rule = &RuleTF{
-		ComparisonOperator: helper.TFStringValue(x.Rule.ComparisonOperator),
-		ComparisonValue:    helper.TFFloat64Value(x.Rule.ComparisonValue),
+		ComparisonOperator: types.StringValue(x.Rule.ComparisonOperator),
+		ComparisonValue:    types.Float64Value(x.Rule.ComparisonValue),
 		Tolerance:          helper.TFFloat64PtrValue(x.Rule.Tolerance),
 	}
 
@@ -70,13 +70,13 @@ func (x *Monitor) ToTF() any {
 	for i, at := range x.ActionTemplates {
 		headers := map[string]attr.Value{}
 		for k, v := range at.Headers {
-			headers[k] = helper.TFStringValue(v)
+			headers[k] = types.StringValue(v)
 		}
 		headersMap := types.MapValueMust(types.StringType, headers)
 
 		triggeredOn := make([]attr.Value, len(at.TriggeredOn))
 		for j, t := range at.TriggeredOn {
-			triggeredOn[j] = helper.TFStringValue(t)
+			triggeredOn[j] = types.StringValue(t)
 		}
 		triggeredOnSet := types.SetValueMust(types.StringType, triggeredOn)
 
@@ -87,10 +87,10 @@ func (x *Monitor) ToTF() any {
 			"created_by":       am.CreatedBy,
 			"last_modified_at": am.LastModifiedAt,
 			"last_modified_by": am.LastModifiedBy,
-			"name":             helper.TFStringValue(at.Name),
-			"type":             helper.TFStringValue(at.Type),
-			"url":              helper.TFStringValue(at.URL),
-			"payload":          helper.TFStringValue(at.Payload),
+			"name":             types.StringValue(at.Name),
+			"type":             types.StringValue(at.Type),
+			"url":              types.StringValue(at.URL),
+			"payload":          types.StringValue(at.Payload),
 			"content":          types.StringNull(),
 			"headers":          headersMap,
 			"triggered_on":     triggeredOnSet,
@@ -106,18 +106,18 @@ func (x *Monitor) ToTF() any {
 			triggeredOn = atl.TriggeredOn
 		}
 		actionTemplateLinks[i] = ActionTemplateLinkTF{
-			ID:          helper.TFStringValue(atl.ID),
+			ID:          types.StringValue(atl.ID),
 			TriggeredOn: helper.TFStringsValue(triggeredOn),
 		}
 	}
 
 	return &MonitorTF{
 		AuditModelTF:        general_objects.AuditModelToTF(&x.AuditModel),
-		Name:                helper.TFStringValue(x.Name),
+		Name:                types.StringValue(x.Name),
 		Description:         helper.TFStringPtrValue(x.Description),
-		Status:              helper.TFStringValue(x.Status),
-		MetricId:            helper.TFStringValue(x.MetricId),
-		NodeId:              helper.TFStringValue(x.NodeId),
+		Status:              types.StringValue(x.Status),
+		MetricId:            types.StringValue(x.MetricId),
+		NodeId:              types.StringValue(x.NodeId),
 		Rule:                rule,
 		ActionTemplates:     actionTemplatesSet,
 		ActionTemplateLinks: actionTemplateLinks,
