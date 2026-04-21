@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
@@ -109,6 +110,7 @@ func (team *Team) removeMember(memberId string, client *provider.Client) error {
 
 func (team *Team) PostReadProcess(client *provider.Client, rawTeam any) error {
 	currentTeam := rawTeam.(*Team)
+	currentTeam.Tags = general_objects.ReorderKeyValues(team.Tags, currentTeam.Tags)
 	if policies, err := currentTeam.currentPolicies(client); err != nil {
 		return err
 	} else {

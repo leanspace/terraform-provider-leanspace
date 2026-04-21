@@ -29,7 +29,7 @@ func makeNodeSchema(recursiveNodes map[string]resourceschema.Attribute) map[stri
 	baseSchema := general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
 		"id": resourceschema.StringAttribute{ // redefine id here to add the plan modifier
 			Computed:      true,
-			PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
+			PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown(), stringplanmodifier.RequiresReplace()},
 		},
 		"name": resourceschema.StringAttribute{
 			Required: true,

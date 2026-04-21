@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
@@ -222,6 +223,7 @@ func (node *Node) PostUpdateProcess(client *provider.Client, updated any) error 
 
 func (node *Node) PostReadProcess(client *provider.Client, destNodeRaw any) error {
 	createdNode := destNodeRaw.(*Node)
+	createdNode.Tags = general_objects.ReorderKeyValues(node.Tags, createdNode.Tags)
 	builtInProperties, err := currentProperties(client, createdNode.ID)
 	if err != nil {
 		return err

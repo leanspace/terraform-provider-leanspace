@@ -1,6 +1,11 @@
 package streams
 
-import "encoding/base64"
+import (
+	"encoding/base64"
+
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+	"github.com/leanspace/terraform-provider-leanspace/provider"
+)
 
 func base64Encode(str string) string {
 	return base64.StdEncoding.EncodeToString([]byte(str))
@@ -51,5 +56,14 @@ func (stream *Stream) PostUnmarshallProcess() error {
 	} else {
 		stream.Configuration.Metadata.Timestamp.Expression = value
 	}
+	return nil
+}
+
+func (stream *Stream) PostReadProcess(_ *provider.Client, newValue any) error {
+	newStream, ok := newValue.(*Stream)
+	if !ok || newStream == nil {
+		return nil
+	}
+	newStream.Tags = general_objects.ReorderKeyValues(stream.Tags, newStream.Tags)
 	return nil
 }

@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
@@ -65,6 +66,7 @@ func (serviceAccount *ServiceAccount) removePolicies(policies []string, client *
 
 func (serviceAccount *ServiceAccount) PostReadProcess(client *provider.Client, rawServiceAccount any) error {
 	currentServiceAccount := rawServiceAccount.(*ServiceAccount)
+	currentServiceAccount.Tags = general_objects.ReorderKeyValues(serviceAccount.Tags, currentServiceAccount.Tags)
 	if policies, err := currentServiceAccount.currentPolicies(client); err != nil {
 		return err
 	} else {

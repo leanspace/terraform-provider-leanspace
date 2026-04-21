@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
@@ -19,6 +20,7 @@ func (activityDefinition *ActivityDefinition) PostReadProcess(_ *provider.Client
 	if !ok || newDef == nil {
 		return nil
 	}
+	newDef.Tags = general_objects.ReorderKeyValues(activityDefinition.Tags, newDef.Tags)
 	newDef.Metadata = helper.ReorderByKey(activityDefinition.Metadata, newDef.Metadata,
 		func(m Metadata[any]) string { return m.Name })
 	newDef.ArgumentDefinitions = helper.ReorderByKey(activityDefinition.ArgumentDefinitions, newDef.ArgumentDefinitions,

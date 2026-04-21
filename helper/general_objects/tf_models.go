@@ -74,6 +74,13 @@ func KeyValuesFromTF(tfs []KeyValueTF) []KeyValue {
 	return result
 }
 
+// ReorderKeyValues reorders api tags to match the order of state tags.
+// This prevents spurious plan diffs caused by the API returning tags in a
+// different order from what was previously stored in Terraform state.
+func ReorderKeyValues(state, api []KeyValue) []KeyValue {
+	return helper.ReorderByKey(state, api, func(kv KeyValue) string { return kv.Key })
+}
+
 // --- Geopoint Field TF models ---
 
 // FieldDefTF is the TF model for FieldDef (geopoint definition fields).

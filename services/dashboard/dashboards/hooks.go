@@ -2,6 +2,7 @@ package dashboards
 
 import (
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
@@ -10,6 +11,7 @@ func (dashboard *Dashboard) PostReadProcess(_ *provider.Client, newValue any) er
 	if !ok || newDashboard == nil {
 		return nil
 	}
+	newDashboard.Tags = general_objects.ReorderKeyValues(dashboard.Tags, newDashboard.Tags)
 	newDashboard.WidgetInfo = helper.ReorderByKey(dashboard.WidgetInfo, newDashboard.WidgetInfo, func(w WidgetInfo) string { return w.ID })
 	return nil
 }

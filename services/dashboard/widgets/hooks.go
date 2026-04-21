@@ -2,6 +2,7 @@ package widgets
 
 import (
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
@@ -10,6 +11,7 @@ func (widget *Widget) PostReadProcess(_ *provider.Client, newValue any) error {
 	if !ok || newWidget == nil {
 		return nil
 	}
+	newWidget.Tags = general_objects.ReorderKeyValues(widget.Tags, newWidget.Tags)
 	for i := range newWidget.Series {
 		if i >= len(widget.Series) {
 			break
