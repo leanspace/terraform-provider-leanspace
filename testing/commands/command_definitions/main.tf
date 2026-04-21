@@ -304,6 +304,13 @@ resource "leanspace_command_definitions" "test" {
   }
 }
 
+resource "leanspace_command_definitions" "test_tempty" {
+  name        = "Terraform Command Empt"
+  description = "A complex command definition, entirely created under terraform."
+  node_id     = var.node_id
+  identifier  = "TERRA_CMD_EMPTY"
+}
+
 output "test_command_definition" {
   value = leanspace_command_definitions.test
 }

@@ -8,7 +8,7 @@ type RecordTemplate struct {
 	general_objects.AuditModel
 	Name                 string                     `json:"name"`
 	Description          *string                    `json:"description"`
-	StreamId             string                     `json:"streamId"`
+	StreamId             *string                    `json:"streamId,omitempty"`
 	DefaultParsers       []DefaultParser            `json:"defaultParsers"`
 	NodeIds              []string                   `json:"nodeIds"`
 	MetricIds            []string                   `json:"metricIds"`

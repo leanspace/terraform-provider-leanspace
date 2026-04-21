@@ -13,9 +13,9 @@ type Resource struct {
 	MetricId     *string                    `json:"metricId,omitempty"`
 	Name         string                     `json:"name"`
 	Description  *string                    `json:"description,omitempty"`
-	DefaultLevel float64                    `json:"defaultLevel"`
-	LowerLimit   *float64                   `json:"lowerLimit"`
-	UpperLimit   *float64                   `json:"upperLimit"`
+	DefaultLevel *float64                   `json:"defaultLevel,omitempty"`
+	LowerLimit   *float64                   `json:"lowerLimit,omitempty"`
+	UpperLimit   *float64                   `json:"upperLimit,omitempty"`
 	Thresholds   []ResourceThreshold        `json:"thresholds,omitempty"`
 	Tags         []general_objects.KeyValue `json:"tags,omitempty"`
 }

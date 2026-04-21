@@ -7,18 +7,18 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-type StandardDeviationsTF struct {
-	Latitude    types.Float64 `tfsdk:"latitude"`
-	Longitude   types.Float64 `tfsdk:"longitude"`
-	Altitude    types.Float64 `tfsdk:"altitude"`
-	GroundSpeed types.Float64 `tfsdk:"ground_speed"`
-}
-
 type GpsMetricsTF struct {
 	MetricIdForLatitude    types.String `tfsdk:"metric_id_for_latitude"`
 	MetricIdForLongitude   types.String `tfsdk:"metric_id_for_longitude"`
 	MetricIdForAltitude    types.String `tfsdk:"metric_id_for_altitude"`
 	MetricIdForGroundSpeed types.String `tfsdk:"metric_id_for_ground_speed"`
+}
+
+type StandardDeviationsTF struct {
+	Latitude    types.Float64 `tfsdk:"latitude"`
+	Longitude   types.Float64 `tfsdk:"longitude"`
+	Altitude    types.Float64 `tfsdk:"altitude"`
+	GroundSpeed types.Float64 `tfsdk:"ground_speed"`
 }
 
 type SatelliteConfigurationTF struct {
@@ -77,43 +77,6 @@ func (tf *OrbitTF) ToAPI() any {
 	}
 }
 
-func standardDeviationsToTF(x *StandardDeviations) *StandardDeviationsTF {
-	if x == nil {
-		return nil
-	}
-	return general_objects.ReflectToTF[StandardDeviationsTF](x)
-}
-
-func standardDeviationsFromTF(tf *StandardDeviationsTF) *StandardDeviations {
-	if tf == nil {
-		return nil
-	}
-	return general_objects.ReflectFromTF[StandardDeviations](tf)
-}
-
-func standardDeviationsValueFromTF(tf *StandardDeviationsTF) StandardDeviations {
-	if v := standardDeviationsFromTF(tf); v != nil {
-		return *v
-	}
-	return StandardDeviations{}
-}
-
-func standardDeviationsSliceToTF(xs []StandardDeviations) []StandardDeviationsTF {
-	result := make([]StandardDeviationsTF, len(xs))
-	for i := range xs {
-		result[i] = *general_objects.ReflectToTF[StandardDeviationsTF](&xs[i])
-	}
-	return result
-}
-
-func standardDeviationsSliceFromTF(tfs []StandardDeviationsTF) []StandardDeviations {
-	result := make([]StandardDeviations, len(tfs))
-	for i := range tfs {
-		result[i] = *general_objects.ReflectFromTF[StandardDeviations](&tfs[i])
-	}
-	return result
-}
-
 func gpsMetricsToTF(x *GpsMetrics) *GpsMetricsTF {
 	if x == nil {
 		return nil
@@ -147,6 +110,43 @@ func gpsMetricsSliceFromTF(tfs []GpsMetricsTF) []GpsMetrics {
 	result := make([]GpsMetrics, len(tfs))
 	for i := range tfs {
 		result[i] = *general_objects.ReflectFromTF[GpsMetrics](&tfs[i])
+	}
+	return result
+}
+
+func standardDeviationsToTF(x *StandardDeviations) *StandardDeviationsTF {
+	if x == nil {
+		return nil
+	}
+	return general_objects.ReflectToTF[StandardDeviationsTF](x)
+}
+
+func standardDeviationsFromTF(tf *StandardDeviationsTF) *StandardDeviations {
+	if tf == nil {
+		return nil
+	}
+	return general_objects.ReflectFromTF[StandardDeviations](tf)
+}
+
+func standardDeviationsValueFromTF(tf *StandardDeviationsTF) StandardDeviations {
+	if v := standardDeviationsFromTF(tf); v != nil {
+		return *v
+	}
+	return StandardDeviations{}
+}
+
+func standardDeviationsSliceToTF(xs []StandardDeviations) []StandardDeviationsTF {
+	result := make([]StandardDeviationsTF, len(xs))
+	for i := range xs {
+		result[i] = *general_objects.ReflectToTF[StandardDeviationsTF](&xs[i])
+	}
+	return result
+}
+
+func standardDeviationsSliceFromTF(tfs []StandardDeviationsTF) []StandardDeviations {
+	result := make([]StandardDeviations, len(tfs))
+	for i := range tfs {
+		result[i] = *general_objects.ReflectFromTF[StandardDeviations](&tfs[i])
 	}
 	return result
 }

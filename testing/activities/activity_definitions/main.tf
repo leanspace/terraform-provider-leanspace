@@ -291,6 +291,17 @@ resource "leanspace_activity_definitions" "test" {
   }
 }
 
+resource "leanspace_activity_definitions" "test_empty" {
+  name               = "Terraform Activity Definition Empty"
+  description        = "A complex activity definition, entirely created under terraform."
+  node_id            = var.node_id
+
+  tags {
+    key   = "Mission"
+    value = "Terraform"
+  }
+}
+
 output "test_activity_definition" {
   value = leanspace_activity_definitions.test
 }

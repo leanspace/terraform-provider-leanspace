@@ -6,10 +6,10 @@ import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects
 
 type ResourceFunction struct {
 	general_objects.AuditModel
-	ActivityDefinitionId string                   `json:"activityDefinitionId"`
-	ResourceId           string                   `json:"resourceId"`
-	Name                 string                   `json:"name"`
-	Formula              *ResourceFunctionFormula `json:"formula"`
+	ActivityDefinitionId string                  `json:"activityDefinitionId"`
+	ResourceId           string                  `json:"resourceId"`
+	Name                 string                  `json:"name"`
+	Formula              ResourceFunctionFormula `json:"formula"`
 }
 
 type ResourceFunctionFormula struct {

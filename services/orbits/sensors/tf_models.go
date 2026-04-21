@@ -40,7 +40,7 @@ func (x *Sensor) ToTF() any {
 		AuditModelTF:  general_objects.AuditModelToTF(&x.AuditModel),
 		SatelliteID:   types.StringValue(x.SatelliteID),
 		Name:          types.StringValue(x.Name),
-		ApertureShape: apertureShapeToTF(x.ApertureShape),
+		ApertureShape: apertureShapeToTF(&x.ApertureShape),
 		Tags:          general_objects.KeyValuesToTF(x.Tags),
 	}
 }
@@ -50,7 +50,7 @@ func (tf *SensorTF) ToAPI() any {
 		AuditModel:    general_objects.AuditModelFromTF(tf.AuditModelTF),
 		SatelliteID:   helper.FromTFString(tf.SatelliteID),
 		Name:          helper.FromTFString(tf.Name),
-		ApertureShape: apertureShapeFromTF(tf.ApertureShape),
+		ApertureShape: apertureShapeValueFromTF(tf.ApertureShape),
 		Tags:          general_objects.KeyValuesFromTF(tf.Tags),
 	}
 }

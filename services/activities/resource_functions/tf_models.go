@@ -29,7 +29,7 @@ func (x *ResourceFunction) ToTF() any {
 		ActivityDefinitionId: types.StringValue(x.ActivityDefinitionId),
 		ResourceId:           types.StringValue(x.ResourceId),
 		Name:                 types.StringValue(x.Name),
-		Formula:              resourceFunctionFormulaToTF(x.Formula),
+		Formula:              resourceFunctionFormulaToTF(&x.Formula),
 	}
 }
 
@@ -39,7 +39,7 @@ func (tf *ResourceFunctionTF) ToAPI() any {
 		ActivityDefinitionId: helper.FromTFString(tf.ActivityDefinitionId),
 		ResourceId:           helper.FromTFString(tf.ResourceId),
 		Name:                 helper.FromTFString(tf.Name),
-		Formula:              resourceFunctionFormulaFromTF(tf.Formula),
+		Formula:              resourceFunctionFormulaValueFromTF(tf.Formula),
 	}
 }
 

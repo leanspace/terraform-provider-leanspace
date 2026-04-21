@@ -27,7 +27,7 @@ func (x *PassiveResourceFunction) ToTF() any {
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
 		ResourceId:   types.StringValue(x.ResourceId),
 		Name:         types.StringValue(x.Name),
-		Formula:      passiveResourceFunctionFormulaToTF(x.Formula),
+		Formula:      passiveResourceFunctionFormulaToTF(&x.Formula),
 		ControlBound: helper.TFFloat64PtrValue(x.ControlBound),
 		Tags:         general_objects.KeyValuesToTF(x.Tags),
 	}
@@ -38,7 +38,7 @@ func (tf *PassiveResourceFunctionTF) ToAPI() any {
 		AuditModel:   general_objects.AuditModelFromTF(tf.AuditModelTF),
 		ResourceId:   helper.FromTFString(tf.ResourceId),
 		Name:         helper.FromTFString(tf.Name),
-		Formula:      passiveResourceFunctionFormulaFromTF(tf.Formula),
+		Formula:      passiveResourceFunctionFormulaValueFromTF(tf.Formula),
 		ControlBound: helper.FromTFFloat64Ptr(tf.ControlBound),
 		Tags:         general_objects.KeyValuesFromTF(tf.Tags),
 	}

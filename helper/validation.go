@@ -625,6 +625,27 @@ func parentPathOf(p path.Path) path.Path {
 	return parent
 }
 
+// isParentBlockConfigured returns true if the parent value represents a block
+// that the user has actually written in config. A SingleNestedBlock that is absent
+// from config is represented by the framework as an object with all-null children
+// (not as a null value), so checking IsNull() alone is not sufficient.
+func isParentBlockConfigured(v attr.Value) bool {
+	if v == nil || v.IsNull() || v.IsUnknown() {
+		return false
+	}
+	obj, ok := v.(types.Object)
+	if !ok {
+		return true
+	}
+	// All-null attributes means the block was absent from config.
+	for _, attrVal := range obj.Attributes() {
+		if !attrVal.IsNull() && !attrVal.IsUnknown() {
+			return true
+		}
+	}
+	return false
+}
+
 // RequiredIfParentConfigured returns a String validator that mimics Required behaviour
 // but only when the immediate parent block is actually configured (non-null).
 //
@@ -661,7 +682,7 @@ func (v requiredStringIfParentConfigured) ValidateString(ctx context.Context, re
 	}
 
 	// Parent is absent or unknown — the block is not written by the user; no error.
-	if parentVal == nil || parentVal.IsNull() || parentVal.IsUnknown() {
+	if !isParentBlockConfigured(parentVal) {
 		return
 	}
 
@@ -700,7 +721,7 @@ func (v requiredFloat64IfParentConfigured) ValidateFloat64(ctx context.Context, 
 		return
 	}
 
-	if parentVal == nil || parentVal.IsNull() || parentVal.IsUnknown() {
+	if !isParentBlockConfigured(parentVal) {
 		return
 	}
 

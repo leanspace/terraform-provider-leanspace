@@ -74,6 +74,18 @@ resource "leanspace_nodes" "test_nodes_groundstation" {
   }
 }
 
+resource "leanspace_nodes" "generic" {
+  parent_node_id = leanspace_nodes.test_nodes_root.id
+  name           = "Terraform Generic"
+  description    = "A generic asset for the terraform mission."
+  type = "ASSET"
+  kind           = "GENERIC"
+  tags {
+    key   = "Mission"
+    value = "Terraform"
+  }
+}
+
 output "root_node" {
   value = leanspace_nodes.test_nodes_root
 }

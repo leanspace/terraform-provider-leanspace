@@ -8,7 +8,7 @@ type Sensor struct {
 	general_objects.AuditModel
 	SatelliteID   string                     `json:"satelliteId"`
 	Name          string                     `json:"name"`
-	ApertureShape *ApertureShape             `json:"apertureShape"`
+	ApertureShape ApertureShape              `json:"apertureShape"`
 	Tags          []general_objects.KeyValue `json:"tags,omitempty"`
 }
 

@@ -32,7 +32,7 @@ func (x *AreaOfInterest) ToTF() any {
 	return &AreaOfInterestTF{
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
 		Name:         types.StringValue(x.Name),
-		Shape:        areaOfInterestShapeToTF(x.Shape),
+		Shape:        areaOfInterestShapeToTF(&x.Shape),
 		Tags:         general_objects.KeyValuesToTF(x.Tags),
 	}
 }
@@ -41,7 +41,7 @@ func (tf *AreaOfInterestTF) ToAPI() any {
 	return &AreaOfInterest{
 		AuditModel: general_objects.AuditModelFromTF(tf.AuditModelTF),
 		Name:       helper.FromTFString(tf.Name),
-		Shape:      areaOfInterestShapeFromTF(tf.Shape),
+		Shape:      areaOfInterestShapeValueFromTF(tf.Shape),
 		Tags:       general_objects.KeyValuesFromTF(tf.Tags),
 	}
 }

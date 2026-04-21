@@ -43,29 +43,29 @@ var orbitSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.A
 
 var idealOrbitSchema = map[string]resourceschema.Attribute{
 	"type": resourceschema.StringAttribute{
-		Required:    true,
+		Optional:    true,
 		Description: helper.AllowedValuesToDescription(validIdealOrbitTypes),
-		Validators:  []validator.String{stringvalidator.OneOf(validIdealOrbitTypes...)},
+		Validators:  []validator.String{stringvalidator.OneOf(validIdealOrbitTypes...), helper.RequiredIfParentConfigured()},
 	},
 	"inclination": resourceschema.Float64Attribute{
-		Required:   true,
-		Validators: []validator.Float64{float64validator.Between(0.0, 180.0)},
+		Optional:   true,
+		Validators: []validator.Float64{float64validator.Between(0.0, 180.0), helper.RequiredFloat64IfParentConfigured()},
 	},
 	"right_ascension_of_ascending_node": resourceschema.Float64Attribute{
-		Required:   true,
-		Validators: []validator.Float64{float64validator.Between(0.0, 360.0)},
+		Optional:   true,
+		Validators: []validator.Float64{float64validator.Between(0.0, 360.0), helper.RequiredFloat64IfParentConfigured()},
 	},
 	"argument_of_perigee": resourceschema.Float64Attribute{
-		Required:   true,
-		Validators: []validator.Float64{float64validator.Between(0.0, 360.0)},
+		Optional:   true,
+		Validators: []validator.Float64{float64validator.Between(0.0, 360.0), helper.RequiredFloat64IfParentConfigured()},
 	},
 	"altitude_in_meters": resourceschema.Float64Attribute{
-		Required:   true,
-		Validators: []validator.Float64{float64validator.AtLeast(0.0)},
+		Optional:   true,
+		Validators: []validator.Float64{float64validator.AtLeast(0.0), helper.RequiredFloat64IfParentConfigured()},
 	},
 	"eccentricity": resourceschema.Float64Attribute{
-		Required:   true,
-		Validators: []validator.Float64{float64validator.AtLeast(0.0)},
+		Optional:   true,
+		Validators: []validator.Float64{float64validator.AtLeast(0.0), helper.RequiredFloat64IfParentConfigured()},
 	},
 	"perigee_altitude_in_meters": resourceschema.Float64Attribute{
 		Computed: true,
@@ -91,50 +91,50 @@ var gpsConfigurationSchema = map[string]resourceschema.Attribute{
 
 var gpsMetricsSchema = map[string]resourceschema.Attribute{
 	"metric_id_for_latitude": resourceschema.StringAttribute{
-		Required:   true,
-		Validators: helper.ValidUUID(),
+		Optional:   true,
+		Validators: append(helper.ValidUUID(), helper.RequiredIfParentConfigured()),
 	},
 	"metric_id_for_longitude": resourceschema.StringAttribute{
-		Required:   true,
-		Validators: helper.ValidUUID(),
+		Optional:   true,
+		Validators: append(helper.ValidUUID(), helper.RequiredIfParentConfigured()),
 	},
 	"metric_id_for_altitude": resourceschema.StringAttribute{
-		Required:   true,
-		Validators: helper.ValidUUID(),
+		Optional:   true,
+		Validators: append(helper.ValidUUID(), helper.RequiredIfParentConfigured()),
 	},
 	"metric_id_for_ground_speed": resourceschema.StringAttribute{
-		Required:   true,
-		Validators: helper.ValidUUID(),
+		Optional:   true,
+		Validators: append(helper.ValidUUID(), helper.RequiredIfParentConfigured()),
 	},
 }
 
 var standardDeviationsSchema = map[string]resourceschema.Attribute{
 	"latitude": resourceschema.Float64Attribute{
-		Required:   true,
-		Validators: []validator.Float64{float64validator.AtLeast(0.01)},
+		Optional:   true,
+		Validators: []validator.Float64{float64validator.AtLeast(0.01), helper.RequiredFloat64IfParentConfigured()},
 	},
 	"longitude": resourceschema.Float64Attribute{
-		Required:   true,
-		Validators: []validator.Float64{float64validator.AtLeast(0.01)},
+		Optional:   true,
+		Validators: []validator.Float64{float64validator.AtLeast(0.01), helper.RequiredFloat64IfParentConfigured()},
 	},
 	"altitude": resourceschema.Float64Attribute{
-		Required:   true,
-		Validators: []validator.Float64{float64validator.AtLeast(0.0)},
+		Optional:   true,
+		Validators: []validator.Float64{float64validator.AtLeast(0.0), helper.RequiredFloat64IfParentConfigured()},
 	},
 	"ground_speed": resourceschema.Float64Attribute{
-		Required:   true,
-		Validators: []validator.Float64{float64validator.AtLeast(0.0)},
+		Optional:   true,
+		Validators: []validator.Float64{float64validator.AtLeast(0.0), helper.RequiredFloat64IfParentConfigured()},
 	},
 }
 
 var satelliteConfigurationSchema = map[string]resourceschema.Attribute{
 	"drag_cross_section": resourceschema.Float64Attribute{
-		Required:   true,
-		Validators: []validator.Float64{float64validator.AtLeast(0.01)},
+		Optional:   true,
+		Validators: []validator.Float64{float64validator.AtLeast(0.01), helper.RequiredFloat64IfParentConfigured()},
 	},
 	"radiation_cross_section": resourceschema.Float64Attribute{
-		Required:   true,
-		Validators: []validator.Float64{float64validator.AtLeast(0.01)},
+		Optional:   true,
+		Validators: []validator.Float64{float64validator.AtLeast(0.01), helper.RequiredFloat64IfParentConfigured()},
 	},
 }
 

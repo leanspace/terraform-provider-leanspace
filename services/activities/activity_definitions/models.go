@@ -7,7 +7,7 @@ type ActivityDefinition struct {
 	NodeId              string                     `json:"nodeId"`
 	Name                string                     `json:"name"`
 	Description         *string                    `json:"description,omitempty"`
-	EstimatedDuration   int                        `json:"estimatedDuration"`
+	EstimatedDuration   *int                       `json:"estimatedDuration,omitempty"`
 	Metadata            []Metadata[any]            `json:"metadata,omitempty"`
 	ArgumentDefinitions []ArgumentDefinition[any]  `json:"argumentDefinitions,omitempty"`
 	CommandMappings     []CommandMapping           `json:"commandMappings"`
