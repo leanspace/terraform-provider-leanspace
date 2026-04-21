@@ -3,7 +3,6 @@ package areas_of_interest
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
@@ -40,7 +39,7 @@ func (x *AreaOfInterest) ToTF() any {
 func (tf *AreaOfInterestTF) ToAPI() any {
 	return &AreaOfInterest{
 		AuditModel: general_objects.AuditModelFromTF(tf.AuditModelTF),
-		Name:       helper.FromTFString(tf.Name),
+		Name:       tf.Name.ValueString(),
 		Shape:      areaOfInterestShapeValueFromTF(tf.Shape),
 		Tags:       general_objects.KeyValuesFromTF(tf.Tags),
 	}
@@ -91,7 +90,7 @@ func areaOfInterestShapeToTF(x *AreaOfInterestShape) *AreaOfInterestShapeTF {
 		Type:                types.StringValue(x.Type),
 		Geolocation:         geoPointToTF(x.Geolocation),
 		CenterGeolocation:   geoPointToTF(x.CenterGeolocation),
-		RadiusInMeters:      helper.TFFloat64PtrValue(x.RadiusInMeters),
+		RadiusInMeters:      types.Float64PointerValue(x.RadiusInMeters),
 		VerticesGeolocation: geoPointSliceToTF(x.VerticesGeolocation),
 	}
 }
@@ -101,10 +100,10 @@ func areaOfInterestShapeFromTF(tf *AreaOfInterestShapeTF) *AreaOfInterestShape {
 		return nil
 	}
 	return &AreaOfInterestShape{
-		Type:                helper.FromTFString(tf.Type),
+		Type:                tf.Type.ValueString(),
 		Geolocation:         geoPointFromTF(tf.Geolocation),
 		CenterGeolocation:   geoPointFromTF(tf.CenterGeolocation),
-		RadiusInMeters:      helper.FromTFFloat64Ptr(tf.RadiusInMeters),
+		RadiusInMeters:      tf.RadiusInMeters.ValueFloat64Pointer(),
 		VerticesGeolocation: geoPointSliceFromTF(tf.VerticesGeolocation),
 	}
 }

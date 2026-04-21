@@ -116,7 +116,7 @@ func (x *Dashboard) ToTF() any {
 			filtersSet, _ := types.SetValue(types.ObjectType{AttrTypes: dashFilterAttrTypes}, filterElems)
 			sObj, _ := types.ObjectValue(dashSeriesAttrTypes, map[string]attr.Value{
 				"id":          types.StringValue(s.ID),
-				"name":        helper.TFStringPtrValue(s.Name),
+				"name":        types.StringPointerValue(s.Name),
 				"datasource":  types.StringValue(s.Datasource),
 				"aggregation": types.StringValue(s.Aggregation),
 				"filters":     filtersSet,
@@ -143,18 +143,18 @@ func (x *Dashboard) ToTF() any {
 
 			var minElems []attr.Value
 			if len(w.Metadata.YAxisRange) == 2 && w.Metadata.YAxisRange[0] != nil {
-				minElems = []attr.Value{helper.TFFloat64PtrValue(w.Metadata.YAxisRange[0])}
+				minElems = []attr.Value{types.Float64PointerValue(w.Metadata.YAxisRange[0])}
 			}
 			minList, _ := types.ListValue(types.Float64Type, minElems)
 
 			var maxElems []attr.Value
 			if len(w.Metadata.YAxisRange) == 2 && w.Metadata.YAxisRange[1] != nil {
-				maxElems = []attr.Value{helper.TFFloat64PtrValue(w.Metadata.YAxisRange[1])}
+				maxElems = []attr.Value{types.Float64PointerValue(w.Metadata.YAxisRange[1])}
 			}
 			maxList, _ := types.ListValue(types.Float64Type, maxElems)
 
 			metadataObj, _ = types.ObjectValue(dashMetadataAttrTypes, map[string]attr.Value{
-				"y_axis_label":     helper.TFStringPtrValue(w.Metadata.YAxisLabel),
+				"y_axis_label":     types.StringPointerValue(w.Metadata.YAxisLabel),
 				"y_axis_range_min": minList,
 				"y_axis_range_max": maxList,
 				"thresholds":       thresholdList,
@@ -171,7 +171,7 @@ func (x *Dashboard) ToTF() any {
 		for j, t := range w.Tags {
 			tObj, _ := types.ObjectValue(dashTagAttrTypes, map[string]attr.Value{
 				"key":   types.StringValue(t.Key),
-				"value": helper.TFStringPtrValue(t.Value),
+				"value": types.StringPointerValue(t.Value),
 			})
 			tagElems[j] = tObj
 		}
@@ -185,7 +185,7 @@ func (x *Dashboard) ToTF() any {
 			"last_modified_at":       am.LastModifiedAt,
 			"last_modified_by":       am.LastModifiedBy,
 			"name":                   types.StringValue(w.Name),
-			"description":            helper.TFStringPtrValue(w.Description),
+			"description":            types.StringPointerValue(w.Description),
 			"type":                   types.StringValue(w.Type),
 			"granularity":            types.StringValue(w.Granularity),
 			"query_time_dimension":   types.StringValue(w.QueryTimeDimension),
@@ -202,12 +202,12 @@ func (x *Dashboard) ToTF() any {
 	return &DashboardTF{
 		AuditModelTF:    general_objects.AuditModelToTF(&x.AuditModel),
 		Name:            types.StringValue(x.Name),
-		Description:     helper.TFStringPtrValue(x.Description),
+		Description:     types.StringPointerValue(x.Description),
 		NodeIds:         helper.TFStringsValue(x.NodeIds),
 		WidgetInfo:      widgetInfos,
 		Widgets:         dashWidgets,
 		Tags:            general_objects.KeyValuesToTF(x.Tags),
-		TimestampFormat: helper.TFStringPtrValue(x.TimestampFormat),
+		TimestampFormat: types.StringPointerValue(x.TimestampFormat),
 	}
 }
 
@@ -217,8 +217,8 @@ func (tf *DashboardTF) ToAPI() any {
 	widgetInfos := make([]WidgetInfo, len(tf.WidgetInfo))
 	for i, wi := range tf.WidgetInfo {
 		widgetInfos[i] = WidgetInfo{
-			ID:   helper.FromTFString(wi.ID),
-			Type: helper.FromTFString(wi.Type),
+			ID:   wi.ID.ValueString(),
+			Type: wi.Type.ValueString(),
 			W:    helper.FromTFInt64(wi.W),
 			H:    helper.FromTFInt64(wi.H),
 			X:    helper.FromTFInt64(wi.X),
@@ -230,11 +230,11 @@ func (tf *DashboardTF) ToAPI() any {
 
 	return &Dashboard{
 		AuditModel:      general_objects.AuditModelFromTF(tf.AuditModelTF),
-		Name:            helper.FromTFString(tf.Name),
-		Description:     helper.FromTFStringPtr(tf.Description),
+		Name:            tf.Name.ValueString(),
+		Description:     tf.Description.ValueStringPointer(),
 		NodeIds:         nodeIds,
 		WidgetInfo:      widgetInfos,
 		Tags:            general_objects.KeyValuesFromTF(tf.Tags),
-		TimestampFormat: helper.FromTFStringPtr(tf.TimestampFormat),
+		TimestampFormat: tf.TimestampFormat.ValueStringPointer(),
 	}
 }

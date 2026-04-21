@@ -45,14 +45,14 @@ func metricAttributeToTF(a *general_objects.DefinitionAttribute[any]) *MetricAtt
 		Type:      types.StringValue(a.Type),
 		MinLength: helper.TFIntPtrValue(a.MinLength),
 		MaxLength: helper.TFIntPtrValue(a.MaxLength),
-		Pattern:   helper.TFStringPtrValue(a.Pattern),
-		Min:       helper.TFFloat64PtrValue(a.Min),
-		Max:       helper.TFFloat64PtrValue(a.Max),
+		Pattern:   types.StringPointerValue(a.Pattern),
+		Min:       types.Float64PointerValue(a.Min),
+		Max:       types.Float64PointerValue(a.Max),
 		Scale:     helper.TFIntPtrValue(a.Scale),
 		Precision: helper.TFIntPtrValue(a.Precision),
-		UnitId:    helper.TFStringPtrValue(a.UnitId),
-		Before:    helper.TFStringPtrValue(a.Before),
-		After:     helper.TFStringPtrValue(a.After),
+		UnitId:    types.StringPointerValue(a.UnitId),
+		Before:    types.StringPointerValue(a.Before),
+		After:     types.StringPointerValue(a.After),
 		Fields:    general_objects.FieldsDefToTF(a.Fields),
 		MinSize:   helper.TFIntPtrValue(a.MinSize),
 		MaxSize:   helper.TFIntPtrValue(a.MaxSize),
@@ -64,7 +64,7 @@ func metricAttributeToTF(a *general_objects.DefinitionAttribute[any]) *MetricAtt
 			tf.Options[k] = types.StringValue(fmt.Sprint(v))
 		}
 	}
-	tf.Constraint = general_objects.ArrayConstraintToTF(&a.Constraint)
+	tf.Constraint = general_objects.ArrayConstraintToTF(a.Constraint)
 	return tf
 }
 
@@ -73,26 +73,26 @@ func metricAttributeFromTF(tf *MetricAttributeTF) general_objects.DefinitionAttr
 		return general_objects.DefinitionAttribute[any]{}
 	}
 	a := general_objects.DefinitionAttribute[any]{
-		Type:      helper.FromTFString(tf.Type),
+		Type:      tf.Type.ValueString(),
 		MinLength: helper.FromTFIntPtr(tf.MinLength),
 		MaxLength: helper.FromTFIntPtr(tf.MaxLength),
-		Pattern:   helper.FromTFStringPtr(tf.Pattern),
-		Min:       helper.FromTFFloat64Ptr(tf.Min),
-		Max:       helper.FromTFFloat64Ptr(tf.Max),
+		Pattern:   tf.Pattern.ValueStringPointer(),
+		Min:       tf.Min.ValueFloat64Pointer(),
+		Max:       tf.Max.ValueFloat64Pointer(),
 		Scale:     helper.FromTFIntPtr(tf.Scale),
 		Precision: helper.FromTFIntPtr(tf.Precision),
-		UnitId:    helper.FromTFStringPtr(tf.UnitId),
-		Before:    helper.FromTFStringPtr(tf.Before),
-		After:     helper.FromTFStringPtr(tf.After),
+		UnitId:    tf.UnitId.ValueStringPointer(),
+		Before:    tf.Before.ValueStringPointer(),
+		After:     tf.After.ValueStringPointer(),
 		Fields:    general_objects.FieldsDefFromTF(tf.Fields),
 		MinSize:   helper.FromTFIntPtr(tf.MinSize),
 		MaxSize:   helper.FromTFIntPtr(tf.MaxSize),
-		Unique:    helper.FromTFBool(tf.Unique),
+		Unique:    tf.Unique.ValueBool(),
 	}
 	if tf.Options != nil {
 		opts := make(map[string]any, len(tf.Options))
 		for k, v := range tf.Options {
-			opts[k] = helper.FromTFString(v)
+			opts[k] = v.ValueString()
 		}
 		a.Options = &opts
 	}
@@ -112,9 +112,9 @@ func (x *Metric[T]) ToTF() interface{} {
 	return &MetricTF{
 		AuditModelTF:    general_objects.AuditModelToTF(&x.AuditModel),
 		Name:            types.StringValue(x.Name),
-		Description:     helper.TFStringPtrValue(x.Description),
+		Description:     types.StringPointerValue(x.Description),
 		NodeId:          types.StringValue(x.NodeId),
-		AncestorAssetId: helper.TFStringPtrValue(x.AncestorAssetId),
+		AncestorAssetId: types.StringPointerValue(x.AncestorAssetId),
 		Tags:            general_objects.KeyValuesToTF(x.Tags),
 		Attributes:      metricAttributeToTF(&genAttr),
 	}
@@ -123,10 +123,10 @@ func (x *Metric[T]) ToTF() interface{} {
 func (tf *MetricTF) ToAPI() interface{} {
 	return &Metric[interface{}]{
 		AuditModel:      general_objects.AuditModelFromTF(tf.AuditModelTF),
-		Name:            helper.FromTFString(tf.Name),
-		Description:     helper.FromTFStringPtr(tf.Description),
-		NodeId:          helper.FromTFString(tf.NodeId),
-		AncestorAssetId: helper.FromTFStringPtr(tf.AncestorAssetId),
+		Name:            tf.Name.ValueString(),
+		Description:     tf.Description.ValueStringPointer(),
+		NodeId:          tf.NodeId.ValueString(),
+		AncestorAssetId: tf.AncestorAssetId.ValueStringPointer(),
 		Tags:            general_objects.KeyValuesFromTF(tf.Tags),
 		Attributes:      metricAttributeFromTF(tf.Attributes),
 	}

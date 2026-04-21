@@ -3,7 +3,6 @@ package access_policies
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
@@ -25,7 +24,7 @@ func (x *AccessPolicy) ToTF() any {
 	return &AccessPolicyTF{
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
 		Name:         types.StringValue(x.Name),
-		Description:  helper.TFStringPtrValue(x.Description),
+		Description:  types.StringPointerValue(x.Description),
 		ReadOnly:     types.BoolValue(x.ReadOnly),
 		Statements:   statementSliceToTF(x.Statements),
 		Tags:         general_objects.KeyValuesToTF(x.Tags),
@@ -35,9 +34,9 @@ func (x *AccessPolicy) ToTF() any {
 func (tf *AccessPolicyTF) ToAPI() any {
 	return &AccessPolicy{
 		AuditModel:  general_objects.AuditModelFromTF(tf.AuditModelTF),
-		Name:        helper.FromTFString(tf.Name),
-		Description: helper.FromTFStringPtr(tf.Description),
-		ReadOnly:    helper.FromTFBool(tf.ReadOnly),
+		Name:        tf.Name.ValueString(),
+		Description: tf.Description.ValueStringPointer(),
+		ReadOnly:    tf.ReadOnly.ValueBool(),
 		Statements:  statementSliceFromTF(tf.Statements),
 		Tags:        general_objects.KeyValuesFromTF(tf.Tags),
 	}

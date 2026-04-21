@@ -60,10 +60,10 @@ func (x *Node) ToTF() any {
 	tf := &NodeTF{
 		AuditModelTF:     general_objects.AuditModelToTF(&x.AuditModel),
 		Name:             types.StringValue(x.Name),
-		Description:      helper.TFStringPtrValue(x.Description),
-		ParentNodeId:     helper.TFStringPtrValue(x.ParentNodeId),
+		Description:      types.StringPointerValue(x.Description),
+		ParentNodeId:     types.StringPointerValue(x.ParentNodeId),
 		Type:             types.StringValue(x.Type),
-		Kind:             helper.TFStringPtrValue(x.Kind),
+		Kind:             types.StringPointerValue(x.Kind),
 		Tags:             general_objects.KeyValuesToTF(x.Tags),
 		NumberOfChildren: helper.TFInt64Value(x.NumberOfChildren),
 		// nodes is Computed-only; set empty set so the framework does not see a null→value diff.
@@ -71,8 +71,8 @@ func (x *Node) ToTF() any {
 	}
 
 	if x.Kind != nil && *x.Kind == "SATELLITE" {
-		tf.NoradId = helper.TFStringPtrValue(x.NoradId)
-		tf.InternationalDesignator = helper.TFStringPtrValue(x.InternationalDesignator)
+		tf.NoradId = types.StringPointerValue(x.NoradId)
+		tf.InternationalDesignator = types.StringPointerValue(x.InternationalDesignator)
 		tf.Tle = helper.TFStringsValue(x.Tle)
 	}
 
@@ -88,19 +88,19 @@ func (x *Node) ToTF() any {
 func (tf *NodeTF) ToAPI() any {
 	node := &Node{
 		AuditModel:              general_objects.AuditModelFromTF(tf.AuditModelTF),
-		Name:                    helper.FromTFString(tf.Name),
-		Description:             helper.FromTFStringPtr(tf.Description),
-		ParentNodeId:            helper.FromTFStringPtr(tf.ParentNodeId),
-		Type:                    helper.FromTFString(tf.Type),
-		Kind:                    helper.FromTFStringPtr(tf.Kind),
+		Name:                    tf.Name.ValueString(),
+		Description:             tf.Description.ValueStringPointer(),
+		ParentNodeId:            tf.ParentNodeId.ValueStringPointer(),
+		Type:                    tf.Type.ValueString(),
+		Kind:                    tf.Kind.ValueStringPointer(),
 		Tags:                    general_objects.KeyValuesFromTF(tf.Tags),
 		NumberOfChildren:        helper.FromTFInt64(tf.NumberOfChildren),
-		NoradId:                 helper.FromTFStringPtr(tf.NoradId),
-		InternationalDesignator: helper.FromTFStringPtr(tf.InternationalDesignator),
+		NoradId:                 tf.NoradId.ValueStringPointer(),
+		InternationalDesignator: tf.InternationalDesignator.ValueStringPointer(),
 		Tle:                     helper.FromTFStrings(tf.Tle),
-		Latitude:                helper.FromTFFloat64(tf.Latitude),
-		Longitude:               helper.FromTFFloat64(tf.Longitude),
-		Elevation:               helper.FromTFFloat64(tf.Elevation),
+		Latitude:                tf.Latitude.ValueFloat64(),
+		Longitude:               tf.Longitude.ValueFloat64(),
+		Elevation:               tf.Elevation.ValueFloat64(),
 	}
 
 	// Build PropertyList from the flattened fields (same logic as FromMap)

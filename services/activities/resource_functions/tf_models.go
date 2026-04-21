@@ -3,7 +3,6 @@ package resource_functions
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
@@ -36,9 +35,9 @@ func (x *ResourceFunction) ToTF() any {
 func (tf *ResourceFunctionTF) ToAPI() any {
 	return &ResourceFunction{
 		AuditModel:           general_objects.AuditModelFromTF(tf.AuditModelTF),
-		ActivityDefinitionId: helper.FromTFString(tf.ActivityDefinitionId),
-		ResourceId:           helper.FromTFString(tf.ResourceId),
-		Name:                 helper.FromTFString(tf.Name),
+		ActivityDefinitionId: tf.ActivityDefinitionId.ValueString(),
+		ResourceId:           tf.ResourceId.ValueString(),
+		Name:                 tf.Name.ValueString(),
 		Formula:              resourceFunctionFormulaValueFromTF(tf.Formula),
 	}
 }

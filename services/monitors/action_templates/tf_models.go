@@ -2,7 +2,6 @@ package action_templates
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
@@ -25,9 +24,9 @@ func (x *ActionTemplate) ToTF() any {
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
 		Name:         types.StringValue(x.Name),
 		Type:         types.StringValue(x.Type),
-		URL:          helper.TFStringPtrValue(x.URL),
-		Payload:      helper.TFStringPtrValue(x.Payload),
-		Content:      helper.TFStringPtrValue(x.Content),
+		URL:          types.StringPointerValue(x.URL),
+		Payload:      types.StringPointerValue(x.Payload),
+		Content:      types.StringPointerValue(x.Content),
 		Headers:      headers,
 	}
 }
@@ -37,16 +36,16 @@ func (tf *ActionTemplateTF) ToAPI() any {
 	if tf.Headers != nil {
 		headers = make(map[string]string, len(tf.Headers))
 		for k, v := range tf.Headers {
-			headers[k] = helper.FromTFString(v)
+			headers[k] = v.ValueString()
 		}
 	}
 	return &ActionTemplate{
 		AuditModel: general_objects.AuditModelFromTF(tf.AuditModelTF),
-		Name:       helper.FromTFString(tf.Name),
-		Type:       helper.FromTFString(tf.Type),
-		URL:        helper.FromTFStringPtr(tf.URL),
-		Payload:    helper.FromTFStringPtr(tf.Payload),
-		Content:    helper.FromTFStringPtr(tf.Content),
+		Name:       tf.Name.ValueString(),
+		Type:       tf.Type.ValueString(),
+		URL:        tf.URL.ValueStringPointer(),
+		Payload:    tf.Payload.ValueStringPointer(),
+		Content:    tf.Content.ValueStringPointer(),
 		Headers:    headers,
 	}
 }

@@ -63,7 +63,7 @@ func (x *Monitor) ToTF() any {
 	rule = &RuleTF{
 		ComparisonOperator: types.StringValue(x.Rule.ComparisonOperator),
 		ComparisonValue:    types.Float64Value(x.Rule.ComparisonValue),
-		Tolerance:          helper.TFFloat64PtrValue(x.Rule.Tolerance),
+		Tolerance:          types.Float64PointerValue(x.Rule.Tolerance),
 	}
 
 	atElems := make([]attr.Value, len(x.ActionTemplates))
@@ -114,7 +114,7 @@ func (x *Monitor) ToTF() any {
 	return &MonitorTF{
 		AuditModelTF:        general_objects.AuditModelToTF(&x.AuditModel),
 		Name:                types.StringValue(x.Name),
-		Description:         helper.TFStringPtrValue(x.Description),
+		Description:         types.StringPointerValue(x.Description),
 		Status:              types.StringValue(x.Status),
 		MetricId:            types.StringValue(x.MetricId),
 		NodeId:              types.StringValue(x.NodeId),
@@ -129,27 +129,27 @@ func (tf *MonitorTF) ToAPI() any {
 	var rule Rule
 	if tf.Rule != nil {
 		rule = Rule{
-			ComparisonOperator: helper.FromTFString(tf.Rule.ComparisonOperator),
-			ComparisonValue:    helper.FromTFFloat64(tf.Rule.ComparisonValue),
-			Tolerance:          helper.FromTFFloat64Ptr(tf.Rule.Tolerance),
+			ComparisonOperator: tf.Rule.ComparisonOperator.ValueString(),
+			ComparisonValue:    tf.Rule.ComparisonValue.ValueFloat64(),
+			Tolerance:          tf.Rule.Tolerance.ValueFloat64Pointer(),
 		}
 	}
 
 	actionTemplateLinks := make([]ActionTemplateLink, len(tf.ActionTemplateLinks))
 	for i, atl := range tf.ActionTemplateLinks {
 		actionTemplateLinks[i] = ActionTemplateLink{
-			ID:          helper.FromTFString(atl.ID),
+			ID:          atl.ID.ValueString(),
 			TriggeredOn: helper.FromTFStrings(atl.TriggeredOn),
 		}
 	}
 
 	return &Monitor{
 		AuditModel:          general_objects.AuditModelFromTF(tf.AuditModelTF),
-		Name:                helper.FromTFString(tf.Name),
-		Description:         helper.FromTFStringPtr(tf.Description),
-		Status:              helper.FromTFString(tf.Status),
-		MetricId:            helper.FromTFString(tf.MetricId),
-		NodeId:              helper.FromTFString(tf.NodeId),
+		Name:                tf.Name.ValueString(),
+		Description:         tf.Description.ValueStringPointer(),
+		Status:              tf.Status.ValueString(),
+		MetricId:            tf.MetricId.ValueString(),
+		NodeId:              tf.NodeId.ValueString(),
 		Rule:                rule,
 		ActionTemplateLinks: actionTemplateLinks,
 		Tags:                general_objects.KeyValuesFromTF(tf.Tags),

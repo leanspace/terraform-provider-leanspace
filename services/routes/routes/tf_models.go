@@ -30,7 +30,7 @@ func (x *Route) ToTF() any {
 	return &RouteTF{
 		AuditModelTF:   general_objects.AuditModelToTF(&x.AuditModel),
 		Name:           types.StringValue(x.Name),
-		Description:    helper.TFStringPtrValue(x.Description),
+		Description:    types.StringPointerValue(x.Description),
 		Tags:           general_objects.KeyValuesToTF(x.Tags),
 		Definition:     definitionToTF(&x.Definition),
 		RouteInstances: routeInstanceToList(x.RouteInstances),
@@ -41,8 +41,8 @@ func (x *Route) ToTF() any {
 func (tf *RouteTF) ToAPI() any {
 	return &Route{
 		AuditModel:     general_objects.AuditModelFromTF(tf.AuditModelTF),
-		Name:           helper.FromTFString(tf.Name),
-		Description:    helper.FromTFStringPtr(tf.Description),
+		Name:           tf.Name.ValueString(),
+		Description:    tf.Description.ValueStringPointer(),
 		Tags:           general_objects.KeyValuesFromTF(tf.Tags),
 		Definition:     definitionValueFromTF(tf.Definition),
 		RouteInstances: routeInstanceFromList(tf.RouteInstances),
@@ -58,7 +58,7 @@ func definitionToTF(x *Definition) *DefinitionTF {
 		Configuration:    types.StringValue(x.Configuration),
 		LogLevel:         types.StringValue(x.LogLevel),
 		Valid:            types.BoolValue(x.Valid),
-		ServiceAccountId: helper.TFStringPtrValue(x.ServiceAccountId),
+		ServiceAccountId: types.StringPointerValue(x.ServiceAccountId),
 		Errors:           errorToList(x.Errors),
 	}
 }
@@ -68,10 +68,10 @@ func definitionFromTF(tf *DefinitionTF) *Definition {
 		return nil
 	}
 	return &Definition{
-		Configuration:    helper.FromTFString(tf.Configuration),
-		LogLevel:         helper.FromTFString(tf.LogLevel),
-		Valid:            helper.FromTFBool(tf.Valid),
-		ServiceAccountId: helper.FromTFStringPtr(tf.ServiceAccountId),
+		Configuration:    tf.Configuration.ValueString(),
+		LogLevel:         tf.LogLevel.ValueString(),
+		Valid:            tf.Valid.ValueBool(),
+		ServiceAccountId: tf.ServiceAccountId.ValueStringPointer(),
 		Errors:           errorFromList(tf.Errors),
 	}
 }
@@ -114,12 +114,12 @@ func routeInstanceToList(xs []RouteInstance) types.List {
 	for i := range xs {
 		elems[i] = types.ObjectValueMust(routeInstanceAttrTypes, map[string]attr.Value{
 			"status":                        types.StringValue(xs[i].Status),
-			"last_status_at":                helper.TFStringPtrValue(xs[i].LastStatusAt),
+			"last_status_at":                types.StringPointerValue(xs[i].LastStatusAt),
 			"container_id":                  types.StringValue(xs[i].ContainerId),
-			"last_message_start_process_at": helper.TFStringPtrValue(xs[i].LastMessageStartProcessAt),
-			"last_message_end_process_at":   helper.TFStringPtrValue(xs[i].LastMessageEndProcessAt),
+			"last_message_start_process_at": types.StringPointerValue(xs[i].LastMessageStartProcessAt),
+			"last_message_end_process_at":   types.StringPointerValue(xs[i].LastMessageEndProcessAt),
 			"number_of_messages_processed":  helper.TFInt64Value(xs[i].NumberOfMessagesProcessed),
-			"camel_route_id":                helper.TFStringPtrValue(xs[i].CamelRouteId),
+			"camel_route_id":                types.StringPointerValue(xs[i].CamelRouteId),
 		})
 	}
 	return types.ListValueMust(types.ObjectType{AttrTypes: routeInstanceAttrTypes}, elems)
@@ -134,13 +134,13 @@ func routeInstanceFromList(list types.List) []RouteInstance {
 		obj := elem.(types.Object)
 		attrs := obj.Attributes()
 		result[i] = RouteInstance{
-			Status:                    helper.FromTFString(attrs["status"].(types.String)),
-			LastStatusAt:              helper.FromTFStringPtr(attrs["last_status_at"].(types.String)),
-			ContainerId:               helper.FromTFString(attrs["container_id"].(types.String)),
-			LastMessageStartProcessAt: helper.FromTFStringPtr(attrs["last_message_start_process_at"].(types.String)),
-			LastMessageEndProcessAt:   helper.FromTFStringPtr(attrs["last_message_end_process_at"].(types.String)),
+			Status:                    attrs["status"].(types.String).ValueString(),
+			LastStatusAt:              attrs["last_status_at"].(types.String).ValueStringPointer(),
+			ContainerId:               attrs["container_id"].(types.String).ValueString(),
+			LastMessageStartProcessAt: attrs["last_message_start_process_at"].(types.String).ValueStringPointer(),
+			LastMessageEndProcessAt:   attrs["last_message_end_process_at"].(types.String).ValueStringPointer(),
 			NumberOfMessagesProcessed: helper.FromTFInt64(attrs["number_of_messages_processed"].(types.Int64)),
-			CamelRouteId:              helper.FromTFStringPtr(attrs["camel_route_id"].(types.String)),
+			CamelRouteId:              attrs["camel_route_id"].(types.String).ValueStringPointer(),
 		}
 	}
 	return result
@@ -171,8 +171,8 @@ func errorFromList(list types.List) []Error {
 		obj := elem.(types.Object)
 		attrs := obj.Attributes()
 		result[i] = Error{
-			Code:    helper.FromTFString(attrs["code"].(types.String)),
-			Message: helper.FromTFString(attrs["message"].(types.String)),
+			Code:    attrs["code"].(types.String).ValueString(),
+			Message: attrs["message"].(types.String).ValueString(),
 		}
 	}
 	return result

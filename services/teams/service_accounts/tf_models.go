@@ -29,7 +29,7 @@ func (x *ServiceAccount) ToTF() any {
 func (tf *ServiceAccountTF) ToAPI() any {
 	return &ServiceAccount{
 		AuditModel:  general_objects.AuditModelFromTF(tf.AuditModelTF),
-		Name:        helper.FromTFString(tf.Name),
+		Name:        tf.Name.ValueString(),
 		PolicyIds:   helper.FromTFStrings(tf.PolicyIds),
 		Credentials: credentialsFromObject(tf.Credentials),
 		Tags:        general_objects.KeyValuesFromTF(tf.Tags),
@@ -57,7 +57,7 @@ func credentialsFromObject(obj types.Object) Credentials {
 	}
 	attrs := obj.Attributes()
 	return Credentials{
-		ClientId:     helper.FromTFString(attrs["client_id"].(types.String)),
-		ClientSecret: helper.FromTFString(attrs["client_secret"].(types.String)),
+		ClientId:     attrs["client_id"].(types.String).ValueString(),
+		ClientSecret: attrs["client_secret"].(types.String).ValueString(),
 	}
 }

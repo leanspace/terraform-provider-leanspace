@@ -549,6 +549,25 @@ func renderFileFlat(pkg, structName string, fields []fieldInfo) ([]byte, error) 
 
 // ---- Full (with nested local structs) ----
 
+// anyFieldsNeedHelper reports whether any of the provided field sets contain a
+// field whose generated code still calls the helper package (int/[]string/map kinds).
+func anyFieldsNeedHelper(sets ...[]fieldInfo) bool {
+	needHelperKinds := map[string]bool{
+		kindInt:             true,
+		kindPtrInt:          true,
+		kindStrings:         true,
+		kindMapStringString: true,
+	}
+	for _, fields := range sets {
+		for _, f := range fields {
+			if needHelperKinds[f.kind] {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func renderFileFull(pkg, structName string, fields []fieldInfo, nestedOrder []string, nestedFields map[string][]fieldInfo, nestedComplex map[string]bool, objectLocalNames map[string]bool, listLocalNames map[string]bool, locals map[string]*ast.StructType) ([]byte, error) {
 	tfName := structName + "TF"
 
@@ -561,7 +580,31 @@ func renderFileFull(pkg, structName string, fields []fieldInfo, nestedOrder []st
 		fmt.Fprintf(&buf, "\t\"github.com/hashicorp/terraform-plugin-framework/attr\"\n")
 	}
 	fmt.Fprintf(&buf, "\t\"github.com/hashicorp/terraform-plugin-framework/types\"\n")
-	fmt.Fprintf(&buf, "\t\"github.com/leanspace/terraform-provider-leanspace/helper\"\n")
+	// Collect all field sets that emit explicit helper calls to determine if helper is needed.
+	// Non-complex nested structs use ReflectToTF/ReflectFromTF and never call helper directly.
+	allFieldSets := [][]fieldInfo{fields}
+	for name, nf := range nestedFields {
+		if nestedComplex[name] {
+			allFieldSets = append(allFieldSets, nf)
+		}
+	}
+	for name := range objectLocalNames {
+		if st, ok := locals[name]; ok {
+			if nf, err2 := parseFields(st, locals); err2 == nil {
+				allFieldSets = append(allFieldSets, nf)
+			}
+		}
+	}
+	for name := range listLocalNames {
+		if st, ok := locals[name]; ok {
+			if nf, err2 := parseFields(st, locals); err2 == nil {
+				allFieldSets = append(allFieldSets, nf)
+			}
+		}
+	}
+	if anyFieldsNeedHelper(allFieldSets...) {
+		fmt.Fprintf(&buf, "\t\"github.com/leanspace/terraform-provider-leanspace/helper\"\n")
+	}
 	fmt.Fprintf(&buf, "\t\"github.com/leanspace/terraform-provider-leanspace/helper/general_objects\"\n")
 	fmt.Fprintf(&buf, ")\n\n")
 
@@ -788,21 +831,21 @@ func fromObjectAttrExpr(fi fieldInfo) string {
 	ref := `attrs["` + fi.tfsdk + `"]`
 	switch fi.kind {
 	case kindString:
-		return "helper.FromTFString(" + ref + ".(types.String))"
+		return ref + ".(types.String).ValueString()"
 	case kindPtrString:
-		return "helper.FromTFStringPtr(" + ref + ".(types.String))"
+		return ref + ".(types.String).ValueStringPointer()"
 	case kindBool:
-		return "helper.FromTFBool(" + ref + ".(types.Bool))"
+		return ref + ".(types.Bool).ValueBool()"
 	case kindPtrBool:
-		return "helper.FromTFBoolPtr(" + ref + ".(types.Bool))"
+		return ref + ".(types.Bool).ValueBoolPointer()"
 	case kindInt:
 		return "helper.FromTFInt64(" + ref + ".(types.Int64))"
 	case kindPtrInt:
 		return "helper.FromTFIntPtr(" + ref + ".(types.Int64))"
 	case kindFloat64:
-		return "helper.FromTFFloat64(" + ref + ".(types.Float64))"
+		return ref + ".(types.Float64).ValueFloat64()"
 	case kindPtrFloat64:
-		return "helper.FromTFFloat64Ptr(" + ref + ".(types.Float64))"
+		return ref + ".(types.Float64).ValueFloat64Pointer()"
 	}
 	return "/* unsupported field type for object-local struct */"
 }
@@ -814,11 +857,11 @@ func toTFExpr(fi fieldInfo, src string) string {
 	case kindString:
 		return "types.StringValue(" + ref + ")"
 	case kindPtrString:
-		return "helper.TFStringPtrValue(" + ref + ")"
+		return "types.StringPointerValue(" + ref + ")"
 	case kindBool:
 		return "types.BoolValue(" + ref + ")"
 	case kindPtrBool:
-		return "helper.TFBoolPtrValue(" + ref + ")"
+		return "types.BoolPointerValue(" + ref + ")"
 	case kindInt:
 		return "helper.TFInt64Value(" + ref + ")"
 	case kindPtrInt:
@@ -826,7 +869,7 @@ func toTFExpr(fi fieldInfo, src string) string {
 	case kindFloat64:
 		return "types.Float64Value(" + ref + ")"
 	case kindPtrFloat64:
-		return "helper.TFFloat64PtrValue(" + ref + ")"
+		return "types.Float64PointerValue(" + ref + ")"
 	case kindStrings:
 		return "helper.TFStringsValue(" + ref + ")"
 	case kindKeyValues:
@@ -852,21 +895,21 @@ func fromTFExpr(fi fieldInfo, src string) string {
 	ref := src + "." + fi.goName
 	switch fi.kind {
 	case kindString:
-		return "helper.FromTFString(" + ref + ")"
+		return ref + ".ValueString()"
 	case kindPtrString:
-		return "helper.FromTFStringPtr(" + ref + ")"
+		return ref + ".ValueStringPointer()"
 	case kindBool:
-		return "helper.FromTFBool(" + ref + ")"
+		return ref + ".ValueBool()"
 	case kindPtrBool:
-		return "helper.FromTFBoolPtr(" + ref + ")"
+		return ref + ".ValueBoolPointer()"
 	case kindInt:
 		return "helper.FromTFInt64(" + ref + ")"
 	case kindPtrInt:
 		return "helper.FromTFIntPtr(" + ref + ")"
 	case kindFloat64:
-		return "helper.FromTFFloat64(" + ref + ")"
+		return ref + ".ValueFloat64()"
 	case kindPtrFloat64:
-		return "helper.FromTFFloat64Ptr(" + ref + ")"
+		return ref + ".ValueFloat64Pointer()"
 	case kindStrings:
 		return "helper.FromTFStrings(" + ref + ")"
 	case kindKeyValues:

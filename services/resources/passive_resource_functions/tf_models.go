@@ -3,7 +3,6 @@ package passive_resource_functions
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
@@ -28,7 +27,7 @@ func (x *PassiveResourceFunction) ToTF() any {
 		ResourceId:   types.StringValue(x.ResourceId),
 		Name:         types.StringValue(x.Name),
 		Formula:      passiveResourceFunctionFormulaToTF(&x.Formula),
-		ControlBound: helper.TFFloat64PtrValue(x.ControlBound),
+		ControlBound: types.Float64PointerValue(x.ControlBound),
 		Tags:         general_objects.KeyValuesToTF(x.Tags),
 	}
 }
@@ -36,10 +35,10 @@ func (x *PassiveResourceFunction) ToTF() any {
 func (tf *PassiveResourceFunctionTF) ToAPI() any {
 	return &PassiveResourceFunction{
 		AuditModel:   general_objects.AuditModelFromTF(tf.AuditModelTF),
-		ResourceId:   helper.FromTFString(tf.ResourceId),
-		Name:         helper.FromTFString(tf.Name),
+		ResourceId:   tf.ResourceId.ValueString(),
+		Name:         tf.Name.ValueString(),
 		Formula:      passiveResourceFunctionFormulaValueFromTF(tf.Formula),
-		ControlBound: helper.FromTFFloat64Ptr(tf.ControlBound),
+		ControlBound: tf.ControlBound.ValueFloat64Pointer(),
 		Tags:         general_objects.KeyValuesFromTF(tf.Tags),
 	}
 }

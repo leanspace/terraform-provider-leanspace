@@ -4,7 +4,6 @@ package generic_plugins
 import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
@@ -24,7 +23,7 @@ func (x *GenericPlugin) ToTF() any {
 	return &GenericPluginTF{
 		AuditModelTF:   general_objects.AuditModelToTF(&x.AuditModel),
 		Name:           types.StringValue(x.Name),
-		Description:    helper.TFStringPtrValue(x.Description),
+		Description:    types.StringPointerValue(x.Description),
 		Type:           types.StringValue(x.Type),
 		Language:       types.StringValue(x.Language),
 		SourceCodeLink: sourceCodeLinkToObject(&x.SourceCodeLink),
@@ -37,14 +36,14 @@ func (x *GenericPlugin) ToTF() any {
 func (tf *GenericPluginTF) ToAPI() any {
 	return &GenericPlugin{
 		AuditModel:     general_objects.AuditModelFromTF(tf.AuditModelTF),
-		Name:           helper.FromTFString(tf.Name),
-		Description:    helper.FromTFStringPtr(tf.Description),
-		Type:           helper.FromTFString(tf.Type),
-		Language:       helper.FromTFString(tf.Language),
+		Name:           tf.Name.ValueString(),
+		Description:    tf.Description.ValueStringPointer(),
+		Type:           tf.Type.ValueString(),
+		Language:       tf.Language.ValueString(),
 		SourceCodeLink: sourceCodeLinkFromObject(tf.SourceCodeLink),
-		Status:         helper.FromTFString(tf.Status),
-		FilePath:       helper.FromTFString(tf.FilePath),
-		FileSha:        helper.FromTFString(tf.FileSha),
+		Status:         tf.Status.ValueString(),
+		FilePath:       tf.FilePath.ValueString(),
+		FileSha:        tf.FileSha.ValueString(),
 	}
 }
 
@@ -71,8 +70,8 @@ func sourceCodeLinkFromObject(obj types.Object) SourceCodeLink {
 	}
 	attrs := obj.Attributes()
 	return SourceCodeLink{
-		ExpirationTime: helper.FromTFString(attrs["expiration_time"].(types.String)),
-		SourceCodeId:   helper.FromTFString(attrs["source_code_id"].(types.String)),
-		Url:            helper.FromTFString(attrs["url"].(types.String)),
+		ExpirationTime: attrs["expiration_time"].(types.String).ValueString(),
+		SourceCodeId:   attrs["source_code_id"].(types.String).ValueString(),
+		Url:            attrs["url"].(types.String).ValueString(),
 	}
 }

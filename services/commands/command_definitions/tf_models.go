@@ -2,7 +2,6 @@ package command_definitions
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
@@ -38,7 +37,7 @@ func (x *CommandDefinition) ToTF() any {
 		metadata[i] = MetadataTF{
 			ID:          types.StringValue(m.ID),
 			Name:        types.StringValue(m.Name),
-			Description: helper.TFStringPtrValue(m.Description),
+			Description: types.StringPointerValue(m.Description),
 			Attributes:  &attr,
 		}
 	}
@@ -50,7 +49,7 @@ func (x *CommandDefinition) ToTF() any {
 			ID:          types.StringValue(a.ID),
 			Name:        types.StringValue(a.Name),
 			Identifier:  types.StringValue(a.Identifier),
-			Description: helper.TFStringPtrValue(a.Description),
+			Description: types.StringPointerValue(a.Description),
 			Attributes:  &attr,
 		}
 	}
@@ -59,8 +58,8 @@ func (x *CommandDefinition) ToTF() any {
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
 		NodeId:       types.StringValue(x.NodeId),
 		Name:         types.StringValue(x.Name),
-		Description:  helper.TFStringPtrValue(x.Description),
-		Identifier:   helper.TFStringPtrValue(x.Identifier),
+		Description:  types.StringPointerValue(x.Description),
+		Identifier:   types.StringPointerValue(x.Identifier),
 		Metadata:     metadata,
 		Arguments:    arguments,
 	}
@@ -70,9 +69,9 @@ func (tf *CommandDefinitionTF) ToAPI() any {
 	metadata := make([]Metadata[any], len(tf.Metadata))
 	for i, m := range tf.Metadata {
 		metadata[i] = Metadata[any]{
-			ID:          helper.FromTFString(m.ID),
-			Name:        helper.FromTFString(m.Name),
-			Description: helper.FromTFStringPtr(m.Description),
+			ID:          m.ID.ValueString(),
+			Name:        m.Name.ValueString(),
+			Description: m.Description.ValueStringPointer(),
 		}
 		if m.Attributes != nil {
 			metadata[i].Attributes = general_objects.ValueAttributeFromTF(*m.Attributes)
@@ -82,10 +81,10 @@ func (tf *CommandDefinitionTF) ToAPI() any {
 	arguments := make([]Argument[any], len(tf.Arguments))
 	for i, a := range tf.Arguments {
 		arguments[i] = Argument[any]{
-			ID:          helper.FromTFString(a.ID),
-			Name:        helper.FromTFString(a.Name),
-			Identifier:  helper.FromTFString(a.Identifier),
-			Description: helper.FromTFStringPtr(a.Description),
+			ID:          a.ID.ValueString(),
+			Name:        a.Name.ValueString(),
+			Identifier:  a.Identifier.ValueString(),
+			Description: a.Description.ValueStringPointer(),
 		}
 		if a.Attributes != nil {
 			arguments[i].Attributes = general_objects.DefinitionAttributeFromTF(*a.Attributes)
@@ -94,10 +93,10 @@ func (tf *CommandDefinitionTF) ToAPI() any {
 
 	return &CommandDefinition{
 		AuditModel:  general_objects.AuditModelFromTF(tf.AuditModelTF),
-		NodeId:      helper.FromTFString(tf.NodeId),
-		Name:        helper.FromTFString(tf.Name),
-		Description: helper.FromTFStringPtr(tf.Description),
-		Identifier:  helper.FromTFStringPtr(tf.Identifier),
+		NodeId:      tf.NodeId.ValueString(),
+		Name:        tf.Name.ValueString(),
+		Description: tf.Description.ValueStringPointer(),
+		Identifier:  tf.Identifier.ValueStringPointer(),
 		Metadata:    metadata,
 		Arguments:   arguments,
 	}

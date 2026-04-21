@@ -3,7 +3,6 @@ package sensors
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
@@ -48,8 +47,8 @@ func (x *Sensor) ToTF() any {
 func (tf *SensorTF) ToAPI() any {
 	return &Sensor{
 		AuditModel:    general_objects.AuditModelFromTF(tf.AuditModelTF),
-		SatelliteID:   helper.FromTFString(tf.SatelliteID),
-		Name:          helper.FromTFString(tf.Name),
+		SatelliteID:   tf.SatelliteID.ValueString(),
+		Name:          tf.Name.ValueString(),
 		ApertureShape: apertureShapeValueFromTF(tf.ApertureShape),
 		Tags:          general_objects.KeyValuesFromTF(tf.Tags),
 	}
@@ -149,7 +148,7 @@ func apertureShapeFromTF(tf *ApertureShapeTF) *ApertureShape {
 		return nil
 	}
 	return &ApertureShape{
-		Type:                        helper.FromTFString(tf.Type),
+		Type:                        tf.Type.ValueString(),
 		ApertureCenter:              vector3DFromTF(tf.ApertureCenter),
 		HalfApertureAngle:           halfApertureAngleFromTF(tf.HalfApertureAngle),
 		FirstAxisVector:             vector3DFromTF(tf.FirstAxisVector),

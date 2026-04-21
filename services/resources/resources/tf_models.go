@@ -3,7 +3,6 @@ package resources
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
@@ -33,12 +32,12 @@ func (x *Resource) ToTF() any {
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
 		AssetId:      types.StringValue(x.AssetId),
 		UnitId:       types.StringValue(x.UnitId),
-		MetricId:     helper.TFStringPtrValue(x.MetricId),
+		MetricId:     types.StringPointerValue(x.MetricId),
 		Name:         types.StringValue(x.Name),
-		Description:  helper.TFStringPtrValue(x.Description),
-		DefaultLevel: helper.TFFloat64PtrValue(x.DefaultLevel),
-		LowerLimit:   helper.TFFloat64PtrValue(x.LowerLimit),
-		UpperLimit:   helper.TFFloat64PtrValue(x.UpperLimit),
+		Description:  types.StringPointerValue(x.Description),
+		DefaultLevel: types.Float64PointerValue(x.DefaultLevel),
+		LowerLimit:   types.Float64PointerValue(x.LowerLimit),
+		UpperLimit:   types.Float64PointerValue(x.UpperLimit),
 		Thresholds:   resourceThresholdSliceToTF(x.Thresholds),
 		Tags:         general_objects.KeyValuesToTF(x.Tags),
 	}
@@ -47,14 +46,14 @@ func (x *Resource) ToTF() any {
 func (tf *ResourceTF) ToAPI() any {
 	return &Resource{
 		AuditModel:   general_objects.AuditModelFromTF(tf.AuditModelTF),
-		AssetId:      helper.FromTFString(tf.AssetId),
-		UnitId:       helper.FromTFString(tf.UnitId),
-		MetricId:     helper.FromTFStringPtr(tf.MetricId),
-		Name:         helper.FromTFString(tf.Name),
-		Description:  helper.FromTFStringPtr(tf.Description),
-		DefaultLevel: helper.FromTFFloat64Ptr(tf.DefaultLevel),
-		LowerLimit:   helper.FromTFFloat64Ptr(tf.LowerLimit),
-		UpperLimit:   helper.FromTFFloat64Ptr(tf.UpperLimit),
+		AssetId:      tf.AssetId.ValueString(),
+		UnitId:       tf.UnitId.ValueString(),
+		MetricId:     tf.MetricId.ValueStringPointer(),
+		Name:         tf.Name.ValueString(),
+		Description:  tf.Description.ValueStringPointer(),
+		DefaultLevel: tf.DefaultLevel.ValueFloat64Pointer(),
+		LowerLimit:   tf.LowerLimit.ValueFloat64Pointer(),
+		UpperLimit:   tf.UpperLimit.ValueFloat64Pointer(),
 		Thresholds:   resourceThresholdSliceFromTF(tf.Thresholds),
 		Tags:         general_objects.KeyValuesFromTF(tf.Tags),
 	}

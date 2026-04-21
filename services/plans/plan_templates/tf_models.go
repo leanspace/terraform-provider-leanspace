@@ -73,14 +73,14 @@ func (x *PlanTemplate) ToTF() any {
 			if rf.Formula != nil {
 				formulaSlice = []ResourceFunctionFormulaTF{{
 					Type:      types.StringValue(rf.Formula.Type),
-					Amplitude: helper.TFFloat64PtrValue(rf.Formula.Amplitude),
-					Constant:  helper.TFFloat64PtrValue(rf.Formula.Constant),
-					Rate:      helper.TFFloat64PtrValue(rf.Formula.Rate),
-					TimeUnit:  helper.TFStringPtrValue(rf.Formula.TimeUnit),
+					Amplitude: types.Float64PointerValue(rf.Formula.Amplitude),
+					Constant:  types.Float64PointerValue(rf.Formula.Constant),
+					Rate:      types.Float64PointerValue(rf.Formula.Rate),
+					TimeUnit:  types.StringPointerValue(rf.Formula.TimeUnit),
 				}}
 			}
 			formulas[j] = ResourceFunctionFormulaOverloadTF{
-				ResourceFunctionId: helper.TFStringPtrValue(rf.ResourceFunctionId),
+				ResourceFunctionId: types.StringPointerValue(rf.ResourceFunctionId),
 				Formula:            formulaSlice,
 			}
 		}
@@ -97,15 +97,15 @@ func (x *PlanTemplate) ToTF() any {
 
 		activityConfigs[i] = ActivityConfigResultTF{
 			ActivityDefinitionId:         types.StringValue(ac.ActivityDefinitionId),
-			DelayReferenceOnPredecessor:  helper.TFStringPtrValue(ac.DelayReferenceOnPredecessor),
+			DelayReferenceOnPredecessor:  types.StringPointerValue(ac.DelayReferenceOnPredecessor),
 			Position:                     helper.TFInt64Value(ac.Position),
 			DelayInSeconds:               helper.TFInt64Value(ac.DelayInSeconds),
 			EstimatedDurationInSeconds:   helper.TFIntPtrValue(ac.EstimatedDurationInSeconds),
-			Name:                         helper.TFStringPtrValue(ac.Name),
+			Name:                         types.StringPointerValue(ac.Name),
 			Arguments:                    arguments,
 			ResourceFunctionFormulas:     formulas,
 			Tags:                         general_objects.KeyValuesToTF(ac.Tags),
-			DefinitionLinkStatus:         helper.TFStringPtrValue(ac.DefinitionLinkStatus),
+			DefinitionLinkStatus:         types.StringPointerValue(ac.DefinitionLinkStatus),
 			InvalidDefinitionLinkReasons: defLinkReasons,
 		}
 	}
@@ -124,7 +124,7 @@ func (x *PlanTemplate) ToTF() any {
 		AuditModelTF:               general_objects.AuditModelToTF(&x.AuditModel),
 		AssetId:                    types.StringValue(x.AssetId),
 		Name:                       types.StringValue(x.Name),
-		Description:                helper.TFStringPtrValue(x.Description),
+		Description:                types.StringPointerValue(x.Description),
 		IntegrityStatus:            types.StringValue(x.IntegrityStatus),
 		ActivityConfigs:            activityConfigs,
 		EstimatedDurationInSeconds: helper.TFInt64Value(x.EstimatedDurationInSeconds),
@@ -137,7 +137,7 @@ func (tf *PlanTemplateTF) ToAPI() any {
 	for i, ac := range tf.ActivityConfigs {
 		arguments := make([]Argument, len(ac.Arguments))
 		for j, arg := range ac.Arguments {
-			arguments[j] = Argument{Name: helper.FromTFString(arg.Name)}
+			arguments[j] = Argument{Name: arg.Name.ValueString()}
 			if len(arg.Attributes) > 0 {
 				arguments[j].Attributes = general_objects.ValueAttributeFromTF(arg.Attributes[0])
 			}
@@ -146,40 +146,40 @@ func (tf *PlanTemplateTF) ToAPI() any {
 		formulas := make([]ResourceFunctionFormulaOverload, len(ac.ResourceFunctionFormulas))
 		for j, rf := range ac.ResourceFunctionFormulas {
 			formulas[j] = ResourceFunctionFormulaOverload{
-				ResourceFunctionId: helper.FromTFStringPtr(rf.ResourceFunctionId),
+				ResourceFunctionId: rf.ResourceFunctionId.ValueStringPointer(),
 			}
 			if len(rf.Formula) > 0 {
 				f := rf.Formula[0]
 				formulas[j].Formula = &ResourceFunctionFormula{
-					Type:      helper.FromTFString(f.Type),
-					Amplitude: helper.FromTFFloat64Ptr(f.Amplitude),
-					Constant:  helper.FromTFFloat64Ptr(f.Constant),
-					Rate:      helper.FromTFFloat64Ptr(f.Rate),
-					TimeUnit:  helper.FromTFStringPtr(f.TimeUnit),
+					Type:      f.Type.ValueString(),
+					Amplitude: f.Amplitude.ValueFloat64Pointer(),
+					Constant:  f.Constant.ValueFloat64Pointer(),
+					Rate:      f.Rate.ValueFloat64Pointer(),
+					TimeUnit:  f.TimeUnit.ValueStringPointer(),
 				}
 			}
 		}
 
 		activityConfigs[i] = ActivityConfigResult{
-			ActivityDefinitionId:        helper.FromTFString(ac.ActivityDefinitionId),
-			DelayReferenceOnPredecessor: helper.FromTFStringPtr(ac.DelayReferenceOnPredecessor),
+			ActivityDefinitionId:        ac.ActivityDefinitionId.ValueString(),
+			DelayReferenceOnPredecessor: ac.DelayReferenceOnPredecessor.ValueStringPointer(),
 			Position:                    helper.FromTFInt64(ac.Position),
 			DelayInSeconds:              helper.FromTFInt64(ac.DelayInSeconds),
 			EstimatedDurationInSeconds:  helper.FromTFIntPtr(ac.EstimatedDurationInSeconds),
-			Name:                        helper.FromTFStringPtr(ac.Name),
+			Name:                        ac.Name.ValueStringPointer(),
 			Arguments:                   arguments,
 			ResourceFunctionFormulas:    formulas,
 			Tags:                        general_objects.KeyValuesFromTF(ac.Tags),
-			DefinitionLinkStatus:        helper.FromTFStringPtr(ac.DefinitionLinkStatus),
+			DefinitionLinkStatus:        ac.DefinitionLinkStatus.ValueStringPointer(),
 		}
 	}
 
 	return &PlanTemplate{
 		AuditModel:                 general_objects.AuditModelFromTF(tf.AuditModelTF),
-		AssetId:                    helper.FromTFString(tf.AssetId),
-		Name:                       helper.FromTFString(tf.Name),
-		Description:                helper.FromTFStringPtr(tf.Description),
-		IntegrityStatus:            helper.FromTFString(tf.IntegrityStatus),
+		AssetId:                    tf.AssetId.ValueString(),
+		Name:                       tf.Name.ValueString(),
+		Description:                tf.Description.ValueStringPointer(),
+		IntegrityStatus:            tf.IntegrityStatus.ValueString(),
 		ActivityConfigs:            activityConfigs,
 		EstimatedDurationInSeconds: helper.FromTFInt64(tf.EstimatedDurationInSeconds),
 	}

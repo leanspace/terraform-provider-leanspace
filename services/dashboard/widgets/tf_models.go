@@ -5,7 +5,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
@@ -68,7 +67,7 @@ func (x *Widget) ToTF() any {
 		}
 		series[i] = SeriesTF{
 			ID:          types.StringValue(s.ID),
-			Name:        helper.TFStringPtrValue(s.Name),
+			Name:        types.StringPointerValue(s.Name),
 			Datasource:  types.StringValue(s.Datasource),
 			Aggregation: types.StringValue(s.Aggregation),
 			Filters:     filters,
@@ -78,14 +77,14 @@ func (x *Widget) ToTF() any {
 	var metadata *MetadataTF
 	if x.Metadata != nil {
 		md := &MetadataTF{
-			YAxisLabel: helper.TFStringPtrValue(x.Metadata.YAxisLabel),
+			YAxisLabel: types.StringPointerValue(x.Metadata.YAxisLabel),
 		}
 		if len(x.Metadata.YAxisRange) == 2 {
 			if x.Metadata.YAxisRange[0] != nil {
-				md.YAxisRangeMin = helper.TFFloat64PtrValue(x.Metadata.YAxisRange[0])
+				md.YAxisRangeMin = types.Float64PointerValue(x.Metadata.YAxisRange[0])
 			}
 			if x.Metadata.YAxisRange[1] != nil {
-				md.YAxisRangeMax = helper.TFFloat64PtrValue(x.Metadata.YAxisRange[1])
+				md.YAxisRangeMax = types.Float64PointerValue(x.Metadata.YAxisRange[1])
 			}
 		}
 		thresholds := make([]ThresholdTF, len(x.Metadata.Thresholds))
@@ -120,7 +119,7 @@ func (x *Widget) ToTF() any {
 	return &WidgetTF{
 		AuditModelTF:         general_objects.AuditModelToTF(&x.AuditModel),
 		Name:                 types.StringValue(x.Name),
-		Description:          helper.TFStringPtrValue(x.Description),
+		Description:          types.StringPointerValue(x.Description),
 		Type:                 types.StringValue(x.Type),
 		Granularity:          types.StringValue(x.Granularity),
 		QueryTimeDimension:   types.StringValue(x.QueryTimeDimension),
@@ -138,16 +137,16 @@ func (tf *WidgetTF) ToAPI() any {
 		filters := make([]Filter, len(s.Filters))
 		for j, f := range s.Filters {
 			filters[j] = Filter{
-				FilterBy: helper.FromTFString(f.FilterBy),
-				Operator: helper.FromTFString(f.Operator),
-				Value:    helper.FromTFString(f.Value),
+				FilterBy: f.FilterBy.ValueString(),
+				Operator: f.Operator.ValueString(),
+				Value:    f.Value.ValueString(),
 			}
 		}
 		series[i] = Series{
-			ID:          helper.FromTFString(s.ID),
-			Name:        helper.FromTFStringPtr(s.Name),
-			Datasource:  helper.FromTFString(s.Datasource),
-			Aggregation: helper.FromTFString(s.Aggregation),
+			ID:          s.ID.ValueString(),
+			Name:        s.Name.ValueStringPointer(),
+			Datasource:  s.Datasource.ValueString(),
+			Aggregation: s.Aggregation.ValueString(),
 			Filters:     filters,
 		}
 	}
@@ -155,7 +154,7 @@ func (tf *WidgetTF) ToAPI() any {
 	var metadata *Metadata
 	if tf.Metadata != nil {
 		metadata = &Metadata{
-			YAxisLabel: helper.FromTFStringPtr(tf.Metadata.YAxisLabel),
+			YAxisLabel: tf.Metadata.YAxisLabel.ValueStringPointer(),
 			YAxisRange: make([]*float64, 2),
 		}
 		if !tf.Metadata.YAxisRangeMin.IsNull() && !tf.Metadata.YAxisRangeMin.IsUnknown() {
@@ -168,9 +167,9 @@ func (tf *WidgetTF) ToAPI() any {
 		}
 		thresholds := make([]Threshold, len(tf.Metadata.Thresholds))
 		for j, t := range tf.Metadata.Thresholds {
-			from := helper.FromTFString(t.From)
-			to := helper.FromTFString(t.To)
-			th := Threshold{Color: helper.FromTFString(t.Color)}
+			from := t.From.ValueString()
+			to := t.To.ValueString()
+			th := Threshold{Color: t.Color.ValueString()}
 			if from != "" {
 				f, _ := strconv.ParseFloat(from, 64)
 				th.From = &f
@@ -186,12 +185,12 @@ func (tf *WidgetTF) ToAPI() any {
 
 	return &Widget{
 		AuditModel:           general_objects.AuditModelFromTF(tf.AuditModelTF),
-		Name:                 helper.FromTFString(tf.Name),
-		Description:          helper.FromTFStringPtr(tf.Description),
-		Type:                 helper.FromTFString(tf.Type),
-		Granularity:          helper.FromTFString(tf.Granularity),
-		QueryTimeDimension:   helper.FromTFString(tf.QueryTimeDimension),
-		DisplayTimeDimension: helper.FromTFString(tf.DisplayTimeDimension),
+		Name:                 tf.Name.ValueString(),
+		Description:          tf.Description.ValueStringPointer(),
+		Type:                 tf.Type.ValueString(),
+		Granularity:          tf.Granularity.ValueString(),
+		QueryTimeDimension:   tf.QueryTimeDimension.ValueString(),
+		DisplayTimeDimension: tf.DisplayTimeDimension.ValueString(),
 		Series:               series,
 		Metadata:             metadata,
 		Tags:                 general_objects.KeyValuesFromTF(tf.Tags),

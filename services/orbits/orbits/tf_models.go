@@ -3,22 +3,21 @@ package orbits
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
-
-type GpsMetricsTF struct {
-	MetricIdForLatitude    types.String `tfsdk:"metric_id_for_latitude"`
-	MetricIdForLongitude   types.String `tfsdk:"metric_id_for_longitude"`
-	MetricIdForAltitude    types.String `tfsdk:"metric_id_for_altitude"`
-	MetricIdForGroundSpeed types.String `tfsdk:"metric_id_for_ground_speed"`
-}
 
 type StandardDeviationsTF struct {
 	Latitude    types.Float64 `tfsdk:"latitude"`
 	Longitude   types.Float64 `tfsdk:"longitude"`
 	Altitude    types.Float64 `tfsdk:"altitude"`
 	GroundSpeed types.Float64 `tfsdk:"ground_speed"`
+}
+
+type GpsMetricsTF struct {
+	MetricIdForLatitude    types.String `tfsdk:"metric_id_for_latitude"`
+	MetricIdForLongitude   types.String `tfsdk:"metric_id_for_longitude"`
+	MetricIdForAltitude    types.String `tfsdk:"metric_id_for_altitude"`
+	MetricIdForGroundSpeed types.String `tfsdk:"metric_id_for_ground_speed"`
 }
 
 type SatelliteConfigurationTF struct {
@@ -68,50 +67,13 @@ func (x *Orbit) ToTF() any {
 func (tf *OrbitTF) ToAPI() any {
 	return &Orbit{
 		AuditModel:             general_objects.AuditModelFromTF(tf.AuditModelTF),
-		SatelliteId:            helper.FromTFString(tf.SatelliteId),
-		Name:                   helper.FromTFString(tf.Name),
+		SatelliteId:            tf.SatelliteId.ValueString(),
+		Name:                   tf.Name.ValueString(),
 		IdealOrbit:             idealOrbitFromTF(tf.IdealOrbit),
 		GpsConfiguration:       gpsConfigurationFromTF(tf.GpsConfiguration),
 		SatelliteConfiguration: satelliteConfigurationFromTF(tf.SatelliteConfiguration),
 		Tags:                   general_objects.KeyValuesFromTF(tf.Tags),
 	}
-}
-
-func gpsMetricsToTF(x *GpsMetrics) *GpsMetricsTF {
-	if x == nil {
-		return nil
-	}
-	return general_objects.ReflectToTF[GpsMetricsTF](x)
-}
-
-func gpsMetricsFromTF(tf *GpsMetricsTF) *GpsMetrics {
-	if tf == nil {
-		return nil
-	}
-	return general_objects.ReflectFromTF[GpsMetrics](tf)
-}
-
-func gpsMetricsValueFromTF(tf *GpsMetricsTF) GpsMetrics {
-	if v := gpsMetricsFromTF(tf); v != nil {
-		return *v
-	}
-	return GpsMetrics{}
-}
-
-func gpsMetricsSliceToTF(xs []GpsMetrics) []GpsMetricsTF {
-	result := make([]GpsMetricsTF, len(xs))
-	for i := range xs {
-		result[i] = *general_objects.ReflectToTF[GpsMetricsTF](&xs[i])
-	}
-	return result
-}
-
-func gpsMetricsSliceFromTF(tfs []GpsMetricsTF) []GpsMetrics {
-	result := make([]GpsMetrics, len(tfs))
-	for i := range tfs {
-		result[i] = *general_objects.ReflectFromTF[GpsMetrics](&tfs[i])
-	}
-	return result
 }
 
 func standardDeviationsToTF(x *StandardDeviations) *StandardDeviationsTF {
@@ -147,6 +109,43 @@ func standardDeviationsSliceFromTF(tfs []StandardDeviationsTF) []StandardDeviati
 	result := make([]StandardDeviations, len(tfs))
 	for i := range tfs {
 		result[i] = *general_objects.ReflectFromTF[StandardDeviations](&tfs[i])
+	}
+	return result
+}
+
+func gpsMetricsToTF(x *GpsMetrics) *GpsMetricsTF {
+	if x == nil {
+		return nil
+	}
+	return general_objects.ReflectToTF[GpsMetricsTF](x)
+}
+
+func gpsMetricsFromTF(tf *GpsMetricsTF) *GpsMetrics {
+	if tf == nil {
+		return nil
+	}
+	return general_objects.ReflectFromTF[GpsMetrics](tf)
+}
+
+func gpsMetricsValueFromTF(tf *GpsMetricsTF) GpsMetrics {
+	if v := gpsMetricsFromTF(tf); v != nil {
+		return *v
+	}
+	return GpsMetrics{}
+}
+
+func gpsMetricsSliceToTF(xs []GpsMetrics) []GpsMetricsTF {
+	result := make([]GpsMetricsTF, len(xs))
+	for i := range xs {
+		result[i] = *general_objects.ReflectToTF[GpsMetricsTF](&xs[i])
+	}
+	return result
+}
+
+func gpsMetricsSliceFromTF(tfs []GpsMetricsTF) []GpsMetrics {
+	result := make([]GpsMetrics, len(tfs))
+	for i := range tfs {
+		result[i] = *general_objects.ReflectFromTF[GpsMetrics](&tfs[i])
 	}
 	return result
 }

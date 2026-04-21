@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
@@ -52,8 +51,8 @@ func (x *EventsDefinition) ToTF() interface{} {
 		Name:         types.StringValue(x.Name),
 		Source:       types.StringValue(x.Source),
 		State:        types.StringValue(x.State),
-		Description:  helper.TFStringPtrValue(x.Description),
-		Criticality:  helper.TFStringPtrValue(x.Criticality),
+		Description:  types.StringPointerValue(x.Description),
+		Criticality:  types.StringPointerValue(x.Criticality),
 		Rules:        rules,
 		Tags:         general_objects.KeyValuesToTF(x.Tags),
 	}
@@ -63,24 +62,24 @@ func (tf *EventsDefinitionTF) ToAPI() interface{} {
 	rules := make([]Rules[any], len(tf.Rules))
 	for i, r := range tf.Rules {
 		rules[i] = Rules[any]{
-			Operator: helper.FromTFString(r.Operator),
-			Path:     helper.FromTFString(r.Path),
+			Operator: r.Operator.ValueString(),
+			Path:     r.Path.ValueString(),
 		}
 		if r.ComparisonValue != nil {
 			rules[i].ComparisonValue = &ComparisonValue[any]{
-				Value: helper.FromTFString(r.ComparisonValue.Value),
-				Type:  helper.FromTFString(r.ComparisonValue.Type),
+				Value: r.ComparisonValue.Value.ValueString(),
+				Type:  r.ComparisonValue.Type.ValueString(),
 			}
 		}
 	}
 
 	return &EventsDefinition{
 		AuditModel:  general_objects.AuditModelFromTF(tf.AuditModelTF),
-		Name:        helper.FromTFString(tf.Name),
-		Source:      helper.FromTFString(tf.Source),
-		State:       helper.FromTFString(tf.State),
-		Description: helper.FromTFStringPtr(tf.Description),
-		Criticality: helper.FromTFStringPtr(tf.Criticality),
+		Name:        tf.Name.ValueString(),
+		Source:      tf.Source.ValueString(),
+		State:       tf.State.ValueString(),
+		Description: tf.Description.ValueStringPointer(),
+		Criticality: tf.Criticality.ValueStringPointer(),
 		Rules:       rules,
 		Tags:        general_objects.KeyValuesFromTF(tf.Tags),
 	}

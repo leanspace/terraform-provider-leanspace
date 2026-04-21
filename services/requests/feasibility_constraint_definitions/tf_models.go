@@ -2,7 +2,6 @@ package feasibility_constraint_definitions
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 	"github.com/leanspace/terraform-provider-leanspace/services/activities/activity_definitions"
 )
@@ -20,7 +19,7 @@ func (x *FeasibilityConstraintDefinition) ToTF() interface{} {
 		attr := general_objects.DefinitionAttributeToTF(&a.Attributes)
 		argDefs[i] = activity_definitions.ArgumentDefinitionTF{
 			Name:        types.StringValue(a.Name),
-			Description: helper.TFStringPtrValue(a.Description),
+			Description: types.StringPointerValue(a.Description),
 			Attributes:  &attr,
 		}
 	}
@@ -28,7 +27,7 @@ func (x *FeasibilityConstraintDefinition) ToTF() interface{} {
 	return &FeasibilityConstraintDefinitionTF{
 		AuditModelTF:        general_objects.AuditModelToTF(&x.AuditModel),
 		Name:                types.StringValue(x.Name),
-		Description:         helper.TFStringPtrValue(x.Description),
+		Description:         types.StringPointerValue(x.Description),
 		ArgumentDefinitions: argDefs,
 	}
 }
@@ -37,8 +36,8 @@ func (tf *FeasibilityConstraintDefinitionTF) ToAPI() interface{} {
 	argDefs := make([]activity_definitions.ArgumentDefinition[any], len(tf.ArgumentDefinitions))
 	for i, a := range tf.ArgumentDefinitions {
 		argDefs[i] = activity_definitions.ArgumentDefinition[any]{
-			Name:        helper.FromTFString(a.Name),
-			Description: helper.FromTFStringPtr(a.Description),
+			Name:        a.Name.ValueString(),
+			Description: a.Description.ValueStringPointer(),
 		}
 		if a.Attributes != nil {
 			argDefs[i].Attributes = general_objects.DefinitionAttributeFromTF(*a.Attributes)
@@ -47,8 +46,8 @@ func (tf *FeasibilityConstraintDefinitionTF) ToAPI() interface{} {
 
 	return &FeasibilityConstraintDefinition{
 		AuditModel:          general_objects.AuditModelFromTF(tf.AuditModelTF),
-		Name:                helper.FromTFString(tf.Name),
-		Description:         helper.FromTFStringPtr(tf.Description),
+		Name:                tf.Name.ValueString(),
+		Description:         tf.Description.ValueStringPointer(),
 		ArgumentDefinitions: argDefs,
 	}
 }

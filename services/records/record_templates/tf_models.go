@@ -53,7 +53,7 @@ func (x *RecordTemplate) ToTF() any {
 	return &RecordTemplateTF{
 		AuditModelTF:         general_objects.AuditModelToTF(&x.AuditModel),
 		Name:                 types.StringValue(x.Name),
-		Description:          helper.TFStringPtrValue(x.Description),
+		Description:          types.StringPointerValue(x.Description),
 		StreamId:             types.StringPointerValue(x.StreamId),
 		DefaultParsers:       defaultParsers,
 		NodeIds:              helper.TFStringsValue(x.NodeIds),
@@ -68,7 +68,7 @@ func (tf *RecordTemplateTF) ToAPI() any {
 	properties := make([]Property[any], len(tf.Properties))
 	for i, p := range tf.Properties {
 		properties[i] = Property[any]{
-			Name: helper.FromTFString(p.Name),
+			Name: p.Name.ValueString(),
 		}
 		if p.Attributes != nil {
 			properties[i].Attributes = general_objects.DefinitionAttributeFromTF(*p.Attributes)
@@ -77,9 +77,9 @@ func (tf *RecordTemplateTF) ToAPI() any {
 
 	return &RecordTemplate{
 		AuditModel:           general_objects.AuditModelFromTF(tf.AuditModelTF),
-		Name:                 helper.FromTFString(tf.Name),
-		Description:          helper.FromTFStringPtr(tf.Description),
-		StreamId:             helper.FromTFStringPtr(tf.StreamId),
+		Name:                 tf.Name.ValueString(),
+		Description:          tf.Description.ValueStringPointer(),
+		StreamId:             tf.StreamId.ValueStringPointer(),
 		NodeIds:              helper.FromTFStrings(tf.NodeIds),
 		MetricIds:            helper.FromTFStrings(tf.MetricIds),
 		CommandDefinitionIds: helper.FromTFStrings(tf.CommandDefinitionIds),

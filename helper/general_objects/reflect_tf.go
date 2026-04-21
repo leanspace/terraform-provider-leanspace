@@ -134,11 +134,11 @@ func toTFValue(v reflect.Value) reflect.Value {
 	case typeString:
 		return reflect.ValueOf(types.StringValue(v.String()))
 	case typePtrString:
-		return reflect.ValueOf(helper.TFStringPtrValue(v.Interface().(*string)))
+		return reflect.ValueOf(types.StringPointerValue(v.Interface().(*string)))
 	case typeBool:
 		return reflect.ValueOf(types.BoolValue(v.Bool()))
 	case typePtrBool:
-		return reflect.ValueOf(helper.TFBoolPtrValue(v.Interface().(*bool)))
+		return reflect.ValueOf(types.BoolPointerValue(v.Interface().(*bool)))
 	case typeInt:
 		return reflect.ValueOf(types.Int64Value(v.Int()))
 	case typePtrInt:
@@ -146,7 +146,7 @@ func toTFValue(v reflect.Value) reflect.Value {
 	case typeFloat64:
 		return reflect.ValueOf(types.Float64Value(v.Float()))
 	case typePtrFloat64:
-		return reflect.ValueOf(helper.TFFloat64PtrValue(v.Interface().(*float64)))
+		return reflect.ValueOf(types.Float64PointerValue(v.Interface().(*float64)))
 	case typeStrings:
 		return reflect.ValueOf(helper.TFStringsValue(v.Interface().([]string)))
 	case typeKeyValues:
@@ -161,17 +161,17 @@ func fromTFValue(v reflect.Value, destType reflect.Type) reflect.Value {
 		s := v.Interface().(types.String)
 		switch destType {
 		case typeString:
-			return reflect.ValueOf(helper.FromTFString(s))
+			return reflect.ValueOf(s.ValueString())
 		case typePtrString:
-			return reflect.ValueOf(helper.FromTFStringPtr(s))
+			return reflect.ValueOf(s.ValueStringPointer())
 		}
 	case typeTFBool:
 		b := v.Interface().(types.Bool)
 		switch destType {
 		case typeBool:
-			return reflect.ValueOf(helper.FromTFBool(b))
+			return reflect.ValueOf(b.ValueBool())
 		case typePtrBool:
-			return reflect.ValueOf(helper.FromTFBoolPtr(b))
+			return reflect.ValueOf(b.ValueBoolPointer())
 		}
 	case typeTFInt64:
 		i := v.Interface().(types.Int64)
@@ -185,9 +185,9 @@ func fromTFValue(v reflect.Value, destType reflect.Type) reflect.Value {
 		f := v.Interface().(types.Float64)
 		switch destType {
 		case typeFloat64:
-			return reflect.ValueOf(helper.FromTFFloat64(f))
+			return reflect.ValueOf(f.ValueFloat64())
 		case typePtrFloat64:
-			return reflect.ValueOf(helper.FromTFFloat64Ptr(f))
+			return reflect.ValueOf(f.ValueFloat64Pointer())
 		}
 	case typeTFStrings:
 		return reflect.ValueOf(helper.FromTFStrings(v.Interface().([]types.String)))

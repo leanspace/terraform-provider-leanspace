@@ -105,15 +105,15 @@ func streamComponentToTF(sc StreamComponent) StreamComponentTF {
 		Order:      helper.TFInt64Value(sc.Order),
 		Path:       types.StringValue(sc.Path),
 		Type:       types.StringValue(sc.Type),
-		Processor:  helper.TFStringPtrValue(sc.Processor),
-		DataType:   helper.TFStringPtrValue(sc.DataType),
-		Endianness: helper.TFStringPtrValue(sc.Endianness),
+		Processor:  types.StringPointerValue(sc.Processor),
+		DataType:   types.StringPointerValue(sc.DataType),
+		Endianness: types.StringPointerValue(sc.Endianness),
 	}
 
 	if sc.Repetitive != nil {
 		tf.Repetitive = &RepetitiveTF{
 			Value: helper.TFInt64Value(sc.Repetitive.Value),
-			Path:  helper.TFStringPtrValue(sc.Repetitive.Path),
+			Path:  types.StringPointerValue(sc.Repetitive.Path),
 		}
 	}
 
@@ -122,7 +122,7 @@ func streamComponentToTF(sc StreamComponent) StreamComponentTF {
 			Type:  types.StringValue(sc.Length.Type),
 			Unit:  types.StringValue(sc.Length.Unit),
 			Value: helper.TFInt64Value(sc.Length.Value),
-			Path:  helper.TFStringPtrValue(sc.Length.Path),
+			Path:  types.StringPointerValue(sc.Length.Path),
 		}
 	}
 
@@ -155,28 +155,28 @@ func streamComponentToTF(sc StreamComponent) StreamComponentTF {
 
 func streamComponentFromTF(tf StreamComponentTF) StreamComponent {
 	sc := StreamComponent{
-		Name:       helper.FromTFString(tf.Name),
+		Name:       tf.Name.ValueString(),
 		Order:      helper.FromTFInt64(tf.Order),
-		Path:       helper.FromTFString(tf.Path),
-		Type:       helper.FromTFString(tf.Type),
-		Processor:  helper.FromTFStringPtr(tf.Processor),
-		DataType:   helper.FromTFStringPtr(tf.DataType),
-		Endianness: helper.FromTFStringPtr(tf.Endianness),
+		Path:       tf.Path.ValueString(),
+		Type:       tf.Type.ValueString(),
+		Processor:  tf.Processor.ValueStringPointer(),
+		DataType:   tf.DataType.ValueStringPointer(),
+		Endianness: tf.Endianness.ValueStringPointer(),
 	}
 
 	if tf.Repetitive != nil {
 		sc.Repetitive = &Repetitive{
 			Value: helper.FromTFInt64(tf.Repetitive.Value),
-			Path:  helper.FromTFStringPtr(tf.Repetitive.Path),
+			Path:  tf.Repetitive.Path.ValueStringPointer(),
 		}
 	}
 
 	if tf.Length != nil {
 		sc.Length = &Length{
-			Type:  helper.FromTFString(tf.Length.Type),
-			Unit:  helper.FromTFString(tf.Length.Unit),
+			Type:  tf.Length.Type.ValueString(),
+			Unit:  tf.Length.Unit.ValueString(),
 			Value: helper.FromTFInt64(tf.Length.Value),
-			Path:  helper.FromTFStringPtr(tf.Length.Path),
+			Path:  tf.Length.Path.ValueStringPointer(),
 		}
 	}
 
@@ -184,17 +184,17 @@ func streamComponentFromTF(tf StreamComponentTF) StreamComponent {
 		opts := make([]SwitchOption, len(tf.Expression.Options))
 		for i, o := range tf.Expression.Options {
 			opts[i] = SwitchOption{
-				Component: helper.FromTFString(o.Component),
+				Component: o.Component.ValueString(),
 			}
 			if o.Value != nil {
 				opts[i].Value = SwitchValue[any]{
-					DataType: helper.FromTFString(o.Value.DataType),
-					Data:     helper.FromTFString(o.Value.Data),
+					DataType: o.Value.DataType.ValueString(),
+					Data:     o.Value.Data.ValueString(),
 				}
 			}
 		}
 		sc.Expression = &SwitchExpression{
-			SwitchOn: helper.FromTFString(tf.Expression.SwitchOn),
+			SwitchOn: tf.Expression.SwitchOn.ValueString(),
 			Options:  opts,
 		}
 	}
@@ -233,7 +233,7 @@ func (x *Stream) ToTF() interface{} {
 	for i, m := range x.Mappings {
 		mappings[i] = MappingTF{
 			MetricId:   types.StringValue(m.MetricId),
-			Expression: helper.TFStringPtrValue(m.Expression),
+			Expression: types.StringPointerValue(m.Expression),
 		}
 	}
 
@@ -241,7 +241,7 @@ func (x *Stream) ToTF() interface{} {
 		AuditModelTF: general_objects.AuditModelToTF(&x.AuditModel),
 		Version:      helper.TFInt64Value(x.Version),
 		Name:         types.StringValue(x.Name),
-		Description:  helper.TFStringPtrValue(x.Description),
+		Description:  types.StringPointerValue(x.Description),
 		Tags:         general_objects.KeyValuesToTF(x.Tags),
 		AssetId:      types.StringValue(x.AssetId),
 		Configuration: &ConfigurationTF{
@@ -280,35 +280,35 @@ func (tf *StreamTF) ToAPI() interface{} {
 		compElements = make([]Computation, len(tf.Configuration.Computations.Elements))
 		for i, c := range tf.Configuration.Computations.Elements {
 			compElements[i] = Computation{
-				Name:       helper.FromTFString(c.Name),
+				Name:       c.Name.ValueString(),
 				Order:      helper.FromTFInt64(c.Order),
-				Type:       helper.FromTFString(c.Type),
-				DataType:   helper.FromTFString(c.DataType),
-				Expression: helper.FromTFString(c.Expression),
+				Type:       c.Type.ValueString(),
+				DataType:   c.DataType.ValueString(),
+				Expression: c.Expression.ValueString(),
 			}
 		}
-		compValid = helper.FromTFBool(tf.Configuration.Computations.Valid)
+		compValid = tf.Configuration.Computations.Valid.ValueBool()
 	}
 
 	// Metadata
 	var metadata Metadata
 	if tf.Configuration != nil && tf.Configuration.Metadata != nil && tf.Configuration.Metadata.Timestamp != nil {
-		metadata.Timestamp.Expression = helper.FromTFString(tf.Configuration.Metadata.Timestamp.Expression)
+		metadata.Timestamp.Expression = tf.Configuration.Metadata.Timestamp.Expression.ValueString()
 	}
 
 	// Mappings
 	mappings := make([]Mapping, len(tf.Mappings))
 	for i, m := range tf.Mappings {
 		mappings[i] = Mapping{
-			MetricId:   helper.FromTFString(m.MetricId),
-			Expression: helper.FromTFStringPtr(m.Expression),
+			MetricId:   m.MetricId.ValueString(),
+			Expression: m.Expression.ValueStringPointer(),
 		}
 	}
 
 	var config Configuration
 	if tf.Configuration != nil {
 		config = Configuration{
-			Endianness: helper.FromTFString(tf.Configuration.Endianness),
+			Endianness: tf.Configuration.Endianness.ValueString(),
 			Structure: ElementList[StreamComponent, *StreamComponent]{
 				Elements: structElements,
 			},
@@ -323,10 +323,10 @@ func (tf *StreamTF) ToAPI() interface{} {
 	return &Stream{
 		AuditModel:    general_objects.AuditModelFromTF(tf.AuditModelTF),
 		Version:       helper.FromTFInt64(tf.Version),
-		Name:          helper.FromTFString(tf.Name),
-		Description:   helper.FromTFStringPtr(tf.Description),
+		Name:          tf.Name.ValueString(),
+		Description:   tf.Description.ValueStringPointer(),
 		Tags:          general_objects.KeyValuesFromTF(tf.Tags),
-		AssetId:       helper.FromTFString(tf.AssetId),
+		AssetId:       tf.AssetId.ValueString(),
 		Configuration: config,
 		Mappings:      mappings,
 	}

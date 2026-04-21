@@ -72,10 +72,10 @@ type DefinitionAttribute[T any] struct {
 	// Geopoint
 	Fields *FieldsDef `json:"fields,omitempty"`
 	// Array
-	MinSize    *int                 `json:"minSize,omitempty"`
-	MaxSize    *int                 `json:"maxSize,omitempty"`
-	Unique     bool                 `json:"unique,omitempty"`
-	Constraint ArrayConstraint[any] `json:"elementConstraint,omitempty"`
+	MinSize    *int                  `json:"minSize,omitempty"`
+	MaxSize    *int                  `json:"maxSize,omitempty"`
+	Unique     bool                  `json:"unique,omitempty"`
+	Constraint *ArrayConstraint[any] `json:"elementConstraint,omitempty"`
 }
 
 type ArrayConstraint[T any] struct {
