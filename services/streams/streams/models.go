@@ -102,7 +102,7 @@ type Length struct {
 	Unit string `json:"unit"` // [BITS | BYTES]
 
 	// Fixed
-	Value int `json:"value,omitempty"`
+	Value *int `json:"value,omitempty"`
 
 	// Dynamic
 	Path *string `json:"path,omitempty"`

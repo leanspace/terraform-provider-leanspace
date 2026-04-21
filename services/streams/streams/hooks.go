@@ -3,6 +3,7 @@ package streams
 import (
 	"encoding/base64"
 
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
@@ -65,5 +66,6 @@ func (stream *Stream) PostReadProcess(_ *provider.Client, newValue any) error {
 		return nil
 	}
 	newStream.Tags = general_objects.ReorderKeyValues(stream.Tags, newStream.Tags)
+	newStream.Mappings = helper.ReorderByKey(stream.Mappings, newStream.Mappings, func(m Mapping) string { return m.MetricId })
 	return nil
 }

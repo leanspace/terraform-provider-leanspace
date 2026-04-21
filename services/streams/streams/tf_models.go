@@ -121,7 +121,7 @@ func streamComponentToTF(sc StreamComponent) StreamComponentTF {
 		tf.Length = &LengthTF{
 			Type:  types.StringValue(sc.Length.Type),
 			Unit:  types.StringValue(sc.Length.Unit),
-			Value: helper.TFInt64Value(sc.Length.Value),
+			Value: helper.TFIntPtrValue(sc.Length.Value),
 			Path:  types.StringPointerValue(sc.Length.Path),
 		}
 	}
@@ -175,7 +175,7 @@ func streamComponentFromTF(tf StreamComponentTF) StreamComponent {
 		sc.Length = &Length{
 			Type:  tf.Length.Type.ValueString(),
 			Unit:  tf.Length.Unit.ValueString(),
-			Value: helper.FromTFInt64(tf.Length.Value),
+			Value: helper.FromTFIntPtr(tf.Length.Value),
 			Path:  tf.Length.Path.ValueStringPointer(),
 		}
 	}
