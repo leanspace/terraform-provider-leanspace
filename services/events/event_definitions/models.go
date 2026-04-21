@@ -16,7 +16,7 @@ type EventsDefinition struct {
 type Rules[T any] struct {
 	Operator        string              `json:"operator"`
 	Path            string              `json:"path"`
-	ComparisonValue *ComparisonValue[T] `json:"comparisonValue"`
+	ComparisonValue *ComparisonValue[T] `json:"comparisonValue,omitempty"`
 }
 
 type ComparisonValue[T any] struct {

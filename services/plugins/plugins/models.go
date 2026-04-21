@@ -17,9 +17,9 @@ type Plugin struct {
 	ImplementationClassName          string  `json:"implementationClassName"`
 	Name                             string  `json:"name"`
 	Description                      *string `json:"description,omitempty"`
-	SourceCodeFileDownloadAuthorized bool    `json:"sourceCodeFileDownloadAuthorized,omitempty"`
+	SourceCodeFileDownloadAuthorized bool    `json:"sourceCodeFileDownloadAuthorized"`
 	FilePath                         string  `json:"filePath"`
-	SdkVersion                       string  `json:"sdkVersion,omitempty"`
+	SdkVersion                       *string `json:"sdkVersion,omitempty"`
 	SdkVersionFamily                 string  `json:"sdkVersionFamily"`
 	Status                           string  `json:"status"`
 	FileSha                          string  `json:"fileSha"`

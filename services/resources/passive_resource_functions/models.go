@@ -9,7 +9,7 @@ type PassiveResourceFunction struct {
 	ResourceId   string                         `json:"resourceId"`
 	Name         string                         `json:"name"`
 	Formula      PassiveResourceFunctionFormula `json:"formula"`
-	ControlBound *float64                       `json:"controlBound"`
+	ControlBound *float64                       `json:"controlBound,omitempty"`
 	Tags         []general_objects.KeyValue     `json:"tags,omitempty"`
 }
 

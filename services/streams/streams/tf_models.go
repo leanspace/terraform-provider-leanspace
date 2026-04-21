@@ -112,7 +112,7 @@ func streamComponentToTF(sc StreamComponent) StreamComponentTF {
 
 	if sc.Repetitive != nil {
 		tf.Repetitive = &RepetitiveTF{
-			Value: helper.TFInt64Value(sc.Repetitive.Value),
+			Value: helper.TFIntPtrValue(sc.Repetitive.Value),
 			Path:  types.StringPointerValue(sc.Repetitive.Path),
 		}
 	}
@@ -166,7 +166,7 @@ func streamComponentFromTF(tf StreamComponentTF) StreamComponent {
 
 	if tf.Repetitive != nil {
 		sc.Repetitive = &Repetitive{
-			Value: helper.FromTFInt64(tf.Repetitive.Value),
+			Value: helper.FromTFIntPtr(tf.Repetitive.Value),
 			Path:  tf.Repetitive.Path.ValueStringPointer(),
 		}
 	}

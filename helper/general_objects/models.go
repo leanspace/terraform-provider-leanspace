@@ -74,7 +74,7 @@ type DefinitionAttribute[T any] struct {
 	// Array
 	MinSize    *int                  `json:"minSize,omitempty"`
 	MaxSize    *int                  `json:"maxSize,omitempty"`
-	Unique     bool                  `json:"unique,omitempty"`
+	Unique     *bool                 `json:"unique,omitempty"`
 	Constraint *ArrayConstraint[any] `json:"elementConstraint,omitempty"`
 }
 

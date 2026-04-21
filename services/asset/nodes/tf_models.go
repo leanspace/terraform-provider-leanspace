@@ -77,9 +77,9 @@ func (x *Node) ToTF() any {
 	}
 
 	if x.Kind != nil && *x.Kind == "GROUND_STATION" {
-		tf.Latitude = types.Float64Value(x.Latitude)
-		tf.Longitude = types.Float64Value(x.Longitude)
-		tf.Elevation = types.Float64Value(x.Elevation)
+		tf.Latitude = types.Float64PointerValue(x.Latitude)
+		tf.Longitude = types.Float64PointerValue(x.Longitude)
+		tf.Elevation = types.Float64PointerValue(x.Elevation)
 	}
 
 	return tf
@@ -98,9 +98,9 @@ func (tf *NodeTF) ToAPI() any {
 		NoradId:                 tf.NoradId.ValueStringPointer(),
 		InternationalDesignator: tf.InternationalDesignator.ValueStringPointer(),
 		Tle:                     helper.FromTFStrings(tf.Tle),
-		Latitude:                tf.Latitude.ValueFloat64(),
-		Longitude:               tf.Longitude.ValueFloat64(),
-		Elevation:               tf.Elevation.ValueFloat64(),
+		Latitude:                tf.Latitude.ValueFloat64Pointer(),
+		Longitude:               tf.Longitude.ValueFloat64Pointer(),
+		Elevation:               tf.Elevation.ValueFloat64Pointer(),
 	}
 
 	// Build PropertyList from the flattened fields (same logic as FromMap)

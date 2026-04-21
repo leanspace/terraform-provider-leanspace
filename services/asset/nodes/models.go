@@ -17,12 +17,12 @@ type Node struct {
 	Nodes                   []Node                     `json:"nodes,omitempty"`
 	Type                    string                     `json:"type"`
 	Kind                    *string                    `json:"kind,omitempty"`
-	Latitude                float64                    `json:"latitude,omitempty"`
+	Latitude                *float64                   `json:"latitude,omitempty"`
 	NoradId                 *string                    `json:"noradId,omitempty"`
 	Tle                     []string                   `json:"tle,omitempty"`
 	InternationalDesignator *string                    `json:"internationalDesignator,omitempty"`
-	Longitude               float64                    `json:"longitude,omitempty"`
-	Elevation               float64                    `json:"elevation,omitempty"`
+	Longitude               *float64                   `json:"longitude,omitempty"`
+	Elevation               *float64                   `json:"elevation,omitempty"`
 	NumberOfChildren        int                        `json:"numberOfChildren"`
 	PropertyList            []properties.Property[any] `json:"propertiesV2,omitempty"`
 }

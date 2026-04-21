@@ -11,7 +11,7 @@ type Widget struct {
 	QueryTimeDimension   string                     `json:"queryTimeDimension"`
 	DisplayTimeDimension string                     `json:"displayTimeDimension"`
 	Series               []Series                   `json:"series"`
-	Metadata             *Metadata                  `json:"metadata"`
+	Metadata             *Metadata                  `json:"metadata,omitempty"`
 	Dashboards           []DashboardInfo            `json:"dashboards"`
 	Tags                 []general_objects.KeyValue `json:"tags,omitempty"`
 }
@@ -32,7 +32,7 @@ type Filter struct {
 
 type Metadata struct {
 	YAxisLabel *string     `json:"yAxisLabel,omitempty"`
-	YAxisRange []*float64  `json:"yAxisRange"`
+	YAxisRange []*float64  `json:"yAxisRange,omitempty"`
 	Thresholds []Threshold `json:"thresholds"`
 }
 

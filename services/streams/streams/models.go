@@ -9,7 +9,7 @@ type Stream struct {
 	general_objects.AuditModel
 	Version       int                        `json:"version"`
 	Name          string                     `json:"name"`
-	Description   *string                    `json:"description"`
+	Description   *string                    `json:"description,omitempty"`
 	Tags          []general_objects.KeyValue `json:"tags,omitempty"`
 	AssetId       string                     `json:"assetId"`
 	Configuration Configuration              `json:"configuration"`
@@ -73,7 +73,7 @@ type ElementList[T any, PT helper.ParseablePointer[T]] struct {
 
 type ElementListWithValid[T any, PT helper.ParseablePointer[T]] struct {
 	Elements []T  `json:"elements"`
-	Valid    bool `json:"valid,omitempty"`
+	Valid    bool `json:"valid"`
 }
 
 type Computation struct {
@@ -91,7 +91,7 @@ type Mapping struct {
 
 type Repetitive struct {
 	// Fixed
-	Value int `json:"value,omitempty"`
+	Value *int `json:"value,omitempty"`
 
 	// Dynamic
 	Path *string `json:"path,omitempty"`

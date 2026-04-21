@@ -101,13 +101,13 @@ func (node *Node) setPropertiesFromAttributes() (err error) {
 		if property.Name == LOCATION_COORDINATES {
 			field := property.Attributes.Fields
 			if field.Latitude.Value != nil {
-				node.Latitude = field.Latitude.Value.(float64)
+				node.Latitude = field.Latitude.Value.(*float64)
 			}
 			if field.Longitude.Value != nil {
-				node.Longitude = field.Longitude.Value.(float64)
+				node.Longitude = field.Longitude.Value.(*float64)
 			}
 			if field.Elevation.Value != nil {
-				node.Elevation = field.Elevation.Value.(float64)
+				node.Elevation = field.Elevation.Value.(*float64)
 			}
 		}
 	}
@@ -262,13 +262,13 @@ func (node *Node) PostReadProcess(client *provider.Client, destNodeRaw any) erro
 			attributeProperites := property.(map[string]any)["attributes"].(map[string]any)
 			field := attributeProperites["fields"].(map[string]any)
 			if field["latitude"].(map[string]any)["value"] != nil {
-				createdNode.Latitude = field["latitude"].(map[string]any)["value"].(float64)
+				createdNode.Latitude = field["latitude"].(map[string]any)["value"].(*float64)
 			}
 			if field["longitude"].(map[string]any)["value"] != nil {
-				createdNode.Longitude = field["longitude"].(map[string]any)["value"].(float64)
+				createdNode.Longitude = field["longitude"].(map[string]any)["value"].(*float64)
 			}
 			if field["elevation"].(map[string]any)["value"] != nil {
-				createdNode.Elevation = field["elevation"].(map[string]any)["value"].(float64)
+				createdNode.Elevation = field["elevation"].(map[string]any)["value"].(*float64)
 			}
 		}
 	}

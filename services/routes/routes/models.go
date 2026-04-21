@@ -17,7 +17,7 @@ type Route struct {
 type Definition struct {
 	Configuration    string  `json:"configuration"`
 	LogLevel         string  `json:"logLevel"`
-	Valid            bool    `json:"valid,omitempty"`
+	Valid            bool    `json:"valid"`
 	ServiceAccountId *string `json:"serviceAccountId,omitempty"`
 	Errors           []Error `json:"errors,omitempty" tf:"list"`
 }
@@ -33,6 +33,6 @@ type RouteInstance struct {
 	ContainerId               string  `json:"containerId"`
 	LastMessageStartProcessAt *string `json:"lastMessageStartProcessAt,omitempty"`
 	LastMessageEndProcessAt   *string `json:"lastMessageEndProcessAt,omitempty"`
-	NumberOfMessagesProcessed int     `json:"numberOfMessagesProcessed,omitempty"`
+	NumberOfMessagesProcessed int     `json:"numberOfMessagesProcessed"`
 	CamelRouteId              *string `json:"camelRouteId,omitempty"`
 }

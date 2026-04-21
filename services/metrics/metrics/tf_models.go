@@ -56,7 +56,7 @@ func metricAttributeToTF(a *general_objects.DefinitionAttribute[any]) *MetricAtt
 		Fields:    general_objects.FieldsDefToTF(a.Fields),
 		MinSize:   helper.TFIntPtrValue(a.MinSize),
 		MaxSize:   helper.TFIntPtrValue(a.MaxSize),
-		Unique:    types.BoolValue(a.Unique),
+		Unique:    types.BoolPointerValue(a.Unique),
 	}
 	if a.Options != nil {
 		tf.Options = make(map[string]types.String, len(*a.Options))
@@ -87,7 +87,7 @@ func metricAttributeFromTF(tf *MetricAttributeTF) general_objects.DefinitionAttr
 		Fields:    general_objects.FieldsDefFromTF(tf.Fields),
 		MinSize:   helper.FromTFIntPtr(tf.MinSize),
 		MaxSize:   helper.FromTFIntPtr(tf.MaxSize),
-		Unique:    tf.Unique.ValueBool(),
+		Unique:    tf.Unique.ValueBoolPointer(),
 	}
 	if tf.Options != nil {
 		opts := make(map[string]any, len(tf.Options))

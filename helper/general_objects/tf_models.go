@@ -353,7 +353,7 @@ func DefinitionAttributeToTF(a *DefinitionAttribute[any]) DefinitionAttributeTF 
 		Fields:    FieldsDefToTF(a.Fields),
 		MinSize:   helper.TFIntPtrValue(a.MinSize),
 		MaxSize:   helper.TFIntPtrValue(a.MaxSize),
-		Unique:    types.BoolValue(a.Unique),
+		Unique:    types.BoolPointerValue(a.Unique),
 	}
 	if any(a.DefaultValue) != nil {
 		switch v := a.DefaultValue.(type) {
@@ -400,7 +400,7 @@ func DefinitionAttributeFromTF(tf DefinitionAttributeTF) DefinitionAttribute[any
 		Fields:    FieldsDefFromTF(tf.Fields),
 		MinSize:   helper.FromTFIntPtr(tf.MinSize),
 		MaxSize:   helper.FromTFIntPtr(tf.MaxSize),
-		Unique:    tf.Unique.ValueBool(),
+		Unique:    tf.Unique.ValueBoolPointer(),
 	}
 	if !tf.DefaultValue.IsNull() && !tf.DefaultValue.IsUnknown() {
 		rawDefault := tf.DefaultValue.ValueString()

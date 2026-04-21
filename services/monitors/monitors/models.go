@@ -7,7 +7,7 @@ import (
 type Monitor struct {
 	general_objects.AuditModel
 	Name                string                     `json:"name"`
-	Description         *string                    `json:"description"`
+	Description         *string                    `json:"description,omitempty"`
 	Status              string                     `json:"status"`
 	MetricId            string                     `json:"metricId"`
 	NodeId              string                     `json:"nodeId"`

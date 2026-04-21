@@ -6,7 +6,7 @@ type Property[T any] struct {
 	general_objects.AuditModel
 	Name        string                     `json:"name"`
 	Description *string                    `json:"description,omitempty"`
-	IsBuiltIn   bool                       `json:"builtIn,omitempty"`
+	IsBuiltIn   bool                       `json:"builtIn"`
 	NodeId      string                     `json:"nodeId"`
 	Tags        []general_objects.KeyValue `json:"tags,omitempty"`
 	Attributes  PropertyAttribute[T]       `json:"attributes,omitempty"`
