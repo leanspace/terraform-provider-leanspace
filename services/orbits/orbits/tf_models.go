@@ -20,16 +20,6 @@ type GpsMetricsTF struct {
 	MetricIdForGroundSpeed types.String `tfsdk:"metric_id_for_ground_speed"`
 }
 
-type SatelliteConfigurationTF struct {
-	DragCrossSection      types.Float64 `tfsdk:"drag_cross_section"`
-	RadiationCrossSection types.Float64 `tfsdk:"radiation_cross_section"`
-}
-
-type GpsConfigurationTF struct {
-	GpsMetrics         *GpsMetricsTF         `tfsdk:"gps_metrics"`
-	StandardDeviations *StandardDeviationsTF `tfsdk:"standard_deviations"`
-}
-
 type IdealOrbitTF struct {
 	Type                          types.String  `tfsdk:"type"`
 	Inclination                   types.Float64 `tfsdk:"inclination"`
@@ -40,6 +30,16 @@ type IdealOrbitTF struct {
 	PerigeeAltitudeInMeters       types.Float64 `tfsdk:"perigee_altitude_in_meters"`
 	ApogeeAltitudeInMeters        types.Float64 `tfsdk:"apogee_altitude_in_meters"`
 	SemiMajorAxis                 types.Float64 `tfsdk:"semi_major_axis"`
+}
+
+type SatelliteConfigurationTF struct {
+	DragCrossSection      types.Float64 `tfsdk:"drag_cross_section"`
+	RadiationCrossSection types.Float64 `tfsdk:"radiation_cross_section"`
+}
+
+type GpsConfigurationTF struct {
+	GpsMetrics         *GpsMetricsTF         `tfsdk:"gps_metrics"`
+	StandardDeviations *StandardDeviationsTF `tfsdk:"standard_deviations"`
 }
 
 type OrbitTF struct {
@@ -150,6 +150,43 @@ func gpsMetricsSliceFromTF(tfs []GpsMetricsTF) []GpsMetrics {
 	return result
 }
 
+func idealOrbitToTF(x *IdealOrbit) *IdealOrbitTF {
+	if x == nil {
+		return nil
+	}
+	return general_objects.ReflectToTF[IdealOrbitTF](x)
+}
+
+func idealOrbitFromTF(tf *IdealOrbitTF) *IdealOrbit {
+	if tf == nil {
+		return nil
+	}
+	return general_objects.ReflectFromTF[IdealOrbit](tf)
+}
+
+func idealOrbitValueFromTF(tf *IdealOrbitTF) IdealOrbit {
+	if v := idealOrbitFromTF(tf); v != nil {
+		return *v
+	}
+	return IdealOrbit{}
+}
+
+func idealOrbitSliceToTF(xs []IdealOrbit) []IdealOrbitTF {
+	result := make([]IdealOrbitTF, len(xs))
+	for i := range xs {
+		result[i] = *general_objects.ReflectToTF[IdealOrbitTF](&xs[i])
+	}
+	return result
+}
+
+func idealOrbitSliceFromTF(tfs []IdealOrbitTF) []IdealOrbit {
+	result := make([]IdealOrbit, len(tfs))
+	for i := range tfs {
+		result[i] = *general_objects.ReflectFromTF[IdealOrbit](&tfs[i])
+	}
+	return result
+}
+
 func satelliteConfigurationToTF(x *SatelliteConfiguration) *SatelliteConfigurationTF {
 	if x == nil {
 		return nil
@@ -226,43 +263,6 @@ func gpsConfigurationSliceFromTF(tfs []GpsConfigurationTF) []GpsConfiguration {
 	result := make([]GpsConfiguration, len(tfs))
 	for i := range tfs {
 		result[i] = *gpsConfigurationFromTF(&tfs[i])
-	}
-	return result
-}
-
-func idealOrbitToTF(x *IdealOrbit) *IdealOrbitTF {
-	if x == nil {
-		return nil
-	}
-	return general_objects.ReflectToTF[IdealOrbitTF](x)
-}
-
-func idealOrbitFromTF(tf *IdealOrbitTF) *IdealOrbit {
-	if tf == nil {
-		return nil
-	}
-	return general_objects.ReflectFromTF[IdealOrbit](tf)
-}
-
-func idealOrbitValueFromTF(tf *IdealOrbitTF) IdealOrbit {
-	if v := idealOrbitFromTF(tf); v != nil {
-		return *v
-	}
-	return IdealOrbit{}
-}
-
-func idealOrbitSliceToTF(xs []IdealOrbit) []IdealOrbitTF {
-	result := make([]IdealOrbitTF, len(xs))
-	for i := range xs {
-		result[i] = *general_objects.ReflectToTF[IdealOrbitTF](&xs[i])
-	}
-	return result
-}
-
-func idealOrbitSliceFromTF(tfs []IdealOrbitTF) []IdealOrbit {
-	result := make([]IdealOrbit, len(tfs))
-	for i := range tfs {
-		result[i] = *general_objects.ReflectFromTF[IdealOrbit](&tfs[i])
 	}
 	return result
 }

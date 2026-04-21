@@ -99,38 +99,6 @@ func definitionSliceFromTF(tfs []DefinitionTF) []Definition {
 	return result
 }
 
-var errorAttrTypes = map[string]attr.Type{
-	"code":    types.StringType,
-	"message": types.StringType,
-}
-
-func errorToList(xs []Error) types.List {
-	elems := make([]attr.Value, len(xs))
-	for i := range xs {
-		elems[i] = types.ObjectValueMust(errorAttrTypes, map[string]attr.Value{
-			"code":    types.StringValue(xs[i].Code),
-			"message": types.StringValue(xs[i].Message),
-		})
-	}
-	return types.ListValueMust(types.ObjectType{AttrTypes: errorAttrTypes}, elems)
-}
-
-func errorFromList(list types.List) []Error {
-	if list.IsNull() || list.IsUnknown() {
-		return nil
-	}
-	result := make([]Error, len(list.Elements()))
-	for i, elem := range list.Elements() {
-		obj := elem.(types.Object)
-		attrs := obj.Attributes()
-		result[i] = Error{
-			Code:    attrs["code"].(types.String).ValueString(),
-			Message: attrs["message"].(types.String).ValueString(),
-		}
-	}
-	return result
-}
-
 var routeInstanceAttrTypes = map[string]attr.Type{
 	"status":                        types.StringType,
 	"last_status_at":                types.StringType,
@@ -173,6 +141,38 @@ func routeInstanceFromList(list types.List) []RouteInstance {
 			LastMessageEndProcessAt:   attrs["last_message_end_process_at"].(types.String).ValueStringPointer(),
 			NumberOfMessagesProcessed: helper.FromTFInt64(attrs["number_of_messages_processed"].(types.Int64)),
 			CamelRouteId:              attrs["camel_route_id"].(types.String).ValueStringPointer(),
+		}
+	}
+	return result
+}
+
+var errorAttrTypes = map[string]attr.Type{
+	"code":    types.StringType,
+	"message": types.StringType,
+}
+
+func errorToList(xs []Error) types.List {
+	elems := make([]attr.Value, len(xs))
+	for i := range xs {
+		elems[i] = types.ObjectValueMust(errorAttrTypes, map[string]attr.Value{
+			"code":    types.StringValue(xs[i].Code),
+			"message": types.StringValue(xs[i].Message),
+		})
+	}
+	return types.ListValueMust(types.ObjectType{AttrTypes: errorAttrTypes}, elems)
+}
+
+func errorFromList(list types.List) []Error {
+	if list.IsNull() || list.IsUnknown() {
+		return nil
+	}
+	result := make([]Error, len(list.Elements()))
+	for i, elem := range list.Elements() {
+		obj := elem.(types.Object)
+		attrs := obj.Attributes()
+		result[i] = Error{
+			Code:    attrs["code"].(types.String).ValueString(),
+			Message: attrs["message"].(types.String).ValueString(),
 		}
 	}
 	return result

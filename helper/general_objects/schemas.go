@@ -10,6 +10,7 @@ import (
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -159,6 +160,35 @@ func isComputedOnly(attr resourceschema.Attribute) bool {
 	}
 }
 
+// isOptionalComputed returns true when the attribute is both Optional and Computed.
+// Such attributes may be server-managed when the user omits them.
+func isOptionalComputed(attr resourceschema.Attribute) bool {
+	switch a := attr.(type) {
+	case resourceschema.StringAttribute:
+		return a.Computed && a.Optional
+	case resourceschema.Int64Attribute:
+		return a.Computed && a.Optional
+	case resourceschema.Float64Attribute:
+		return a.Computed && a.Optional
+	case resourceschema.BoolAttribute:
+		return a.Computed && a.Optional
+	case resourceschema.NumberAttribute:
+		return a.Computed && a.Optional
+	case resourceschema.ListAttribute:
+		return a.Computed && a.Optional
+	case resourceschema.SetAttribute:
+		return a.Computed && a.Optional
+	case resourceschema.ListNestedAttribute:
+		return a.Computed && a.Optional
+	case resourceschema.SetNestedAttribute:
+		return a.Computed && a.Optional
+	case resourceschema.SingleNestedAttribute:
+		return a.Computed && a.Optional
+	default:
+		return false
+	}
+}
+
 // getNestedAttrSchema returns the child attribute schema for a nested attribute, or nil for scalars.
 func getNestedAttrSchema(schema map[string]resourceschema.Attribute, key string) map[string]resourceschema.Attribute {
 	if schema == nil {
@@ -216,6 +246,12 @@ func noOpPlanSchema(plan, state tftypes.Value, schema map[string]resourceschema.
 				if schema != nil {
 					if attr, exists := schema[k]; exists && isComputedOnly(attr) {
 						continue // Computed-only — UseStateForUnknown will handle it
+					}
+					// Optional+Computed with null state: user omitted it and the server determines
+					// the value. UseStateForUnknown won't fire (state is null), so this unknown
+					// is not a user-driven change.
+					if attr, exists := schema[k]; exists && isOptionalComputed(attr) && (!sv.IsKnown() || sv.IsNull()) {
+						continue
 					}
 				}
 				return false // Required/Optional unknown → dependency recreation → potential change
@@ -706,10 +742,10 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string, fo
 		Description: "Array only: The maximum number of elements allowed",
 	}
 	attribute["unique"] = resourceschema.BoolAttribute{
-		Optional:    true,
-		Computed:    true,
-		Description: "Array only: No duplicated elements are allowed",
-		Default:     booldefault.StaticBool(false),
+		Optional:      true,
+		Computed:      true,
+		Description:   "Array only: No duplicated elements are allowed",
+		PlanModifiers: []planmodifier.Bool{boolplanmodifier.UseStateForUnknown()},
 	}
 	attribute["constraint"] = resourceschema.SingleNestedAttribute{
 		Optional:    true,
