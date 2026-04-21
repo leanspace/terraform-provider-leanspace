@@ -262,13 +262,16 @@ func (node *Node) PostReadProcess(client *provider.Client, destNodeRaw any) erro
 			attributeProperites := property.(map[string]any)["attributes"].(map[string]any)
 			field := attributeProperites["fields"].(map[string]any)
 			if field["latitude"].(map[string]any)["value"] != nil {
-				createdNode.Latitude = field["latitude"].(map[string]any)["value"].(*float64)
+				v := field["latitude"].(map[string]any)["value"].(float64)
+				createdNode.Latitude = &v
 			}
 			if field["longitude"].(map[string]any)["value"] != nil {
-				createdNode.Longitude = field["longitude"].(map[string]any)["value"].(*float64)
+				v := field["longitude"].(map[string]any)["value"].(float64)
+				createdNode.Longitude = &v
 			}
 			if field["elevation"].(map[string]any)["value"] != nil {
-				createdNode.Elevation = field["elevation"].(map[string]any)["value"].(*float64)
+				v := field["elevation"].(map[string]any)["value"].(float64)
+				createdNode.Elevation = &v
 			}
 		}
 	}
