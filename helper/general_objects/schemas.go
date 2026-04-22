@@ -19,116 +19,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 )
 
-// serverManagedTimestampModifier marks a Computed-only timestamp field as unknown
-// whenever the resource is being updated (i.e. any user-configurable attribute has changed).
-// This prevents the "inconsistent result after apply" error caused by the server
-// updating the timestamp on every write while the plan kept the old known value.
-type serverManagedTimestampModifier struct{}
-
-func (m serverManagedTimestampModifier) Description(_ context.Context) string {
-	return "Marks the field as (known after apply) when the resource is being updated."
-}
-func (m serverManagedTimestampModifier) MarkdownDescription(ctx context.Context) string {
-	return m.Description(ctx)
-}
-func (m serverManagedTimestampModifier) PlanModifyString(_ context.Context, req planmodifier.StringRequest, resp *planmodifier.StringResponse) {
-	// During create the value is already unknown — nothing to do.
-	if req.StateValue.IsNull() {
-		return
-	}
-	// Check for a no-op plan using a comparison that treats unknown plan values as equal
-	// to their state counterparts. Unknown values appear for Optional+Computed attributes
-	// whose UseStateForUnknown modifier hasn't run yet — they are not user-initiated changes.
-	isNoOp := noOpPlan(req.Plan.Raw, req.State.Raw)
-	if isNoOp {
-		// Restore the known state value even if something earlier already set the plan to
-		// unknown (e.g. another plan modifier upstream). On a no-op plan the server will not
-		// touch this field, so we can safely keep the prior known value.
-		resp.PlanValue = req.StateValue
-		return
-	}
-	// Something is changing — the server will update the timestamp, so mark it
-	// as unknown to accept whatever value comes back after apply.
-	resp.PlanValue = types.StringUnknown()
-}
-
-// noOpPlan returns true if plan and state are effectively equal, treating unknown
-// plan values as equal to whatever the state has. Unknown values in the plan arise
-// for Optional+Computed attributes whose UseStateForUnknown modifier hasn't run yet;
-// they do not represent a user-driven change to the resource.
-// NOTE: do NOT use serverManagedTimestampModifier on resources whose Computed-only
-// attributes depend on recreated external resources — use alwaysUnknownAfterApplyModifier
-// instead to keep phase-1 and phase-2 planning consistent.
-func noOpPlan(plan, state tftypes.Value) bool {
-	if plan.Equal(state) {
-		return true
-	}
-	// Unknown in plan → will be preserved from state by UseStateForUnknown → treat as equal.
-	if !plan.IsKnown() {
-		return true
-	}
-	if plan.IsNull() != state.IsNull() {
-		return false
-	}
-	if plan.IsNull() {
-		return true // both null
-	}
-	// Both known and non-null but not bitwise equal: recurse into compound types.
-	typ := plan.Type()
-	switch {
-	case typ.Is(tftypes.Object{}):
-		planAttrs := map[string]tftypes.Value{}
-		stateAttrs := map[string]tftypes.Value{}
-		_ = plan.As(&planAttrs)
-		_ = state.As(&stateAttrs)
-		for k, pv := range planAttrs {
-			sv, ok := stateAttrs[k]
-			if !ok {
-				return false
-			}
-			if !noOpPlan(pv, sv) {
-				return false
-			}
-		}
-		return true
-	case typ.Is(tftypes.List{}) || typ.Is(tftypes.Set{}) || typ.Is(tftypes.Tuple{}):
-		planElems := []tftypes.Value{}
-		stateElems := []tftypes.Value{}
-		_ = plan.As(&planElems)
-		_ = state.As(&stateElems)
-		if len(planElems) != len(stateElems) {
-			return false
-		}
-		for i := range planElems {
-			if !noOpPlan(planElems[i], stateElems[i]) {
-				return false
-			}
-		}
-		return true
-	case typ.Is(tftypes.Map{}):
-		planMap := map[string]tftypes.Value{}
-		stateMap := map[string]tftypes.Value{}
-		_ = plan.As(&planMap)
-		_ = state.As(&stateMap)
-		if len(planMap) != len(stateMap) {
-			return false
-		}
-		for k, pv := range planMap {
-			sv, ok := stateMap[k]
-			if !ok {
-				return false
-			}
-			if !noOpPlan(pv, sv) {
-				return false
-			}
-		}
-		return true
-	default:
-		// Primitive types: plan is known and non-null but not equal to state.
-		return false
-	}
-}
-
 // isComputedOnly returns true when the attribute is Computed but neither Optional nor Required.
 // Such attributes are server-managed; unknown plan values for them arise from UseStateForUnknown
 // running lazily and do NOT indicate a user-driven change.
@@ -209,7 +99,8 @@ func getNestedAttrSchema(schema map[string]resourceschema.Attribute, key string)
 	}
 }
 
-// noOpPlanSchema is like noOpPlan but schema-aware: when a plan value is unknown,
+// noOpPlanSchema eturns true if plan and state are effectively equal, treating unknown
+// plan values as equal to whatever the state has: when a plan value is unknown,
 // it checks whether the corresponding schema attribute is Computed-only.
 //   - Computed-only unknown → UseStateForUnknown will resolve it → treat as no-op.
 //   - Required/Optional unknown → dependency being recreated → treat as potential change.
@@ -299,8 +190,11 @@ func noOpPlanSchema(plan, state tftypes.Value, schema map[string]resourceschema.
 	}
 }
 
-// schemaAwareTimestampModifier behaves like serverManagedTimestampModifier but uses
-// noOpPlanSchema to distinguish Computed-only unknowns (harmless UseStateForUnknown)
+// schemaAwareTimestampModifier marks a Computed-only timestamp field as unknown
+// whenever the resource is being updated (i.e. any user-configurable attribute has changed).
+// This prevents the "inconsistent result after apply" error caused by the server
+// updating the timestamp on every write while the plan kept the old known value. It
+// distinguishes Computed-only unknowns (harmless UseStateForUnknown)
 // from Required/Optional unknowns (dependency being recreated → potential change).
 // This makes it safe to use on resources like plan_templates where Computed-only
 // sub-attributes reference external resources that may be recreated in the same apply.
@@ -823,50 +717,6 @@ func ValueAttributeSchema(excludeTypes []string) map[string]resourceschema.Attri
 			Description: "Geopoint only",
 		},
 	}
-}
-
-// ServerManagedTimestampAttribute returns a Computed string attribute whose plan
-// uses serverManagedTimestampModifier. Use this for most resources.
-// For resources whose Computed-only sub-attributes depend on recreated external
-// resources, use AlwaysUnknownAfterApplyAttribute instead.
-func ServerManagedTimestampAttribute(description string) resourceschema.StringAttribute {
-	return resourceschema.StringAttribute{
-		Computed:      true,
-		Description:   description,
-		PlanModifiers: []planmodifier.String{serverManagedTimestampModifier{}},
-	}
-}
-
-// AlwaysUnknownAfterApplyAttribute returns a Computed string attribute that is
-// always shown as (known after apply) in plans after creation. This is the safe
-// choice when serverManagedTimestampModifier would produce inconsistent results
-// between planning phase 1 and phase 2 (e.g. when Computed-only sub-attributes
-// depend on external resources being recreated in the same apply).
-func AlwaysUnknownAfterApplyAttribute(description string) resourceschema.StringAttribute {
-	return resourceschema.StringAttribute{
-		Computed:      true,
-		Description:   description,
-		PlanModifiers: []planmodifier.String{alwaysUnknownAfterApplyModifier{}},
-	}
-}
-
-// alwaysUnknownAfterApplyModifier always marks the field as (known after apply)
-// once the resource exists. Unlike serverManagedTimestampModifier it does not
-// attempt to keep the old state value on no-op plans, which makes it safe to use
-// even when the surrounding plan contains unknowns from recreated dependencies.
-type alwaysUnknownAfterApplyModifier struct{}
-
-func (m alwaysUnknownAfterApplyModifier) Description(_ context.Context) string {
-	return "Always marks the field as (known after apply) after the resource is created."
-}
-func (m alwaysUnknownAfterApplyModifier) MarkdownDescription(ctx context.Context) string {
-	return m.Description(ctx)
-}
-func (m alwaysUnknownAfterApplyModifier) PlanModifyString(_ context.Context, req planmodifier.StringRequest, resp *planmodifier.StringResponse) {
-	if req.StateValue.IsNull() {
-		return // Creating — already unknown
-	}
-	resp.PlanValue = types.StringUnknown()
 }
 
 func ResourceSchemaWith(fields map[string]resourceschema.Attribute) map[string]resourceschema.Attribute {

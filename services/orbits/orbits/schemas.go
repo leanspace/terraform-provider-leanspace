@@ -65,7 +65,7 @@ var idealOrbitSchema = map[string]resourceschema.Attribute{
 	},
 	"eccentricity": resourceschema.Float64Attribute{
 		Optional:   true,
-		Validators: []validator.Float64{float64validator.AtLeast(0.0), helper.RequiredFloat64IfParentConfigured()},
+		Validators: []validator.Float64{float64validator.AtLeast(0.0), float64validator.AtMost(1.0), helper.RequiredFloat64IfParentConfigured()},
 	},
 	"perigee_altitude_in_meters": resourceschema.Float64Attribute{
 		Computed: true,
@@ -111,19 +111,19 @@ var gpsMetricsSchema = map[string]resourceschema.Attribute{
 var standardDeviationsSchema = map[string]resourceschema.Attribute{
 	"latitude": resourceschema.Float64Attribute{
 		Optional:   true,
-		Validators: []validator.Float64{float64validator.AtLeast(0.01), helper.RequiredFloat64IfParentConfigured()},
+		Validators: append(helper.FloatAtLeastAndLessThan(0.01, 1.0), helper.RequiredFloat64IfParentConfigured()),
 	},
 	"longitude": resourceschema.Float64Attribute{
 		Optional:   true,
-		Validators: []validator.Float64{float64validator.AtLeast(0.01), helper.RequiredFloat64IfParentConfigured()},
+		Validators: append(helper.FloatAtLeastAndLessThan(0.01, 1.0), helper.RequiredFloat64IfParentConfigured()),
 	},
 	"altitude": resourceschema.Float64Attribute{
 		Optional:   true,
-		Validators: []validator.Float64{float64validator.AtLeast(0.0), helper.RequiredFloat64IfParentConfigured()},
+		Validators: append(helper.FloatAtLeastAndLessThan(0.0, 5000.1), helper.RequiredFloat64IfParentConfigured()),
 	},
 	"ground_speed": resourceschema.Float64Attribute{
 		Optional:   true,
-		Validators: []validator.Float64{float64validator.AtLeast(0.0), helper.RequiredFloat64IfParentConfigured()},
+		Validators: append(helper.FloatAtLeastAndLessThan(0.0, 5000.1), helper.RequiredFloat64IfParentConfigured()),
 	},
 }
 

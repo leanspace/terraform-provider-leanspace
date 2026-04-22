@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
@@ -87,5 +88,14 @@ func (route *Route) PostUpdateProcess(client *provider.Client, updated any) erro
 		}
 	}
 
+	return nil
+}
+
+func (route *Route) PostReadProcess(_ *provider.Client, newValue any) error {
+	newRoute, ok := newValue.(*Route)
+	if !ok || newRoute == nil {
+		return nil
+	}
+	newRoute.Tags = general_objects.ReorderKeyValues(route.Tags, newRoute.Tags)
 	return nil
 }

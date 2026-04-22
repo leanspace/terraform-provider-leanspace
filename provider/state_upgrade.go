@@ -11,7 +11,7 @@ import (
 
 // UnwrapSingleNestedStateUpgrader returns a StateUpgrader that migrates SDK v2 state
 // to Framework state by unwrapping any "list-of-1" arrays ([{...}]) that were the
-// SDK v2 workaround for single nested objects.  The v1 schema drives the
+// SDK v2 workaround for single nested objects. The v1 schema drives the
 // transformation — every field that is now a SingleNestedAttribute (Computed-only)
 // or a SingleNestedBlock (Optional/Required, converted by SplitResourceSchemaBlocks)
 // will have its value unwrapped from [{...}] to {...}.  List/set nested fields are
@@ -31,26 +31,8 @@ func UnwrapSingleNestedStateUpgrader(schema map[string]resourceschema.Attribute)
 			attrs, blocks := SplitResourceSchemaBlocks(schema)
 			processStateMap(raw, attrs, blocks)
 
-			// 3. Re-marshal the transformed state.
-			transformed, err := json.Marshal(raw)
-			if err != nil {
-				resp.Diagnostics.AddError("State upgrade: failed to re-marshal v1 state JSON", err.Error())
-				return
-			}
-
-			// 4. Decode the transformed JSON into a tftypes.Value using the v1 schema type.
-			//    tfprotov6.DynamicValue understands Terraform's JSON wire format, which is
-			//    the same format used by req.RawState.JSON.
-			fullSchema := resourceschema.Schema{Attributes: attrs, Blocks: blocks}
-			dv := tfprotov6.DynamicValue{JSON: transformed}
-			val, err := dv.Unmarshal(fullSchema.Type().TerraformType(ctx))
-			if err != nil {
-				resp.Diagnostics.AddError("State upgrade: failed to decode transformed JSON into schema type", err.Error())
-				return
-			}
-
-			// 5. Set the upgraded state directly via the raw tftypes.Value.
-			resp.State.Raw = val
+			// 3–5. Marshal, decode into tftypes.Value, and set the upgraded state.
+			marshalAndSetUpgradedState(ctx, raw, attrs, blocks, resp)
 		},
 	}
 }
@@ -88,23 +70,36 @@ func UnwrapSingleNestedStateUpgraderWithTransforms(schema map[string]resourcesch
 				fn(raw)
 			}
 
-			transformed, err := json.Marshal(raw)
-			if err != nil {
-				resp.Diagnostics.AddError("State upgrade: failed to re-marshal v1 state JSON", err.Error())
-				return
-			}
-
-			fullSchema := resourceschema.Schema{Attributes: attrs, Blocks: blocks}
-			dv := tfprotov6.DynamicValue{JSON: transformed}
-			val, err := dv.Unmarshal(fullSchema.Type().TerraformType(ctx))
-			if err != nil {
-				resp.Diagnostics.AddError("State upgrade: failed to decode transformed JSON into schema type", err.Error())
-				return
-			}
-
-			resp.State.Raw = val
+			// 3–5. Marshal, decode into tftypes.Value, and set the upgraded state.
+			marshalAndSetUpgradedState(ctx, raw, attrs, blocks, resp)
 		},
 	}
+}
+
+// marshalAndSetUpgradedState re-marshals the transformed state map, decodes it
+// into a tftypes.Value using the v1 schema type, and sets it on the response.
+func marshalAndSetUpgradedState(
+	ctx context.Context,
+	raw map[string]any,
+	attrs map[string]resourceschema.Attribute,
+	blocks map[string]resourceschema.Block,
+	resp *resource.UpgradeStateResponse,
+) {
+	transformed, err := json.Marshal(raw)
+	if err != nil {
+		resp.Diagnostics.AddError("State upgrade: failed to re-marshal v1 state JSON", err.Error())
+		return
+	}
+
+	fullSchema := resourceschema.Schema{Attributes: attrs, Blocks: blocks}
+	dv := tfprotov6.DynamicValue{JSON: transformed}
+	val, err := dv.Unmarshal(fullSchema.Type().TerraformType(ctx))
+	if err != nil {
+		resp.Diagnostics.AddError("State upgrade: failed to decode transformed JSON into schema type", err.Error())
+		return
+	}
+
+	resp.State.Raw = val
 }
 
 // processStateMap performs both operations in a single tree walk:
