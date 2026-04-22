@@ -353,7 +353,7 @@ func DefinitionAttributeToTF(a *DefinitionAttribute[any]) DefinitionAttributeTF 
 		Fields:    FieldsDefToTF(a.Fields),
 		MinSize:   helper.TFIntPtrValue(a.MinSize),
 		MaxSize:   helper.TFIntPtrValue(a.MaxSize),
-		Unique:    types.BoolPointerValue(a.Unique),
+		Unique:    types.BoolValue(a.Unique != nil && *a.Unique),
 	}
 	if any(a.DefaultValue) != nil {
 		switch v := a.DefaultValue.(type) {

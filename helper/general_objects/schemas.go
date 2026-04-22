@@ -10,7 +10,6 @@ import (
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -742,10 +741,10 @@ func DefinitionAttributeSchema(excludeTypes []string, excludeFields []string, fo
 		Description: "Array only: The maximum number of elements allowed",
 	}
 	attribute["unique"] = resourceschema.BoolAttribute{
-		Optional:      true,
-		Computed:      true,
-		Description:   "Array only: No duplicated elements are allowed",
-		PlanModifiers: []planmodifier.Bool{boolplanmodifier.UseStateForUnknown()},
+		Optional:    true,
+		Computed:    true,
+		Description: "Array only: No duplicated elements are allowed",
+		Default:     booldefault.StaticBool(false),
 	}
 	attribute["constraint"] = resourceschema.SingleNestedAttribute{
 		Optional:    true,
