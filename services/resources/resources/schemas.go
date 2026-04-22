@@ -28,7 +28,7 @@ var resourceSchema = general_objects.ResourceSchemaWith(map[string]resourceschem
 		Optional:      true,
 		Computed:      true,
 		Validators:    helper.ValidUUID(),
-		PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
+		PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown(), stringplanmodifier.RequiresReplace()},
 	},
 	"metric_id": resourceschema.StringAttribute{
 		Optional:      true,
