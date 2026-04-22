@@ -42,8 +42,25 @@ func commandDefinitionUpgraderFactory(client *provider.Client) map[int64]resourc
 					Client: client,
 					Path:   commandDefinitionAPIPath,
 				}
-				var zero CommandDefinition
-				value, err := apiClient.Get(partial.ID, &zero)
+				// Parse argument and metadata names from the v0 state so that
+				// PostReadProcess can reorder the API response to match the stored order.
+				var v0State struct {
+					Arguments []struct {
+						Name string `json:"name"`
+					} `json:"arguments"`
+					Metadata []struct {
+						Name string `json:"name"`
+					} `json:"metadata"`
+				}
+				_ = json.Unmarshal(req.RawState.JSON, &v0State)
+				readElement := &CommandDefinition{}
+				for _, a := range v0State.Arguments {
+					readElement.Arguments = append(readElement.Arguments, Argument[any]{Name: a.Name})
+				}
+				for _, m := range v0State.Metadata {
+					readElement.Metadata = append(readElement.Metadata, Metadata[any]{Name: m.Name})
+				}
+				value, err := apiClient.Get(partial.ID, readElement)
 				if err != nil {
 					resp.Diagnostics.AddError("State upgrade: failed to re-read command definition from API", err.Error())
 					return
