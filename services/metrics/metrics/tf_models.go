@@ -21,23 +21,19 @@ type MetricTF struct {
 // MetricAttributeTF is a local variant of DefinitionAttributeTF
 // without "required" and "default_value" (excluded from the metric schema).
 type MetricAttributeTF struct {
-	Type       types.String                       `tfsdk:"type"`
-	MinLength  types.Int64                        `tfsdk:"min_length"`
-	MaxLength  types.Int64                        `tfsdk:"max_length"`
-	Pattern    types.String                       `tfsdk:"pattern"`
-	Min        types.Float64                      `tfsdk:"min"`
-	Max        types.Float64                      `tfsdk:"max"`
-	Scale      types.Int64                        `tfsdk:"scale"`
-	Precision  types.Int64                        `tfsdk:"precision"`
-	UnitId     types.String                       `tfsdk:"unit_id"`
-	Before     types.String                       `tfsdk:"before"`
-	After      types.String                       `tfsdk:"after"`
-	Options    map[string]types.String            `tfsdk:"options"`
-	Fields     *general_objects.FieldsDefTF       `tfsdk:"fields"`
-	MinSize    types.Int64                        `tfsdk:"min_size"`
-	MaxSize    types.Int64                        `tfsdk:"max_size"`
-	Unique     types.Bool                         `tfsdk:"unique"`
-	Constraint *general_objects.ArrayConstraintTF `tfsdk:"constraint"`
+	Type      types.String                 `tfsdk:"type"`
+	MinLength types.Int64                  `tfsdk:"min_length"`
+	MaxLength types.Int64                  `tfsdk:"max_length"`
+	Pattern   types.String                 `tfsdk:"pattern"`
+	Min       types.Float64                `tfsdk:"min"`
+	Max       types.Float64                `tfsdk:"max"`
+	Scale     types.Int64                  `tfsdk:"scale"`
+	Precision types.Int64                  `tfsdk:"precision"`
+	UnitId    types.String                 `tfsdk:"unit_id"`
+	Before    types.String                 `tfsdk:"before"`
+	After     types.String                 `tfsdk:"after"`
+	Options   map[string]types.String      `tfsdk:"options"`
+	Fields    *general_objects.FieldsDefTF `tfsdk:"fields"`
 }
 
 func metricAttributeToTF(a *general_objects.DefinitionAttribute[any]) *MetricAttributeTF {
@@ -54,9 +50,6 @@ func metricAttributeToTF(a *general_objects.DefinitionAttribute[any]) *MetricAtt
 		Before:    types.StringPointerValue(a.Before),
 		After:     types.StringPointerValue(a.After),
 		Fields:    general_objects.FieldsDefToTF(a.Fields),
-		MinSize:   helper.TFIntPtrValue(a.MinSize),
-		MaxSize:   helper.TFIntPtrValue(a.MaxSize),
-		Unique:    types.BoolPointerValue(a.Unique),
 	}
 	if a.Options != nil {
 		tf.Options = make(map[string]types.String, len(*a.Options))
@@ -64,7 +57,6 @@ func metricAttributeToTF(a *general_objects.DefinitionAttribute[any]) *MetricAtt
 			tf.Options[k] = types.StringValue(fmt.Sprint(v))
 		}
 	}
-	tf.Constraint = general_objects.ArrayConstraintToTF(a.Constraint)
 	return tf
 }
 
@@ -85,9 +77,6 @@ func metricAttributeFromTF(tf *MetricAttributeTF) general_objects.DefinitionAttr
 		Before:    tf.Before.ValueStringPointer(),
 		After:     tf.After.ValueStringPointer(),
 		Fields:    general_objects.FieldsDefFromTF(tf.Fields),
-		MinSize:   helper.FromTFIntPtr(tf.MinSize),
-		MaxSize:   helper.FromTFIntPtr(tf.MaxSize),
-		Unique:    tf.Unique.ValueBoolPointer(),
 	}
 	if tf.Options != nil {
 		opts := make(map[string]any, len(tf.Options))
@@ -96,7 +85,6 @@ func metricAttributeFromTF(tf *MetricAttributeTF) general_objects.DefinitionAttr
 		}
 		a.Options = &opts
 	}
-	a.Constraint = general_objects.ArrayConstraintFromTF(tf.Constraint)
 	return a
 }
 

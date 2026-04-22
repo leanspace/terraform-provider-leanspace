@@ -31,9 +31,9 @@ var metricSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.
 	"attributes": resourceschema.SingleNestedAttribute{
 		Required: true,
 		Attributes: general_objects.DefinitionAttributeSchema(
-			[]string{"TIME", "ARRAY"},             // TIME and ARRAY type not allowed
-			[]string{"required", "default_value"}, // Fields unused
-			true,                                  // Force recreation if the type changes
+			[]string{"TIME", "ARRAY"}, // TIME and ARRAY type not allowed
+			[]string{"required", "default_value", "min_size", "max_size", "unique", "constraint"}, // Fields unused
+			true, // Force recreation if the type changes
 		),
 	},
 	"tags": general_objects.KeyValuesSchema,

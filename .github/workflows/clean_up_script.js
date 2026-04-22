@@ -31,9 +31,15 @@ module.exports = async (service_list, tenant, client_id, client_secret) => {
 		method: "GET",
 		headers
 		});
-		const all = service.includes('?') ? (await get_all.json()).content : await get_all.json();
-		if (get_all.status !== 200 ) {
-			console.log(`Failed to get ${service}`);
+		let all;
+		try{
+			all = service.includes('?') ? (await get_all.json()).content : await get_all.json();
+			if (get_all.status !== 200 ) {
+				console.log(`Failed to get ${service}`);
+				continue;
+			}
+		} catch (error) {
+			console.log(`Failed to parse response for ${service}: ${error}`);
 			continue;
 		}
 		console.log(all);
