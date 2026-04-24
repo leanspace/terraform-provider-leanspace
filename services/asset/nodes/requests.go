@@ -6,16 +6,25 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
+
+const NORAD_ID = "NORAD ID"
+const INTERNATIONAL_DESIGNATOR = "International Designator"
+const LOCATION_COORDINATES = "Location Coordinates"
 
 type apiShiftNodeInfo struct {
 	TargetParentNodeId string `json:"targetParentNodeId"`
 }
 
 func (node *Node) toAPIFormat() ([]byte, error) {
+	var parentId string
+	if node.ParentNodeId != nil {
+		parentId = *node.ParentNodeId
+	}
 	shiftNode := apiShiftNodeInfo{
-		TargetParentNodeId: node.ParentNodeId,
+		TargetParentNodeId: parentId,
 	}
 	return json.Marshal(shiftNode)
 }
@@ -65,7 +74,8 @@ func (node *Node) setPropertiesFromAttributes() (err error) {
 	for _, property := range node.PropertyList {
 		if property.Name == NORAD_ID {
 			if property.Attributes.Value != nil {
-				node.NoradId = property.Attributes.Value.(string)
+				v := property.Attributes.Value.(string)
+				node.NoradId = &v
 			}
 		}
 		if property.Name == "TLE" {
@@ -84,19 +94,20 @@ func (node *Node) setPropertiesFromAttributes() (err error) {
 		}
 		if property.Name == INTERNATIONAL_DESIGNATOR {
 			if property.Attributes.Value != nil {
-				node.InternationalDesignator = property.Attributes.Value.(string)
+				v := property.Attributes.Value.(string)
+				node.InternationalDesignator = &v
 			}
 		}
 		if property.Name == LOCATION_COORDINATES {
 			field := property.Attributes.Fields
 			if field.Latitude.Value != nil {
-				node.Latitude = field.Latitude.Value.(float64)
+				node.Latitude = field.Latitude.Value.(*float64)
 			}
 			if field.Longitude.Value != nil {
-				node.Longitude = field.Longitude.Value.(float64)
+				node.Longitude = field.Longitude.Value.(*float64)
 			}
 			if field.Elevation.Value != nil {
-				node.Elevation = field.Elevation.Value.(float64)
+				node.Elevation = field.Elevation.Value.(*float64)
 			}
 		}
 	}
@@ -212,6 +223,7 @@ func (node *Node) PostUpdateProcess(client *provider.Client, updated any) error 
 
 func (node *Node) PostReadProcess(client *provider.Client, destNodeRaw any) error {
 	createdNode := destNodeRaw.(*Node)
+	createdNode.Tags = general_objects.ReorderKeyValues(node.Tags, createdNode.Tags)
 	builtInProperties, err := currentProperties(client, createdNode.ID)
 	if err != nil {
 		return err
@@ -220,7 +232,8 @@ func (node *Node) PostReadProcess(client *provider.Client, destNodeRaw any) erro
 		if property.(map[string]any)["name"] == NORAD_ID {
 			attributeProperites := property.(map[string]any)["attributes"].(map[string]any)
 			if attributeProperites["value"] != nil {
-				createdNode.NoradId = attributeProperites["value"].(string)
+				v := attributeProperites["value"].(string)
+				createdNode.NoradId = &v
 			}
 		}
 		if property.(map[string]any)["name"] == "TLE" {
@@ -241,20 +254,24 @@ func (node *Node) PostReadProcess(client *provider.Client, destNodeRaw any) erro
 		if property.(map[string]any)["name"] == INTERNATIONAL_DESIGNATOR {
 			attributeProperites := property.(map[string]any)["attributes"].(map[string]any)
 			if attributeProperites["value"] != nil {
-				createdNode.InternationalDesignator = attributeProperites["value"].(string)
+				v := attributeProperites["value"].(string)
+				createdNode.InternationalDesignator = &v
 			}
 		}
 		if property.(map[string]any)["name"] == LOCATION_COORDINATES {
 			attributeProperites := property.(map[string]any)["attributes"].(map[string]any)
 			field := attributeProperites["fields"].(map[string]any)
 			if field["latitude"].(map[string]any)["value"] != nil {
-				createdNode.Latitude = field["latitude"].(map[string]any)["value"].(float64)
+				v := field["latitude"].(map[string]any)["value"].(float64)
+				createdNode.Latitude = &v
 			}
 			if field["longitude"].(map[string]any)["value"] != nil {
-				createdNode.Longitude = field["longitude"].(map[string]any)["value"].(float64)
+				v := field["longitude"].(map[string]any)["value"].(float64)
+				createdNode.Longitude = &v
 			}
 			if field["elevation"].(map[string]any)["value"] != nil {
-				createdNode.Elevation = field["elevation"].(map[string]any)["value"].(float64)
+				v := field["elevation"].(map[string]any)["value"].(float64)
+				createdNode.Elevation = &v
 			}
 		}
 	}

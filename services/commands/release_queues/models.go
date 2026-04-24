@@ -1,24 +1,20 @@
 package release_queues
 
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct ReleaseQueue
+
 import (
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 type ReleaseQueue struct {
-	ID                                        string                     `json:"id"`
+	general_objects.AuditModel
 	AssetId                                   string                     `json:"assetId"`
 	Name                                      string                     `json:"name"`
-	Description                               string                     `json:"description"`
-	CommandTransformerPluginId                string                     `json:"commandTransformerPluginId"`
+	Description                               *string                    `json:"description,omitempty"`
+	CommandTransformerPluginId                *string                    `json:"commandTransformerPluginId,omitempty"`
 	CommandTransformationStrategy             string                     `json:"commandTransformationStrategy"`
-	CommandTransformerPluginConfigurationData string                     `json:"commandTransformerPluginConfigurationData"`
+	CommandTransformerPluginConfigurationData *string                    `json:"commandTransformerPluginConfigurationData,omitempty"`
 	GlobalTransmissionMetadata                []general_objects.KeyValue `json:"globalTransmissionMetadata"`
 	LogicalLock                               bool                       `json:"logicalLock"`
-	CreatedAt                                 string                     `json:"createdAt"`
-	CreatedBy                                 string                     `json:"createdBy"`
-	LastModifiedAt                            string                     `json:"lastModifiedAt"`
-	LastModifiedBy                            string                     `json:"lastModifiedBy"`
 	Tags                                      []general_objects.KeyValue `json:"tags,omitempty"`
 }
-
-func (queue *ReleaseQueue) GetID() string { return queue.ID }

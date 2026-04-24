@@ -1,111 +1,75 @@
 package release_queues
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
+	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 var validCommandTransformationStrategies = []string{"TEST", "NO_TRANSFORMATION", "USE_PLUGIN"}
 
-var releaseQueueSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
-		Computed: true,
+var releaseQueueSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
+	"asset_id": resourceschema.StringAttribute{
+		Required:      true,
+		Validators:    helper.ValidUUID(),
+		PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 	},
-	"asset_id": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ForceNew:     true,
-		ValidateFunc: validation.IsUUID,
-	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"command_transformer_plugin_id": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.IsUUID,
-		Description:  "The Id of the Command Transformer Plugin",
+	"command_transformer_plugin_id": resourceschema.StringAttribute{
+		Optional:    true,
+		Description: "The Id of the Command Transformer Plugin",
+		Validators:  helper.ValidUUID(),
 	},
-	"command_transformation_strategy": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.StringInSlice(validCommandTransformationStrategies, false),
-		Description:  "What transformation strategy shall be applied on created and updated Commands",
+	"command_transformation_strategy": resourceschema.StringAttribute{
+		Optional:    true,
+		Description: "What transformation strategy shall be applied on created and updated Commands",
+		Validators:  []validator.String{stringvalidator.OneOf(validCommandTransformationStrategies...)},
 	},
-	"command_transformer_plugin_configuration_data": {
-		Type:        schema.TypeString,
+	"command_transformer_plugin_configuration_data": resourceschema.StringAttribute{
 		Optional:    true,
 		Description: "Configuration data used by the Command Transformer Plugin (coming soon)",
 	},
 	"global_transmission_metadata": general_objects.KeyValuesSchema,
-	"logical_lock": {
-		Type:     schema.TypeBool,
+	"logical_lock": resourceschema.BoolAttribute{
 		Computed: true,
 	},
-	"created_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
 	"tags": general_objects.KeyValuesSchema,
-}
+})
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
-	"asset_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-	},
-	"command_transformer_plugin_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-	},
-	"ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-		Description: "Only returns release queues whose id matches one of the provided values.",
-	},
-	"logical_lock": {
-		Type:     schema.TypeBool,
-		Optional: true,
-	},
-	"query": {
-		Type:        schema.TypeString,
+var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+	"asset_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
 		Optional:    true,
-		Description: "Search by name or description",
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
+	},
+	"command_transformer_plugin_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
+	},
+	"command_transformation_strategy": datasourceschema.StringAttribute{
+		Optional:    true,
+		Description: "What transformation strategy shall be applied on created and updated Commands",
+		Validators:  []validator.String{stringvalidator.OneOf(validCommandTransformationStrategies...)},
+	},
+	"logical_lock": datasourceschema.BoolAttribute{
+		Optional: true,
+	},
+	"tags": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
 }

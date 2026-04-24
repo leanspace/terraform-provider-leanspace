@@ -3,10 +3,16 @@ package plugins
 import (
 	"regexp"
 
-	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 var validPluginTypes = []string{
@@ -16,112 +22,56 @@ var validPluginTypes = []string{
 
 var classNameRegex = regexp.MustCompile(`^([a-z]+\.)+([A-Z][a-zA-Z0-9]+)$`)
 
-var pluginSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
-		Computed: true,
+var pluginSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
+	"type": resourceschema.StringAttribute{
+		Required:    true,
+		Description: helper.AllowedValuesToDescription(validPluginTypes),
+		Validators:  []validator.String{stringvalidator.OneOf(validPluginTypes...)},
 	},
-	"type": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validPluginTypes, false),
-		Description:  helper.AllowedValuesToDescription(validPluginTypes),
-	},
-	"implementation_class_name": {
-		Type:     schema.TypeString,
-		Required: true,
-		ValidateFunc: validation.StringMatch(
-			classNameRegex,
-			"'implementation_class_name' must be a valid java class path",
-		),
+	"implementation_class_name": resourceschema.StringAttribute{
+		Required:    true,
 		Description: "It must be a valid java class path",
+		Validators:  []validator.String{stringvalidator.RegexMatches(classNameRegex, "Must be a valid java class path")},
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"source_code_file_download_authorized": {
-		Type:     schema.TypeBool,
+	"source_code_file_download_authorized": resourceschema.BoolAttribute{
 		Optional: true,
-		Default:  true,
+		Computed: true,
+		Default:  booldefault.StaticBool(true),
 	},
-	"file_path": {
-		Type:     schema.TypeString,
-		Required: true,
-		ValidateFunc: validation.StringMatch(
-			helper.PathToJarFileRegex,
-			"'file_path' must be a valid path to a .jar file",
-		),
+	"file_path": resourceschema.StringAttribute{
+		Required:    true,
 		Description: "It must be a valid path to a .jar file",
+		Validators:  []validator.String{stringvalidator.RegexMatches(helper.PathToJarFileRegex, "Must be a valid file path to a .jar file")},
 	},
-	"created_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When the plugin was created",
+	"sdk_version": resourceschema.StringAttribute{
+		Optional:    true,
+		Description: "SDK version in the semantic version format with major versions 1 or 2.",
+		Validators:  isValidSemVerForPlugins(),
 	},
-	"created_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who created the plugin",
-	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who modified the plugin the last",
-	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When the plugin was last modified",
-	},
-	"sdk_version": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: isValidSemVerForPlugins,
-		Description:  "SDK version in the semantic version format with major versions 1 or 2.",
-	},
-	"sdk_version_family": {
-		Type:        schema.TypeString,
+	"sdk_version_family": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "SDK family that indicates the major version.",
 	},
-	"status": {
-		Type:        schema.TypeString,
+	"status": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Plugin status. Can be ACTIVE, PENDING or FAILED",
 	},
-	"file_sha": {
-		Type:        schema.TypeString,
+	"file_sha": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Unique identifier of the plugin file",
 	},
-}
+})
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
-	"ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-		Description: "Only returns plugin whose id matches one of the provided values.",
-	},
-	"types": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.StringInSlice(validPluginTypes, false),
-			Description:  helper.AllowedValuesToDescription(validPluginTypes),
-		},
-	},
-	"query": {
-		Type:     schema.TypeString,
-		Optional: true,
+var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+	"types": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(stringvalidator.OneOf(validPluginTypes...))},
 	},
 }

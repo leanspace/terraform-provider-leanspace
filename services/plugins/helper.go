@@ -94,7 +94,7 @@ func DoPostReadProcess[P AbstractPlugin](client *provider.Client, currentPlugin 
 	sourceCodeSha, _ := CalculateFileSha(currentPlugin.GetFilePath())
 	currentPlugin.SetFileSha(sourceCodeSha)
 
-	body, err := currentPlugin.CallReadProcess(client)
+	body, err := createdPlugin.CallReadProcess(client)
 	if err != nil {
 		return err
 	}

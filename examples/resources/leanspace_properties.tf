@@ -11,8 +11,8 @@ resource "leanspace_properties" "numeric_node_property" {
   value       = 100
   min         = 50
   max         = 200
-  scale       = 0
-  precision   = 0
+  scale       = 3
+  precision   = 3
   unit_id     = null
   tags {
     key   = "Key1"

@@ -1,91 +1,57 @@
 package access_policies
 
 import (
-	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 	"regexp"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var accessPolicySchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
-		Computed: true,
-	},
-	"name": {
-		Type:     schema.TypeString,
+var accessPolicySchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"read_only": {
-		Type:     schema.TypeBool,
+	"read_only": resourceschema.BoolAttribute{
 		Computed: true,
 	},
-	"statements": {
-		Type:     schema.TypeSet,
+	"statements": resourceschema.SetNestedAttribute{
 		Optional: true,
-		Elem: &schema.Resource{
-			Schema: statementSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: statementSchema,
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
+})
 
 var actionRegex = regexp.MustCompile(`^([a-zA-Z0-9*]+):([a-zA-Z0-9*]+)$`)
 
-var statementSchema = map[string]*schema.Schema{
-	"name": {
-		Type:     schema.TypeString,
+var statementSchema = map[string]resourceschema.Attribute{
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"actions": {
-		Type:     schema.TypeSet,
-		Required: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.StringMatch(actionRegex, "Actions must match the pattern 'service:rule', 'service:*' or '*:*'"),
-		},
+	"actions": resourceschema.SetAttribute{
+		ElementType: types.StringType,
+		Required:    true,
+		Validators:  []validator.Set{setvalidator.ValueStringsAre(stringvalidator.RegexMatches(actionRegex, "must match pattern: <service>:<action> (e.g. nodes:READ)"))},
 	},
 }
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
-	"action_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+	"actions": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
-	"action_names": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
+	"tags": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
 }

@@ -7,4 +7,7 @@ var RequestDefinitionDataType = provider.DataSourceType[RequestDefinition, *Requ
 	Path:               "requests-repository/request-definitions",
 	Schema:             requestDefinitionSchema,
 	FilterSchema:       requestDefinitionFilterSchema,
+	TFModelFactory:     func() any { return &RequestDefinitionTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(requestDefinitionSchema),
 }

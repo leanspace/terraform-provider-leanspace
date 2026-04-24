@@ -7,4 +7,7 @@ var PassiveResourceFunctionDataType = provider.DataSourceType[PassiveResourceFun
 	Path:               "resources-repository/passive-resource-functions",
 	Schema:             passiveResourceFunctionSchema,
 	FilterSchema:       dataSourceFilterSchema,
+	TFModelFactory:     func() any { return &PassiveResourceFunctionTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(passiveResourceFunctionSchema),
 }

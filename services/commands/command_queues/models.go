@@ -1,17 +1,15 @@
 package command_queues
 
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct CommandQueue
+
+import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+
 type CommandQueue struct {
-	ID                          string   `json:"id"`
+	general_objects.AuditModel
 	AssetId                     string   `json:"assetId"`
 	Name                        string   `json:"name"`
-	GroundStationIds            []string `json:"groundStationIds,"`
-	CommandTransformerPluginId  string   `json:"commandTransformerPluginId"`
-	ProtocolTransformerPluginId string   `json:"protocolTransformerPluginId"`
-	ProtocolTransformerInitData string   `json:"protocolTransformerInitData"`
-	CreatedAt                   string   `json:"createdAt"`
-	CreatedBy                   string   `json:"createdBy"`
-	LastModifiedAt              string   `json:"lastModifiedAt"`
-	LastModifiedBy              string   `json:"lastModifiedBy"`
+	GroundStationIds            []string `json:"groundStationIds"`
+	CommandTransformerPluginId  *string  `json:"commandTransformerPluginId,omitempty"`
+	ProtocolTransformerPluginId *string  `json:"protocolTransformerPluginId,omitempty"`
+	ProtocolTransformerInitData *string  `json:"protocolTransformerInitData,omitempty"`
 }
-
-func (queue *CommandQueue) GetID() string { return queue.ID }

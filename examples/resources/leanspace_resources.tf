@@ -8,36 +8,6 @@ variable "metric_id" {
   description = "The ID of the metric associated to this resource."
 }
 
-resource "leanspace_resources" "a_resource" {
-  name      = "Terraform Resource"
-  asset_id  = var.asset_id
-  metric_id = var.metric_id
-  constraints {
-    type  = "LIMIT"
-    kind  = "UPPER"
-    value = 50.0
-  }
-  constraints {
-    type  = "THRESHOLD"
-    kind  = "UPPER"
-    value = 35.0
-  }
-  constraints {
-    type  = "LIMIT"
-    kind  = "LOWER"
-    value = 0.0
-  }
-  constraints {
-    type  = "THRESHOLD"
-    kind  = "LOWER"
-    value = 10.0
-  }
-  tags {
-    key   = "Mission"
-    value = "Terraform"
-  }
-}
-
 resource "leanspace_resources" "a_resource_with_lower_limit_upper_limit_and_thresholds" {
   name          = "Terraform Resource 4"
   asset_id      = var.asset_id

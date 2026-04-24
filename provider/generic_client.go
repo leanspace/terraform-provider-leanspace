@@ -51,7 +51,7 @@ func (client GenericClient[T, PT]) encodeQueryParams(filters map[string]any) str
 	queryParams := url.Values{}
 
 	addValue := func(key string, value any) {
-		if value == "" {
+		if value == nil || value == "" {
 			return
 		}
 		if str, isString := value.(string); isString {

@@ -6,4 +6,8 @@ var ServiceAccountDataType = provider.DataSourceType[ServiceAccount, *ServiceAcc
 	ResourceIdentifier: "leanspace_service_accounts",
 	Path:               "teams-repository/service-accounts",
 	Schema:             serviceAccountSchema,
+	FilterSchema:       dataSourceFilterSchema,
+	TFModelFactory:     func() any { return &ServiceAccountTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(serviceAccountSchema),
 }

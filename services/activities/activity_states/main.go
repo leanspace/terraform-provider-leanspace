@@ -7,4 +7,5 @@ var ActivityStateDataType = provider.DataSourceType[ActivityState, *ActivityStat
 	Path:               "activities-repository/activities/states",
 	Schema:             activityStateSchema,
 	FilterSchema:       nil,
+	TFModelFactory:     func() any { return &ActivityStateTF{} },
 }

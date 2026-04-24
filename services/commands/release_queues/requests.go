@@ -75,3 +75,12 @@ func (queue *ReleaseQueue) PostUpdateProcess(client *provider.Client, updated an
 	}
 	return queue.PostCreateProcess(client, updated) // Add needed global transmission metadata
 }
+
+func (queue *ReleaseQueue) PostReadProcess(_ *provider.Client, newValue any) error {
+	newQueue, ok := newValue.(*ReleaseQueue)
+	if !ok || newQueue == nil {
+		return nil
+	}
+	newQueue.Tags = general_objects.ReorderKeyValues(queue.Tags, newQueue.Tags)
+	return nil
+}

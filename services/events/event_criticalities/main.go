@@ -7,4 +7,5 @@ var EventCriticalitiesDataType = provider.DataSourceType[EventCriticalities, *Ev
 	Path:               "events/event-criticalities",
 	Schema:             EventCriticalitiesSchema,
 	FilterSchema:       dataSourceFilterSchema,
+	TFModelFactory:     func() any { return &EventCriticalitiesTF{} },
 }

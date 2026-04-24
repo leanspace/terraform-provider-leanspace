@@ -1,5 +1,7 @@
 package groundstation_links
 
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct LeafSpaceGroundStationLink
+
 type LeafSpaceGroundStationLink struct {
 	ID                         string `json:"id"`
 	LeafspaceGroundStationId   string `json:"leafspaceGroundStationId"`

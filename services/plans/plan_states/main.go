@@ -7,4 +7,5 @@ var PlanStateDataType = provider.DataSourceType[PlanState, *PlanState]{
 	Path:               "plans-repository/plans/states",
 	Schema:             planStateSchema,
 	FilterSchema:       nil,
+	TFModelFactory:     func() any { return &PlanStateTF{} },
 }

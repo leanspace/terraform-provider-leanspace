@@ -1,24 +1,20 @@
 package streams
 
-import "github.com/leanspace/terraform-provider-leanspace/helper"
-import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+import (
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+)
 
 type Stream struct {
-	ID             string                     `json:"id"`
-	Version        int                        `json:"version"`
-	Name           string                     `json:"name"`
-	Description    string                     `json:"description"`
-	Tags           []general_objects.KeyValue `json:"tags,omitempty"`
-	AssetId        string                     `json:"assetId"`
-	Configuration  Configuration              `json:"configuration"`
-	Mappings       []Mapping                  `json:"mappings"`
-	CreatedAt      string                     `json:"createdAt"`
-	CreatedBy      string                     `json:"createdBy"`
-	LastModifiedAt string                     `json:"lastModifiedAt"`
-	LastModifiedBy string                     `json:"lastModifiedBy"`
+	general_objects.AuditModel
+	Version       int                        `json:"version"`
+	Name          string                     `json:"name"`
+	Description   *string                    `json:"description,omitempty"`
+	Tags          []general_objects.KeyValue `json:"tags,omitempty"`
+	AssetId       string                     `json:"assetId"`
+	Configuration Configuration              `json:"configuration"`
+	Mappings      []Mapping                  `json:"mappings"`
 }
-
-func (stream *Stream) GetID() string { return stream.ID }
 
 type Configuration struct {
 	Endianness   string                                          `json:"endianness"`
@@ -37,12 +33,12 @@ type StreamComponent struct {
 
 	// Field only
 	Length     *Length `json:"length,omitempty"`
-	Processor  string  `json:"processor,omitempty"`
-	DataType   string  `json:"dataType,omitempty"`
-	Endianness string  `json:"endianness,omitempty"`
+	Processor  *string `json:"processor,omitempty"`
+	DataType   *string `json:"dataType,omitempty"`
+	Endianness *string `json:"endianness,omitempty"`
 
 	// Switch only
-	Expression SwitchExpression `json:"expression,omitempty"`
+	Expression *SwitchExpression `json:"expression,omitempty"`
 
 	// Container and switch only
 	Elements []StreamComponent `json:"elements,omitempty"`
@@ -77,7 +73,7 @@ type ElementList[T any, PT helper.ParseablePointer[T]] struct {
 
 type ElementListWithValid[T any, PT helper.ParseablePointer[T]] struct {
 	Elements []T  `json:"elements"`
-	Valid    bool `json:"valid,omitempty"`
+	Valid    bool `json:"valid"`
 }
 
 type Computation struct {
@@ -89,16 +85,16 @@ type Computation struct {
 }
 
 type Mapping struct {
-	MetricId   string `json:"metricId"`
-	Expression string `json:"expression,omitempty"`
+	MetricId   string  `json:"metricId"`
+	Expression *string `json:"expression,omitempty"`
 }
 
 type Repetitive struct {
 	// Fixed
-	Value int `json:"value,omitempty"`
+	Value *int `json:"value,omitempty"`
 
 	// Dynamic
-	Path string `json:"path,omitempty"`
+	Path *string `json:"path,omitempty"`
 }
 
 type Length struct {
@@ -106,8 +102,8 @@ type Length struct {
 	Unit string `json:"unit"` // [BITS | BYTES]
 
 	// Fixed
-	Value int `json:"value,omitempty"`
+	Value *int `json:"value,omitempty"`
 
 	// Dynamic
-	Path string `json:"path,omitempty"`
+	Path *string `json:"path,omitempty"`
 }

@@ -22,7 +22,7 @@ data "leanspace_properties" "all" {
     from_last_modified_at = null
     to_last_modified_at   = null
     ids                   = []
-    kinds                 = []
+    node_kinds            = []
     node_types            = []
     query                 = ""
     tags                  = []
@@ -40,8 +40,8 @@ resource "leanspace_properties" "numeric_node_property" {
   value       = 100
   min         = 50
   max         = 200
-  scale       = 0
-  precision   = 0
+  scale       = 3
+  precision   = 3
   unit_id     = null
   tags {
     key   = "Key1"

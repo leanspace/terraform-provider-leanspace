@@ -1,15 +1,11 @@
 package contact_reservation_status_mappings
 
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct ContactReservationStatusMapping
+
+import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+
 type ContactReservationStatusMapping struct {
-	ID              string `json:"id"`
+	general_objects.AuditModel
 	ContactStateId  string `json:"contactStateId"`
 	LeafspaceStatus string `json:"leafspaceStatus"`
-	CreatedAt       string `json:"createdAt"`
-	CreatedBy       string `json:"createdBy"`
-	LastModifiedAt  string `json:"lastModifiedAt"`
-	LastModifiedBy  string `json:"lastModifiedBy"`
-}
-
-func (contactReservationStatusMapping *ContactReservationStatusMapping) GetID() string {
-	return contactReservationStatusMapping.ID
 }

@@ -4,6 +4,7 @@ terraform.tfstate*
 terraform-provider-leanspace.exe
 terraform-provider-leanspace
 .devcontainer/
+gen_tf_models
 
 **/.DS_Store
 

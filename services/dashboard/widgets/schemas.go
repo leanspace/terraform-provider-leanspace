@@ -3,12 +3,16 @@ package widgets
 import (
 	"regexp"
 
-	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
 var ValidWidgetTypes = []string{"TABLE", "LINE", "BAR", "AREA", "VALUE", "RESOURCES", "EARTH", "GAUGE", "ENUM", "ORBITAL_VIEW"}
@@ -20,249 +24,165 @@ var validTimeDimensions = []string{"timestamp", "received_at", "ingested_at"}
 
 var colorRegex = regexp.MustCompile(`^#(?:[0-9a-fA-F]{3}){1,2}$`)
 
-var widgetSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
-		Computed: true,
-	},
-	"name": {
-		Type:     schema.TypeString,
+var widgetSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"type": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(ValidWidgetTypes, false),
-		Description:  helper.AllowedValuesToDescription(ValidWidgetTypes),
+	"type": resourceschema.StringAttribute{
+		Required:    true,
+		Description: helper.AllowedValuesToDescription(ValidWidgetTypes),
+		Validators:  []validator.String{stringvalidator.OneOf(ValidWidgetTypes...)},
 	},
-	"granularity": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validGranularities, false),
-		Description:  helper.AllowedValuesToDescription(validGranularities),
+	"granularity": resourceschema.StringAttribute{
+		Required:    true,
+		Description: helper.AllowedValuesToDescription(validGranularities),
+		Validators:  []validator.String{stringvalidator.OneOf(validGranularities...)},
 	},
-	"query_time_dimension": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		Default:      "timestamp",
-		ValidateFunc: validation.StringInSlice(validTimeDimensions, false),
-		Description:  helper.AllowedValuesToDescription(validTimeDimensions),
+	"query_time_dimension": resourceschema.StringAttribute{
+		Optional:    true,
+		Computed:    true,
+		Default:     stringdefault.StaticString("timestamp"),
+		Description: helper.AllowedValuesToDescription(validTimeDimensions),
+		Validators:  []validator.String{stringvalidator.OneOf(validTimeDimensions...)},
 	},
-	"display_time_dimension": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		Default:      "timestamp",
-		ValidateFunc: validation.StringInSlice(validTimeDimensions, false),
-		Description:  helper.AllowedValuesToDescription(validTimeDimensions),
+	"display_time_dimension": resourceschema.StringAttribute{
+		Optional:    true,
+		Computed:    true,
+		Default:     stringdefault.StaticString("timestamp"),
+		Description: helper.AllowedValuesToDescription(validTimeDimensions),
+		Validators:  []validator.String{stringvalidator.OneOf(validTimeDimensions...)},
 	},
-	"series": {
-		Type:     schema.TypeList,
+	"series": resourceschema.ListNestedAttribute{
 		Required: true,
-		Elem: &schema.Resource{
-			Schema: seriesSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: seriesSchema,
 		},
 	},
-	"metadata": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: metadataSchema,
-		},
+	"metadata": resourceschema.SingleNestedAttribute{
+		Optional:   true,
+		Attributes: metadataSchema,
 	},
-	"dashboards": {
-		Type:     schema.TypeSet,
+	"dashboards": resourceschema.SetNestedAttribute{
 		Computed: true,
-		Elem: &schema.Resource{
-			Schema: dashboardInfoSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: dashboardInfoSchema,
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
+})
 
-var seriesSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var seriesSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"name": {
-		Type:        schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Optional:    true,
 		Description: "The datasource's name",
 	},
-	"datasource": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validDatasources, false),
-		Description:  helper.AllowedValuesToDescription(validDatasources),
+	"datasource": resourceschema.StringAttribute{
+		Required:    true,
+		Description: helper.AllowedValuesToDescription(validDatasources),
+		Validators:  []validator.String{stringvalidator.OneOf(validDatasources...)},
 	},
-	"aggregation": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validAggregations, false),
-		Description:  helper.AllowedValuesToDescription(validAggregations),
+	"aggregation": resourceschema.StringAttribute{
+		Required:    true,
+		Description: helper.AllowedValuesToDescription(validAggregations),
+		Validators:  []validator.String{stringvalidator.OneOf(validAggregations...)},
 	},
-	"filters": {
-		Type:     schema.TypeSet,
+	"filters": resourceschema.ListNestedAttribute{ // workaround: we need a list instead of a set
 		Optional: true,
-		MaxItems: 3,
-		Elem: &schema.Resource{
-			Schema: filterSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: filterSchema,
 		},
+		Validators: []validator.List{listvalidator.SizeAtMost(3)},
 	},
 }
 
-var filterSchema = map[string]*schema.Schema{
-	"filter_by": {
-		Type:     schema.TypeString,
+var filterSchema = map[string]resourceschema.Attribute{
+	"filter_by": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"operator": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validFilterOperators, false),
-		Description:  helper.AllowedValuesToDescription(validFilterOperators),
+	"operator": resourceschema.StringAttribute{
+		Required:    true,
+		Description: helper.AllowedValuesToDescription(validFilterOperators),
 	},
-	"value": {
-		Type:     schema.TypeString,
+	"value": resourceschema.StringAttribute{
 		Required: true,
 	},
 }
 
-var metadataSchema = map[string]*schema.Schema{
-	"y_axis_label": {
-		Type:     schema.TypeString,
+var metadataSchema = map[string]resourceschema.Attribute{
+	"y_axis_label": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"y_axis_range_min": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Description: "The minimum value for the widget's Y axis. Set to an array with the value " +
-			"inside (an empty array is treated as unset). This is due to Terraform limitations.",
-		Elem: &schema.Schema{
-			Type: schema.TypeFloat,
-		},
-	},
-	"y_axis_range_max": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Description: "The maximum value for the widget's Y axis. Set to an array with the value " +
-			"inside (an empty array is treated as unset). This is due to Terraform limitations.",
-		Elem: &schema.Schema{
-			Type: schema.TypeFloat,
-		},
-	},
-	"thresholds": {
-		Type:        schema.TypeList,
+	"y_axis_range_min": resourceschema.Float64Attribute{
 		Optional:    true,
-		MinItems:    1,
-		MaxItems:    10,
+		Description: "The minimum value for the widget's Y axis.",
+	},
+	"y_axis_range_max": resourceschema.Float64Attribute{
+		Optional:    true,
+		Description: "The maximum value for the widget's Y axis.",
+	},
+	"thresholds": resourceschema.ListNestedAttribute{
+		Optional:    true,
 		Description: "The threshold applies only to the Gauge widget.",
-		Elem: &schema.Resource{
-			Schema: thresholdSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: thresholdSchema,
 		},
+		Validators: []validator.List{listvalidator.SizeBetween(1, 10)},
 	},
 }
 
 /*
 From and to are strings so that they can be nil.
 */
-var thresholdSchema = map[string]*schema.Schema{
-	"from": {
-		Type:     schema.TypeString,
+var thresholdSchema = map[string]resourceschema.Attribute{
+	"from": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"to": {
-		Type:     schema.TypeString,
+	"to": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"color": {
-		Type:         schema.TypeString,
-		ValidateFunc: validation.StringMatch(colorRegex, "Must be a valid hex color"),
-		Required:     true,
+	"color": resourceschema.StringAttribute{
+		Required:   true,
+		Validators: []validator.String{stringvalidator.RegexMatches(colorRegex, "Must be a valid hex color")},
 	},
 }
 
-var dashboardInfoSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
+var dashboardInfoSchema = map[string]resourceschema.Attribute{
+	"id": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Computed: true,
 	},
 }
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
-	"types": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.StringInSlice(ValidWidgetTypes, false),
-			Description:  helper.AllowedValuesToDescription(ValidWidgetTypes),
-		},
+var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+	"types": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(stringvalidator.OneOf(ValidWidgetTypes...))},
 	},
-	"tags": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
+	"tags": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
-	"dashboard_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+	"dashboard_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
-	"datasource_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+	"datasource_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
-	"datasources": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.StringInSlice(validDatasources, false),
-			Description:  helper.AllowedValuesToDescription(validDatasources),
-		},
+	"datasources": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
 }

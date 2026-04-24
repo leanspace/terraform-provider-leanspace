@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
@@ -154,6 +155,33 @@ func (dashboard *Dashboard) PostUpdateProcess(client *provider.Client, updated a
 			if err := removeWidget(widget, updatedDashboard.ID, client); err != nil {
 				return err
 			}
+		}
+	}
+	return nil
+}
+
+func (dashboard *Dashboard) PostReadProcess(_ *provider.Client, newValue any) error {
+	newDashboard, ok := newValue.(*Dashboard)
+	if !ok || newDashboard == nil {
+		return nil
+	}
+	newDashboard.Tags = general_objects.ReorderKeyValues(dashboard.Tags, newDashboard.Tags)
+	newDashboard.WidgetInfo = helper.ReorderByKey(dashboard.WidgetInfo, newDashboard.WidgetInfo, func(w WidgetInfo) string { return w.ID })
+	return nil
+}
+
+func (dashboard *Dashboard) PostUnmarshallProcess() error {
+	dashboard.WidgetInfo = make([]WidgetInfo, len(dashboard.Widgets))
+	for index, widget := range dashboard.Widgets {
+		dashboard.WidgetInfo[index] = WidgetInfo{
+			ID:   widget.ID,
+			Type: widget.Type,
+			X:    widget.View.Grid.X,
+			Y:    widget.View.Grid.Y,
+			W:    widget.View.Grid.W,
+			H:    widget.View.Grid.H,
+			MinW: widget.View.Grid.MinW,
+			MinH: widget.View.Grid.MinH,
 		}
 	}
 	return nil

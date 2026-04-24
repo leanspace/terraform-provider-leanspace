@@ -7,4 +7,7 @@ var MonitorDataType = provider.DataSourceType[Monitor, *Monitor]{
 	Path:               "monitors-repository/monitors",
 	Schema:             monitorSchema,
 	FilterSchema:       dataSourceFilterSchema,
+	TFModelFactory:     func() any { return &MonitorTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(monitorSchema),
 }

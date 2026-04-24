@@ -1,228 +1,106 @@
 package resources
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/float64default"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var validResourceConstraintTypes = []string{"LIMIT", "THRESHOLD"}
 var validResourceConstraintKinds = []string{"UPPER", "LOWER"}
 
-var resourceSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
-		Computed: true,
+var resourceSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
+	"asset_id": resourceschema.StringAttribute{
+		Required:      true,
+		Validators:    helper.ValidUUID(),
+		PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 	},
-	"asset_id": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ForceNew:     true,
-		ValidateFunc: validation.IsUUID,
+	"unit_id": resourceschema.StringAttribute{
+		Optional:      true,
+		Computed:      true,
+		Validators:    helper.ValidUUID(),
+		PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown(), stringplanmodifier.RequiresReplace()},
 	},
-	"unit_id": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ForceNew:     true,
-		ValidateFunc: validation.IsUUID,
+	"metric_id": resourceschema.StringAttribute{
+		Optional:      true,
+		Validators:    helper.ValidUUID(),
+		PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 	},
-	"metric_id": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ForceNew:     true,
-		ValidateFunc: validation.IsUUID,
-	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"default_level": {
-		Type:     schema.TypeFloat,
+	"default_level": resourceschema.Float64Attribute{
+		Optional: true,
+		Computed: true,
+		Default:  float64default.StaticFloat64(0.0),
+	},
+	"lower_limit": resourceschema.Float64Attribute{
 		Optional: true,
 	},
-	"constraints": {
-		Type:       schema.TypeSet,
-		Deprecated: "Prefer using the lowerLimit, upperLimit and thresholds fields",
-		Optional:   true,
-		Elem: &schema.Resource{
-			Schema: resourceConstraintsSchema,
-		},
-	},
-	"lower_limit": {
-		Type:     schema.TypeList,
+	"upper_limit": resourceschema.Float64Attribute{
 		Optional: true,
-		MaxItems: 1,
-		Elem:     &schema.Schema{Type: schema.TypeFloat},
 	},
-	"upper_limit": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MaxItems: 1,
-		Elem:     &schema.Schema{Type: schema.TypeFloat},
-	},
-	"thresholds": {
-		Type:        schema.TypeSet,
+	"thresholds": resourceschema.SetNestedAttribute{
 		Optional:    true,
 		Description: "Currently, at most three LOWER and three UPPER thresholds can be set",
-		Elem: &schema.Resource{
-			Schema: resourceThresholdSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: resourceThresholdSchema,
 		},
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
+})
 
-var resourceConstraintsSchema = map[string]*schema.Schema{
-	"type": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validResourceConstraintTypes, false),
-		Description:  helper.AllowedValuesToDescription(validResourceConstraintTypes),
+var resourceThresholdSchema = map[string]resourceschema.Attribute{
+	"kind": resourceschema.StringAttribute{
+		Required:    true,
+		Description: helper.AllowedValuesToDescription(validResourceConstraintKinds),
+		Validators:  []validator.String{stringvalidator.OneOf(validResourceConstraintKinds...)},
 	},
-	"kind": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validResourceConstraintKinds, false),
-		Description:  helper.AllowedValuesToDescription(validResourceConstraintKinds),
+	"name": resourceschema.StringAttribute{
+		Optional:   true,
+		Validators: helper.ValidName(),
 	},
-	"value": {
-		Type:     schema.TypeFloat,
-		Required: true,
-	},
-	"name": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidName,
-	},
-}
-
-var resourceThresholdSchema = map[string]*schema.Schema{
-	"kind": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validResourceConstraintKinds, false),
-		Description:  helper.AllowedValuesToDescription(validResourceConstraintKinds),
-	},
-	"name": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidName,
-	},
-	"violation_when_reached": {
-		Type:     schema.TypeBool,
+	"violation_when_reached": resourceschema.BoolAttribute{
 		Optional: true,
+		Computed: true,
+		Default:  booldefault.StaticBool(false),
 	},
-	"value": {
-		Type:     schema.TypeFloat,
+	"value": resourceschema.Float64Attribute{
 		Required: true,
 	},
 }
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
-	"ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+var dataSourceFilterSchema = general_objects.AuditFilterFieldsWithTags(map[string]datasourceschema.Attribute{
+	"asset_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
-	"asset_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+	"unit_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Computed:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
-	"unit_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+	"metric_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
-	"metric_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+	"default_level": datasourceschema.Float64Attribute{
+		Optional:    true,
+		Description: "The default level of the resource.",
 	},
-	"tags": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
-	},
-	"created_bys": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-		Description: "Filter on the user who created the Resource. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"last_modified_bys": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-		Description: "Filter on the user who last modified the Resource. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"from_created_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Resource creation date. Resources with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"from_last_modified_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Resource last modification date. Resources with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"to_created_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Resource creation date. Resources with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"to_last_modified_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Resource last modification date. Resources with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-}
+})

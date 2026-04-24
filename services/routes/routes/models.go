@@ -1,29 +1,25 @@
 package routes
 
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct Route
+
 import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 
 type Route struct {
-	ID             string                     `json:"id"`
+	general_objects.AuditModel
 	Name           string                     `json:"name"`
-	Description    string                     `json:"description,omitempty"`
+	Description    *string                    `json:"description,omitempty"`
 	Tags           []general_objects.KeyValue `json:"tags,omitempty"`
 	Definition     Definition                 `json:"definition"`
-	RouteInstances []RouteInstance            `json:"routeInstances,omitempty"`
+	RouteInstances []RouteInstance            `json:"routeInstances,omitempty" tf:"list"`
 	ProcessorIds   []string                   `json:"processorIds,omitempty"`
-	CreatedAt      string                     `json:"createdAt"`
-	CreatedBy      string                     `json:"createdBy"`
-	LastModifiedAt string                     `json:"lastModifiedAt"`
-	LastModifiedBy string                     `json:"lastModifiedBy"`
 }
-
-func (route *Route) GetID() string { return route.ID }
 
 type Definition struct {
 	Configuration    string  `json:"configuration"`
 	LogLevel         string  `json:"logLevel"`
-	Valid            bool    `json:"valid,omitempty"`
-	ServiceAccountId string  `json:"serviceAccountId,omitempty"`
-	Errors           []Error `json:"errors,omitempty"`
+	Valid            bool    `json:"valid"`
+	ServiceAccountId *string `json:"serviceAccountId,omitempty"`
+	Errors           []Error `json:"errors,omitempty" tf:"list"`
 }
 
 type Error struct {
@@ -32,11 +28,11 @@ type Error struct {
 }
 
 type RouteInstance struct {
-	Status                    string `json:"status"`
-	LastStatusAt              string `json:"lastStatusAt,omitempty"`
-	ContainerId               string `json:"containerId"`
-	LastMessageStartProcessAt string `json:"lastMessageStartProcessAt,omitempty"`
-	LastMessageEndProcessAt   string `json:"lastMessageEndProcessAt,omitempty"`
-	NumberOfMessagesProcessed int    `json:"numberOfMessagesProcessed,omitempty"`
-	CamelRouteId              string `json:"camelRouteId,omitempty"`
+	Status                    string  `json:"status"`
+	LastStatusAt              *string `json:"lastStatusAt,omitempty"`
+	ContainerId               string  `json:"containerId"`
+	LastMessageStartProcessAt *string `json:"lastMessageStartProcessAt,omitempty"`
+	LastMessageEndProcessAt   *string `json:"lastMessageEndProcessAt,omitempty"`
+	NumberOfMessagesProcessed int     `json:"numberOfMessagesProcessed"`
+	CamelRouteId              *string `json:"camelRouteId,omitempty"`
 }

@@ -66,6 +66,12 @@ resource "leanspace_plan_templates" "created" {
   }
 }
 
+resource "leanspace_plan_templates" "created_empty" {
+  name        = "Terraform PlanTemplateTerraform Empty"
+  asset_id    = var.asset_id
+  description = "terraform DescriptionTerraform"
+}
+
 output "created" {
   value = leanspace_plan_templates.created
 }

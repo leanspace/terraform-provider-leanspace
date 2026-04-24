@@ -14,4 +14,5 @@ var PluginDataType = provider.DataSourceType[Plugin, *Plugin]{
 	ReadPath: func(id string) string {
 		return fmt.Sprintf("plugins-repository/plugins/%s/metadata", id)
 	},
+	TFModelFactory: func() any { return &PluginTF{} },
 }

@@ -1,121 +1,98 @@
 package event_definitions
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 var validOperator = []string{"EQUAL_TO"}
-var source = []string{"COMMAND_STATE_CHANGED", "MONITOR_TRIGGERED", "PASS_AOS", "PASS_LOS", "STREAM_DECODED", "CUSTOM", "FILE_UPLOADED"}
+var source = []string{"COMMAND_STATE_CHANGED", "RELEASE_QUEUE_LOCKED", "RELEASE_QUEUE_UNLOCKED", "PASS_STATE_CHANGED", "MONITOR_TRIGGERED", "PASS_AOS", "PASS_LOS", "STREAM_DECODED", "CUSTOM", "FILE_UPLOADED"}
 var state = []string{"ACTIVE", "INACTIVE"}
 var validMetadataTypes = []string{
 	"NUMERIC", "BOOLEAN", "TEXT",
 }
 
-var eventsDefinitions = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
-		Computed: true,
-	},
-	"description": {
-		Type:     schema.TypeString,
+var eventsDefinitions = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"name": {
-		Type:     schema.TypeString,
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"criticality": {
-		Type:     schema.TypeString,
+	"criticality": resourceschema.StringAttribute{
 		Optional: true,
-		Default:  "NORMAL",
+		Computed: true,
+		Default:  stringdefault.StaticString("NORMAL"),
 	},
-	"rules": {
-		Type:     schema.TypeSet,
+	"rules": resourceschema.SetNestedAttribute{
 		Optional: true,
-		Elem: &schema.Resource{
-			Schema: ruleSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: ruleSchema,
 		},
 	},
-	"source": {
-		Type:         schema.TypeString,
-		Required:     true,
-		Description:  helper.AllowedValuesToDescription(source),
-		ValidateFunc: validation.StringInSlice(source, false),
+	"source": resourceschema.StringAttribute{
+		Required:    true,
+		Description: helper.AllowedValuesToDescription(source),
+		Validators:  []validator.String{stringvalidator.OneOf(source...)},
 	},
-	"state": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(state, false),
-		Description:  helper.AllowedValuesToDescription(state),
-	},
-	"created_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who modified it the last",
+	"state": resourceschema.StringAttribute{
+		Required:    true,
+		Description: helper.AllowedValuesToDescription(state),
+		Validators:  []validator.String{stringvalidator.OneOf(state...)},
 	},
 	"tags": general_objects.KeyValuesSchema,
-}
+})
 
-var ruleSchema = map[string]*schema.Schema{
-	"path": {
-		Type:     schema.TypeString,
+var ruleSchema = map[string]resourceschema.Attribute{
+	"path": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"operator": {
-		Type:         schema.TypeString,
-		Required:     true,
-		Description:  helper.AllowedValuesToDescription(validOperator),
-		ValidateFunc: validation.StringInSlice(validOperator, false),
+	"operator": resourceschema.StringAttribute{
+		Required:    true,
+		Description: helper.AllowedValuesToDescription(validOperator),
+		Validators:  []validator.String{stringvalidator.OneOf(validOperator...)},
 	},
-	"comparison_value": {
-		Type:     schema.TypeList,
-		MinItems: 0,
-		MaxItems: 1,
-		Optional: true,
-		Elem: &schema.Resource{
-			Schema: ComparisonValueAttributeSchema,
-		},
+	"comparison_value": resourceschema.SingleNestedAttribute{
+		Optional:   true,
+		Attributes: ComparisonValueAttributeSchema,
 	},
 }
 
-var ComparisonValueAttributeSchema = map[string]*schema.Schema{
-	"value": {
-		Type:     schema.TypeString,
+var ComparisonValueAttributeSchema = map[string]resourceschema.Attribute{
+	"value": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"type": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validMetadataTypes, false),
-		Description:  helper.AllowedValuesToDescription(validMetadataTypes),
+	"type": resourceschema.StringAttribute{
+		Required:    true,
+		Description: helper.AllowedValuesToDescription(validMetadataTypes),
+		Validators:  []validator.String{stringvalidator.OneOf(validMetadataTypes...)},
 	},
 }
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
-	"tags": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
+var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+	"source": datasourceschema.StringAttribute{
+		Optional:    true,
+		Description: helper.AllowedValuesToDescription(source),
+		Validators:  []validator.String{stringvalidator.OneOf(source...)},
+	},
+	"state": datasourceschema.StringAttribute{
+		Optional:    true,
+		Description: helper.AllowedValuesToDescription(state),
+		Validators:  []validator.String{stringvalidator.OneOf(state...)},
+	},
+	"criticalities": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+	},
+	"tags": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
 }

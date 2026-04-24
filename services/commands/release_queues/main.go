@@ -7,4 +7,5 @@ var ReleaseQueueDataType = provider.DataSourceType[ReleaseQueue, *ReleaseQueue]{
 	Path:               "commands-repository/release-queues",
 	Schema:             releaseQueueSchema,
 	FilterSchema:       dataSourceFilterSchema,
+	TFModelFactory:     func() any { return &ReleaseQueueTF{} },
 }

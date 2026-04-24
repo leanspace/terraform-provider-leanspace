@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
@@ -50,7 +51,7 @@ func (monitor *Monitor) PostCreateProcess(client *provider.Client, monitorRaw an
 	createdMonitor := monitorRaw.(*Monitor)
 	expectedActionTemplates := monitor.ActionTemplateLinks
 
-	// Add all members directly
+	// Add all action templates directly
 	for _, actionTemplate := range expectedActionTemplates {
 		err := createdMonitor.addActionTemplate(actionTemplate, client)
 		if err != nil {
@@ -104,21 +105,44 @@ func (monitor *Monitor) PostUpdateProcess(client *provider.Client, monitorRaw an
 
 func contains(slice []ActionTemplateLink, value ActionTemplateLink) bool {
 	for _, v := range slice {
-		if v.ID == value.ID && stringSliceAreEqual(v.TriggeredOn, value.TriggeredOn) {
+		if v.ID == value.ID && stringSliceSetEqual(v.TriggeredOn, value.TriggeredOn) {
 			return true
 		}
 	}
 	return false
 }
 
-func stringSliceAreEqual(a, b []string) bool {
+func stringSliceSetEqual(a, b []string) bool {
 	if len(a) != len(b) {
 		return false
 	}
-	for i := range a {
-		if a[i] != b[i] {
+	seen := make(map[string]int, len(a))
+	for _, s := range a {
+		seen[s]++
+	}
+	for _, s := range b {
+		seen[s]--
+		if seen[s] < 0 {
 			return false
 		}
 	}
 	return true
+}
+
+func (monitor *Monitor) PostReadProcess(_ *provider.Client, newValue any) error {
+	newMonitor, ok := newValue.(*Monitor)
+	if !ok || newMonitor == nil {
+		return nil
+	}
+	newMonitor.Tags = general_objects.ReorderKeyValues(monitor.Tags, newMonitor.Tags)
+	return nil
+}
+
+func (monitor *Monitor) PostUnmarshallProcess() error {
+	monitor.ActionTemplateLinks = make([]ActionTemplateLink, len(monitor.ActionTemplates))
+	for i, value := range monitor.ActionTemplates {
+		monitor.ActionTemplateLinks[i].ID = value.ID
+		monitor.ActionTemplateLinks[i].TriggeredOn = value.TriggeredOn
+	}
+	return nil
 }

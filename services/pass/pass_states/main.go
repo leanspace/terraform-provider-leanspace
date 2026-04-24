@@ -7,4 +7,5 @@ var PassStateDataType = provider.DataSourceType[PassState, *PassState]{
 	Path:               "passes-repository/passes/states",
 	Schema:             passStateSchema,
 	FilterSchema:       nil,
+	TFModelFactory:     func() any { return &PassStateTF{} },
 }

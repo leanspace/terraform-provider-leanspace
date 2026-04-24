@@ -1,216 +1,108 @@
 package sensors
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework-validators/float64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 var validShapeTypes = []string{
 	"CIRCULAR", "RECTANGULAR",
 }
 
-var sensorSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
-		Computed: true,
+var sensorSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
+	"satellite_id": resourceschema.StringAttribute{
+		Required:      true,
+		Validators:    helper.ValidUUID(),
+		PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 	},
-	"satellite_id": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ForceNew:     true,
-		ValidateFunc: validation.IsUUID,
+	"name": resourceschema.StringAttribute{
+		Required:   true,
+		Validators: helper.ValidName(),
 	},
-	"name": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: helper.IsValidName,
-	},
-	"aperture_shape": {
-		Type:     schema.TypeList,
-		Required: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: apertureShapeSchema,
-		},
+	"aperture_shape": resourceschema.SingleNestedAttribute{
+		Required:   true,
+		Attributes: apertureShapeSchema,
 	},
 	"tags": general_objects.KeyValuesSchema,
-	"created_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was created",
+})
+
+var apertureShapeSchema = map[string]resourceschema.Attribute{
+	"type": resourceschema.StringAttribute{
+		Required:   true,
+		Validators: []validator.String{stringvalidator.OneOf(validShapeTypes...)},
 	},
-	"created_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who created it",
+	"aperture_center": resourceschema.SingleNestedAttribute{
+		Optional:   true,
+		Attributes: vector3DSchema,
 	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was last modified",
+	"half_aperture_angle": resourceschema.SingleNestedAttribute{
+		Optional:   true,
+		Attributes: halfApertureAngleSchema(180),
 	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who modified it the last",
+	"first_axis_vector": resourceschema.SingleNestedAttribute{
+		Optional:   true,
+		Attributes: vector3DSchema,
+	},
+	"first_axis_half_aperture_angle": resourceschema.SingleNestedAttribute{
+		Optional:   true,
+		Attributes: halfApertureAngleSchema(90),
+	},
+	"second_axis_vector": resourceschema.SingleNestedAttribute{
+		Optional:   true,
+		Attributes: vector3DSchema,
+	},
+	"second_axis_half_aperture_angle": resourceschema.SingleNestedAttribute{
+		Optional:   true,
+		Attributes: halfApertureAngleSchema(90),
 	},
 }
 
-var apertureShapeSchema = map[string]*schema.Schema{
-	"type": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validShapeTypes, false),
+var vector3DSchema = map[string]resourceschema.Attribute{
+	"x": resourceschema.Float64Attribute{
+		Optional:   true,
+		Validators: []validator.Float64{helper.RequiredFloat64IfParentConfigured()},
 	},
-	"aperture_center": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: vector3DSchema,
-		},
+	"y": resourceschema.Float64Attribute{
+		Optional:   true,
+		Validators: []validator.Float64{helper.RequiredFloat64IfParentConfigured()},
 	},
-	"half_aperture_angle": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: halfApertureAngleSchema(180),
-		},
-	},
-	"first_axis_vector": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: vector3DSchema,
-		},
-	},
-	"first_axis_half_aperture_angle": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: halfApertureAngleSchema(90),
-		},
-	},
-	"second_axis_vector": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: vector3DSchema,
-		},
-	},
-	"second_axis_half_aperture_angle": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: halfApertureAngleSchema(90),
-		},
+	"z": resourceschema.Float64Attribute{
+		Optional:   true,
+		Validators: []validator.Float64{helper.RequiredFloat64IfParentConfigured()},
 	},
 }
 
-var vector3DSchema = map[string]*schema.Schema{
-	"x": {
-		Type:     schema.TypeFloat,
-		Required: true,
-	},
-	"y": {
-		Type:     schema.TypeFloat,
-		Required: true,
-	},
-	"z": {
-		Type:     schema.TypeFloat,
-		Required: true,
-	},
-}
-
-func halfApertureAngleSchema(maximum float64) map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"degrees": {
-			Type:         schema.TypeFloat,
-			Required:     true,
-			ValidateFunc: validateMax(maximum),
+func halfApertureAngleSchema(maximum float64) map[string]resourceschema.Attribute {
+	return map[string]resourceschema.Attribute{
+		"degrees": resourceschema.Float64Attribute{
+			Optional: true,
+			Validators: []validator.Float64{
+				float64validator.Between(0.0, maximum),
+				helper.RequiredFloat64IfParentConfigured(),
+			},
 		},
 	}
 }
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
-	"satellite_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+var dataSourceFilterSchema = general_objects.AuditFilterFieldsWithTags(map[string]datasourceschema.Attribute{
+	"satellite_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
-	"aperture_shape_types": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.StringInSlice(validShapeTypes, false),
-		},
+	"aperture_shape_types": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(stringvalidator.OneOf(validShapeTypes...))},
 	},
-	"tags": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
-	},
-	"created_bys": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-		Description: "Filter on the user who created the entry. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"last_modified_bys": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-		Description: "Filter on the user who last modified the entry. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"from_created_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the creation date. Entries with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"from_last_modified_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the last modification date. Entries with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"to_created_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the creation date. Entries with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"to_last_modified_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the last modification date. Entries with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-}
+})

@@ -7,4 +7,5 @@ var AccessPolicyDataType = provider.DataSourceType[AccessPolicy, *AccessPolicy]{
 	Path:               "teams-repository/access-policies",
 	Schema:             accessPolicySchema,
 	FilterSchema:       dataSourceFilterSchema,
+	TFModelFactory:     func() any { return &AccessPolicyTF{} },
 }

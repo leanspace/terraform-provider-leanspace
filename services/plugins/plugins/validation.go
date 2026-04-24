@@ -1,25 +1,41 @@
 package plugins
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 )
 
-func isValidSemVerForPlugins(i interface{}, fieldName string) (warnings []string, errorsOnField []error) {
+type semVerForPluginsValidator struct{}
 
-	warnings, errors := helper.IsValidSemVer(i, fieldName)
-	if errors != nil {
-		for _, error := range errors {
-			errorsOnField = append(errorsOnField, error)
-		}
+func (v semVerForPluginsValidator) Description(_ context.Context) string {
+	return "must be a valid semantic version MAJOR.MINOR.PATCH with major version 1 or 2"
+}
+
+func (v semVerForPluginsValidator) MarkdownDescription(ctx context.Context) string {
+	return v.Description(ctx)
+}
+
+func (v semVerForPluginsValidator) ValidateString(ctx context.Context, req validator.StringRequest, resp *validator.StringResponse) {
+	for _, v := range helper.IsValidSemVer() {
+		v.ValidateString(ctx, req, resp)
 	}
-
-	var semVerValues []string = strings.Split(i.(string), ".")
-	if semVerValues[0] != "1" && semVerValues[0] != "2" {
-		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to have major version between 1 and 2, got %q", fieldName, semVerValues[0]))
+	if resp.Diagnostics.HasError() || req.ConfigValue.IsNull() || req.ConfigValue.IsUnknown() {
+		return
 	}
+	major := strings.Split(req.ConfigValue.ValueString(), ".")[0]
+	if major != "1" && major != "2" {
+		resp.Diagnostics.AddAttributeError(
+			req.Path,
+			"Invalid semantic version",
+			fmt.Sprintf("expected major version to be 1 or 2, got %q", major),
+		)
+	}
+}
 
-	return warnings, errorsOnField
+func isValidSemVerForPlugins() []validator.String {
+	return []validator.String{semVerForPluginsValidator{}}
 }

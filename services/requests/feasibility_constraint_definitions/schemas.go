@@ -1,105 +1,45 @@
 package feasibility_constraint_definitions
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var feasibilityConstraintDefinitionSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
-		Computed: true,
-	},
-	"name": {
-		Type:     schema.TypeString,
+var feasibilityConstraintDefinitionSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"argument_definitions": {
-		Type:     schema.TypeSet,
+	"argument_definitions": resourceschema.SetNestedAttribute{
 		Optional: true,
-		MaxItems: 499,
-		Elem: &schema.Resource{
-			Schema: argumentDefinitionSchema,
+		NestedObject: resourceschema.NestedAttributeObject{
+			Attributes: argumentDefinitionSchema,
 		},
+		Validators: []validator.Set{setvalidator.SizeAtMost(499)},
 	},
-	"created_at": {
-		Type:     schema.TypeString,
-		Computed: true,
+})
+
+var argumentDefinitionSchema = map[string]resourceschema.Attribute{
+	"name": resourceschema.StringAttribute{
+		Required: true,
 	},
-	"created_by": {
-		Type:     schema.TypeString,
-		Computed: true,
+	"description": resourceschema.StringAttribute{
+		Optional: true,
 	},
-	"last_modified_at": {
-		Type:     schema.TypeString,
-		Computed: true,
-	},
-	"last_modified_by": {
-		Type:     schema.TypeString,
-		Computed: true,
+	"attributes": resourceschema.SingleNestedAttribute{
+		Required: true,
+		Attributes: general_objects.DefinitionAttributeSchema(
+			[]string{"BINARY", "BOOLEAN", "ENUM", "DATE", "ARRAY", "STRUCTURE", "TLE"}, // attribute types not allowed in command definition attributes
+			nil,   // All fields are used
+			false, // Does not force recreation if the type changes
+		),
 	},
 }
 
-var argumentDefinitionSchema = map[string]*schema.Schema{
-	"name": {
-		Type:     schema.TypeString,
-		Required: true,
-	},
-	"description": {
-		Type:     schema.TypeString,
-		Optional: true,
-	},
-	"attributes": {
-		Type:     schema.TypeList,
-		Required: true,
-		MinItems: 1,
-		MaxItems: 1,
-		Elem: &schema.Resource{
-			Schema: general_objects.DefinitionAttributeSchema(
-				[]string{"BINARY", "BOOLEAN", "ENUM", "DATE", "ARRAY", "STRUCTURE", "TLE"}, // attribute types not allowed in command definition attributes
-				nil,   // All fields are used
-				false, // Does not force recreation if the type changes
-			),
-		},
-	},
-}
-
-var feasibilityConstraintDefinitionFilterSchema = map[string]*schema.Schema{
-	"created_bys": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-	},
-	"to_created_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-	},
-	"last_modified_bys": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-	},
-	"from_last_modified_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-	},
-	"to_last_modified_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-	},
-}
+var feasibilityConstraintDefinitionFilterSchema = general_objects.AuditFilterFieldsWithTags(map[string]datasourceschema.Attribute{})

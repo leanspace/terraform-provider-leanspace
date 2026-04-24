@@ -11,10 +11,6 @@ var actionTemplateValidator = Validators{
 	),
 }
 
-func (actionTemplate *ActionTemplate) Validate(obj map[string]any) error {
-	if err := actionTemplateValidator.Check(obj); err != nil {
-		return err
-	}
-
-	return nil
+func (actionTemplate *ActionTemplate) Validate() error {
+	return actionTemplateValidator.CheckValue(actionTemplate)
 }

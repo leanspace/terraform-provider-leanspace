@@ -19,6 +19,9 @@ var StreamQueueDataType = provider.DataSourceType[streams.Stream, *streams.Strea
 	CreateFunction: func(client *provider.Client, stream *streams.Stream) (*streams.Stream, error) {
 		return CreateStream(stream, client)
 	},
+	TFModelFactory: func() any { return &streams.StreamTF{} },
+	SchemaVersion:  1,
+	StateUpgraders: provider.UnwrapSingleNestedUpgraderMap(streams.StreamSchema),
 }
 
 // need to declare there in order to avoid cyclic dependencies

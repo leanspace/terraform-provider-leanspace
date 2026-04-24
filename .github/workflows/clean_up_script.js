@@ -5,9 +5,9 @@ module.exports = async (service_list, tenant, client_id, client_secret) => {
 			method: "DELETE",
 			headers
 		});
-		await delete_service.text();
+		const response = await delete_service.text();
 		if (delete_service.status !== 200) {
-			console.log(`Failed to delete ${delete_service.json()}`);
+			console.log(`Failed to delete ${endpoint}: ${response}`);
 		}
 	}
 	const token_request = await fetch(`https://api.develop.leanspace.io/teams-repository/oauth2/token?tenant=${tenant}`, {
@@ -31,9 +31,15 @@ module.exports = async (service_list, tenant, client_id, client_secret) => {
 		method: "GET",
 		headers
 		});
-		const all = service.includes('?') ? (await get_all.json()).content : await get_all.json();
-		if (get_all.status !== 200 ) {
-			console.log(`Failed to get ${service}`);
+		let all;
+		try{
+			all = service.includes('?') ? (await get_all.json()).content : await get_all.json();
+			if (get_all.status !== 200 ) {
+				console.log(`Failed to get ${service}`);
+				continue;
+			}
+		} catch (error) {
+			console.log(`Failed to parse response for ${service}: ${error}`);
 			continue;
 		}
 		console.log(all);

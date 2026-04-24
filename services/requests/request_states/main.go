@@ -6,5 +6,6 @@ var RequestStateDataType = provider.DataSourceType[RequestState, *RequestState]{
 	ResourceIdentifier: "leanspace_request_states",
 	Path:               "requests-repository/requests/states",
 	Schema:             requestStateSchema,
-	FilterSchema:       requestStateFilterSchema,
+	FilterSchema:       nil,
+	TFModelFactory:     func() any { return &RequestStateTF{} },
 }

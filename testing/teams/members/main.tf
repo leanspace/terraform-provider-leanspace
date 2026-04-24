@@ -19,7 +19,7 @@ variable "access_policies" {
 data "leanspace_members" "all" {
   filters {
     team_ids = []
-    statuses = ["ACTIVE"]
+    states   = ["ACTIVE"]
     ids      = []
     query    = ""
     page     = 0

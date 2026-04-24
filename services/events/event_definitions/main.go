@@ -7,4 +7,7 @@ var EventsDefinitionDataType = provider.DataSourceType[EventsDefinition, *Events
 	Path:               "events/event-definitions",
 	Schema:             eventsDefinitions,
 	FilterSchema:       dataSourceFilterSchema,
+	TFModelFactory:     func() any { return &EventsDefinitionTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(eventsDefinitions),
 }

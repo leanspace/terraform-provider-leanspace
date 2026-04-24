@@ -6,20 +6,15 @@ import (
 )
 
 type Dashboard struct {
-	ID             string                     `json:"id"`
-	Name           string                     `json:"name"`
-	Description    string                     `json:"description,omitempty"`
-	NodeIds        []string                   `json:"nodeIds"`
-	WidgetInfo     []WidgetInfo               `json:"widgetInfo,omitempty"`
-	Widgets        []DashboardWidget          `json:"widgets"`
-	Tags           []general_objects.KeyValue `json:"tags,omitempty"`
-	CreatedAt      string                     `json:"createdAt"`
-	CreatedBy      string                     `json:"createdBy"`
-	LastModifiedAt string                     `json:"lastModifiedAt"`
-	LastModifiedBy string                     `json:"lastModifiedBy"`
+	general_objects.AuditModel
+	Name            string                     `json:"name"`
+	Description     *string                    `json:"description,omitempty"`
+	NodeIds         []string                   `json:"nodeIds"`
+	WidgetInfo      []WidgetInfo               `json:"widgetInfo,omitempty"`
+	Widgets         []DashboardWidget          `json:"widgets,omitempty"`
+	Tags            []general_objects.KeyValue `json:"tags,omitempty"`
+	TimestampFormat *string                    `json:"timestampFormat,omitempty"`
 }
-
-func (dashboard *Dashboard) GetID() string { return dashboard.ID }
 
 type WidgetInfo struct {
 	ID   string `json:"id"`
@@ -33,9 +28,9 @@ type WidgetInfo struct {
 }
 
 type DashboardWidget struct {
-	ID                   string                     `json:"id"`
+	general_objects.AuditModel
 	Name                 string                     `json:"name"`
-	Description          string                     `json:"description,omitempty"`
+	Description          *string                    `json:"description,omitempty"`
 	Type                 string                     `json:"type"`
 	Granularity          string                     `json:"granularity"`
 	QueryTimeDimension   string                     `json:"queryTimeDimension"`
@@ -44,10 +39,6 @@ type DashboardWidget struct {
 	Metadata             widgets.Metadata           `json:"metadata"`
 	View                 WidgetView                 `json:"view"`
 	Tags                 []general_objects.KeyValue `json:"tags,omitempty"`
-	CreatedAt            string                     `json:"createdAt"`
-	CreatedBy            string                     `json:"createdBy"`
-	LastModifiedAt       string                     `json:"lastModifiedAt"`
-	LastModifiedBy       string                     `json:"lastModifiedBy"`
 }
 
 type WidgetView struct {

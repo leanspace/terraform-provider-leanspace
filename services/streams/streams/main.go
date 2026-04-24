@@ -7,4 +7,7 @@ var StreamDataType = provider.DataSourceType[Stream, *Stream]{
 	Path:               "streams-repository/streams",
 	Schema:             StreamSchema,
 	FilterSchema:       DataSourceFilterSchema,
+	TFModelFactory:     func() any { return &StreamTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(StreamSchema),
 }

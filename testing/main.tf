@@ -64,6 +64,10 @@ module "command_definitions" {
   ]
 }
 
+module "units" {
+  source = "./asset/units"
+}
+
 module "metrics" {
   source  = "./metrics/metrics"
   node_id = module.nodes.satellite_node.id
@@ -105,7 +109,7 @@ module "streams" {
   ]
 }
 
-/* module "streams_queue" {
+module "streams_queue" {
   source            = "./streams/stream_queues"
   asset_id          = module.nodes.satellite_node.id
   numeric_metric_id = module.metrics.test_numeric_metric.id
@@ -113,7 +117,18 @@ module "streams" {
     module.nodes,
     module.metrics
   ]
-} */ // Disabled until stream_queues is fixed
+}
+
+module "resources" {
+  source    = "./resources/resources"
+  asset_id  = module.nodes.satellite_node.id
+  metric_id = module.metrics.test_numeric_metric.id
+  unit_id   = module.units.test_units.k.id
+  depends_on = [
+    module.nodes,
+    module.metrics
+  ]
+}
 
 module "widgets" {
   source            = "./dashboard/widgets"
@@ -141,18 +156,6 @@ module "dashboards" {
   depends_on = [
     module.widgets,
     module.nodes
-  ]
-}
-
-module "remote_agents" {
-  source            = "./agents/remote_agents"
-  ground_station_id = module.nodes.groundstation_node.id
-  command_queue_id  = module.command_queues.test_command_queue.id
-  stream_id         = module.streams.test_stream.id
-  depends_on = [
-    module.nodes,
-    module.command_queues,
-    module.streams
   ]
 }
 
@@ -222,12 +225,21 @@ module "monitors" {
   action_template_ids = [module.action_templates.test_action_template.id]
 }
 
-module "units" {
-  source = "./asset/units"
-}
-
 module "plan_states" {
   source = "./plans/plan_states"
+}
+
+module "resource_functions" {
+  source                 = "./activities/resource_functions"
+  resource1_id           = module.resources.a_resource.id
+  resource2_id           = module.resources.a_second_resource.id
+  resource3_id           = module.resources.a_third_resource.id
+  resource4_id           = module.resources.a_fourth_resource.id
+  activity_definition_id = module.activity_definitions.test_activity_definition.id
+  depends_on = [
+    module.activity_definitions,
+    module.resources
+  ]
 }
 
 module "plan_templates" {
@@ -242,15 +254,15 @@ module "plan_templates" {
   ]
 }
 
+module "processors" {
+  source = "./routes/processors"
+  path   = abspath("./routes/processors/processor.jar")
+}
+
 module "routes" {
   source             = "./routes/routes"
   processor_ids      = [module.processors.test_create_processor.id]
   service_account_id = values(module.service_accounts.test_service_accounts)[0].id
-}
-
-module "processors" {
-  source = "./routes/processors"
-  path   = abspath("./routes/processors/processor.jar")
 }
 
 module "orbits" {
@@ -263,30 +275,6 @@ module "orbits" {
   depends_on = [
     module.nodes,
     module.metrics
-  ]
-}
-
-module "resources" {
-  source    = "./resources/resources"
-  asset_id  = module.nodes.satellite_node.id
-  metric_id = module.metrics.test_numeric_metric.id
-  unit_id   = module.units.test_units.k.id
-  depends_on = [
-    module.nodes,
-    module.metrics
-  ]
-}
-
-module "resource_functions" {
-  source                 = "./activities/resource_functions"
-  resource1_id           = module.resources.a_resource.id
-  resource2_id           = module.resources.a_second_resource.id
-  resource3_id           = module.resources.a_third_resource.id
-  resource4_id           = module.resources.a_fourth_resource.id
-  activity_definition_id = module.activity_definitions.test_activity_definition.id
-  depends_on = [
-    module.activity_definitions,
-    module.resources
   ]
 }
 

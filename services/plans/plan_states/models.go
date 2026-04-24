@@ -1,13 +1,11 @@
 package plan_states
 
-type PlanState struct {
-	ID             string `json:"id"`
-	Name           string `json:"name"`
-	ReadOnly       bool   `json:"readOnly"`
-	CreatedAt      string `json:"createdAt"`
-	CreatedBy      string `json:"createdBy"`
-	LastModifiedAt string `json:"lastModifiedAt"`
-	LastModifiedBy string `json:"lastModifiedBy"`
-}
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct PlanState
 
-func (state *PlanState) GetID() string { return state.ID }
+import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+
+type PlanState struct {
+	general_objects.AuditModel
+	Name     string `json:"name"`
+	ReadOnly bool   `json:"readOnly"`
+}

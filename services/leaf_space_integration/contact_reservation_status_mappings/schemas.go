@@ -1,50 +1,24 @@
 package contact_reservation_status_mappings
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var contactReservationStatusMappingSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
-		Computed: true,
-	},
-	"contact_state_id": {
-		Type:     schema.TypeString,
+var contactReservationStatusMappingSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
+	"contact_state_id": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"leafspace_status": {
-		Type:     schema.TypeString,
+	"leafspace_status": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"created_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-}
+})
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
-	"leafspace_statuses": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
+var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+	"leafspace_statuses": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
 }

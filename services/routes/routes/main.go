@@ -7,4 +7,7 @@ var RouteDataType = provider.DataSourceType[Route, *Route]{
 	Path:               "routes-repository/routes",
 	Schema:             routeSchema,
 	FilterSchema:       dataSourceFilterSchema,
+	TFModelFactory:     func() any { return &RouteTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(routeSchema),
 }

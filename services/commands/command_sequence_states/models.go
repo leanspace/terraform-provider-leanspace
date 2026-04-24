@@ -1,13 +1,11 @@
 package command_sequence_states
 
-type CommandSequenceState struct {
-	ID             string `json:"id"`
-	Name           string `json:"name"`
-	ReadOnly       bool   `json:"readOnly"`
-	CreatedAt      string `json:"createdAt"`
-	CreatedBy      string `json:"createdBy"`
-	LastModifiedAt string `json:"lastModifiedAt"`
-	LastModifiedBy string `json:"lastModifiedBy"`
-}
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct CommandSequenceState
 
-func (state *CommandSequenceState) GetID() string { return state.ID }
+import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+
+type CommandSequenceState struct {
+	general_objects.AuditModel
+	Name     string `json:"name"`
+	ReadOnly bool   `json:"readOnly"`
+}

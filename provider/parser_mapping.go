@@ -3,15 +3,14 @@ package provider
 import (
 	"io"
 
-	"github.com/leanspace/terraform-provider-leanspace/helper"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 )
 
 type ParseableModel[T any] interface {
 	*T
-	helper.Parseable
-	// A function that returns the ID of a model instance instance.
+	// A function that returns the ID of a model instance.
 	GetID() string
 }
 
@@ -83,14 +82,28 @@ type CustomEncodingModel interface {
 }
 
 type ValidationModel interface {
-	// An optional extra function that is called before an instance of this resource is parsed
-	// (ie. FromMap is called) for creation / update. This can be used to ensure all values are valid
-	// and are coherent, and to avoid having validation and error throwing during FromMap (better
-	// isolating resource logic from parsing).
-	// The instance this method is called on is empty/irrelevant - all the data is in the map, and will
-	// be the same as what FromMap receives.
+	// An optional extra function that is called before creating or updating.
+	// This can be used to ensure all values are valid and coherent.
 	// If an error is thrown the action is stopped and the error is displayed to the user.
-	Validate(map[string]any) error
+	Validate() error
+}
+
+// APIToTF is implemented by API models that can produce a Terraform model directly,
+// bypassing the intermediate map[string]any layer.
+type APIToTF interface {
+	ToTF() any // returns a pointer to the TF model struct
+}
+
+// TFToAPI is implemented by Terraform models that can produce their API model,
+// bypassing the intermediate map[string]any layer.
+type TFToAPI interface {
+	ToAPI() any // returns the API model (value, not pointer)
+}
+
+// APIToDSTF is implemented by API models that can produce a data-source-specific
+// Terraform model. Used by unique (non-paginated) data sources.
+type APIToDSTF interface {
+	ToDSTF() any // returns a pointer to the DS TF model struct
 }
 
 type GenericClient[T any, PT ParseableModel[T]] struct {
@@ -129,14 +142,35 @@ type DataSourceType[T any, PT ParseableModel[T]] struct {
 	// Optional. A function that is called when an update is requested. This can be useful when the update
 	// request is different from the default Create request.
 	CreateFunction func(*Client, PT) (PT, error)
-	// The schema to represent the data
-	Schema map[string]*schema.Schema
+	// The schema to represent the data as a managed resource
+	Schema map[string]resourceschema.Attribute
 	// The filters used for this resource's data source. The only allowed fields are primitives and lists of
 	// strings. Note that some fields are already declared and don't need to be redefined: ids, query, page, size, sort.
 	// A value of nil is treated as an empty map, and only the fields specified previously will be usable.
-	FilterSchema map[string]*schema.Schema
+	FilterSchema map[string]datasourceschema.Attribute
 	// If the filet endpoint is paginated or not. Defaults to true.
 	IsUnique bool `default:"false"`
+	// Factory that returns a pointer to a new empty TF model struct (e.g. &NodeTF{}).
+	// GenericResource uses the direct TF conversion path (Plan.Get/State.Set)
+	TFModelFactory func() any
+	// Optional. Schema version for state migration. Defaults to 0.
+	// Increment this when the schema changes in a way that requires state migration.
+	SchemaVersion int64
+	// Optional. State upgraders keyed by the source schema version.
+	// Used by GenericResource to migrate state from an older schema version to the current one.
+	// For resources where ordering of list elements matters (Set→List migration), prefer
+	// StateUpgraderFactory which receives the configured client and can re-read from the API.
+	StateUpgraders map[int64]resource.StateUpgrader
+	// Optional. Like StateUpgraders but receives the live *Client so the upgrader can call the
+	// API (e.g. to re-read the resource and obtain elements in the canonical API order).
+	// When both StateUpgraderFactory and StateUpgraders are set, the factory takes precedence.
+	StateUpgraderFactory func(*Client) map[int64]resource.StateUpgrader
+}
+
+// APIClient returns a GenericClient configured for this DataSourceType.
+// Use this inside StateUpgraderFactory implementations to re-read resources from the API.
+func (dataSource DataSourceType[T, PT]) APIClient(client *Client) GenericClient[T, PT] {
+	return dataSource.convert(client)
 }
 
 func (dataSource DataSourceType[T, PT]) convert(client *Client) GenericClient[T, PT] {

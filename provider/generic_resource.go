@@ -2,166 +2,191 @@ package provider
 
 import (
 	"context"
+	"fmt"
 
-	"github.com/leanspace/terraform-provider-leanspace/helper"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-func (dataSource DataSourceType[T, PT]) toResource() *schema.Resource {
-	return &schema.Resource{
-		CreateContext: dataSource.create,
-		ReadContext:   dataSource.get,
-		UpdateContext: dataSource.update,
-		DeleteContext: dataSource.delete,
-		Schema:        dataSource.Schema,
-		Importer: &schema.ResourceImporter{
-			StateContext: schema.ImportStatePassthroughContext,
-		},
+// GenericResource implements resource.Resource for any DataSourceType.
+type GenericResource[T any, PT ParseableModel[T]] struct {
+	dataType *DataSourceType[T, PT]
+	client   *Client
+}
+
+func NewGenericResource[T any, PT ParseableModel[T]](dt *DataSourceType[T, PT]) func() resource.Resource {
+	return func() resource.Resource {
+		return &GenericResource[T, PT]{dataType: dt}
 	}
 }
 
-func (dataSource DataSourceType[T, PT]) getSchemaKeys() []string {
-	keys := []string{}
-	for key := range dataSource.Schema {
-		keys = append(keys, key)
-	}
-	return keys
+func (r *GenericResource[T, PT]) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = r.dataType.ResourceIdentifier
 }
 
-func (dataSource DataSourceType[T, PT]) getFilterSchemaKeys() []string {
-	keys := []string{}
-	for key := range dataSource.FilterSchema {
-		keys = append(keys, key)
+func (r *GenericResource[T, PT]) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	attrs, blocks := SplitResourceSchemaBlocks(r.dataType.Schema)
+	resp.Schema = resourceschema.Schema{
+		Version:    r.dataType.SchemaVersion,
+		Attributes: attrs,
+		Blocks:     blocks,
 	}
-	return keys
 }
 
-func (dataSource DataSourceType[T, PT]) getData(d *schema.ResourceData, checkValidity bool) (string, PT, error) {
-	valueId := d.Id()
-	onlyNil := true
-	valueRaw := make(map[string]any)
-	for _, key := range dataSource.getSchemaKeys() {
-		valueRaw[key] = d.Get(key)
-		if valueRaw[key] != nil {
-			onlyNil = false
+func (r *GenericResource[T, PT]) UpgradeState(_ context.Context) map[int64]resource.StateUpgrader {
+	if r.dataType.StateUpgraderFactory != nil {
+		return r.dataType.StateUpgraderFactory(r.client)
+	}
+	if r.dataType.StateUpgraders == nil {
+		return map[int64]resource.StateUpgrader{}
+	}
+	return r.dataType.StateUpgraders
+}
+
+func (r *GenericResource[T, PT]) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	if req.ProviderData == nil {
+		return
+	}
+	client, ok := req.ProviderData.(*Client)
+	if !ok {
+		resp.Diagnostics.AddError("Unexpected Provider Data", fmt.Sprintf("Expected *Client, got %T", req.ProviderData))
+		return
+	}
+	r.client = client
+}
+
+func (r *GenericResource[T, PT]) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	tfModel := r.dataType.TFModelFactory()
+	resp.Diagnostics.Append(req.Plan.Get(ctx, tfModel)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	apiPtr := tfModel.(TFToAPI).ToAPI().(PT)
+
+	if v, ok := any(apiPtr).(ValidationModel); ok {
+		if err := v.Validate(); err != nil {
+			resp.Diagnostics.AddError("Validation error", err.Error())
+			return
 		}
 	}
-	if onlyNil || len(valueRaw) == 0 {
-		return valueId, nil, nil
-	}
 
-	var value PT = new(T)
-
-	if checkValidity && helper.Implements[T, ValidationModel]() {
-		err := any(value).(ValidationModel).Validate(valueRaw)
-		if err != nil {
-			return valueId, nil, err
-		}
-	}
-
-	err := value.FromMap(valueRaw)
-	return valueId, value, err
-}
-
-func (dataSource DataSourceType[T, PT]) create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	client := m.(*Client)
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
-
-	_, value, err := dataSource.getData(d, true)
+	createdValue, err := r.dataType.convert(r.client).Create(apiPtr)
 	if err != nil {
-		return diag.FromErr(err)
+		resp.Diagnostics.AddError("Error creating resource", err.Error())
+		return
 	}
-	createdValue, err := dataSource.convert(client).Create(value)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-	d.SetId(createdValue.GetID())
-	diags = append(diags, dataSource.get(ctx, d, m)...)
 
-	return diags
+	readValue, err := r.dataType.convert(r.client).Get(createdValue.GetID(), apiPtr)
+	if err != nil {
+		resp.Diagnostics.AddError("Error reading resource after create", err.Error())
+		return
+	}
+	if readValue == nil {
+		resp.Diagnostics.AddError("Resource not found after creation", "")
+		return
+	}
+
+	resp.Diagnostics.Append(resp.State.Set(ctx, any(readValue).(APIToTF).ToTF())...)
 }
 
-func (dataSource DataSourceType[T, PT]) get(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	client := m.(*Client)
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
-
-	valueId, value, err := dataSource.getData(d, false)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-	value, err = dataSource.convert(client).Get(valueId, value)
-	if err != nil {
-		return diag.FromErr(err)
+func (r *GenericResource[T, PT]) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var id types.String
+	diags := req.State.GetAttribute(ctx, path.Root("id"), &id)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
 	}
 
-	if value != nil {
-		storedData := value.ToMap()
-		for _, key := range dataSource.getSchemaKeys() {
-			err = d.Set(key, storedData[key])
-			if err != nil {
-				diags = append(diags, diag.FromErr(err)...)
-			}
-		}
-	} else { // Object was not found (404)
-		for _, key := range dataSource.getSchemaKeys() {
-			err = d.Set(key, nil)
-			if err != nil {
-				diags = append(diags, diag.FromErr(err)...)
-			}
+	var readElement PT
+	tfModel := r.dataType.TFModelFactory()
+	if d := req.State.Get(ctx, tfModel); !d.HasError() {
+		if conv, ok := tfModel.(TFToAPI); ok {
+			readElement = conv.ToAPI().(PT)
 		}
 	}
-	return diags
+
+	value, err := r.dataType.convert(r.client).Get(id.ValueString(), readElement)
+	if err != nil {
+		resp.Diagnostics.AddError("Error reading resource", err.Error())
+		return
+	}
+
+	if value == nil {
+		resp.State.RemoveResource(ctx)
+		return
+	}
+
+	resp.Diagnostics.Append(resp.State.Set(ctx, any(value).(APIToTF).ToTF())...)
 }
 
-func (dataSource DataSourceType[T, PT]) update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	client := m.(*Client)
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
+func (r *GenericResource[T, PT]) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	tfModel := r.dataType.TFModelFactory()
+	resp.Diagnostics.Append(req.Plan.Get(ctx, tfModel)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
-	containsChange := false
+	var id types.String
+	diags := req.State.GetAttribute(ctx, path.Root("id"), &id)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
-	for _, key := range dataSource.getSchemaKeys() {
-		if d.HasChange(key) {
-			containsChange = true
-			break
+	apiPtr := tfModel.(TFToAPI).ToAPI().(PT)
+
+	if v, ok := any(apiPtr).(ValidationModel); ok {
+		if err := v.Validate(); err != nil {
+			resp.Diagnostics.AddError("Validation error", err.Error())
+			return
 		}
 	}
 
-	if containsChange {
-		valueId, value, err := dataSource.getData(d, true)
-		if err != nil {
-			return diag.FromErr(err)
-		}
-		_, err = dataSource.convert(client).Update(valueId, value)
-		if err != nil {
-			return diag.FromErr(err)
-		}
-		diags = append(diags, dataSource.get(ctx, d, m)...)
-
-		return diags
+	_, err := r.dataType.convert(r.client).Update(id.ValueString(), apiPtr)
+	if err != nil {
+		resp.Diagnostics.AddError("Error updating resource", err.Error())
+		return
 	}
 
-	return dataSource.create(ctx, d, m)
+	readValue, err := r.dataType.convert(r.client).Get(id.ValueString(), apiPtr)
+	if err != nil {
+		resp.Diagnostics.AddError("Error reading resource after update", err.Error())
+		return
+	}
+	if readValue == nil {
+		resp.Diagnostics.AddError("Resource not found after update", "")
+		return
+	}
 
+	resp.Diagnostics.Append(resp.State.Set(ctx, any(readValue).(APIToTF).ToTF())...)
 }
 
-func (dataSource DataSourceType[T, PT]) delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	client := m.(*Client)
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
-
-	valueId, value, err := dataSource.getData(d, false)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-	err = dataSource.convert(client).Delete(valueId, value)
-	if err != nil {
-		return diag.FromErr(err)
+func (r *GenericResource[T, PT]) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var id types.String
+	diags := req.State.GetAttribute(ctx, path.Root("id"), &id)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
 	}
 
-	return diags
+	var element PT
+	tfModel := r.dataType.TFModelFactory()
+	if d := req.State.Get(ctx, tfModel); !d.HasError() {
+		if conv, ok := tfModel.(TFToAPI); ok {
+			element = conv.ToAPI().(PT)
+		}
+	}
+
+	err := r.dataType.convert(r.client).Delete(id.ValueString(), element)
+	if err != nil {
+		resp.Diagnostics.AddError("Error deleting resource", err.Error())
+		return
+	}
+}
+
+func (r *GenericResource[T, PT]) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }

@@ -9,4 +9,5 @@ var LeafSpaceSatellitesLinkDataType = provider.DataSourceType[LeafSpaceSatellite
 	Path:               "integration-leafspace/satellites/links",
 	Schema:             leafSpaceSatelliteLink,
 	FilterSchema:       dataSourceFilterSchema,
+	TFModelFactory:     func() any { return &LeafSpaceSatelliteLinkTF{} },
 }

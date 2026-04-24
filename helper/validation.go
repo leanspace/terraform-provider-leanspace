@@ -1,13 +1,20 @@
 package helper
 
 import (
+	"context"
 	"fmt"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
+	"unicode"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 // A condition is an interface that can be used to evaluate a map[string]any,
@@ -24,6 +31,75 @@ type Condition interface {
 // A slice of Conditions. It can be evaluated against a map[string]any, and all
 // errors will be aggregated together.
 type Validators []Condition
+
+// CheckValue is like Check but accepts any struct and converts it to a map[string]any
+// automatically using reflection. PascalCase field names are mapped to snake_case keys,
+// pointer values are dereferenced (nil pointers become nil), and anonymous embedded
+// struct fields are flattened into the top-level map.
+func (validators Validators) CheckValue(v any) error {
+	return validators.Check(structToMap(v))
+}
+
+// camelToSnakeCase converts a PascalCase or camelCase identifier to snake_case.
+// Consecutive uppercase letters (acronyms) are treated as a single word, e.g.
+// "URL" → "url", "MyURL" → "my_url", "URLPath" → "url_path".
+func camelToSnakeCase(s string) string {
+	var result []rune
+	runes := []rune(s)
+	for i, r := range runes {
+		if unicode.IsUpper(r) && i > 0 {
+			prevIsLower := unicode.IsLower(runes[i-1])
+			nextIsLower := i+1 < len(runes) && unicode.IsLower(runes[i+1])
+			if prevIsLower || (unicode.IsUpper(runes[i-1]) && nextIsLower) {
+				result = append(result, '_')
+			}
+		}
+		result = append(result, unicode.ToLower(r))
+	}
+	return string(result)
+}
+
+// derefValue dereferences a reflect.Value through any number of pointer indirections,
+// returning nil if any pointer in the chain is nil.
+func derefValue(rv reflect.Value) any {
+	for rv.Kind() == reflect.Ptr {
+		if rv.IsNil() {
+			return nil
+		}
+		rv = rv.Elem()
+	}
+	return rv.Interface()
+}
+
+// structToMap converts a struct (or pointer to struct) to a map[string]any.
+// Field names are converted from PascalCase to snake_case. Anonymous embedded
+// struct fields are flattened into the top-level map.
+func structToMap(v any) map[string]any {
+	result := make(map[string]any)
+	rv := reflect.ValueOf(v)
+	for rv.Kind() == reflect.Ptr {
+		if rv.IsNil() {
+			return result
+		}
+		rv = rv.Elem()
+	}
+	if rv.Kind() != reflect.Struct {
+		return result
+	}
+	rt := rv.Type()
+	for i := 0; i < rt.NumField(); i++ {
+		field := rt.Field(i)
+		fieldVal := rv.Field(i)
+		if field.Anonymous {
+			for k, val := range structToMap(fieldVal.Interface()) {
+				result[k] = val
+			}
+			continue
+		}
+		result[camelToSnakeCase(field.Name)] = derefValue(fieldVal)
+	}
+	return result
+}
 
 // Will check these conditions, and ensure they all evaluate to true for the given object.
 // If all tests pass, returns nil.
@@ -213,7 +289,16 @@ type isSetCondition struct {
 }
 
 func (c isSetCondition) eval(v map[string]any) bool {
-	return v[c.key] != nil && v[c.key] != "" && v[c.key] != 0 && v[c.key] != '\x00' && v[c.key] != 0.0
+	val := v[c.key]
+	if val == nil {
+		return false
+	}
+	// Handle typed nils (e.g. (*int)(nil) stored as a non-nil interface).
+	rv := reflect.ValueOf(val)
+	if rv.Kind() == reflect.Ptr && rv.IsNil() {
+		return false
+	}
+	return val != "" && val != 0 && val != '\x00' && val != 0.0
 }
 func (c isSetCondition) printExpected() string {
 	return fmt.Sprintf("%q is set", c.key)
@@ -253,16 +338,39 @@ type hasLengthCondition struct {
 }
 
 func (c hasLengthCondition) eval(v map[string]any) bool {
-	if list, isList := v[c.key].([]any); isList {
+	val := v[c.key]
+	// Handle untyped nil and typed nils (e.g. (*map[string]any)(nil)).
+	if val == nil {
+		return c.length == 0
+	}
+	rv := reflect.ValueOf(val)
+	if rv.Kind() == reflect.Ptr {
+		if rv.IsNil() {
+			return c.length == 0
+		}
+		rv = rv.Elem()
+		val = rv.Interface()
+	}
+	if list, isList := val.([]any); isList {
 		return len(list) == c.length
 	}
-	if map_, isMap := v[c.key].(map[string]any); isMap {
-		return len(map_) == c.length
+	if list, isList := val.([]string); isList {
+		return len(list) == c.length
 	}
-	if set, isSet := v[c.key].(*schema.Set); isSet {
-		return set.Len() == c.length
+	if mapObj, isMap := val.(map[string]any); isMap {
+		return len(mapObj) == c.length
 	}
-	panic(fmt.Sprintf("Tried checking length of %#v (only accepts lists, maps and sets)", v[c.key]))
+	if rv.Kind() == reflect.Slice || rv.Kind() == reflect.Map {
+		return rv.Len() == c.length
+	}
+	if rv.Kind() == reflect.Struct {
+		// Structs have no "length"; treat a zero struct as empty (0) and any non-zero struct as present (1).
+		if rv.IsZero() {
+			return c.length == 0
+		}
+		return c.length == 1
+	}
+	panic(fmt.Sprintf("Tried checking length of %#v (only accepts lists and maps)", v[c.key]))
 }
 func (c hasLengthCondition) printExpected() string {
 	return fmt.Sprintf("length(%q) = %v", c.key, c.length)
@@ -357,78 +465,119 @@ func GreaterThanEq[T Number](key string, value T) Condition {
 	return compareCondition[T]{key, value, ">="}
 }
 
-func IsValidTimeDateOrTimestamp(i interface{}, k string) (warnings []string, errorsOnField []error) {
-	v, ok := i.(string)
-	if !ok {
-		errorsOnField = append(errorsOnField, fmt.Errorf("expected type of %q to be string", k))
-		return warnings, errorsOnField
+type timeDateOrTimestampValidator struct{}
+
+func (v timeDateOrTimestampValidator) Description(_ context.Context) string {
+	return "must be a valid date (2006-01-02), time (15:04:05), or RFC3339 timestamp"
+}
+
+func (v timeDateOrTimestampValidator) MarkdownDescription(ctx context.Context) string {
+	return v.Description(ctx)
+}
+
+func (v timeDateOrTimestampValidator) ValidateString(_ context.Context, req validator.StringRequest, resp *validator.StringResponse) {
+	if req.ConfigValue.IsNull() || req.ConfigValue.IsUnknown() {
+		return
 	}
+	value := req.ConfigValue.ValueString()
 	const dateLayoutReference = "2006-01-02"
 	const timeLayoutReference = "15:04:05"
 	const timestampLayoutReference = time.RFC3339
 
-	_, errTimestamp := time.Parse(timestampLayoutReference, v)
-	_, errDate := time.Parse(dateLayoutReference, v)
-	_, errTime := time.Parse(timeLayoutReference, v)
+	_, errTimestamp := time.Parse(timestampLayoutReference, value)
+	_, errDate := time.Parse(dateLayoutReference, value)
+	_, errTime := time.Parse(timeLayoutReference, value)
 
 	if errTimestamp != nil && errDate != nil && errTime != nil {
-		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to be a valid date, time or timestamp, got %q: \n %+v \n %+v \n %+v", k, i, errTimestamp, errDate, errTime))
+		resp.Diagnostics.AddAttributeError(
+			req.Path,
+			"Invalid date, time, or timestamp",
+			fmt.Sprintf("expected a valid date, time or timestamp, got %q:\n %+v\n %+v\n %+v", value, errTimestamp, errDate, errTime),
+		)
 	}
-	return warnings, errorsOnField
 }
 
-func IsValidSemVer(i interface{}, fieldName string) (warnings []string, errorsOnField []error) {
-	var semVerValues []string = strings.Split(i.(string), ".")
-
-	if len(semVerValues) != 3 {
-		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to be a valid semantic version MAJOR.MINOR.PATCH, got %q", fieldName, i.(string)))
-		return warnings, errorsOnField
-	}
-
-	if major, ok := isValidVersion(semVerValues[0]); !ok {
-		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to have minor version between 0 and 9, got %q", fieldName, strconv.FormatInt(major, 10)))
-	}
-
-	if minor, ok := isValidVersion(semVerValues[1]); !ok {
-		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to have minor version between 0 and 9, got %q", fieldName, strconv.FormatInt(minor, 10)))
-	}
-
-	if patch, ok := isValidVersion(semVerValues[2]); !ok {
-		errorsOnField = append(errorsOnField, fmt.Errorf("expected %q to have patch version between 0 and 9, got %q", fieldName, strconv.FormatInt(patch, 10)))
-	}
-
-	return warnings, errorsOnField
+func IsValidTimeDateOrTimestamp() []validator.String {
+	return []validator.String{timeDateOrTimestampValidator{}}
 }
 
-func isValidVersion(value string) (v int64, ok bool) {
-	if version, err := strconv.ParseInt(value, 10, 64); err == nil {
-		ok = true
-		if version < 0 || version > 9 {
-			ok = false
-		}
-		return version, ok
-	}
-	return 0, false
+type semVerValidator struct{}
+
+func (v semVerValidator) Description(_ context.Context) string {
+	return "must be a valid semantic version in MAJOR.MINOR.PATCH format (each part 0-9)"
 }
 
-func FloatAtLeastAndLessThan(min, maxExclusive float64) schema.SchemaValidateFunc {
-	return func(i interface{}, k string) (s []string, es []error) {
-		v, ok := i.(float64)
-		if !ok {
-			es = append(es, fmt.Errorf("expected type of %s to be float64", k))
-			return
-		}
+func (v semVerValidator) MarkdownDescription(ctx context.Context) string {
+	return v.Description(ctx)
+}
 
-		if v < min || v >= maxExclusive {
-			es = append(es, fmt.Errorf("expected %s to be at equal or greater than %f and strictly less than %f, got %f", k, min, maxExclusive, v))
-			return
-		}
-
+func (v semVerValidator) ValidateString(_ context.Context, req validator.StringRequest, resp *validator.StringResponse) {
+	if req.ConfigValue.IsNull() || req.ConfigValue.IsUnknown() {
 		return
 	}
+	value := req.ConfigValue.ValueString()
+	semVerValues := strings.Split(value, ".")
+	if len(semVerValues) != 3 {
+		resp.Diagnostics.AddAttributeError(
+			req.Path,
+			"Invalid semantic version",
+			fmt.Sprintf("expected a valid semantic version MAJOR.MINOR.PATCH, got %q", value),
+		)
+		return
+	}
+	for _, part := range semVerValues {
+		if _, ok := isValidVersion(part); !ok {
+			resp.Diagnostics.AddAttributeError(
+				req.Path,
+				"Invalid semantic version",
+				fmt.Sprintf("expected each part to be between 0 and 9, got %q", part),
+			)
+		}
+	}
 }
 
-// --- State name validation ---
+func IsValidSemVer() []validator.String {
+	return []validator.String{semVerValidator{}}
+}
+
+func isValidVersion(value string) (int64, bool) {
+	version, err := strconv.ParseInt(value, 10, 64)
+	if err != nil {
+		return 0, false
+	}
+	return version, version >= 0 && version <= 9
+}
+
+type floatAtLeastAndLessThanValidator struct {
+	min          float64
+	maxExclusive float64
+}
+
+func (v floatAtLeastAndLessThanValidator) Description(_ context.Context) string {
+	return fmt.Sprintf("must be at least %g and strictly less than %g", v.min, v.maxExclusive)
+}
+
+func (v floatAtLeastAndLessThanValidator) MarkdownDescription(ctx context.Context) string {
+	return v.Description(ctx)
+}
+
+func (v floatAtLeastAndLessThanValidator) ValidateFloat64(_ context.Context, req validator.Float64Request, resp *validator.Float64Response) {
+	if req.ConfigValue.IsNull() || req.ConfigValue.IsUnknown() {
+		return
+	}
+	val := req.ConfigValue.ValueFloat64()
+	if val < v.min || val >= v.maxExclusive {
+		resp.Diagnostics.AddAttributeError(
+			req.Path,
+			"Invalid float value",
+			fmt.Sprintf("expected value to be at least %g and strictly less than %g, got %g", v.min, v.maxExclusive, val),
+		)
+	}
+}
+
+func FloatAtLeastAndLessThan(min, maxExclusive float64) []validator.Float64 {
+	return []validator.Float64{floatAtLeastAndLessThanValidator{min, maxExclusive}}
+}
 
 const stateNameRegexStr = `^[A-Z](?:[A-Z_]*[A-Z])?$`
 
@@ -438,30 +587,150 @@ const nameRegexStr = `^[ a-zA-Z0-9_-]*$`
 
 var nameRegex = regexp.MustCompile(nameRegexStr)
 
-func IsValidStateName(i interface{}, k string) (warnings []string, errors []error) {
-	v, ok := i.(string)
+func ValidStateName() []validator.String {
+	return []validator.String{stringvalidator.RegexMatches(stateNameRegex, "")}
+}
+
+func ValidName() []validator.String {
+	return []validator.String{stringvalidator.RegexMatches(nameRegex, "")}
+}
+
+const uuidRegexStr = `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`
+
+var uuidRegex = regexp.MustCompile(uuidRegexStr)
+
+func ValidUUID() []validator.String {
+	return []validator.String{stringvalidator.RegexMatches(uuidRegex, "must be a valid UUID")}
+}
+
+// parentPathOf reconstructs the parent path by iterating path steps, dropping the last one.
+func parentPathOf(p path.Path) path.Path {
+	steps := p.Steps()
+	if len(steps) == 0 {
+		return path.Empty()
+	}
+	parent := path.Empty()
+	for _, step := range steps[:len(steps)-1] {
+		switch s := step.(type) {
+		case path.PathStepAttributeName:
+			parent = parent.AtName(string(s))
+		case path.PathStepElementKeyInt:
+			parent = parent.AtListIndex(int(s))
+		case path.PathStepElementKeyString:
+			parent = parent.AtMapKey(string(s))
+		case path.PathStepElementKeyValue:
+			parent = parent.AtSetValue(s.Value)
+		}
+	}
+	return parent
+}
+
+// isParentBlockConfigured returns true if the parent value represents a block
+// that the user has actually written in config. A SingleNestedBlock that is absent
+// from config is represented by the framework as an object with all-null children
+// (not as a null value), so checking IsNull() alone is not sufficient.
+func isParentBlockConfigured(v attr.Value) bool {
+	if v == nil || v.IsNull() || v.IsUnknown() {
+		return false
+	}
+	obj, ok := v.(types.Object)
 	if !ok {
-		errors = append(errors, fmt.Errorf("expected type of %q to be string", k))
+		return true
+	}
+	// All-null attributes means the block was absent from config.
+	for _, attrVal := range obj.Attributes() {
+		if !attrVal.IsNull() && !attrVal.IsUnknown() {
+			return true
+		}
+	}
+	return false
+}
+
+// RequiredIfParentConfigured returns a String validator that mimics Required behaviour
+// but only when the immediate parent block is actually configured (non-null).
+//
+// This is needed because terraform-plugin-framework evaluates Required inside
+// SingleNestedBlock even when the block is absent (children are null). Making a
+// field Optional + RequiredIfParentConfigured() preserves the "required within the
+// block" semantics while not failing when the block itself is omitted.
+func RequiredIfParentConfigured() validator.String {
+	return requiredStringIfParentConfigured{}
+}
+
+type requiredStringIfParentConfigured struct{}
+
+func (v requiredStringIfParentConfigured) Description(_ context.Context) string {
+	return "Required when the parent block is configured."
+}
+
+func (v requiredStringIfParentConfigured) MarkdownDescription(ctx context.Context) string {
+	return v.Description(ctx)
+}
+
+func (v requiredStringIfParentConfigured) ValidateString(ctx context.Context, req validator.StringRequest, resp *validator.StringResponse) {
+	// Value is set — no issue.
+	if !req.ConfigValue.IsNull() && !req.ConfigValue.IsUnknown() {
 		return
 	}
 
-	if !stateNameRegex.Match([]byte(v)) {
-		errors = append(errors, fmt.Errorf("expected %q to be a valid state name, got %v.\nValid state name follows the regex: %v", k, v, stateNameRegexStr))
+	// Value is null/unknown — check whether the parent block is configured.
+	parentPath := parentPathOf(req.Path)
+	var parentVal attr.Value
+	diags := req.Config.GetAttribute(ctx, parentPath, &parentVal)
+	if diags.HasError() {
+		return // can't determine parent state; skip
 	}
 
-	return warnings, errors
-}
-
-func IsValidName(i interface{}, k string) (warnings []string, errors []error) {
-	v, ok := i.(string)
-	if !ok {
-		errors = append(errors, fmt.Errorf("expected type of %q to be string", k))
+	// Parent is absent or unknown — the block is not written by the user; no error.
+	if !isParentBlockConfigured(parentVal) {
 		return
 	}
 
-	if !nameRegex.Match([]byte(v)) {
-		errors = append(errors, fmt.Errorf("expected %q to be a valid name, got %v.\nValid name follows the regex: %v", k, v, nameRegex))
+	resp.Diagnostics.AddAttributeError(
+		req.Path,
+		"Missing Required Value",
+		fmt.Sprintf("Attribute %q is required when the parent block %q is configured.", req.Path, parentPath),
+	)
+}
+
+// RequiredFloat64IfParentConfigured returns a Float64 validator with the same
+// "required within its optional parent block" semantics as RequiredIfParentConfigured.
+func RequiredFloat64IfParentConfigured() validator.Float64 {
+	return requiredFloat64IfParentConfigured{}
+}
+
+type requiredFloat64IfParentConfigured struct{}
+
+func (v requiredFloat64IfParentConfigured) Description(_ context.Context) string {
+	return "Required when the parent block is configured."
+}
+
+func (v requiredFloat64IfParentConfigured) MarkdownDescription(ctx context.Context) string {
+	return v.Description(ctx)
+}
+
+func (v requiredFloat64IfParentConfigured) ValidateFloat64(ctx context.Context, req validator.Float64Request, resp *validator.Float64Response) {
+	if !req.ConfigValue.IsNull() && !req.ConfigValue.IsUnknown() {
+		return
 	}
 
-	return warnings, errors
+	parentPath := parentPathOf(req.Path)
+	var parentVal attr.Value
+	diags := req.Config.GetAttribute(ctx, parentPath, &parentVal)
+	if diags.HasError() {
+		return
+	}
+
+	if !isParentBlockConfigured(parentVal) {
+		return
+	}
+
+	resp.Diagnostics.AddAttributeError(
+		req.Path,
+		"Missing Required Value",
+		fmt.Sprintf("Attribute %q is required when the parent block %q is configured.", req.Path, parentPath),
+	)
 }
+
+// Ensure the types import is used (types.StringValue is referenced by path validators elsewhere).
+var _ = types.StringNull

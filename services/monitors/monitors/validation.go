@@ -11,6 +11,6 @@ var monitorRuleValidators = Validators{
 	),
 }
 
-func (monitor *Monitor) Validate(obj map[string]any) error {
-	return monitorRuleValidators.Check(obj["rule"].([]any)[0].(map[string]any))
+func (monitor *Monitor) Validate() error {
+	return monitorRuleValidators.CheckValue(monitor)
 }

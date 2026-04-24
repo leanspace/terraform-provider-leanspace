@@ -7,4 +7,7 @@ var RecordTemplateDataType = provider.DataSourceType[RecordTemplate, *RecordTemp
 	Path:               "records/record-templates",
 	Schema:             recordTemplateSchema,
 	FilterSchema:       dataSourceFilterSchema,
+	TFModelFactory:     func() any { return &RecordTemplateTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(recordTemplateSchema),
 }

@@ -2,6 +2,16 @@ package general_objects
 
 import "github.com/leanspace/terraform-provider-leanspace/helper"
 
+type AuditModel struct {
+	ID             string `json:"id"`
+	CreatedAt      string `json:"createdAt"`
+	CreatedBy      string `json:"createdBy"`
+	LastModifiedAt string `json:"lastModifiedAt"`
+	LastModifiedBy string `json:"lastModifiedBy"`
+}
+
+func (a *AuditModel) GetID() string { return a.ID }
+
 type Sort struct {
 	Direction    string `json:"direction"`
 	Property     string `json:"property"`
@@ -21,8 +31,8 @@ type Pageable struct {
 }
 
 type KeyValue struct {
-	Key   string `json:"key"`
-	Value string `json:"value,omitempty"`
+	Key   string  `json:"key"`
+	Value *string `json:"value,omitempty"`
 }
 
 type PaginatedList[T any, PT helper.ParseablePointer[T]] struct {
@@ -44,28 +54,28 @@ type DefinitionAttribute[T any] struct {
 	Required     *bool  `json:"required,omitempty"`
 	DefaultValue T      `json:"defaultValue,omitempty"`
 	// Text & Binary
-	MinLength int `json:"minLength,omitempty"`
-	MaxLength int `json:"maxLength,omitempty"`
+	MinLength *int `json:"minLength,omitempty"`
+	MaxLength *int `json:"maxLength,omitempty"`
 	// Text
-	Pattern string `json:"pattern,omitempty"`
+	Pattern *string `json:"pattern,omitempty"`
 	// Numeric
-	Min       float64 `json:"min,omitempty"`
-	Max       float64 `json:"max,omitempty"`
-	Scale     int     `json:"scale,omitempty"`
-	Precision int     `json:"precision,omitempty"`
-	UnitId    string  `json:"unitId,omitempty"`
+	Min       *float64 `json:"min,omitempty"`
+	Max       *float64 `json:"max,omitempty"`
+	Scale     *int     `json:"scale,omitempty"`
+	Precision *int     `json:"precision,omitempty"`
+	UnitId    *string  `json:"unitId,omitempty"`
 	// Date, time, timestamp
-	Before string `json:"before,omitempty"`
-	After  string `json:"after,omitempty"`
+	Before *string `json:"before,omitempty"`
+	After  *string `json:"after,omitempty"`
 	// Enum
 	Options *map[string]any `json:"options,omitempty"`
 	// Geopoint
 	Fields *FieldsDef `json:"fields,omitempty"`
 	// Array
-	MinSize    int                  `json:"minSize,omitempty"`
-	MaxSize    int                  `json:"maxSize,omitempty"`
-	Unique     bool                 `json:"unique,omitempty"`
-	Constraint ArrayConstraint[any] `json:"elementConstraint,omitempty"`
+	MinSize    *int                  `json:"minSize,omitempty"`
+	MaxSize    *int                  `json:"maxSize,omitempty"`
+	Unique     *bool                 `json:"unique,omitempty"`
+	Constraint *ArrayConstraint[any] `json:"elementConstraint,omitempty"`
 }
 
 type ArrayConstraint[T any] struct {
@@ -74,19 +84,19 @@ type ArrayConstraint[T any] struct {
 	Required     *bool  `json:"required,omitempty"`
 	DefaultValue T      `json:"defaultValue,omitempty"`
 	// Text & binary
-	MinLength int `json:"minLength,omitempty"`
-	MaxLength int `json:"maxLength,omitempty"`
+	MinLength *int `json:"minLength,omitempty"`
+	MaxLength *int `json:"maxLength,omitempty"`
 	// Text only
-	Pattern string `json:"pattern,omitempty"`
+	Pattern *string `json:"pattern,omitempty"`
 	// Numeric
-	Min       float64 `json:"min,omitempty"`
-	Max       float64 `json:"max,omitempty"`
-	Scale     int     `json:"scale,omitempty"`
-	Precision int     `json:"precision,omitempty"`
-	UnitId    string  `json:"unitId,omitempty"`
+	Min       *float64 `json:"min,omitempty"`
+	Max       *float64 `json:"max,omitempty"`
+	Scale     *int     `json:"scale,omitempty"`
+	Precision *int     `json:"precision,omitempty"`
+	UnitId    *string  `json:"unitId,omitempty"`
 	// Date, time, timestamp
-	Before string `json:"before,omitempty"`
-	After  string `json:"after,omitempty"`
+	Before *string `json:"before,omitempty"`
+	After  *string `json:"after,omitempty"`
 	// Enum
 	Options *map[string]any `json:"options,omitempty"`
 }
@@ -95,11 +105,11 @@ type ValueAttribute[T any] struct {
 	Value T      `json:"value,omitempty"`
 	Type  string `json:"type"`
 	// Numeric
-	UnitId string `json:"unitId,omitempty"`
+	UnitId *string `json:"unitId,omitempty"`
 	// Geopoint
 	Fields *Fields `json:"fields,omitempty"`
 	// Array
-	DataType string `json:"dataType,omitempty"`
+	DataType *string `json:"dataType,omitempty"`
 }
 
 type FieldsDef struct {
@@ -109,12 +119,12 @@ type FieldsDef struct {
 }
 
 type FieldDef[T any] struct {
-	DefaultValue T       `json:"defaultValue,omitempty"`
-	Min          float64 `json:"min,omitempty"`
-	Max          float64 `json:"max,omitempty"`
-	Scale        int     `json:"scale,omitempty"`
-	Precision    int     `json:"precision,omitempty"`
-	UnitId       string  `json:"unitId,omitempty"`
+	DefaultValue T        `json:"defaultValue,omitempty"`
+	Min          *float64 `json:"min,omitempty"`
+	Max          *float64 `json:"max,omitempty"`
+	Scale        *int     `json:"scale,omitempty"`
+	Precision    *int     `json:"precision,omitempty"`
+	UnitId       *string  `json:"unitId,omitempty"`
 }
 
 type Fields struct {
@@ -124,10 +134,10 @@ type Fields struct {
 }
 
 type Field[T any] struct {
-	Value     T       `json:"value,omitempty"`
-	Min       float64 `json:"min,omitempty"`
-	Max       float64 `json:"max,omitempty"`
-	Scale     int     `json:"scale,omitempty"`
-	Precision int     `json:"precision,omitempty"`
-	UnitId    string  `json:"unitId,omitempty"`
+	Value     T        `json:"value,omitempty"`
+	Min       *float64 `json:"min,omitempty"`
+	Max       *float64 `json:"max,omitempty"`
+	Scale     *int     `json:"scale,omitempty"`
+	Precision *int     `json:"precision,omitempty"`
+	UnitId    *string  `json:"unitId,omitempty"`
 }

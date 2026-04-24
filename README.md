@@ -5,7 +5,7 @@ This repository enables the use of Terraform for the different services of Leans
 ## Requirements
 
 - terraform (`choco install terraform` (windows) or `brew install hashicorp/tap/terraform` (mac)): >=1.5.0
-- go (for plugin development): >=1.22
+- go (for plugin development): >=1.26
 
 ## Supported platform
 
@@ -82,10 +82,11 @@ git config --global --add safe.directory [your dir here]
 - Create
   - main.go
   - models.go
-  - parsers.go
   - requests.go (optionally)
   - schemas.go
-- Add for each resource, the corresponding line to the root `main.go` file
+- Run `make generate` to try to generate the tf_models.go
+  - If it doesn't work implement it manually or try to improve the `tools/gen_tf_models.main.go`
+- Add for each resource, the corresponding line to the `services/importer.go` file
 
 ### Testing
 

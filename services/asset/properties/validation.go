@@ -27,6 +27,6 @@ var propertyValidators = Validators{
 	),
 }
 
-func (property *Property[T]) Validate(obj map[string]any) error {
-	return propertyValidators.Check(obj)
+func (property *Property[T]) Validate() error {
+	return propertyValidators.CheckValue(property)
 }

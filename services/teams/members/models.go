@@ -1,15 +1,13 @@
 package members
 
-type Member struct {
-	ID             string   `json:"id"`
-	Name           string   `json:"name"`
-	Email          string   `json:"email"`
-	Status         string   `json:"status"`
-	PolicyIds      []string `json:"policyIds"`
-	CreatedAt      string   `json:"createdAt"`
-	CreatedBy      string   `json:"createdBy"`
-	LastModifiedAt string   `json:"lastModifiedAt"`
-	LastModifiedBy string   `json:"lastModifiedBy"`
-}
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct Member
 
-func (member *Member) GetID() string { return member.ID }
+import "github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+
+type Member struct {
+	general_objects.AuditModel
+	Name      string   `json:"name"`
+	Email     string   `json:"email"`
+	State     string   `json:"state"`
+	PolicyIds []string `json:"policyIds"`
+}

@@ -1,32 +1,30 @@
 package plugins
 
+//go:generate go run github.com/leanspace/terraform-provider-leanspace/tools/gen_tf_models -struct Plugin
+
 import (
 	"fmt"
 	"net/http"
 
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 	"github.com/leanspace/terraform-provider-leanspace/provider"
 	"github.com/leanspace/terraform-provider-leanspace/services/plugins"
 )
 
 type Plugin struct {
-	ID                               string `json:"id"`
-	Type                             string `json:"type"`
-	ImplementationClassName          string `json:"implementationClassName"`
-	Name                             string `json:"name"`
-	Description                      string `json:"description"`
-	SourceCodeFileDownloadAuthorized bool   `json:"sourceCodeFileDownloadAuthorized,omitempty"`
-	FilePath                         string `json:"filePath"`
-	CreatedAt                        string `json:"createdAt"`
-	CreatedBy                        string `json:"createdBy"`
-	LastModifiedAt                   string `json:"lastModifiedAt"`
-	LastModifiedBy                   string `json:"lastModifiedBy"`
-	SdkVersion                       string `json:"sdkVersion,omitempty"`
-	SdkVersionFamily                 string `json:"sdkVersionFamily"`
-	Status                           string `json:"status"`
-	FileSha                          string `json:"fileSha"`
+	general_objects.AuditModel
+	Type                             string  `json:"type"`
+	ImplementationClassName          string  `json:"implementationClassName"`
+	Name                             string  `json:"name"`
+	Description                      *string `json:"description,omitempty"`
+	SourceCodeFileDownloadAuthorized bool    `json:"sourceCodeFileDownloadAuthorized"`
+	FilePath                         string  `json:"filePath"`
+	SdkVersion                       *string `json:"sdkVersion,omitempty"`
+	SdkVersionFamily                 string  `json:"sdkVersionFamily"`
+	Status                           string  `json:"status"`
+	FileSha                          string  `json:"fileSha"`
 }
 
-func (plugin Plugin) GetID() string     { return plugin.ID }
 func (plugin Plugin) GetStatus() string { return plugin.Status }
 func (plugin *Plugin) SetStatus(status string) {
 	plugin.Status = status

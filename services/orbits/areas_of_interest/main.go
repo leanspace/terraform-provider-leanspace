@@ -7,4 +7,7 @@ var AreaOfInterestDataType = provider.DataSourceType[AreaOfInterest, *AreaOfInte
 	Path:               "orbits-repository/area-of-interests",
 	Schema:             areaOfInterestSchema,
 	FilterSchema:       dataSourceFilterSchema,
+	TFModelFactory:     func() any { return &AreaOfInterestTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(areaOfInterestSchema),
 }

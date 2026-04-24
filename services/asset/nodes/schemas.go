@@ -3,8 +3,14 @@ package nodes
 import (
 	"regexp"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
@@ -13,73 +19,45 @@ import (
 var nodeSchema = makeNodeSchema(nil)            // no sub nodes
 var rootNodeSchema = makeNodeSchema(nodeSchema) // max depth 1
 
-var validNodeTypes = []string{"ASSET", "GROUP", "COMPONENT"}
-var validNodeKinds = []string{"GENERIC", "SATELLITE", "GROUND_STATION"}
+var ValidNodeTypes = []string{"ASSET", "GROUP", "COMPONENT"}
+var ValidNodeKinds = []string{"GENERIC", "SATELLITE", "GROUND_STATION"}
 
 var tle1stLineRegex = regexp.MustCompile(`^1 (?P<noradId>[ 0-9]{5})[A-Z] [ 0-9]{5}[ A-Z]{3} [ 0-9]{5}[.][ 0-9]{8} (?:(?:[ 0+-][.][ 0-9]{8})|(?: [ +-][.][ 0-9]{7})) [ +-][ 0-9]{5}[+-][ 0-9] [ +-][ 0-9]{5}[+-][ 0-9] [ 0-9] [ 0-9]{4}[ 0-9]$`)
 var tle2ndLineRegex = regexp.MustCompile(`^2 (?P<noradId>[ 0-9]{5}) [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{7} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{3}[.][ 0-9]{4} [ 0-9]{2}[.][ 0-9]{13}[ 0-9]$`)
 
-func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema.Schema {
-	baseSchema := map[string]*schema.Schema{
-		"id": {
-			Type:     schema.TypeString,
-			Computed: true,
-			ForceNew: true,
+func makeNodeSchema(recursiveNodes map[string]resourceschema.Attribute) map[string]resourceschema.Attribute {
+	baseSchema := general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
+		"id": resourceschema.StringAttribute{ // redefine id here to add the plan modifier
+			Computed:      true,
+			PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown(), stringplanmodifier.RequiresReplace()},
 		},
-		"name": {
-			Type:     schema.TypeString,
+		"name": resourceschema.StringAttribute{
 			Required: true,
 		},
-		"description": {
-			Type:     schema.TypeString,
+		"description": resourceschema.StringAttribute{
 			Optional: true,
 		},
-		"created_at": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "When it was created",
+		"parent_node_id": resourceschema.StringAttribute{
+			Optional:   true,
+			Validators: helper.ValidUUID(),
 		},
-		"created_by": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "Who created it",
+		"type": resourceschema.StringAttribute{
+			Required:      true,
+			Description:   helper.AllowedValuesToDescription(ValidNodeTypes),
+			Validators:    []validator.String{stringvalidator.OneOf(ValidNodeTypes...)},
+			PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 		},
-		"last_modified_at": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "When it was last modified",
-		},
-		"last_modified_by": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "Who modified it the last",
-		},
-		"parent_node_id": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: validation.IsUUID,
-		},
-		"type": {
-			Type:         schema.TypeString,
-			Required:     true,
-			ForceNew:     true,
-			ValidateFunc: validation.StringInSlice(validNodeTypes, false),
-			Description:  helper.AllowedValuesToDescription(validNodeTypes),
-		},
-		"kind": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ForceNew:     true,
-			ValidateFunc: validation.StringInSlice(validNodeKinds, false),
-			Description:  helper.AllowedValuesToDescription(validNodeKinds),
+		"kind": resourceschema.StringAttribute{
+			Optional:      true,
+			Description:   helper.AllowedValuesToDescription(ValidNodeKinds),
+			Validators:    []validator.String{stringvalidator.OneOf(ValidNodeKinds...)},
+			PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 		},
 		"tags": general_objects.KeyValuesSchema,
-		"number_of_children": {
-			Type:        schema.TypeInt,
-			Computed:    true,
-			Description: "Numeric only",
+		"number_of_children": resourceschema.Int64Attribute{
+			Computed: true,
 		},
-		// The following fields are part of V1 properties in the API that have been marked as deprecated for node updates.
+		// The following fields were part of V1 properties in the API.
 		// In terraform, an update occurs when using `terraform apply` multiple times on the same resource with different field values.
 		// When these fields are deleted in the API, we suggest to follow these steps during node updates :
 		// 1- Do not change this schema so that the user is not impacted by this deprecation
@@ -87,50 +65,40 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 		// 		- Call the endpoint https://api.develop.leanspace.io/asset-repository/properties/v2 to retrieve all the built-in properties.
 		//		- For each built-in property, call the endpoint https://api.develop.leanspace.io/asset-repository/properties/v2/{propertyId} to update the property
 		//		Hint: you can create a request.go file with a PostUpdateProcess function
-		"norad_id": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: validation.StringMatch(regexp.MustCompile(`^\d{5}$`), "It must be 5 digits"),
-			Description:  "It must be 5 digits.",
+		"norad_id": resourceschema.StringAttribute{
+			Optional:    true,
+			Description: "It must be 5 digits.",
+			Validators:  []validator.String{stringvalidator.RegexMatches(regexp.MustCompile(`^\d{5}$`), "It must be 5 digits")},
 		},
-		"international_designator": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: validation.StringMatch(regexp.MustCompile(`^(\d{4}-|\d{2})[0-9]{3}[A-Za-z]{0,3}$`), ""),
+		"international_designator": resourceschema.StringAttribute{
+			Optional:   true,
+			Validators: []validator.String{stringvalidator.RegexMatches(regexp.MustCompile(`^(\d{4}-|\d{2})[0-9]{3}[A-Za-z]{0,3}$`), "")},
 		},
-		"tle": {
-			Type:     schema.TypeList,
-			MaxItems: 2,
-			MinItems: 2,
-			Optional: true,
-			Elem: &schema.Schema{
-				Type: schema.TypeString,
-			},
+		"tle": resourceschema.ListAttribute{
+			ElementType: types.StringType,
+			Optional:    true,
 			Description: "TLE composed of its 2 lines.",
+			Validators:  []validator.List{listvalidator.SizeBetween(2, 2)},
 		},
-		"latitude": {
-			Type:        schema.TypeFloat,
+		"latitude": resourceschema.Float64Attribute{
 			Optional:    true,
 			Description: "Only for ground stations",
 		},
-		"longitude": {
-			Type:        schema.TypeFloat,
+		"longitude": resourceschema.Float64Attribute{
 			Optional:    true,
 			Description: "Only for ground stations",
 		},
-		"elevation": {
-			Type:        schema.TypeFloat,
+		"elevation": resourceschema.Float64Attribute{
 			Optional:    true,
 			Description: "Only for ground stations",
 		},
-	}
+	})
 
 	if recursiveNodes != nil {
-		baseSchema["nodes"] = &schema.Schema{
-			Type:     schema.TypeSet,
+		baseSchema["nodes"] = resourceschema.SetNestedAttribute{
 			Computed: true,
-			Elem: &schema.Resource{
-				Schema: recursiveNodes,
+			NestedObject: resourceschema.NestedAttributeObject{
+				Attributes: recursiveNodes,
 			},
 		}
 	}
@@ -138,93 +106,22 @@ func makeNodeSchema(recursiveNodes map[string]*schema.Schema) map[string]*schema
 	return baseSchema
 }
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
-	"created_by": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.IsUUID,
-		Description:  "Filter on the user who created the Node. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"from_created_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Node creation date. Properties with a creation date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"from_last_modified_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Node last modification date. Nodes with a last modification date greater or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"last_modified_by": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: validation.IsUUID,
-		Description:  "Filter on the user who modified last the Node. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"to_created_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Node creation date. Nodes with a creation date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"to_last_modified_at": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidTimeDateOrTimestamp,
-		Description:  "Filter on the Node last modification date. Nodes with a last modification date lower or equals than the filter value will be selected (if they are not excluded by other filters). If you have no wish to use this field as a filter, either provide a null value or remove the field.",
-	},
-	"ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-		Description: "Only returns node whose id matches one of the provided values.",
-	},
-	"is_root_node": {
-		Type:        schema.TypeBool,
+var dataSourceFilterSchema = general_objects.AuditFilterFieldsWithTagsAndSingularBy(map[string]datasourceschema.Attribute{
+	"is_root_node": datasourceschema.BoolAttribute{
 		Optional:    true,
 		Description: "Show only Root Nodes, or hide only Root Nodes. true: select Root Nodes only - false: select Nodes with Parent only",
 	},
-	"kinds": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.StringInSlice(validNodeKinds, false),
-			Description:  helper.AllowedValuesToDescription(validNodeKinds),
-		},
-	},
-	"parent_node_ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
-	},
-	"query": {
-		Type:        schema.TypeString,
+	"kinds": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
 		Optional:    true,
-		Description: "Search by name or description",
 	},
-	"types": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.StringInSlice(validNodeTypes, false),
-			Description:  helper.AllowedValuesToDescription(validNodeTypes),
-		},
+	"parent_node_ids": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Validators:  []validator.List{listvalidator.ValueStringsAre(helper.ValidUUID()...)},
 	},
-	"tags": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type: schema.TypeString,
-		},
+	"types": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
 	},
-}
+})

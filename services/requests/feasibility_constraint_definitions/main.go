@@ -7,4 +7,7 @@ var FeasibilityConstraintDefinitionDataType = provider.DataSourceType[Feasibilit
 	Path:               "requests-repository/feasibility-constraint-definitions",
 	Schema:             feasibilityConstraintDefinitionSchema,
 	FilterSchema:       feasibilityConstraintDefinitionFilterSchema,
+	TFModelFactory:     func() any { return &FeasibilityConstraintDefinitionTF{} },
+	SchemaVersion:      1,
+	StateUpgraders:     provider.UnwrapSingleNestedUpgraderMap(feasibilityConstraintDefinitionSchema),
 }

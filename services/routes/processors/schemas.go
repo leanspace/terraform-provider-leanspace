@@ -1,81 +1,53 @@
 package processors
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var processorSchema = map[string]*schema.Schema{
-	"id": {
-		Type:     schema.TypeString,
-		Computed: true,
-	},
-	"name": {
-		Type:     schema.TypeString,
+var processorSchema = general_objects.ResourceSchemaWith(map[string]resourceschema.Attribute{
+	"name": resourceschema.StringAttribute{
 		Required: true,
 	},
-	"description": {
-		Type:     schema.TypeString,
+	"description": resourceschema.StringAttribute{
 		Optional: true,
 	},
-	"version": {
-		Type:     schema.TypeString,
-		ForceNew: true,
-		Required: true,
+	"version": resourceschema.StringAttribute{
+		Required:      true,
+		PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 	},
-	"type": {
-		Type:     schema.TypeString,
+	"type": resourceschema.StringAttribute{
 		Computed: true,
 	},
-	"file_path": {
-		Type:     schema.TypeString,
-		ForceNew: true,
-		Required: true,
-		ValidateFunc: validation.StringMatch(
-			helper.PathToJarFileRegex,
-			"'file_path' must be a valid path to a .jar file",
-		),
-		Description: "It must be a valid path to a .jar file",
+	"file_path": resourceschema.StringAttribute{
+		Required:      true,
+		Description:   "It must be a valid path to a .jar file",
+		PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
+		Validators:    []validator.String{stringvalidator.RegexMatches(helper.PathToJarFileRegex, "Must be a valid file path")},
 	},
-	"created_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was created",
-	},
-	"created_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who created it",
-	},
-	"last_modified_at": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "When it was last modified",
-	},
-	"last_modified_by": {
-		Type:        schema.TypeString,
-		Computed:    true,
-		Description: "Who modified it the last",
-	},
-	"file_sha": {
-		Type:        schema.TypeString,
+	"file_sha": resourceschema.StringAttribute{
 		Computed:    true,
 		Description: "Unique identifier of the processor file",
 	},
-}
+})
 
-var dataSourceFilterSchema = map[string]*schema.Schema{
-	"ids": {
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Schema{
-			Type:         schema.TypeString,
-			ValidateFunc: validation.IsUUID,
-		},
+var dataSourceFilterSchema = map[string]datasourceschema.Attribute{
+	"created_bys": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Description: "Filter on the user who created the entry. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
-	"query": {
-		Type:     schema.TypeString,
-		Optional: true,
+	"last_modified_bys": datasourceschema.ListAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Description: "Filter on the user who last modified the entry. If you have no wish to use this field as a filter, either provide a null value or remove the field.",
 	},
 }
