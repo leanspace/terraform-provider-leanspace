@@ -10,10 +10,12 @@ import (
 
 func (genericPlugin *GenericPlugin) CustomEncoding(data []byte, isUpdating bool) (io.Reader, string, error) {
 	multipartMap := map[string]any{
-		"name":        genericPlugin.Name,
-		"description": *genericPlugin.Description,
-		"type":        genericPlugin.Type,
-		"language":    genericPlugin.Language,
+		"name":     genericPlugin.Name,
+		"type":     genericPlugin.Type,
+		"language": genericPlugin.Language,
+	}
+	if genericPlugin.Description != nil {
+		multipartMap["description"] = *genericPlugin.Description
 	}
 	return helper.FileAndDatasToMultipart(genericPlugin.FilePath, "sourceCode", multipartMap)
 }
