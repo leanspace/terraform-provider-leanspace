@@ -83,7 +83,7 @@ func (requestDefinition *RequestDefinition) FromMap(requestDefinitionMap map[str
 	}
 
 	if requestDefinitionMap["configuration_argument_definitions"] != nil {
-		if argumentDefinitions, err := helper.ParseFromMaps[activity_definitions.ArgumentDefinition[any]](
+		if argumentDefinitions, err := helper.ParseFromMaps[activity_definitions.Argument[any]](
 			requestDefinitionMap["configuration_argument_definitions"].(*schema.Set).List(),
 		); err != nil {
 			return err
@@ -116,7 +116,7 @@ func (feasibilityConstraintDefinition *FeasibilityConstraintDefinition) FromMap(
 	feasibilityConstraintDefinition.Required = feasibilityConstraintDefinitionMap["required"].(bool)
 
 	if feasibilityConstraintDefinitionMap["argument_definitions"] != nil {
-		if argumentDefinitions, err := helper.ParseFromMaps[activity_definitions.ArgumentDefinition[any]](
+		if argumentDefinitions, err := helper.ParseFromMaps[activity_definitions.Argument[any]](
 			feasibilityConstraintDefinitionMap["argument_definitions"].(*schema.Set).List(),
 		); err != nil {
 			return err

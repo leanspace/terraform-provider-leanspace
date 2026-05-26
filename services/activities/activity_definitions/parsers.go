@@ -14,6 +14,7 @@ func (activityDefinition *ActivityDefinition) ToMap() map[string]any {
 	actDefinitionMap["name"] = activityDefinition.Name
 	actDefinitionMap["description"] = activityDefinition.Description
 	actDefinitionMap["estimated_duration"] = activityDefinition.EstimatedDuration
+	actDefinitionMap["estimated_duration_in_seconds"] = activityDefinition.EstimatedDurationInSeconds
 	actDefinitionMap["mapping_status"] = activityDefinition.MappingStatus
 	actDefinitionMap["created_at"] = activityDefinition.CreatedAt
 	actDefinitionMap["created_by"] = activityDefinition.CreatedBy
@@ -25,6 +26,9 @@ func (activityDefinition *ActivityDefinition) ToMap() map[string]any {
 	}
 	if activityDefinition.ArgumentDefinitions != nil {
 		actDefinitionMap["argument_definitions"] = helper.ParseToMaps(activityDefinition.ArgumentDefinitions)
+	}
+	if activityDefinition.Arguments != nil {
+		actDefinitionMap["arguments"] = helper.ParseToMaps(activityDefinition.Arguments)
 	}
 	if activityDefinition.CommandMappings != nil {
 		actDefinitionMap["command_mappings"] = helper.ParseToMaps(activityDefinition.CommandMappings)
@@ -40,7 +44,7 @@ func (metadata *Metadata[T]) ToMap() map[string]any {
 	return metadataMap
 }
 
-func (argument *ArgumentDefinition[T]) ToMap() map[string]any {
+func (argument *Argument[T]) ToMap() map[string]any {
 	argumentMap := make(map[string]any)
 	argumentMap["name"] = argument.Name
 	argumentMap["description"] = argument.Description
@@ -77,6 +81,7 @@ func (activityDefinition *ActivityDefinition) FromMap(actDefinitionMap map[strin
 	activityDefinition.NodeId = actDefinitionMap["node_id"].(string)
 	activityDefinition.Name = actDefinitionMap["name"].(string)
 	activityDefinition.EstimatedDuration = actDefinitionMap["estimated_duration"].(int)
+	activityDefinition.EstimatedDurationInSeconds = actDefinitionMap["estimated_duration_in_seconds"].(int)
 	activityDefinition.Description = actDefinitionMap["description"].(string)
 	activityDefinition.MappingStatus = actDefinitionMap["mapping_status"].(string)
 	activityDefinition.CreatedAt = actDefinitionMap["created_at"].(string)
@@ -98,12 +103,21 @@ func (activityDefinition *ActivityDefinition) FromMap(actDefinitionMap map[strin
 		}
 	}
 	if actDefinitionMap["argument_definitions"] != nil {
-		if argumentDefinitions, err := helper.ParseFromMaps[ArgumentDefinition[any]](
+		if argumentDefinitions, err := helper.ParseFromMaps[Argument[any]](
 			actDefinitionMap["argument_definitions"].(*schema.Set).List(),
 		); err != nil {
 			return err
 		} else {
 			activityDefinition.ArgumentDefinitions = argumentDefinitions
+		}
+	}
+	if actDefinitionMap["arguments"] != nil {
+		if arguments, err := helper.ParseFromMaps[Argument[any]](
+			actDefinitionMap["arguments"].(*schema.Set).List(),
+		); err != nil {
+			return err
+		} else {
+			activityDefinition.Arguments = arguments
 		}
 	}
 	if actDefinitionMap["command_mappings"] != nil {
@@ -129,7 +143,7 @@ func (metadata *Metadata[T]) FromMap(metadataMap map[string]any) error {
 	return nil
 }
 
-func (argument *ArgumentDefinition[T]) FromMap(argumentMap map[string]any) error {
+func (argument *Argument[T]) FromMap(argumentMap map[string]any) error {
 	argument.Name = argumentMap["name"].(string)
 	argument.Description = argumentMap["description"].(string)
 

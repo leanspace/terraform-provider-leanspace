@@ -33,6 +33,12 @@ var activityDefinitionSchema = map[string]*schema.Schema{
 	},
 	"estimated_duration": {
 		Type:         schema.TypeInt,
+		Deprecated:   "Prefer using the estimated_duration_in_seconds field instead",
+		Optional:     true,
+		ValidateFunc: validation.IntAtLeast(0),
+	},
+	"estimated_duration_in_seconds": {
+		Type:         schema.TypeInt,
 		Optional:     true,
 		ValidateFunc: validation.IntAtLeast(0),
 	},
@@ -44,10 +50,18 @@ var activityDefinitionSchema = map[string]*schema.Schema{
 		},
 	},
 	"argument_definitions": {
+		Type:       schema.TypeSet,
+		Deprecated: "Prefer using the arguments field instead",
+		Optional:   true,
+		Elem: &schema.Resource{
+			Schema: argumentSchema,
+		},
+	},
+	"arguments": {
 		Type:     schema.TypeSet,
 		Optional: true,
 		Elem: &schema.Resource{
-			Schema: argumentDefinitionSchema,
+			Schema: argumentSchema,
 		},
 	},
 	"command_mappings": {
@@ -100,7 +114,7 @@ var metadataSchema = map[string]*schema.Schema{
 	},
 }
 
-var argumentDefinitionSchema = map[string]*schema.Schema{
+var argumentSchema = map[string]*schema.Schema{
 	"name": {
 		Type:     schema.TypeString,
 		Required: true,

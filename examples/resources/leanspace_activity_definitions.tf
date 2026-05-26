@@ -2,7 +2,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
   name               = "Terraform Activity Definition"
   description        = "An activity definition, created under terraform."
   node_id            = var.node_id
-  estimated_duration = 3
+  estimated_duration_in_seconds = 3
 
   metadata {
     name        = "ActivityMetadataNumeric"
@@ -62,7 +62,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
     }
   }
 
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentNumeric"
     description = "A numeric input"
     attributes {
@@ -71,7 +71,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
       required      = true
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentText"
     description = "A text input"
     attributes {
@@ -79,7 +79,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
       type          = "TEXT"
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentBool"
     description = "A boolean input"
     attributes {
@@ -88,7 +88,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
       required      = true
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentTimestamp"
     description = "A timestamp input"
     attributes {
@@ -97,7 +97,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
       required      = true
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentDate"
     description = "A date input"
     attributes {
@@ -106,7 +106,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
       required      = true
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentTime"
     description = "A time input"
     attributes {
@@ -115,7 +115,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
       required      = true
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentEnum"
     description = "An enum input"
     attributes {
@@ -125,7 +125,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
       required      = true
     }
   }
-  argument_definitions {
+  arguments {
     name        = "TestArgumentBinaryArray"
     description = "A binary array"
     attributes {

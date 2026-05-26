@@ -43,7 +43,7 @@ resource "leanspace_activity_definitions" "test" {
   name               = "Terraform Activity Definition"
   description        = "A complex activity definition, entirely created under terraform."
   node_id            = var.node_id
-  estimated_duration = 3
+  estimated_duration_in_seconds = 3
 
   metadata {
     name        = "ActivityMetadataNumeric"
@@ -138,7 +138,7 @@ resource "leanspace_activity_definitions" "test" {
     }
   }
 
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentNumeric"
     description = "A numeric input"
     attributes {
@@ -147,7 +147,7 @@ resource "leanspace_activity_definitions" "test" {
       required      = true
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentText"
     description = "A text input"
     attributes {
@@ -155,7 +155,7 @@ resource "leanspace_activity_definitions" "test" {
       type          = "TEXT"
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentBool"
     description = "A boolean input"
     attributes {
@@ -164,7 +164,7 @@ resource "leanspace_activity_definitions" "test" {
       required      = false
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentTimestamp"
     description = "A timestamp input"
     attributes {
@@ -173,7 +173,7 @@ resource "leanspace_activity_definitions" "test" {
       required      = true
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentTime"
     description = "A time input"
     attributes {
@@ -182,7 +182,7 @@ resource "leanspace_activity_definitions" "test" {
       required      = true
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentDate"
     description = "A date input"
     attributes {
@@ -191,7 +191,7 @@ resource "leanspace_activity_definitions" "test" {
       required      = true
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentEnum"
     description = "An enum input"
     attributes {
@@ -203,7 +203,7 @@ resource "leanspace_activity_definitions" "test" {
       required = true
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentBinary"
     description = "A binary input"
     attributes {
@@ -212,7 +212,7 @@ resource "leanspace_activity_definitions" "test" {
       required      = true
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentGeoPoint"
     description = "A geopoint input"
     attributes {
@@ -231,7 +231,7 @@ resource "leanspace_activity_definitions" "test" {
       required = true
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentNumericArray"
     description = "A numeric array"
     attributes {
@@ -248,7 +248,7 @@ resource "leanspace_activity_definitions" "test" {
       }
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentBinaryArray"
     description = "A binary array"
     attributes {
