@@ -12,7 +12,6 @@ type Resource struct {
 	Name           string                     `json:"name"`
 	Description    string                     `json:"description"`
 	DefaultLevel   float64                    `json:"defaultLevel"`
-	Constraints    []ResourceConstraints      `json:"constraints,omitempty"`
 	LowerLimit     *float64                   `json:"lowerLimit"`
 	UpperLimit     *float64                   `json:"upperLimit"`
 	Thresholds     []ResourceThreshold        `json:"thresholds,omitempty"`
@@ -24,13 +23,6 @@ type Resource struct {
 }
 
 func (resource *Resource) GetID() string { return resource.ID }
-
-type ResourceConstraints struct {
-	Type  string  `json:"type"`
-	Kind  string  `json:"kind"`
-	Value float64 `json:"value"`
-	Name  string  `json:"name,omitempty"`
-}
 
 type ResourceThreshold struct {
 	Kind                 string  `json:"kind"`
