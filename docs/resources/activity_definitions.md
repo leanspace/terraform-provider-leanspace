@@ -16,7 +16,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
   name               = "Terraform Activity Definition"
   description        = "An activity definition, created under terraform."
   node_id            = var.node_id
-  estimated_duration = 3
+  estimated_duration_in_seconds = 3
 
   metadata {
     name        = "ActivityMetadataNumeric"
@@ -76,7 +76,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
     }
   }
 
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentNumeric"
     description = "A numeric input"
     attributes {
@@ -85,7 +85,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
       required      = true
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentText"
     description = "A text input"
     attributes {
@@ -93,7 +93,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
       type          = "TEXT"
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentBool"
     description = "A boolean input"
     attributes {
@@ -102,7 +102,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
       required      = true
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentTimestamp"
     description = "A timestamp input"
     attributes {
@@ -111,7 +111,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
       required      = true
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentDate"
     description = "A date input"
     attributes {
@@ -120,7 +120,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
       required      = true
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentTime"
     description = "A time input"
     attributes {
@@ -129,7 +129,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
       required      = true
     }
   }
-  argument_definitions {
+  arguments {
     name        = "ActivityArgumentEnum"
     description = "An enum input"
     attributes {
@@ -139,7 +139,7 @@ resource "leanspace_activity_definitions" "activity_definition" {
       required      = true
     }
   }
-  argument_definitions {
+  arguments {
     name        = "TestArgumentBinaryArray"
     description = "A binary array"
     attributes {
@@ -191,10 +191,12 @@ resource "leanspace_activity_definitions" "activity_definition" {
 
 ### Optional
 
-- `argument_definitions` (Block Set) (see [below for nested schema](#nestedblock--argument_definitions))
+- `argument_definitions` (Block Set, Deprecated) (see [below for nested schema](#nestedblock--argument_definitions))
+- `arguments` (Block Set) (see [below for nested schema](#nestedblock--arguments))
 - `command_mappings` (Block List) (see [below for nested schema](#nestedblock--command_mappings))
 - `description` (String)
-- `estimated_duration` (Number)
+- `estimated_duration` (Number, Deprecated)
+- `estimated_duration_in_seconds` (Number)
 - `metadata` (Block Set) (see [below for nested schema](#nestedblock--metadata))
 - `tags` (Block Set) (see [below for nested schema](#nestedblock--tags))
 
@@ -310,6 +312,126 @@ Read-Only:
 
 <a id="nestedblock--argument_definitions--attributes--fields--longitude"></a>
 ### Nested Schema for `argument_definitions.attributes.fields.longitude`
+
+Optional:
+
+- `default_value` (String)
+- `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
+- `scale` (Number) Property field with numeric type only: the scale required.
+- `unit_id` (String) Property field with numeric type only
+
+Read-Only:
+
+- `max` (Number) Property field with numeric type only: the maximum value allowed.
+- `min` (Number) Property field with numeric type only: the minimum value allowed.
+
+
+
+
+
+<a id="nestedblock--arguments"></a>
+### Nested Schema for `arguments`
+
+Required:
+
+- `attributes` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--arguments--attributes))
+- `name` (String)
+
+Optional:
+
+- `description` (String)
+
+<a id="nestedblock--arguments--attributes"></a>
+### Nested Schema for `arguments.attributes`
+
+Required:
+
+- `type` (String) it must be one of these values: NUMERIC, BOOLEAN, TEXT, DATE, TIME, TIMESTAMP, ENUM, BINARY, ARRAY, GEOPOINT
+
+Optional:
+
+- `after` (String) Time/date/timestamp only: Minimum date allowed
+- `before` (String) Time/date/timestamp only: Maximum date allowed
+- `constraint` (Block List, Max: 1) Array only: Constraint applied to all elements in the array (see [below for nested schema](#nestedblock--arguments--attributes--constraint))
+- `default_value` (String) The default value can be of any type. In case of an array type, please surround the list values with double quotes and use the comma separator.
+- `fields` (Block List, Max: 1) Geopoint only (see [below for nested schema](#nestedblock--arguments--attributes--fields))
+- `max` (Number) Numeric only
+- `max_length` (Number) Text only: Maximum length of this text (at least 1)
+- `max_size` (Number) Array only: The maximum number of elements allowed
+- `min` (Number) Numeric only
+- `min_length` (Number) Text only: Minimum length of this text (at least 1)
+- `min_size` (Number) Array only: The minimum number of elements allowed
+- `options` (Map of String) Enum only: The allowed values for the enum in the format 1 = "value"
+- `pattern` (String) Text only: Regex defined the allowed pattern of this text
+- `precision` (Number) Numeric only: How many values after the comma should be accepted
+- `required` (Boolean)
+- `scale` (Number) Numeric only
+- `unique` (Boolean) Array only: No duplicated elements are allowed
+- `unit_id` (String) Numeric only
+
+<a id="nestedblock--arguments--attributes--constraint"></a>
+### Nested Schema for `arguments.attributes.constraint`
+
+Required:
+
+- `type` (String) it must be one of these values: NUMERIC, BOOLEAN, TEXT, DATE, TIME, TIMESTAMP, ENUM, BINARY
+
+Optional:
+
+- `after` (String) Only array elements with time/date/timestamp type : Minimum date allowed
+- `before` (String) Only array elements with time/date/timestamp type : Maximum date allowed
+- `max` (Number) Only array elements with numeric type : maximum value allowed
+- `max_length` (Number) Only array elements with text type: Maximum length of this text (at least 1)
+- `min` (Number) Only array elements with numeric type : minimum value allowed
+- `min_length` (Number) Only array elements with text type: Minimum length of this text (at least 1)
+- `options` (Map of String) Only array elements with enum type : The allowed values for the enum in the format 1 = "value"
+- `pattern` (String) Only array elements with text type: Regex defined the allowed pattern of this text
+- `precision` (Number) Only array elements with numeric type : how many values after the comma should be accepted
+- `required` (Boolean)
+- `scale` (Number) Only array elements with numeric type
+- `unit_id` (String) Only array elements with numeric type
+
+
+<a id="nestedblock--arguments--attributes--fields"></a>
+### Nested Schema for `arguments.attributes.fields`
+
+Required:
+
+- `elevation` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--arguments--attributes--fields--elevation))
+- `latitude` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--arguments--attributes--fields--latitude))
+- `longitude` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--arguments--attributes--fields--longitude))
+
+<a id="nestedblock--arguments--attributes--fields--elevation"></a>
+### Nested Schema for `arguments.attributes.fields.elevation`
+
+Optional:
+
+- `default_value` (String)
+- `max` (Number) Property field with numeric type only: the maximum value allowed.
+- `min` (Number) Property field with numeric type only: the minimum value allowed.
+- `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
+- `scale` (Number) Property field with numeric type only: the scale required.
+- `unit_id` (String) Property field with numeric type only
+
+
+<a id="nestedblock--arguments--attributes--fields--latitude"></a>
+### Nested Schema for `arguments.attributes.fields.latitude`
+
+Optional:
+
+- `default_value` (String)
+- `precision` (Number) Property field with numeric type only: How many values after the comma should be accepted
+- `scale` (Number) Property field with numeric type only: the scale required.
+- `unit_id` (String) Property field with numeric type only
+
+Read-Only:
+
+- `max` (Number) Property field with numeric type only: the maximum value allowed.
+- `min` (Number) Property field with numeric type only: the minimum value allowed.
+
+
+<a id="nestedblock--arguments--attributes--fields--longitude"></a>
+### Nested Schema for `arguments.attributes.fields.longitude`
 
 Optional:
 

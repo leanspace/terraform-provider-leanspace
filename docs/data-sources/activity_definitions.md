@@ -65,11 +65,13 @@ Optional:
 Read-Only:
 
 - `argument_definitions` (Set of Object) (see [below for nested schema](#nestedobjatt--content--argument_definitions))
+- `arguments` (Set of Object) (see [below for nested schema](#nestedobjatt--content--arguments))
 - `command_mappings` (List of Object) (see [below for nested schema](#nestedobjatt--content--command_mappings))
 - `created_at` (String)
 - `created_by` (String)
 - `description` (String)
 - `estimated_duration` (Number)
+- `estimated_duration_in_seconds` (Number)
 - `id` (String)
 - `last_modified_at` (String)
 - `last_modified_by` (String)
@@ -170,6 +172,111 @@ Read-Only:
 
 <a id="nestedobjatt--content--argument_definitions--attributes--unit_id--longitude"></a>
 ### Nested Schema for `content.argument_definitions.attributes.unit_id.longitude`
+
+Read-Only:
+
+- `default_value` (String)
+- `max` (Number)
+- `min` (Number)
+- `precision` (Number)
+- `scale` (Number)
+- `unit_id` (String)
+
+
+
+
+
+<a id="nestedobjatt--content--arguments"></a>
+### Nested Schema for `content.arguments`
+
+Read-Only:
+
+- `attributes` (List of Object) (see [below for nested schema](#nestedobjatt--content--arguments--attributes))
+- `description` (String)
+- `name` (String)
+
+<a id="nestedobjatt--content--arguments--attributes"></a>
+### Nested Schema for `content.arguments.attributes`
+
+Read-Only:
+
+- `after` (String)
+- `before` (String)
+- `constraint` (List of Object) (see [below for nested schema](#nestedobjatt--content--arguments--attributes--constraint))
+- `default_value` (String)
+- `fields` (List of Object) (see [below for nested schema](#nestedobjatt--content--arguments--attributes--fields))
+- `max` (Number)
+- `max_length` (Number)
+- `max_size` (Number)
+- `min` (Number)
+- `min_length` (Number)
+- `min_size` (Number)
+- `options` (Map of String)
+- `pattern` (String)
+- `precision` (Number)
+- `required` (Boolean)
+- `scale` (Number)
+- `type` (String)
+- `unique` (Boolean)
+- `unit_id` (String)
+
+<a id="nestedobjatt--content--arguments--attributes--constraint"></a>
+### Nested Schema for `content.arguments.attributes.unit_id`
+
+Read-Only:
+
+- `after` (String)
+- `before` (String)
+- `max` (Number)
+- `max_length` (Number)
+- `min` (Number)
+- `min_length` (Number)
+- `options` (Map of String)
+- `pattern` (String)
+- `precision` (Number)
+- `required` (Boolean)
+- `scale` (Number)
+- `type` (String)
+- `unit_id` (String)
+
+
+<a id="nestedobjatt--content--arguments--attributes--fields"></a>
+### Nested Schema for `content.arguments.attributes.unit_id`
+
+Read-Only:
+
+- `elevation` (List of Object) (see [below for nested schema](#nestedobjatt--content--arguments--attributes--unit_id--elevation))
+- `latitude` (List of Object) (see [below for nested schema](#nestedobjatt--content--arguments--attributes--unit_id--latitude))
+- `longitude` (List of Object) (see [below for nested schema](#nestedobjatt--content--arguments--attributes--unit_id--longitude))
+
+<a id="nestedobjatt--content--arguments--attributes--unit_id--elevation"></a>
+### Nested Schema for `content.arguments.attributes.unit_id.elevation`
+
+Read-Only:
+
+- `default_value` (String)
+- `max` (Number)
+- `min` (Number)
+- `precision` (Number)
+- `scale` (Number)
+- `unit_id` (String)
+
+
+<a id="nestedobjatt--content--arguments--attributes--unit_id--latitude"></a>
+### Nested Schema for `content.arguments.attributes.unit_id.latitude`
+
+Read-Only:
+
+- `default_value` (String)
+- `max` (Number)
+- `min` (Number)
+- `precision` (Number)
+- `scale` (Number)
+- `unit_id` (String)
+
+
+<a id="nestedobjatt--content--arguments--attributes--unit_id--longitude"></a>
+### Nested Schema for `content.arguments.attributes.unit_id.longitude`
 
 Read-Only:
 
