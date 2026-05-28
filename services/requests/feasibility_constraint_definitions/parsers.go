@@ -30,7 +30,7 @@ func (feasibilityConstraintDefinition *FeasibilityConstraintDefinition) FromMap(
 	feasibilityConstraintDefinition.Description = feasibilityConstraintDefinitionMap["description"].(string)
 
 	if feasibilityConstraintDefinitionMap["argument_definitions"] != nil {
-		if argumentDefinitions, err := helper.ParseFromMaps[activity_definitions.ArgumentDefinition[any]](
+		if argumentDefinitions, err := helper.ParseFromMaps[activity_definitions.Argument[any]](
 			feasibilityConstraintDefinitionMap["argument_definitions"].(*schema.Set).List(),
 		); err != nil {
 			return err
