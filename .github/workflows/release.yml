@@ -94,6 +94,8 @@ jobs:
           go-version-file: 'terraform-provider-leanspace/go.mod'
           cache-dependency-path: terraform-provider-leanspace/go.sum
           cache: true
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
       - name: Import GPG key
         id: import_gpg
         uses: crazy-max/ghaction-import-gpg@v6
