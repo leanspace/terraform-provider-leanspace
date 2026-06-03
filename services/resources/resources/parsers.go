@@ -16,9 +16,6 @@ func (resource *Resource) ToMap() map[string]any {
 	resourceMap["name"] = resource.Name
 	resourceMap["description"] = resource.Description
 	resourceMap["default_level"] = resource.DefaultLevel
-	if resource.Constraints != nil {
-		resourceMap["constraints"] = helper.ParseToMaps(resource.Constraints)
-	}
 
 	if resource.UpperLimit != nil {
 		resourceMap["upper_limit"] = []any{float64(*resource.UpperLimit)}
@@ -39,15 +36,6 @@ func (resource *Resource) ToMap() map[string]any {
 	return resourceMap
 }
 
-func (constraints *ResourceConstraints) ToMap() map[string]any {
-	constraintsMap := make(map[string]any)
-	constraintsMap["type"] = constraints.Type
-	constraintsMap["kind"] = constraints.Kind
-	constraintsMap["name"] = constraints.Name
-	constraintsMap["value"] = constraints.Value
-	return constraintsMap
-}
-
 func (thresholds *ResourceThreshold) ToMap() map[string]any {
 	thresholdsMap := make(map[string]any)
 	thresholdsMap["kind"] = thresholds.Kind
@@ -65,14 +53,6 @@ func (resource *Resource) FromMap(resourceMap map[string]any) error {
 	resource.Name = resourceMap["name"].(string)
 	resource.Description = resourceMap["description"].(string)
 	resource.DefaultLevel = resourceMap["default_level"].(float64)
-
-	if resourceMap["constraints"] != nil {
-		constraints, err := helper.ParseFromMaps[ResourceConstraints](resourceMap["constraints"].(*schema.Set).List())
-		if err != nil {
-			return err
-		}
-		resource.Constraints = constraints
-	}
 
 	if v, ok := resourceMap["lower_limit"]; ok && v != nil {
 		if list, ok := v.([]interface{}); ok && len(list) > 0 {
@@ -108,14 +88,6 @@ func (resource *Resource) FromMap(resourceMap map[string]any) error {
 	resource.LastModifiedAt = resourceMap["last_modified_at"].(string)
 	resource.LastModifiedBy = resourceMap["last_modified_by"].(string)
 
-	return nil
-}
-
-func (constraints *ResourceConstraints) FromMap(constraintsMap map[string]any) error {
-	constraints.Type = constraintsMap["type"].(string)
-	constraints.Kind = constraintsMap["kind"].(string)
-	constraints.Value = constraintsMap["value"].(float64)
-	constraints.Name = constraintsMap["name"].(string)
 	return nil
 }
 

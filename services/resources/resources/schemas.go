@@ -8,8 +8,7 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
 
-var validResourceConstraintTypes = []string{"LIMIT", "THRESHOLD"}
-var validResourceConstraintKinds = []string{"UPPER", "LOWER"}
+var validResourceThresholdKinds = []string{"UPPER", "LOWER"}
 
 var resourceSchema = map[string]*schema.Schema{
 	"id": {
@@ -45,14 +44,6 @@ var resourceSchema = map[string]*schema.Schema{
 	"default_level": {
 		Type:     schema.TypeFloat,
 		Optional: true,
-	},
-	"constraints": {
-		Type:       schema.TypeSet,
-		Deprecated: "Prefer using the lowerLimit, upperLimit and thresholds fields",
-		Optional:   true,
-		Elem: &schema.Resource{
-			Schema: resourceConstraintsSchema,
-		},
 	},
 	"lower_limit": {
 		Type:     schema.TypeList,
@@ -97,36 +88,12 @@ var resourceSchema = map[string]*schema.Schema{
 	},
 }
 
-var resourceConstraintsSchema = map[string]*schema.Schema{
-	"type": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validResourceConstraintTypes, false),
-		Description:  helper.AllowedValuesToDescription(validResourceConstraintTypes),
-	},
-	"kind": {
-		Type:         schema.TypeString,
-		Required:     true,
-		ValidateFunc: validation.StringInSlice(validResourceConstraintKinds, false),
-		Description:  helper.AllowedValuesToDescription(validResourceConstraintKinds),
-	},
-	"value": {
-		Type:     schema.TypeFloat,
-		Required: true,
-	},
-	"name": {
-		Type:         schema.TypeString,
-		Optional:     true,
-		ValidateFunc: helper.IsValidName,
-	},
-}
-
 var resourceThresholdSchema = map[string]*schema.Schema{
 	"kind": {
 		Type:         schema.TypeString,
 		Required:     true,
-		ValidateFunc: validation.StringInSlice(validResourceConstraintKinds, false),
-		Description:  helper.AllowedValuesToDescription(validResourceConstraintKinds),
+		ValidateFunc: validation.StringInSlice(validResourceThresholdKinds, false),
+		Description:  helper.AllowedValuesToDescription(validResourceThresholdKinds),
 	},
 	"name": {
 		Type:         schema.TypeString,
