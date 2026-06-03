@@ -76,7 +76,6 @@ Optional:
 Read-Only:
 
 - `asset_id` (String)
-- `constraints` (Set of Object) (see [below for nested schema](#nestedobjatt--content--constraints))
 - `created_at` (String)
 - `created_by` (String)
 - `default_level` (Number)
@@ -91,17 +90,6 @@ Read-Only:
 - `thresholds` (Set of Object) (see [below for nested schema](#nestedobjatt--content--thresholds))
 - `unit_id` (String)
 - `upper_limit` (List of Number)
-
-<a id="nestedobjatt--content--constraints"></a>
-### Nested Schema for `content.constraints`
-
-Read-Only:
-
-- `kind` (String)
-- `name` (String)
-- `type` (String)
-- `value` (Number)
-
 
 <a id="nestedobjatt--content--tags"></a>
 ### Nested Schema for `content.tags`

@@ -22,39 +22,10 @@ variable "metric_id" {
   description = "The ID of the metric associated to this resource."
 }
 
-resource "leanspace_resources" "a_resource" {
-  name      = "Terraform Resource"
-  asset_id  = var.asset_id
-  metric_id = var.metric_id
-  constraints {
-    type  = "LIMIT"
-    kind  = "UPPER"
-    value = 50.0
-  }
-  constraints {
-    type  = "THRESHOLD"
-    kind  = "UPPER"
-    value = 35.0
-  }
-  constraints {
-    type  = "LIMIT"
-    kind  = "LOWER"
-    value = 0.0
-  }
-  constraints {
-    type  = "THRESHOLD"
-    kind  = "LOWER"
-    value = 10.0
-  }
-  tags {
-    key   = "Mission"
-    value = "Terraform"
-  }
-}
-
 resource "leanspace_resources" "a_resource_with_lower_limit_upper_limit_and_thresholds" {
   name          = "Terraform Resource 4"
   asset_id      = var.asset_id
+  metric_id   = var.metric_id
   default_level = 10.0
   lower_limit   = 5.0
   upper_limit   = 15.0
@@ -97,7 +68,6 @@ resource "leanspace_resources" "a_resource_with_lower_limit_upper_limit_and_thre
 
 ### Optional
 
-- `constraints` (Block Set, Deprecated) (see [below for nested schema](#nestedblock--constraints))
 - `default_level` (Number)
 - `description` (String)
 - `lower_limit` (List of Number)
@@ -114,20 +84,6 @@ resource "leanspace_resources" "a_resource_with_lower_limit_upper_limit_and_thre
 - `id` (String) The ID of this resource.
 - `last_modified_at` (String) When it was last modified
 - `last_modified_by` (String) Who modified it the last
-
-<a id="nestedblock--constraints"></a>
-### Nested Schema for `constraints`
-
-Required:
-
-- `kind` (String) it must be one of these values: UPPER, LOWER
-- `type` (String) it must be one of these values: LIMIT, THRESHOLD
-- `value` (Number)
-
-Optional:
-
-- `name` (String)
-
 
 <a id="nestedblock--tags"></a>
 ### Nested Schema for `tags`
