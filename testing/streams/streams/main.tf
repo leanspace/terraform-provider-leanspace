@@ -35,13 +35,37 @@ resource "leanspace_streams" "test" {
     key   = "CreatedBy"
     value = "Terraform"
   }
-    configuration {
-      endianness = "BE"
-      structure {
+  configuration {
+    endianness = "BE"
+    structure {
+      elements {
+        type      = "FIELD"
+        data_type = "UINTEGER"
+        name      = "id_field"
+        length {
+          unit  = "BITS"
+          type  = "FIXED"
+          value = 8
+        }
+      }
+      elements {
+        type = "CONTAINER"
+        name = "properties"
         elements {
           type      = "FIELD"
-          data_type = "UINTEGER"
-          name      = "id_field"
+          data_type = "TEXT"
+          name      = "name"
+          length {
+            unit  = "BITS"
+            type  = "FIXED"
+            value = 32
+          }
+          processor = "zlib"
+        }
+        elements {
+          type      = "FIELD"
+          data_type = "INTEGER"
+          name      = "version"
           length {
             unit  = "BITS"
             type  = "FIXED"
@@ -49,23 +73,94 @@ resource "leanspace_streams" "test" {
           }
         }
         elements {
+          type      = "FIELD"
+          data_type = "BOOLEAN"
+          name      = "is_active"
+          length {
+            unit  = "BITS"
+            type  = "FIXED"
+            value = 8
+          }
+        }
+        elements {
+          type      = "FIELD"
+          data_type = "DECIMAL"
+          name      = "solar_w"
+          length {
+            unit  = "BITS"
+            type  = "FIXED"
+            value = 32
+          }
+        }
+        elements {
+          type      = "FIELD"
+          data_type = "BINARY"
+          name      = "binary_field"
+          length {
+            unit  = "BITS"
+            type  = "FIXED"
+            value = 32
+          }
+        }
+      }
+      elements {
+        type = "SWITCH"
+        name = "data"
+        expression {
+          switch_on = "structure.properties.version"
+          options {
+            component = "structure.data.pos_data"
+            value {
+              data_type = "INTEGER"
+              data      = 0
+            }
+          }
+          options {
+            component = "structure.data.rot_data"
+            value {
+              data_type = "INTEGER"
+              data      = 1
+            }
+          }
+          options {
+            component = "structure.data.rot_data"
+            value {
+              data_type = "INTEGER"
+              data      = 2
+            }
+          }
+        }
+        elements {
           type = "CONTAINER"
-          name = "properties"
+          name = "pos_data"
           elements {
             type      = "FIELD"
-            data_type = "TEXT"
-            name      = "name"
+            data_type = "INTEGER"
+            name      = "x"
             length {
               unit  = "BITS"
               type  = "FIXED"
-              value = 32
+              value = 8
             }
-            processor = "zlib"
           }
           elements {
             type      = "FIELD"
             data_type = "INTEGER"
-            name      = "version"
+            name      = "y"
+            length {
+              unit  = "BITS"
+              type  = "FIXED"
+              value = 8
+            }
+          }
+        }
+        elements {
+          type = "CONTAINER"
+          name = "rot_data"
+          elements {
+            type      = "FIELD"
+            data_type = "INTEGER"
+            name      = "rx"
             length {
               unit  = "BITS"
               type  = "FIXED"
@@ -74,152 +169,57 @@ resource "leanspace_streams" "test" {
           }
           elements {
             type      = "FIELD"
-            data_type = "BOOLEAN"
-            name      = "is_active"
+            data_type = "INTEGER"
+            name      = "ry"
             length {
               unit  = "BITS"
               type  = "FIXED"
               value = 8
             }
           }
-          elements {
-            type      = "FIELD"
-            data_type = "DECIMAL"
-            name      = "solar_w"
-            length {
-              unit  = "BITS"
-              type  = "FIXED"
-              value = 32
-            }
-          }
-          elements {
-            type      = "FIELD"
-            data_type = "BINARY"
-            name      = "binary_field"
-            length {
-              unit  = "BITS"
-              type  = "FIXED"
-              value = 32
-            }
-          }
-        }
-        elements {
-          type = "SWITCH"
-          name = "data"
-          expression {
-            switch_on = "structure.properties.version"
-            options {
-              component = "structure.data.pos_data"
-              value {
-                data_type = "INTEGER"
-                data      = 0
-              }
-            }
-            options {
-              component = "structure.data.rot_data"
-              value {
-                data_type = "INTEGER"
-                data      = 1
-              }
-            }
-            options {
-              component = "structure.data.rot_data"
-              value {
-                data_type = "INTEGER"
-                data      = 2
-              }
-            }
-          }
-          elements {
-            type = "CONTAINER"
-            name = "pos_data"
-            elements {
-              type      = "FIELD"
-              data_type = "INTEGER"
-              name      = "x"
-              length {
-                unit  = "BITS"
-                type  = "FIXED"
-                value = 8
-              }
-            }
-            elements {
-              type      = "FIELD"
-              data_type = "INTEGER"
-              name      = "y"
-              length {
-                unit  = "BITS"
-                type  = "FIXED"
-                value = 8
-              }
-            }
-          }
-          elements {
-            type = "CONTAINER"
-            name = "rot_data"
-            elements {
-              type      = "FIELD"
-              data_type = "INTEGER"
-              name      = "rx"
-              length {
-                unit  = "BITS"
-                type  = "FIXED"
-                value = 8
-              }
-            }
-            elements {
-              type      = "FIELD"
-              data_type = "INTEGER"
-              name      = "ry"
-              length {
-                unit  = "BITS"
-                type  = "FIXED"
-                value = 8
-              }
-            }
-          }
-        }
-      }
-      metadata {
-        timestamp {
-          expression = "(ctx, raw) => ctx.metadata.received_at;"
-        }
-      }
-      computations {
-        elements {
-          data_type  = "UINTEGER"
-          name       = "power"
-          expression = <<-EOT
-              (ctx) => {
-                const voltage = ctx.structure.properties.solar_w;
-                var power = voltage * 15;
-                return (power);
-              }
-            EOT
-        }
-        elements {
-          data_type  = "BINARY"
-          name       = "binary_computation"
-          expression = <<-EOT
-              (ctx) => ctx.structure.properties.binary_field
-            EOT
-        }
-        elements {
-          data_type  = "TIMESTAMP"
-          name       = "timestamp_computation"
-          expression = <<-EOT
-              (ctx) => "2023-01-01T00:00:00.000Z"
-            EOT
-        }
-        elements {
-          data_type  = "DATE"
-          name       = "date_computation"
-          expression = <<-EOT
-              (ctx) => "2023-01-01"
-            EOT
         }
       }
     }
+    metadata {
+      timestamp {
+        expression = "(ctx, raw) => ctx.metadata.received_at;"
+      }
+    }
+    computations {
+      elements {
+        data_type  = "UINTEGER"
+        name       = "power"
+        expression = <<-EOT
+            (ctx) => {
+              const voltage = ctx.structure.properties.solar_w;
+              var power = voltage * 15;
+              return (power);
+            }
+          EOT
+      }
+      elements {
+        data_type  = "BINARY"
+        name       = "binary_computation"
+        expression = <<-EOT
+            (ctx) => ctx.structure.properties.binary_field
+          EOT
+      }
+      elements {
+        data_type  = "TIMESTAMP"
+        name       = "timestamp_computation"
+        expression = <<-EOT
+            (ctx) => "2023-01-01T00:00:00.000Z"
+          EOT
+      }
+      elements {
+        data_type  = "DATE"
+        name       = "date_computation"
+        expression = <<-EOT
+            (ctx) => "2023-01-01"
+          EOT
+      }
+    }
+  }
   mappings {
     metric_id  = var.numeric_metric_id
     expression = "$.computations.power"
