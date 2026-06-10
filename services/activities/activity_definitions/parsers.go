@@ -24,7 +24,7 @@ func (activityDefinition *ActivityDefinition) ToMap() map[string]any {
 	if activityDefinition.Metadata != nil {
 		actDefinitionMap["metadata"] = helper.ParseToMaps(activityDefinition.Metadata)
 	}
-	if activityDefinition.ArgumentDefinitions != nil {
+	if len(activityDefinition.Arguments) == 0 && activityDefinition.ArgumentDefinitions != nil {
 		actDefinitionMap["argument_definitions"] = helper.ParseToMaps(activityDefinition.ArgumentDefinitions)
 	}
 	if activityDefinition.Arguments != nil {
@@ -108,7 +108,7 @@ func (activityDefinition *ActivityDefinition) FromMap(actDefinitionMap map[strin
 		); err != nil {
 			return err
 		} else {
-			activityDefinition.ArgumentDefinitions = filterEmptyArguments(argumentDefinitions)
+			activityDefinition.ArgumentDefinitions = argumentDefinitions
 		}
 	}
 	if actDefinitionMap["arguments"] != nil {
@@ -117,8 +117,11 @@ func (activityDefinition *ActivityDefinition) FromMap(actDefinitionMap map[strin
 		); err != nil {
 			return err
 		} else {
-			activityDefinition.Arguments = filterEmptyArguments(arguments)
+			activityDefinition.Arguments = arguments
 		}
+	}
+	if len(activityDefinition.Arguments) > 0 {
+		activityDefinition.ArgumentDefinitions = nil
 	}
 	if actDefinitionMap["command_mappings"] != nil {
 		if commandMappings, err := helper.ParseFromMaps[CommandMapping](
@@ -130,17 +133,6 @@ func (activityDefinition *ActivityDefinition) FromMap(actDefinitionMap map[strin
 		}
 	}
 	return nil
-}
-
-func filterEmptyArguments(arguments []Argument[any]) []Argument[any] {
-	filteredArguments := make([]Argument[any], 0, len(arguments))
-	for _, argument := range arguments {
-		if argument.Name == "" && argument.Description == "" && argument.Attributes.Type == "" {
-			continue
-		}
-		filteredArguments = append(filteredArguments, argument)
-	}
-	return filteredArguments
 }
 
 func (metadata *Metadata[T]) FromMap(metadataMap map[string]any) error {
@@ -198,6 +190,9 @@ func (metadataMapping *MetadataMapping) FromMap(metadataMappingMap map[string]an
 }
 
 func (activityDefinition *ActivityDefinition) PreMarshallProcess() error {
+	if len(activityDefinition.Arguments) > 0 {
+		activityDefinition.ArgumentDefinitions = nil
+	}
 	for i := range activityDefinition.CommandMappings {
 		activityDefinition.CommandMappings[i].Position = i
 	}
