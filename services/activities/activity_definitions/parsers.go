@@ -108,7 +108,7 @@ func (activityDefinition *ActivityDefinition) FromMap(actDefinitionMap map[strin
 		); err != nil {
 			return err
 		} else {
-			activityDefinition.ArgumentDefinitions = argumentDefinitions
+			activityDefinition.ArgumentDefinitions = filterEmptyArguments(argumentDefinitions)
 		}
 	}
 	if actDefinitionMap["arguments"] != nil {
@@ -117,7 +117,7 @@ func (activityDefinition *ActivityDefinition) FromMap(actDefinitionMap map[strin
 		); err != nil {
 			return err
 		} else {
-			activityDefinition.Arguments = arguments
+			activityDefinition.Arguments = filterEmptyArguments(arguments)
 		}
 	}
 	if actDefinitionMap["command_mappings"] != nil {
@@ -130,6 +130,17 @@ func (activityDefinition *ActivityDefinition) FromMap(actDefinitionMap map[strin
 		}
 	}
 	return nil
+}
+
+func filterEmptyArguments(arguments []Argument[any]) []Argument[any] {
+	filteredArguments := make([]Argument[any], 0, len(arguments))
+	for _, argument := range arguments {
+		if argument.Name == "" && argument.Description == "" && argument.Attributes.Type == "" {
+			continue
+		}
+		filteredArguments = append(filteredArguments, argument)
+	}
+	return filteredArguments
 }
 
 func (metadata *Metadata[T]) FromMap(metadataMap map[string]any) error {
