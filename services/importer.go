@@ -4,7 +4,6 @@ import (
 	"github.com/leanspace/terraform-provider-leanspace/services/activities/activity_definitions"
 	"github.com/leanspace/terraform-provider-leanspace/services/activities/activity_states"
 	"github.com/leanspace/terraform-provider-leanspace/services/activities/resource_functions"
-	"github.com/leanspace/terraform-provider-leanspace/services/agents/remote_agents"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/nodes"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/properties"
 	"github.com/leanspace/terraform-provider-leanspace/services/asset/units"
@@ -68,7 +67,6 @@ func AddDataTypes() {
 	generic_plugins.GenericPluginDataType.Subscribe()
 	plugins.PluginDataType.Subscribe()
 	properties.PropertyDataType.Subscribe()
-	remote_agents.RemoteAgentDataType.Subscribe()
 	record_templates.RecordTemplateDataType.Subscribe()
 	service_accounts.ServiceAccountDataType.Subscribe()
 	streams.StreamDataType.Subscribe()

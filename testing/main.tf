@@ -144,17 +144,6 @@ module "dashboards" {
   ]
 }
 
-module "remote_agents" {
-  source            = "./agents/remote_agents"
-  ground_station_id = module.nodes.groundstation_node.id
-  command_queue_id  = module.command_queues.test_command_queue.id
-  stream_id         = module.streams.test_stream.id
-  depends_on = [
-    module.nodes,
-    module.command_queues,
-    module.streams
-  ]
-}
 
 module "access_policies" {
   source = "./teams/access_policies"

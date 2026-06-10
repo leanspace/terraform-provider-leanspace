@@ -71,7 +71,7 @@ resource "leanspace_widgets" "test_line" {
   type                   = "LINE"
   granularity            = "second"
   query_time_dimension   = "received_at"
-  display_time_dimension = "timestamp"
+  display_time_dimension = "received_at"
   series {
     id          = var.numeric_metric_id
     name        = "Numeric Metric Series"
@@ -98,7 +98,7 @@ resource "leanspace_widgets" "test_enum" {
   description            = "An enum widget created with Terraform"
   type                   = "ENUM"
   granularity            = "second"
-  query_time_dimension   = "ingested_at"
+  query_time_dimension   = "timestamp"
   display_time_dimension = "timestamp"
   series {
     id          = var.enum_metric_id
@@ -182,7 +182,7 @@ resource "leanspace_widgets" "test_bar" {
   description            = "A bar widget created with Terraform"
   type                   = "BAR"
   granularity            = "hour"
-  query_time_dimension   = "received_at"
+  query_time_dimension   = "timestamp"
   display_time_dimension = "timestamp"
   series {
     id          = "error_code"
@@ -240,7 +240,7 @@ resource "leanspace_widgets" "test_value" {
   type                   = "VALUE"
   granularity            = "minute"
   query_time_dimension   = "received_at"
-  display_time_dimension = "timestamp"
+  display_time_dimension = "received_at"
   series {
     id          = var.text_metric_id
     datasource  = "metric"
@@ -303,4 +303,3 @@ output "test_value_widget" {
 output "test_resources_widget" {
   value = leanspace_widgets.test_resources
 }
-
