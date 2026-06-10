@@ -124,10 +124,16 @@ func (dataSource DataSourceType[T, PT]) update(ctx context.Context, d *schema.Re
 
 	containsChange := false
 
-	for _, key := range dataSource.getSchemaKeys() {
-		if d.HasChange(key) {
-			containsChange = true
-			break
+	if dataSource.SkipHasChangeCheck {
+		containsChange = true
+	} else {
+		for _, key := range dataSource.getSchemaKeys() {
+			hasChange := d.HasChange(key)
+
+			if hasChange {
+				containsChange = true
+				break
+			}
 		}
 	}
 

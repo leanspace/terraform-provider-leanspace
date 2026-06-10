@@ -137,6 +137,10 @@ type DataSourceType[T any, PT ParseableModel[T]] struct {
 	FilterSchema map[string]*schema.Schema
 	// If the filet endpoint is paginated or not. Defaults to true.
 	IsUnique bool `default:"false"`
+	// If true, the update flow skips the explicit d.HasChange scan.
+	// Terraform still computes the plan diff, but the provider avoids re-checking
+	// a potentially huge nested schema during UpdateContext.
+	SkipHasChangeCheck bool `default:"false"`
 }
 
 func (dataSource DataSourceType[T, PT]) convert(client *Client) GenericClient[T, PT] {
