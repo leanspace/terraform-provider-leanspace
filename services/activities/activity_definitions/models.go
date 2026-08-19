@@ -7,8 +7,8 @@ type ActivityDefinition struct {
 	NodeId                     string                     `json:"nodeId"`
 	Name                       string                     `json:"name"`
 	Description                string                     `json:"description,omitempty"`
-	EstimatedDuration          int                        `json:"estimatedDuration"`
-	EstimatedDurationInSeconds int                        `json:"estimatedDurationInSeconds"`
+	EstimatedDuration          *int                       `json:"estimatedDuration"`
+	EstimatedDurationInSeconds *int                       `json:"estimatedDurationInSeconds"`
 	Metadata                   []Metadata[any]            `json:"metadata,omitempty"`
 	ArgumentDefinitions        []Argument[any]            `json:"argumentDefinitions,omitempty"`
 	Arguments                  []Argument[any]            `json:"arguments,omitempty"`

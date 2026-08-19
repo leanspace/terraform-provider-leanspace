@@ -13,8 +13,12 @@ func (activityDefinition *ActivityDefinition) ToMap() map[string]any {
 	actDefinitionMap["node_id"] = activityDefinition.NodeId
 	actDefinitionMap["name"] = activityDefinition.Name
 	actDefinitionMap["description"] = activityDefinition.Description
-	actDefinitionMap["estimated_duration"] = activityDefinition.EstimatedDuration
-	actDefinitionMap["estimated_duration_in_seconds"] = activityDefinition.EstimatedDurationInSeconds
+	if activityDefinition.EstimatedDuration != nil {
+		actDefinitionMap["estimated_duration"] = *activityDefinition.EstimatedDuration
+	}
+	if activityDefinition.EstimatedDurationInSeconds != nil {
+		actDefinitionMap["estimated_duration_in_seconds"] = *activityDefinition.EstimatedDurationInSeconds
+	}
 	actDefinitionMap["mapping_status"] = activityDefinition.MappingStatus
 	actDefinitionMap["created_at"] = activityDefinition.CreatedAt
 	actDefinitionMap["created_by"] = activityDefinition.CreatedBy
@@ -80,8 +84,18 @@ func (activityDefinition *ActivityDefinition) FromMap(actDefinitionMap map[strin
 	activityDefinition.ID = actDefinitionMap["id"].(string)
 	activityDefinition.NodeId = actDefinitionMap["node_id"].(string)
 	activityDefinition.Name = actDefinitionMap["name"].(string)
-	activityDefinition.EstimatedDuration = actDefinitionMap["estimated_duration"].(int)
-	activityDefinition.EstimatedDurationInSeconds = actDefinitionMap["estimated_duration_in_seconds"].(int)
+	if value, exists := actDefinitionMap["estimated_duration"]; exists && value != nil {
+		estimatedDuration := value.(int)
+		activityDefinition.EstimatedDuration = &estimatedDuration
+	}
+
+	// Avoid estimated_duration_in_seconds=0 when estimated_duration is provided
+	activityDefinition.EstimatedDurationInSeconds = nil
+	if (activityDefinition.EstimatedDuration == nil || *activityDefinition.EstimatedDuration == 0) &&
+		actDefinitionMap["estimated_duration_in_seconds"] != nil {
+		estimatedDurationInSeconds := actDefinitionMap["estimated_duration_in_seconds"].(int)
+		activityDefinition.EstimatedDurationInSeconds = &estimatedDurationInSeconds
+	}
 	activityDefinition.Description = actDefinitionMap["description"].(string)
 	activityDefinition.MappingStatus = actDefinitionMap["mapping_status"].(string)
 	activityDefinition.CreatedAt = actDefinitionMap["created_at"].(string)

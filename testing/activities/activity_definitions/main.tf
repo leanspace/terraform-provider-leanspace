@@ -40,9 +40,9 @@ locals {
 }
 
 resource "leanspace_activity_definitions" "test" {
-  name               = "Terraform Activity Definition"
-  description        = "A complex activity definition, entirely created under terraform."
-  node_id            = var.node_id
+  name                          = "Terraform Activity Definition"
+  description                   = "A complex activity definition, entirely created under terraform."
+  node_id                       = var.node_id
   estimated_duration_in_seconds = 3
 
   metadata {
@@ -288,6 +288,23 @@ resource "leanspace_activity_definitions" "test" {
   tags {
     key   = "Mission"
     value = "Terraform"
+  }
+}
+
+resource "leanspace_activity_definitions" "activity_definition_deprecated_fields" {
+  name               = "Terraform Activity Definition with deprecated fields"
+  description        = "A simple activity definition, entirely created under terraform."
+  node_id            = var.node_id
+  estimated_duration = 3
+
+  argument_definitions {
+    name        = "ActivityArgumentNumeric"
+    description = "A numeric input"
+    attributes {
+      default_value = 2
+      type          = "NUMERIC"
+      required      = true
+    }
   }
 }
 
