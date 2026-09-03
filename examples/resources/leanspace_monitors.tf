@@ -13,8 +13,10 @@ resource "leanspace_monitors" "test_greater_than_monitor" {
   description = "A monitor created throug terraform."
   metric_id   = var.metric_id
   rule {
-    comparison_operator = "GREATER_THAN"
-    comparison_value    = 200
+    trigger_condition {
+      comparison_operator = "GREATER_THAN"
+      comparison_value    = 200
+    }
   }
   dynamic "action_template_links" {
     for_each = var.action_template_ids
@@ -34,9 +36,38 @@ resource "leanspace_monitors" "test_equals_monitor" {
   description = "Another monitor created throug terraform."
   metric_id   = var.metric_id
   rule {
-    comparison_operator = "NOT_EQUAL_TO"
-    comparison_value    = 120
-    tolerance           = 10
+    trigger_condition {
+      comparison_operator = "NOT_EQUAL_TO"
+      comparison_value    = 120
+      tolerance           = 10
+    }
+  }
+  dynamic "action_template_links" {
+    for_each = var.action_template_ids
+    content {
+      id = action_template_links.value
+    }
+  }
+  tags {
+    key   = "Mission"
+    value = "Terraform"
+  }
+}
+
+
+resource "leanspace_monitors" "test_hysteresis_monitor" {
+  name        = "Terraform Monitor 3"
+  description = "Another monitor created throug terraform."
+  metric_id   = var.metric_id
+  rule {
+    trigger_condition {
+      comparison_operator = "GREATER_THAN"
+      comparison_value    = 50
+    }
+    clear_condition {
+      comparison_operator = "LESSER_THAN"
+      comparison_value    = 40
+    }
   }
   dynamic "action_template_links" {
     for_each = var.action_template_ids

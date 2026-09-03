@@ -99,6 +99,46 @@ var monitorSchema = map[string]*schema.Schema{
 }
 
 var ruleSchema = map[string]*schema.Schema{ // ruleSchema
+	"trigger_condition": {
+		Type:     schema.TypeList,
+		Optional: true, // TODO once backward compatibility for hysteresis is over, make mandatory
+		MinItems: 1,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: thresholdConditionSchema,
+		},
+	},
+	"clear_condition": {
+		Type:     schema.TypeList,
+		Optional: true, // TODO once backward compatibility for hysteresis is over, make mandatory
+		MinItems: 1,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: thresholdConditionSchema,
+		},
+	},
+	"comparison_operator": {
+		Type:         schema.TypeString,
+		Optional:     true,
+		ValidateFunc: validation.StringInSlice(validComparisonOperators, false),
+		Description:  helper.AllowedValuesToDescription(validComparisonOperators),
+		Deprecated:   "Use trigger_condition.comparison_operator",
+	},
+	"comparison_value": {
+		Type:       schema.TypeFloat,
+		Optional:   true,
+		Deprecated: "Use trigger_condition.comparison_value",
+	},
+	"tolerance": {
+		Type:         schema.TypeFloat,
+		Optional:     true,
+		ValidateFunc: validation.FloatAtLeast(0),
+		Description:  "Only valid for EQUAL_TO or NOT_EQUAL_TO comparison operator",
+		Deprecated:   "Use trigger_condition.tolerance",
+	},
+}
+
+var thresholdConditionSchema = map[string]*schema.Schema{ // thresholdConditionSchema
 	"comparison_operator": {
 		Type:         schema.TypeString,
 		Required:     true,
