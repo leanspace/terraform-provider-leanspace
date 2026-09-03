@@ -61,6 +61,40 @@ func (monitor *Monitor) PostCreateProcess(client *provider.Client, monitorRaw an
 	return nil
 }
 
+func (monitor *Monitor) PreMarshallProcess() error {
+	if monitor.Rule.TriggerCondition == nil && monitor.Rule.ComparisonOperator != "" {
+		monitor.Rule.TriggerCondition = &ThresholdCondition{
+			ComparisonOperator: monitor.Rule.ComparisonOperator,
+			ComparisonValue:    monitor.Rule.ComparisonValue,
+			Tolerance:          monitor.Rule.Tolerance,
+		}
+	}
+	return nil
+}
+
+func (monitor *Monitor) PostReadProcess(_ *provider.Client, monitorRaw any) error {
+	currentMonitor := monitorRaw.(*Monitor)
+
+	if monitor.Rule.TriggerCondition == nil {
+		currentMonitor.Rule.TriggerCondition = nil
+	}
+
+	if monitor.Rule.ComparisonOperator == "" {
+		currentMonitor.Rule.ComparisonOperator = ""
+		currentMonitor.Rule.ComparisonValue = 0
+		currentMonitor.Rule.Tolerance = 0
+	} else if currentMonitor.Rule.TriggerCondition != nil {
+		currentMonitor.Rule.ComparisonOperator = currentMonitor.Rule.TriggerCondition.ComparisonOperator
+		currentMonitor.Rule.ComparisonValue = currentMonitor.Rule.TriggerCondition.ComparisonValue
+		currentMonitor.Rule.Tolerance = currentMonitor.Rule.TriggerCondition.Tolerance
+	}
+
+	if monitor.Rule.ClearCondition == nil {
+		currentMonitor.Rule.ClearCondition = nil
+	}
+	return nil
+}
+
 func (monitor *Monitor) PostUpdateProcess(client *provider.Client, monitorRaw any) error {
 	monitorCurrent := monitorRaw.(*Monitor)
 	currentActionTemplates := monitorCurrent.ActionTemplateLinks

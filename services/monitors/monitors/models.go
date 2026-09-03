@@ -23,10 +23,18 @@ type Monitor struct {
 
 func (monitor *Monitor) GetID() string { return monitor.ID }
 
-type Rule struct {
+type ThresholdCondition struct {
 	ComparisonOperator string  `json:"comparisonOperator"`
 	ComparisonValue    float64 `json:"comparisonValue"`
 	Tolerance          float64 `json:"tolerance,omitempty"`
+}
+
+type Rule struct {
+	TriggerCondition   *ThresholdCondition `json:"triggerCondition,omitempty"`
+	ClearCondition     *ThresholdCondition `json:"clearCondition,omitempty"`
+	ComparisonOperator string              `json:"comparisonOperator,omitempty"`
+	ComparisonValue    float64             `json:"comparisonValue,omitempty"`
+	Tolerance          float64             `json:"tolerance,omitempty"`
 }
 
 type ActionTemplateLink struct {

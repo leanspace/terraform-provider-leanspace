@@ -31,10 +31,24 @@ func (monitor *Monitor) ToMap() map[string]any {
 
 func (rule *Rule) ToMap() map[string]any {
 	ruleMap := make(map[string]any)
+	if rule.TriggerCondition != nil {
+		ruleMap["trigger_condition"] = []any{rule.TriggerCondition.ToMap()}
+	}
+	if rule.ClearCondition != nil {
+		ruleMap["clear_condition"] = []any{rule.ClearCondition.ToMap()}
+	}
 	ruleMap["comparison_operator"] = rule.ComparisonOperator
 	ruleMap["comparison_value"] = rule.ComparisonValue
 	ruleMap["tolerance"] = rule.Tolerance
 	return ruleMap
+}
+
+func (thresholdCondition *ThresholdCondition) ToMap() map[string]any {
+	thresholdConditionMap := make(map[string]any)
+	thresholdConditionMap["comparison_operator"] = thresholdCondition.ComparisonOperator
+	thresholdConditionMap["comparison_value"] = thresholdCondition.ComparisonValue
+	thresholdConditionMap["tolerance"] = thresholdCondition.Tolerance
+	return thresholdConditionMap
 }
 
 func (actionTemplateLink *ActionTemplateLink) ToMap() map[string]any {
@@ -82,7 +96,29 @@ func (rule *Rule) FromMap(ruleMap map[string]any) error {
 	rule.ComparisonOperator = ruleMap["comparison_operator"].(string)
 	rule.ComparisonValue = ruleMap["comparison_value"].(float64)
 	rule.Tolerance = ruleMap["tolerance"].(float64)
+	rule.TriggerCondition = parseThresholdCondition(ruleMap["trigger_condition"])
+	rule.ClearCondition = parseThresholdCondition(ruleMap["clear_condition"])
 	return nil
+}
+
+func (thresholdCondition *ThresholdCondition) FromMap(thresholdConditionMap map[string]any) error {
+	thresholdCondition.ComparisonOperator = thresholdConditionMap["comparison_operator"].(string)
+	thresholdCondition.ComparisonValue = thresholdConditionMap["comparison_value"].(float64)
+	thresholdCondition.Tolerance = thresholdConditionMap["tolerance"].(float64)
+	return nil
+}
+
+func parseThresholdCondition(raw any) *ThresholdCondition {
+	conditions, ok := raw.([]any)
+	if !ok || len(conditions) == 0 || conditions[0] == nil {
+		return nil
+	}
+
+	thresholdCondition := &ThresholdCondition{}
+	if err := thresholdCondition.FromMap(conditions[0].(map[string]any)); err != nil {
+		return nil
+	}
+	return thresholdCondition
 }
 
 func (actionTemplateLink *ActionTemplateLink) FromMap(actionTemplateLinkMap map[string]any) error {
