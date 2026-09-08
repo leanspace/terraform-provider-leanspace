@@ -107,6 +107,7 @@ func (dataSource DataSourceType[T, PT]) get(ctx context.Context, d *schema.Resou
 			}
 		}
 	} else { // Object was not found (404)
+		d.SetId("")
 		for _, key := range dataSource.getSchemaKeys() {
 			err = d.Set(key, nil)
 			if err != nil {
