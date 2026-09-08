@@ -43,6 +43,7 @@ var eventsDefinitions = map[string]*schema.Schema{
 	"source": {
 		Type:         schema.TypeString,
 		Required:     true,
+		ForceNew:     true,
 		Description:  helper.AllowedValuesToDescription(source),
 		ValidateFunc: validation.StringInSlice(source, false),
 	},
