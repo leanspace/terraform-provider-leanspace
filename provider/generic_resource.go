@@ -106,7 +106,9 @@ func (dataSource DataSourceType[T, PT]) get(ctx context.Context, d *schema.Resou
 				diags = append(diags, diag.FromErr(err)...)
 			}
 		}
-	} else { // Object was not found (404)
+	} else {
+		// The remote object no longer exists, so clear its Terraform state
+		// and stored attributes to let Terraform reconcile it on the next plan.
 		d.SetId("")
 		for _, key := range dataSource.getSchemaKeys() {
 			err = d.Set(key, nil)
