@@ -55,11 +55,6 @@ resource "leanspace_monitors" "test_equals_monitor" {
       comparison_value    = 120
       tolerance           = 10
     }
-    clear_condition {
-      comparison_operator = "EQUAL_TO"
-      comparison_value    = 120
-      tolerance           = 10
-    }
   }
   dynamic "action_template_links" {
     for_each = var.action_template_ids
@@ -131,13 +126,26 @@ resource "leanspace_monitors" "test_hysteresis_monitor" {
 <a id="nestedblock--rule"></a>
 ### Nested Schema for `rule`
 
+Optional:
+
+- `clear_condition` (Block List, Max: 1) (see [below for nested schema](#nestedblock--rule--clear_condition))
+- `comparison_operator` (String, Deprecated) it must be one of these values: GREATER_THAN, LESSER_THAN, GREATER_THAN_OR_EQUAL_TO, LESSER_THAN_OR_EQUAL_TO, EQUAL_TO, NOT_EQUAL_TO
+- `comparison_value` (Number, Deprecated)
+- `tolerance` (Number, Deprecated) Only valid for EQUAL_TO or NOT_EQUAL_TO comparison operator
+- `trigger_condition` (Block List, Max: 1) (see [below for nested schema](#nestedblock--rule--trigger_condition))
+
+<a id="nestedblock--rule--clear_condition"></a>
+### Nested Schema for `rule.clear_condition`
+
 Required:
 
-- `trigger_condition` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--rule--trigger_condition))
+- `comparison_operator` (String) it must be one of these values: GREATER_THAN, LESSER_THAN, GREATER_THAN_OR_EQUAL_TO, LESSER_THAN_OR_EQUAL_TO, EQUAL_TO, NOT_EQUAL_TO
+- `comparison_value` (Number)
 
 Optional:
 
-- `clear_condition` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--rule--clear_condition))
+- `tolerance` (Number) Only valid for EQUAL_TO or NOT_EQUAL_TO comparison operator
+
 
 <a id="nestedblock--rule--trigger_condition"></a>
 ### Nested Schema for `rule.trigger_condition`
@@ -151,17 +159,6 @@ Optional:
 
 - `tolerance` (Number) Only valid for EQUAL_TO or NOT_EQUAL_TO comparison operator
 
-<a id="nestedblock--rule--clear_condition"></a>
-### Nested Schema for `rule.clear_condition`
-
-Required:
-
-- `comparison_operator` (String) it must be one of these values: GREATER_THAN, LESSER_THAN, GREATER_THAN_OR_EQUAL_TO, LESSER_THAN_OR_EQUAL_TO, EQUAL_TO, NOT_EQUAL_TO
-- `comparison_value` (Number)
-
-Optional:
-
-- `tolerance` (Number) Only valid for EQUAL_TO or NOT_EQUAL_TO comparison operator
 
 
 <a id="nestedblock--action_template_links"></a>

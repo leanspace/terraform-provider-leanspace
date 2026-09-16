@@ -123,8 +123,21 @@ Read-Only:
 
 Read-Only:
 
-- `trigger_condition` (List of Object) (see [below for nested schema](#nestedobjatt--content--rule--trigger_condition))
 - `clear_condition` (List of Object) (see [below for nested schema](#nestedobjatt--content--rule--clear_condition))
+- `comparison_operator` (String)
+- `comparison_value` (Number)
+- `tolerance` (Number)
+- `trigger_condition` (List of Object) (see [below for nested schema](#nestedobjatt--content--rule--trigger_condition))
+
+<a id="nestedobjatt--content--rule--clear_condition"></a>
+### Nested Schema for `content.rule.clear_condition`
+
+Read-Only:
+
+- `comparison_operator` (String)
+- `comparison_value` (Number)
+- `tolerance` (Number)
+
 
 <a id="nestedobjatt--content--rule--trigger_condition"></a>
 ### Nested Schema for `content.rule.trigger_condition`
@@ -135,14 +148,6 @@ Read-Only:
 - `comparison_value` (Number)
 - `tolerance` (Number)
 
-<a id="nestedobjatt--content--rule--clear_condition"></a>
-### Nested Schema for `content.rule.clear_condition`
-
-Read-Only:
-
-- `comparison_operator` (String)
-- `comparison_value` (Number)
-- `tolerance` (Number)
 
 
 <a id="nestedobjatt--content--tags"></a>
