@@ -83,12 +83,12 @@ func (attribute *ValueAttribute[T]) ToMap() map[string]any {
 		}
 	case "ARRAY":
 		if any(attribute.Value) != nil {
-			var defaultValue string
+			var value string
 			var interfaceArrayValues []interface{} = any(attribute.Value).([]interface{})
-			for _, value := range interfaceArrayValues {
-				defaultValue = defaultValue + "," + fmt.Sprint(value)
+			for _, arrayValue := range interfaceArrayValues {
+				value = value + "," + fmt.Sprint(arrayValue)
 			}
-			attributeMap["value"] = strings.TrimPrefix(defaultValue, ",")
+			attributeMap["value"] = strings.TrimPrefix(value, ",")
 		}
 
 	}
@@ -228,7 +228,7 @@ func (attribute *DefinitionAttribute[T]) FromMap(attributeMap map[string]any) er
 				}
 			}
 			attribute.DefaultValue = any(interfaceOfDefaultValues).(T)
-		} else {
+		} else if attribute.Type != "GEOPOINT" {
 			attribute.DefaultValue = defaultValue.(T)
 		}
 	}
@@ -271,23 +271,35 @@ func (constraint *ArrayConstraint[T]) FromMap(constraintMap map[string]any) erro
 
 func (attribute *ValueAttribute[T]) FromMap(attributeMap map[string]any) error {
 
-	attribute.Value = attributeMap["value"].(T)
 	attribute.Type = attributeMap["type"].(string)
 	attribute.DataType = attributeMap["data_type"].(string)
-	if attributeMap["type"] == "NUMERIC" {
+	if attribute.Type == "NUMERIC" {
 		attribute.UnitId = attributeMap["unit_id"].(string)
-	}
-	if attributeMap["type"] == "ARRAY" {
+		attribute.Value = attributeMap["value"].(T)
+	} else if attribute.Type == "ARRAY" {
 		var stringValues []string = strings.Split(attributeMap["value"].(string), ",")
 		var interfaceOfValues []interface{}
 		for _, str := range stringValues {
 			var stringValue = strings.TrimSpace(str)
-			interfaceOfValues = append(interfaceOfValues, stringValue)
-
+			switch attribute.DataType {
+			case "NUMERIC":
+				if numericValue, err := strconv.ParseFloat(stringValue, 64); err == nil {
+					interfaceOfValues = append(interfaceOfValues, numericValue)
+				}
+			case "ENUM":
+				if enumValue, err := strconv.ParseInt(stringValue, 10, 16); err == nil {
+					interfaceOfValues = append(interfaceOfValues, enumValue)
+				}
+			case "BOOLEAN":
+				if booleanValue, err := strconv.ParseBool(stringValue); err == nil {
+					interfaceOfValues = append(interfaceOfValues, booleanValue)
+				}
+			case "TEXT", "TIMESTAMP", "DATE", "TIME", "BINARY":
+				interfaceOfValues = append(interfaceOfValues, stringValue)
+			}
 		}
 		attribute.Value = any(interfaceOfValues).(T)
-	}
-	if attributeMap["type"] == "GEOPOINT" {
+	} else if attribute.Type == "GEOPOINT" {
 		if attributeMap["fields"] != nil {
 			fields := attributeMap["fields"].([]any)[0].(map[string]any)
 			attribute.Fields = &Fields{}
@@ -295,6 +307,8 @@ func (attribute *ValueAttribute[T]) FromMap(attributeMap map[string]any) error {
 			attribute.Fields.Latitude.FromMap(fields["latitude"].([]any)[0].(map[string]any))
 			attribute.Fields.Longitude.FromMap(fields["longitude"].([]any)[0].(map[string]any))
 		}
+	} else {
+		attribute.Value = attributeMap["value"].(T)
 	}
 	return nil
 }
