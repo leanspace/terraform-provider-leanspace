@@ -22,3 +22,22 @@ var passDelayConfigurationSchema = map[string]*schema.Schema{
 		Required: true,
 	},
 }
+
+var passDelayConfigurationFilterSchema = map[string]*schema.Schema{
+	"id": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"name": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+	"aos_delay_in_millisecond": {
+		Type:     schema.TypeFloat,
+		Computed: true,
+	},
+	"los_delay_in_millisecond": {
+		Type:     schema.TypeFloat,
+		Computed: true,
+	},
+}

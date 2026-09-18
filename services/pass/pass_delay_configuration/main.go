@@ -8,7 +8,7 @@ var PassDelayConfigurationType = provider.DataSourceType[PassDelayConfiguration,
 	ResourceIdentifier: "leanspace_pass_delay_configuration",
 	Path:               path,
 	Schema:             passDelayConfigurationSchema,
-	FilterSchema:       nil,
+	FilterSchema:       passDelayConfigurationFilterSchema,
 	ReadPath: func(id string) string {
 		return path
 	},

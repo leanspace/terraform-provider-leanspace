@@ -25,4 +25,7 @@ data "leanspace_pass_delay_configuration" "all" {
 
 ### Read-Only
 
+- `aos_delay_in_millisecond` (Number)
 - `id` (String) The ID of this resource.
+- `los_delay_in_millisecond` (Number)
+- `name` (String)
