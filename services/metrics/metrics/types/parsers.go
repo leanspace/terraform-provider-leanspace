@@ -1,11 +1,17 @@
-package metrics
+package types
 
 import (
-	"github.com/leanspace/terraform-provider-leanspace/helper"
-	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	generalobjectstypes "github.com/leanspace/terraform-provider-leanspace/helper/general_objects/types"
 )
+
+// listable is satisfied by *schema.Set (from terraform-plugin-sdk) without
+// importing it: hashicorp's Set.List() has this exact signature. Using
+// structural typing here keeps this package free of any SDK dependency
+// while still accepting the raw *schema.Set values terraform-plugin-sdk
+// puts in ResourceData-derived maps for TypeSet fields (e.g. "tags").
+type listable interface {
+	List() []any
+}
 
 func (metric *Metric[T]) ToMap() map[string]any {
 	metricMap := make(map[string]any)
@@ -18,7 +24,11 @@ func (metric *Metric[T]) ToMap() map[string]any {
 	metricMap["last_modified_at"] = metric.LastModifiedAt
 	metricMap["last_modified_by"] = metric.LastModifiedBy
 	metricMap["attributes"] = []map[string]any{metric.Attributes.ToMap()}
-	metricMap["tags"] = helper.ParseToMaps(metric.Tags)
+	tags := make([]map[string]any, len(metric.Tags))
+	for i := range metric.Tags {
+		tags[i] = metric.Tags[i].ToMap()
+	}
+	metricMap["tags"] = tags
 	return metricMap
 }
 
@@ -36,10 +46,19 @@ func (metric *Metric[T]) FromMap(metricMap map[string]any) error {
 			return err
 		}
 	}
-	if tags, err := helper.ParseFromMaps[general_objects.KeyValue](metricMap["tags"].(*schema.Set).List()); err != nil {
-		return err
-	} else {
-		metric.Tags = tags
+
+	var tagsList []any
+	switch tags := metricMap["tags"].(type) {
+	case []any:
+		tagsList = tags
+	case listable:
+		tagsList = tags.List()
+	}
+	metric.Tags = make([]generalobjectstypes.KeyValue, len(tagsList))
+	for i, tag := range tagsList {
+		if err := metric.Tags[i].FromMap(tag.(map[string]any)); err != nil {
+			return err
+		}
 	}
 	return nil
 }
