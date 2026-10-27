@@ -40,6 +40,15 @@ var metricSchema = map[string]*schema.Schema{
 			),
 		},
 	},
+	"calibration": {
+		Type:        schema.TypeList,
+		MaxItems:    1,
+		Optional:    true,
+		Description: "Calibration applied to the metric values. Removing this block removes the calibration of the metric.",
+		Elem: &schema.Resource{
+			Schema: calibrationSchema,
+		},
+	},
 	"tags": general_objects.KeyValuesSchema,
 	"created_at": {
 		Type:        schema.TypeString,
@@ -87,5 +96,79 @@ var dataSourceFilterSchema = map[string]*schema.Schema{
 		Elem: &schema.Schema{
 			Type: schema.TypeString,
 		},
+	},
+}
+
+func calibrationBoundSchema(description string) *schema.Schema {
+	return &schema.Schema{
+		Type:        schema.TypeList,
+		Optional:    true,
+		MaxItems:    1,
+		Elem:        &schema.Schema{Type: schema.TypeFloat},
+		Description: description,
+	}
+}
+
+var calibrationSchema = map[string]*schema.Schema{
+	"type": {
+		Type:         schema.TypeString,
+		Required:     true,
+		ValidateFunc: validation.StringInSlice(ValidCalibrationTypes, false),
+		Description: helper.AllowedValuesToDescription(ValidCalibrationTypes) +
+			". TEXT_MAPPING is only allowed for TEXT metrics, the other types only for NUMERIC metrics.",
+	},
+	"description": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"coefficients": {
+		Type:        schema.TypeList,
+		Optional:    true,
+		MaxItems:    6,
+		Elem:        &schema.Schema{Type: schema.TypeFloat},
+		Description: "POLYNOMIAL, LOG and INVERSE_LOG only (required): between 1 and 6 coefficients.",
+	},
+	"base": {
+		Type:         schema.TypeFloat,
+		Optional:     true,
+		ValidateFunc: validation.FloatAtLeast(1),
+		Description:  "LOG and INVERSE_LOG only: the base of the logarithm, at least 1.",
+	},
+	"capping": {
+		Type:        schema.TypeList,
+		Optional:    true,
+		MaxItems:    1,
+		Description: "POLYNOMIAL, LOG, INVERSE_LOG and RANGE only: bounds applied to the calibrated value.",
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"min": calibrationBoundSchema("Lower bound of the calibrated value. Leave empty for no lower bound."),
+				"max": calibrationBoundSchema("Upper bound of the calibrated value. Leave empty for no upper bound."),
+			},
+		},
+	},
+	"min": calibrationBoundSchema("CAPPING only: lower bound of the value. Leave empty for no lower bound."),
+	"max": calibrationBoundSchema("CAPPING only: upper bound of the value. Leave empty for no upper bound."),
+	"ranges": {
+		Type:        schema.TypeList,
+		Optional:    true,
+		MaxItems:    10,
+		Description: "RANGE only (required): between 1 and 10 non-overlapping ranges, each mapped to a value.",
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"min": calibrationBoundSchema("Lower bound of the range. Leave empty for no lower bound."),
+				"max": calibrationBoundSchema("Upper bound of the range. Leave empty for no upper bound."),
+				"value": {
+					Type:        schema.TypeFloat,
+					Required:    true,
+					Description: "The calibrated value for values within this range.",
+				},
+			},
+		},
+	},
+	"mappings": {
+		Type:        schema.TypeMap,
+		Optional:    true,
+		Elem:        &schema.Schema{Type: schema.TypeString},
+		Description: "TEXT_MAPPING only (required): maps raw text values to calibrated text values.",
 	},
 }
