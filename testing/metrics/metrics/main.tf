@@ -251,6 +251,7 @@ resource "leanspace_metrics" "test_range_calibration" {
   calibration {
     type = "RANGE"
     ranges {
+      min   = [-100]
       max   = [0]
       value = -1
     }
