@@ -33,3 +33,8 @@ resource "leanspace_units" "custom_units" {
 output "test_units" {
   value = leanspace_units.custom_units
 }
+
+resource "leanspace_unit_security_tags" "mission" {
+  unit_id       = leanspace_units.custom_units["k"].id
+  security_tags = ["terraform_mission"]
+}

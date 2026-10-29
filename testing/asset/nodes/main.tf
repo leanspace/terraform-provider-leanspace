@@ -27,6 +27,11 @@ data "leanspace_nodes" "all" {
   }
 }
 
+resource "leanspace_node_security_tags" "mission" {
+  node_id       = leanspace_nodes.test_nodes_root.id
+  security_tags = ["terraform_mission"]
+}
+
 resource "leanspace_nodes" "test_nodes_root" {
   name        = "Terraform Mission - 0.1"
   description = "This is the root node for an entire mission made in terraform!"

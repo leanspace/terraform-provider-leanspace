@@ -106,6 +106,7 @@ type GenericClient[T any, PT ParseableModel[T]] struct {
 }
 
 type DataSourceType[T any, PT ParseableModel[T]] struct {
+	SecurityTags *SecurityTagsDefinition
 	// Will be used in the terraform file!
 	ResourceIdentifier string
 	// The path to which API requests are sent (e.g. "asset-repository/nodes")
