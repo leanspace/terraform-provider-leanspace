@@ -109,6 +109,21 @@ func calibrationBoundSchema(description string) *schema.Schema {
 	}
 }
 
+var calibrationBoundsSchema = map[string]*schema.Schema{
+	"min": calibrationBoundSchema("Lower bound of the calibrated value. Leave empty for no lower bound."),
+	"max": calibrationBoundSchema("Upper bound of the calibrated value. Leave empty for no upper bound."),
+}
+
+var calibrationRangeSchema = map[string]*schema.Schema{
+	"min": calibrationBoundSchema("Lower bound of the range. Leave empty for no lower bound."),
+	"max": calibrationBoundSchema("Upper bound of the range. Leave empty for no upper bound."),
+	"value": {
+		Type:        schema.TypeFloat,
+		Required:    true,
+		Description: "The calibrated value for values within this range.",
+	},
+}
+
 var calibrationSchema = map[string]*schema.Schema{
 	"type": {
 		Type:         schema.TypeString,
@@ -140,10 +155,7 @@ var calibrationSchema = map[string]*schema.Schema{
 		MaxItems:    1,
 		Description: "POLYNOMIAL, LOG, INVERSE_LOG and RANGE only: bounds applied to the calibrated value.",
 		Elem: &schema.Resource{
-			Schema: map[string]*schema.Schema{
-				"min": calibrationBoundSchema("Lower bound of the calibrated value. Leave empty for no lower bound."),
-				"max": calibrationBoundSchema("Upper bound of the calibrated value. Leave empty for no upper bound."),
-			},
+			Schema: calibrationBoundsSchema,
 		},
 	},
 	"min": calibrationBoundSchema("CAPPING only: lower bound of the value. Leave empty for no lower bound."),
@@ -154,15 +166,7 @@ var calibrationSchema = map[string]*schema.Schema{
 		MaxItems:    10,
 		Description: "RANGE only (required): between 1 and 10 non-overlapping ranges, each mapped to a value.",
 		Elem: &schema.Resource{
-			Schema: map[string]*schema.Schema{
-				"min": calibrationBoundSchema("Lower bound of the range. Leave empty for no lower bound."),
-				"max": calibrationBoundSchema("Upper bound of the range. Leave empty for no upper bound."),
-				"value": {
-					Type:        schema.TypeFloat,
-					Required:    true,
-					Description: "The calibrated value for values within this range.",
-				},
-			},
+			Schema: calibrationRangeSchema,
 		},
 	},
 	"mappings": {
