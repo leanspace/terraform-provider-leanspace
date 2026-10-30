@@ -14,13 +14,6 @@ var dataSourceMap = make(map[string]*schema.Resource)
 func (dataType DataSourceType[T, PT]) Subscribe() {
 	resourceMap[dataType.ResourceIdentifier] = dataType.toResource()
 	dataSourceMap[dataType.ResourceIdentifier] = dataType.toDataSource()
-	if dataType.SecurityTags != nil {
-		tagsResource := securityTagsResource{
-			basePath:   dataType.Path,
-			definition: *dataType.SecurityTags,
-		}
-		resourceMap[dataType.SecurityTags.ResourceIdentifier] = tagsResource.toResource()
-	}
 }
 
 // Provider -

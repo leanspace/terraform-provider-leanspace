@@ -17,6 +17,7 @@ data "leanspace_units" "all" {
 }
 
 resource "leanspace_units" "custom_units" {
+  security_tags = (each.key == "k" ? ["terraform_mission"] : [])
   for_each = {
     "k" : "Kilo"
     "h" : "Hecto"
@@ -32,9 +33,4 @@ resource "leanspace_units" "custom_units" {
 
 output "test_units" {
   value = leanspace_units.custom_units
-}
-
-resource "leanspace_unit_security_tags" "mission" {
-  unit_id       = leanspace_units.custom_units["k"].id
-  security_tags = ["terraform_mission"]
 }

@@ -38,10 +38,19 @@ func (node *Node) ToMap() map[string]any {
 		nodeMap["elevation"] = node.Elevation
 	}
 
+	if node.SecurityTags != nil {
+		nodeMap["security_tags"] = node.SecurityTags
+	}
 	return nodeMap
 }
 
 func (node *Node) FromMap(nodeMap map[string]any) error {
+	if tagSet, ok := nodeMap["security_tags"].(*schema.Set); ok {
+		node.SecurityTags = make([]string, tagSet.Len())
+		for index, tag := range tagSet.List() {
+			node.SecurityTags[index] = tag.(string)
+		}
+	}
 	node.Name = nodeMap["name"].(string)
 	node.Description = nodeMap["description"].(string)
 	node.CreatedAt = nodeMap["created_at"].(string)
