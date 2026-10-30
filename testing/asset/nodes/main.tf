@@ -29,7 +29,7 @@ data "leanspace_nodes" "all" {
 
 
 resource "leanspace_nodes" "test_nodes_root" {
-  security_tags = ["terraform_dmission"]
+  security_tags = ["terraform_mission"]
   name          = "Terraform Mission - 0.1"
   description   = "This is the root node for an entire mission made in terraform!"
   type          = "GROUP"
