@@ -69,6 +69,7 @@ Optional:
 Read-Only:
 
 - `attributes` (List of Object) (see [below for nested schema](#nestedobjatt--content--attributes))
+- `calibration` (List of Object) (see [below for nested schema](#nestedobjatt--content--calibration))
 - `created_at` (String)
 - `created_by` (String)
 - `description` (String)
@@ -169,6 +170,41 @@ Read-Only:
 - `scale` (Number)
 - `unit_id` (String)
 
+
+
+
+<a id="nestedobjatt--content--calibration"></a>
+### Nested Schema for `content.calibration`
+
+Read-Only:
+
+- `base` (Number)
+- `capping` (List of Object) (see [below for nested schema](#nestedobjatt--content--calibration--capping))
+- `coefficients` (List of Number)
+- `description` (String)
+- `mappings` (Map of String)
+- `max` (List of Number)
+- `min` (List of Number)
+- `ranges` (List of Object) (see [below for nested schema](#nestedobjatt--content--calibration--ranges))
+- `type` (String)
+
+<a id="nestedobjatt--content--calibration--capping"></a>
+### Nested Schema for `content.calibration.capping`
+
+Read-Only:
+
+- `max` (List of Number)
+- `min` (List of Number)
+
+
+<a id="nestedobjatt--content--calibration--ranges"></a>
+### Nested Schema for `content.calibration.ranges`
+
+Read-Only:
+
+- `max` (List of Number)
+- `min` (List of Number)
+- `value` (Number)
 
 
 
