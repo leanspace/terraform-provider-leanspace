@@ -30,6 +30,11 @@ func (dataSource DataSourceType[T, PT]) getSchemaKeys() []string {
 	return keys
 }
 
+func (dataSource DataSourceType[T, PT]) hasSecurityTags() bool {
+	_, exists := dataSource.Schema["security_tags"]
+	return exists
+}
+
 func (dataSource DataSourceType[T, PT]) getFilterSchemaKeys() []string {
 	keys := []string{}
 	for key := range dataSource.FilterSchema {
@@ -79,6 +84,14 @@ func (dataSource DataSourceType[T, PT]) create(ctx context.Context, d *schema.Re
 		return diag.FromErr(err)
 	}
 	d.SetId(createdValue.GetID())
+	if dataSource.hasSecurityTags() {
+		configuration := d.GetRawConfig()
+		if !configuration.IsNull() && configuration.IsKnown() && !configuration.GetAttr("security_tags").IsNull() {
+			if err := dataSource.writeSecurityTags(ctx, client, d.Id(), value); err != nil {
+				return diag.FromErr(err)
+			}
+		}
+	}
 	diags = append(diags, dataSource.get(ctx, d, m)...)
 
 	return diags
@@ -99,6 +112,11 @@ func (dataSource DataSourceType[T, PT]) get(ctx context.Context, d *schema.Resou
 	}
 
 	if value != nil {
+		if dataSource.hasSecurityTags() {
+			if err := dataSource.loadSecurityTagsAfterRead(ctx, client, valueId, value); err != nil {
+				return diag.FromErr(err)
+			}
+		}
 		storedData := value.ToMap()
 		for _, key := range dataSource.getSchemaKeys() {
 			err = d.Set(key, storedData[key])
@@ -131,23 +149,28 @@ func (dataSource DataSourceType[T, PT]) update(ctx context.Context, d *schema.Re
 		containsChange = true
 	} else {
 		for _, key := range dataSource.getSchemaKeys() {
-			hasChange := d.HasChange(key)
-
-			if hasChange {
+			if key != "security_tags" && d.HasChange(key) {
 				containsChange = true
 				break
 			}
 		}
 	}
 
-	if containsChange {
+	if containsChange || dataSource.hasSecurityTags() {
 		valueId, value, err := dataSource.getData(d, true)
 		if err != nil {
 			return diag.FromErr(err)
 		}
-		_, err = dataSource.convert(client).Update(valueId, value)
-		if err != nil {
-			return diag.FromErr(err)
+		if containsChange {
+			_, err = dataSource.convert(client).Update(valueId, value)
+			if err != nil {
+				return diag.FromErr(err)
+			}
+		}
+		if dataSource.hasSecurityTags() && d.HasChange("security_tags") {
+			if err := dataSource.writeSecurityTags(ctx, client, valueId, value); err != nil {
+				return diag.FromErr(err)
+			}
 		}
 		diags = append(diags, dataSource.get(ctx, d, m)...)
 

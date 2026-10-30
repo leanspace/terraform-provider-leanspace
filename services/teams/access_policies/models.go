@@ -18,6 +18,7 @@ type AccessPolicy struct {
 func (policy *AccessPolicy) GetID() string { return policy.ID }
 
 type Statement struct {
-	Name    string   `json:"name"`
-	Actions []string `json:"actions"`
+	SecurityTags []string `json:"securityTags,omitempty"`
+	Name         string   `json:"name"`
+	Actions      []string `json:"actions"`
 }

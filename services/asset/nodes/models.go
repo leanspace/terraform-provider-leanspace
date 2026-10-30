@@ -9,6 +9,7 @@ import (
 // As a consequence, properties management would be too complicated.
 // In the end, it was decided to not include a properties attribute in Node schema/struc to force the user to use the property resource.
 type Node struct {
+	SecurityTags            []string                   `json:"-"`
 	ID                      string                     `json:"id"`
 	Name                    string                     `json:"name"`
 	Description             string                     `json:"description,omitempty"`
@@ -32,3 +33,7 @@ type Node struct {
 }
 
 func (node *Node) GetID() string { return node.ID }
+
+func (node *Node) GetSecurityTags() []string { return node.SecurityTags }
+
+func (node *Node) SetSecurityTags(tags []string) { node.SecurityTags = tags }

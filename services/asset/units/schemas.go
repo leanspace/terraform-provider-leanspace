@@ -2,9 +2,10 @@ package units
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
-var unitSchema = map[string]*schema.Schema{
+var unitSchema = provider.WithSecurityTagsSchema(map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
 		Computed: true,
@@ -17,4 +18,4 @@ var unitSchema = map[string]*schema.Schema{
 		Type:     schema.TypeString,
 		Required: true,
 	},
-}
+})

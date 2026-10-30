@@ -26,6 +26,7 @@ func (statement *Statement) ToMap() map[string]any {
 	statementMap := make(map[string]any)
 	statementMap["name"] = statement.Name
 	statementMap["actions"] = statement.Actions
+	statementMap["security_tags"] = statement.SecurityTags
 	return statementMap
 }
 
@@ -53,6 +54,13 @@ func (policy *AccessPolicy) FromMap(policyMap map[string]any) error {
 }
 
 func (statement *Statement) FromMap(statementMap map[string]any) error {
+	statement.SecurityTags = nil
+	if tags, ok := statementMap["security_tags"].(*schema.Set); ok {
+		statement.SecurityTags = make([]string, tags.Len())
+		for i, tag := range tags.List() {
+			statement.SecurityTags[i] = tag.(string)
+		}
+	}
 	statement.Name = statementMap["name"].(string)
 	statement.Actions = make([]string, len(statementMap["actions"].(*schema.Set).List()))
 	for i, action := range statementMap["actions"].(*schema.Set).List() {
