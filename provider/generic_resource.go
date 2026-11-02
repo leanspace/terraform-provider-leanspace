@@ -10,7 +10,7 @@ import (
 )
 
 func (dataSource DataSourceType[T, PT]) toResource() *schema.Resource {
-	return &schema.Resource{
+	resource := &schema.Resource{
 		CreateContext: dataSource.create,
 		ReadContext:   dataSource.get,
 		UpdateContext: dataSource.update,
@@ -20,6 +20,10 @@ func (dataSource DataSourceType[T, PT]) toResource() *schema.Resource {
 			StateContext: schema.ImportStatePassthroughContext,
 		},
 	}
+	if dataSource.hasSecurityTags() {
+		resource.ValidateRawResourceConfigFuncs = []schema.ValidateRawResourceConfigFunc{validateSecurityTagsConfig}
+	}
+	return resource
 }
 
 func (dataSource DataSourceType[T, PT]) getSchemaKeys() []string {
@@ -177,6 +181,9 @@ func (dataSource DataSourceType[T, PT]) update(ctx context.Context, d *schema.Re
 		return diags
 	}
 
+	if dataSource.hasSecurityTags() {
+		return diags
+	}
 	return dataSource.create(ctx, d, m)
 
 }

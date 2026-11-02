@@ -6,8 +6,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"regexp"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 type SecurityTagsModel interface {
@@ -15,12 +18,43 @@ type SecurityTagsModel interface {
 	SetSecurityTags([]string)
 }
 
+type securityTagsRequest struct {
+	SecurityTags []string `json:"securityTags"`
+}
+
 func WithSecurityTagsSchema(resourceSchema map[string]*schema.Schema) map[string]*schema.Schema {
 	resourceSchema["security_tags"] = &schema.Schema{
-		Type: schema.TypeSet, Optional: true, Elem: &schema.Schema{Type: schema.TypeString},
+		Type:     schema.TypeSet,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringMatch(regexp.MustCompile(`^[a-zA-Z0-9_-]+$`), "Security tags must contain only letters, digits, underscores and dashes, and must not be empty"),
+		},
 		Description: "Complete security-tag collection. Omit on creation to leave tags unchanged; an explicit empty set clears tags. Removing this attribute after managing tags also clears the collection. Refresh and import retrieve actual tags.",
 	}
 	return resourceSchema
+}
+
+func validateSecurityTagsConfig(_ context.Context, request schema.ValidateResourceConfigFuncRequest, response *schema.ValidateResourceConfigFuncResponse) {
+	if request.RawConfig.IsNull() || !request.RawConfig.IsKnown() {
+		return
+	}
+	tags := request.RawConfig.GetAttr("security_tags")
+	if tags.IsNull() || !tags.IsKnown() {
+		return
+	}
+	// Element validators do not receive null values after the SDK configuration conversion.
+	for iterator := tags.ElementIterator(); iterator.Next(); {
+		_, tag := iterator.Element()
+		if tag.IsNull() {
+			response.Diagnostics = append(response.Diagnostics, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "Invalid security tag",
+				Detail:   "security_tags must not contain null elements.",
+			})
+			return
+		}
+	}
 }
 
 func withoutSecurityTagsSchema(resourceSchema map[string]*schema.Schema) map[string]*schema.Schema {
@@ -85,9 +119,9 @@ func sendSecurityTagRequest(ctx context.Context, client *Client, basePath, paren
 			securityTags = []string{}
 		}
 		var err error
-		requestBody, err = json.Marshal(struct {
-			SecurityTags []string `json:"securityTags"`
-		}{securityTags})
+		requestBody, err = json.Marshal(securityTagsRequest{
+			SecurityTags: securityTags,
+		})
 		if err != nil {
 			return nil, err
 		}
