@@ -1,7 +1,8 @@
 resource "leanspace_nodes" "test_nodes_root" {
-  name        = "TerraMission - 0.1"
-  description = "This is the root node for an entire mission made in terraform!"
-  type        = "GROUP"
+  security_tags = ["terraform_mission"]
+  name          = "TerraMission - 0.1"
+  description   = "This is the root node for an entire mission made in terraform!"
+  type          = "GROUP"
   tags {
     key   = "key1"
     value = "Value1"

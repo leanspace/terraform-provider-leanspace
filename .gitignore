@@ -12,3 +12,7 @@ terraform-provider-leanspace
 .vscode
 
 __debug*
+
+.env
+AGENTS.local.md
+.local/

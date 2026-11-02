@@ -8,10 +8,11 @@ import (
 
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
-var nodeSchema = makeNodeSchema(nil)            // no sub nodes
-var rootNodeSchema = makeNodeSchema(nodeSchema) // max depth 1
+var nodeSchema = makeNodeSchema(nil)                                             // no sub nodes
+var rootNodeSchema = provider.WithSecurityTagsSchema(makeNodeSchema(nodeSchema)) // max depth 1
 
 var validNodeTypes = []string{"ASSET", "GROUP", "COMPONENT"}
 var validNodeKinds = []string{"GENERIC", "SATELLITE", "GROUND_STATION"}

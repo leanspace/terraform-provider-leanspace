@@ -10,7 +10,7 @@ import (
 )
 
 func (dataSource DataSourceType[T, PT]) toResource() *schema.Resource {
-	return &schema.Resource{
+	resource := &schema.Resource{
 		CreateContext: dataSource.create,
 		ReadContext:   dataSource.get,
 		UpdateContext: dataSource.update,
@@ -20,6 +20,10 @@ func (dataSource DataSourceType[T, PT]) toResource() *schema.Resource {
 			StateContext: schema.ImportStatePassthroughContext,
 		},
 	}
+	if dataSource.hasSecurityTags() {
+		resource.ValidateRawResourceConfigFuncs = []schema.ValidateRawResourceConfigFunc{validateSecurityTagsConfig}
+	}
+	return resource
 }
 
 func (dataSource DataSourceType[T, PT]) getSchemaKeys() []string {
@@ -28,6 +32,11 @@ func (dataSource DataSourceType[T, PT]) getSchemaKeys() []string {
 		keys = append(keys, key)
 	}
 	return keys
+}
+
+func (dataSource DataSourceType[T, PT]) hasSecurityTags() bool {
+	_, exists := dataSource.Schema["security_tags"]
+	return exists
 }
 
 func (dataSource DataSourceType[T, PT]) getFilterSchemaKeys() []string {
@@ -79,6 +88,14 @@ func (dataSource DataSourceType[T, PT]) create(ctx context.Context, d *schema.Re
 		return diag.FromErr(err)
 	}
 	d.SetId(createdValue.GetID())
+	if dataSource.hasSecurityTags() {
+		configuration := d.GetRawConfig()
+		if !configuration.IsNull() && configuration.IsKnown() && !configuration.GetAttr("security_tags").IsNull() {
+			if err := dataSource.writeSecurityTags(ctx, client, d.Id(), value); err != nil {
+				return diag.FromErr(err)
+			}
+		}
+	}
 	diags = append(diags, dataSource.get(ctx, d, m)...)
 
 	return diags
@@ -99,6 +116,11 @@ func (dataSource DataSourceType[T, PT]) get(ctx context.Context, d *schema.Resou
 	}
 
 	if value != nil {
+		if dataSource.hasSecurityTags() {
+			if err := dataSource.loadSecurityTagsAfterRead(ctx, client, valueId, value); err != nil {
+				return diag.FromErr(err)
+			}
+		}
 		storedData := value.ToMap()
 		for _, key := range dataSource.getSchemaKeys() {
 			err = d.Set(key, storedData[key])
@@ -122,8 +144,6 @@ func (dataSource DataSourceType[T, PT]) get(ctx context.Context, d *schema.Resou
 
 func (dataSource DataSourceType[T, PT]) update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*Client)
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
 
 	containsChange := false
 
@@ -131,29 +151,36 @@ func (dataSource DataSourceType[T, PT]) update(ctx context.Context, d *schema.Re
 		containsChange = true
 	} else {
 		for _, key := range dataSource.getSchemaKeys() {
-			hasChange := d.HasChange(key)
-
-			if hasChange {
+			if key != "security_tags" && d.HasChange(key) {
 				containsChange = true
 				break
 			}
 		}
 	}
 
-	if containsChange {
+	securityTagsChanged := dataSource.hasSecurityTags() && d.HasChange("security_tags")
+	if containsChange || securityTagsChanged {
 		valueId, value, err := dataSource.getData(d, true)
 		if err != nil {
 			return diag.FromErr(err)
 		}
-		_, err = dataSource.convert(client).Update(valueId, value)
-		if err != nil {
-			return diag.FromErr(err)
+		if containsChange {
+			_, err = dataSource.convert(client).Update(valueId, value)
+			if err != nil {
+				return diag.FromErr(err)
+			}
 		}
-		diags = append(diags, dataSource.get(ctx, d, m)...)
-
-		return diags
+		if securityTagsChanged {
+			if err := dataSource.writeSecurityTags(ctx, client, valueId, value); err != nil {
+				return diag.FromErr(err)
+			}
+		}
+		return dataSource.get(ctx, d, m)
 	}
 
+	if dataSource.hasSecurityTags() {
+		return nil
+	}
 	return dataSource.create(ctx, d, m)
 
 }

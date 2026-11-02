@@ -58,6 +58,14 @@ var accessPolicySchema = map[string]*schema.Schema{
 var actionRegex = regexp.MustCompile(`^([a-zA-Z0-9*]+):([a-zA-Z0-9*]+)$`)
 
 var statementSchema = map[string]*schema.Schema{
+	"security_tags": {
+		Type:     schema.TypeSet,
+		Optional: true,
+		Elem: &schema.Schema{
+			Type:         schema.TypeString,
+			ValidateFunc: validation.StringMatch(regexp.MustCompile(`^(\*|[a-zA-Z0-9_-]+)$`), "Security tags must be * or contain only alphanumerics, underscores and dashes"),
+		},
+	},
 	"name": {
 		Type:     schema.TypeString,
 		Required: true,

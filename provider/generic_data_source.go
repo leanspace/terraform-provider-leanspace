@@ -16,7 +16,7 @@ func (dataSourceType DataSourceType[T, PT]) toDataSource() *schema.Resource {
 	if dataSourceType.IsUnique {
 		schemaType = dataSourceType.FilterSchema
 	} else {
-		schemaType = general_objects.PaginatedListSchema(dataSourceType.Schema, dataSourceType.FilterSchema)
+		schemaType = general_objects.PaginatedListSchema(withoutSecurityTagsSchema(dataSourceType.Schema), dataSourceType.FilterSchema)
 	}
 	return &schema.Resource{
 		ReadContext: dataSourceType.read,
