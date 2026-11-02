@@ -144,8 +144,6 @@ func (dataSource DataSourceType[T, PT]) get(ctx context.Context, d *schema.Resou
 
 func (dataSource DataSourceType[T, PT]) update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*Client)
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
 
 	containsChange := false
 
@@ -160,7 +158,8 @@ func (dataSource DataSourceType[T, PT]) update(ctx context.Context, d *schema.Re
 		}
 	}
 
-	if containsChange || dataSource.hasSecurityTags() {
+	securityTagsChanged := dataSource.hasSecurityTags() && d.HasChange("security_tags")
+	if containsChange || securityTagsChanged {
 		valueId, value, err := dataSource.getData(d, true)
 		if err != nil {
 			return diag.FromErr(err)
@@ -171,18 +170,16 @@ func (dataSource DataSourceType[T, PT]) update(ctx context.Context, d *schema.Re
 				return diag.FromErr(err)
 			}
 		}
-		if dataSource.hasSecurityTags() && d.HasChange("security_tags") {
+		if securityTagsChanged {
 			if err := dataSource.writeSecurityTags(ctx, client, valueId, value); err != nil {
 				return diag.FromErr(err)
 			}
 		}
-		diags = append(diags, dataSource.get(ctx, d, m)...)
-
-		return diags
+		return dataSource.get(ctx, d, m)
 	}
 
 	if dataSource.hasSecurityTags() {
-		return diags
+		return nil
 	}
 	return dataSource.create(ctx, d, m)
 
