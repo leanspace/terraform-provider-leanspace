@@ -27,9 +27,10 @@ data "leanspace_service_accounts" "all" {
 }
 
 resource "leanspace_service_accounts" "test" {
-  for_each   = var.usernames
-  name       = each.value
-  policy_ids = var.access_policies
+  security_tags = ["terraform_mission"]
+  for_each      = var.usernames
+  name          = each.value
+  policy_ids    = var.access_policies
   tags {
     key   = "CreatedBy"
     value = "Terraform"

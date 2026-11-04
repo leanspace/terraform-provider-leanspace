@@ -19,8 +19,9 @@ data "leanspace_access_policies" "all" {
 }
 
 resource "leanspace_access_policies" "test" {
-  name        = "Terraform Access Policy"
-  description = "An access policy made through Terraform, for easy team management."
+  security_tags = ["terraform_mission"]
+  name          = "Terraform Access Policy"
+  description   = "An access policy made through Terraform, for easy team management."
   statements {
     name          = "Dashboard Full Access"
     actions       = ["dashboards:*"]

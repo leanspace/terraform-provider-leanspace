@@ -12,6 +12,11 @@ type Team struct {
 	CreatedBy      string                     `json:"createdBy"`
 	LastModifiedAt string                     `json:"lastModifiedAt"`
 	LastModifiedBy string                     `json:"lastModifiedBy"`
+	SecurityTags   []string                   `json:"-"`
 }
 
 func (team *Team) GetID() string { return team.ID }
+
+func (team *Team) GetSecurityTags() []string { return team.SecurityTags }
+
+func (team *Team) SetSecurityTags(tags []string) { team.SecurityTags = tags }

@@ -9,7 +9,8 @@ variable "access_policies" {
 }
 
 resource "leanspace_teams" "team" {
-  name       = "Terraform Team"
-  policy_ids = var.access_policies
-  members    = var.members
+  security_tags = ["terraform_mission"]
+  name          = "Terraform Team"
+  policy_ids    = var.access_policies
+  members       = var.members
 }

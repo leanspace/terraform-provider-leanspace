@@ -4,9 +4,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
-var serviceAccountSchema = map[string]*schema.Schema{
+var serviceAccountSchema = provider.WithSecurityTagsSchema(map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
 		Computed: true,
@@ -51,7 +52,7 @@ var serviceAccountSchema = map[string]*schema.Schema{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
-}
+})
 
 var credentialSchema = map[string]*schema.Schema{
 	"client_id": {

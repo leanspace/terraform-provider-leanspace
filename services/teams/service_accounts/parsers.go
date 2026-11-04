@@ -17,6 +17,9 @@ func (serviceAccount *ServiceAccount) ToMap() map[string]any {
 	serviceAccountMap["created_by"] = serviceAccount.CreatedBy
 	serviceAccountMap["last_modified_at"] = serviceAccount.LastModifiedAt
 	serviceAccountMap["last_modified_by"] = serviceAccount.LastModifiedBy
+	if serviceAccount.SecurityTags != nil {
+		serviceAccountMap["security_tags"] = serviceAccount.SecurityTags
+	}
 	return serviceAccountMap
 }
 
@@ -34,6 +37,12 @@ func (credential *Credentials) ToMap() map[string]any {
 }
 
 func (serviceAccount *ServiceAccount) FromMap(serviceAccountMap map[string]any) error {
+	if tagSet, ok := serviceAccountMap["security_tags"].(*schema.Set); ok {
+		serviceAccount.SecurityTags = make([]string, tagSet.Len())
+		for index, tag := range tagSet.List() {
+			serviceAccount.SecurityTags[index] = tag.(string)
+		}
+	}
 	serviceAccount.ID = serviceAccountMap["id"].(string)
 	serviceAccount.Name = serviceAccountMap["name"].(string)
 	serviceAccount.PolicyIds = make([]string, serviceAccountMap["policy_ids"].(*schema.Set).Len())

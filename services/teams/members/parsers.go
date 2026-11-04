@@ -14,10 +14,19 @@ func (member *Member) ToMap() map[string]any {
 	memberMap["last_modified_at"] = member.LastModifiedAt
 	memberMap["last_modified_by"] = member.LastModifiedBy
 
+	if member.SecurityTags != nil {
+		memberMap["security_tags"] = member.SecurityTags
+	}
 	return memberMap
 }
 
 func (member *Member) FromMap(memberMap map[string]any) error {
+	if tagSet, ok := memberMap["security_tags"].(*schema.Set); ok {
+		member.SecurityTags = make([]string, tagSet.Len())
+		for index, tag := range tagSet.List() {
+			member.SecurityTags[index] = tag.(string)
+		}
+	}
 	member.ID = memberMap["id"].(string)
 	member.Name = memberMap["name"].(string)
 	member.Email = memberMap["email"].(string)

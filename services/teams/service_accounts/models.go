@@ -12,9 +12,16 @@ type ServiceAccount struct {
 	CreatedBy      string                     `json:"createdBy"`
 	LastModifiedAt string                     `json:"lastModifiedAt"`
 	LastModifiedBy string                     `json:"lastModifiedBy"`
+	SecurityTags   []string                   `json:"-"`
 }
 
 func (serviceAccount *ServiceAccount) GetID() string { return serviceAccount.ID }
+
+func (serviceAccount *ServiceAccount) GetSecurityTags() []string { return serviceAccount.SecurityTags }
+
+func (serviceAccount *ServiceAccount) SetSecurityTags(tags []string) {
+	serviceAccount.SecurityTags = tags
+}
 
 type Credentials struct {
 	ClientId     string `json:"clientId"`

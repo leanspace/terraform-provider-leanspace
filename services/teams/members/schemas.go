@@ -2,6 +2,7 @@ package members
 
 import (
 	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/provider"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -9,7 +10,7 @@ import (
 
 var validMemberStatus = []string{"ACTIVE", "DISABLED", "DELETED"}
 
-var memberSchema = map[string]*schema.Schema{
+var memberSchema = provider.WithSecurityTagsSchema(map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
 		Computed: true,
@@ -55,7 +56,7 @@ var memberSchema = map[string]*schema.Schema{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
-}
+})
 
 var dataSourceFilterSchema = map[string]*schema.Schema{
 	"team_ids": {

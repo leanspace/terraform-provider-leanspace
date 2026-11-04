@@ -19,6 +19,9 @@ func (policy *AccessPolicy) ToMap() map[string]any {
 	policyMap["last_modified_at"] = policy.LastModifiedAt
 	policyMap["last_modified_by"] = policy.LastModifiedBy
 
+	if policy.SecurityTags != nil {
+		policyMap["security_tags"] = policy.SecurityTags
+	}
 	return policyMap
 }
 
@@ -31,6 +34,12 @@ func (statement *Statement) ToMap() map[string]any {
 }
 
 func (policy *AccessPolicy) FromMap(policyMap map[string]any) error {
+	if tagSet, ok := policyMap["security_tags"].(*schema.Set); ok {
+		policy.SecurityTags = make([]string, tagSet.Len())
+		for index, tag := range tagSet.List() {
+			policy.SecurityTags[index] = tag.(string)
+		}
+	}
 	policy.ID = policyMap["id"].(string)
 	policy.Name = policyMap["name"].(string)
 	policy.Description = policyMap["description"].(string)

@@ -18,10 +18,19 @@ func (team *Team) ToMap() map[string]any {
 	teamMap["last_modified_at"] = team.LastModifiedAt
 	teamMap["last_modified_by"] = team.LastModifiedBy
 
+	if team.SecurityTags != nil {
+		teamMap["security_tags"] = team.SecurityTags
+	}
 	return teamMap
 }
 
 func (team *Team) FromMap(teamMap map[string]any) error {
+	if tagSet, ok := teamMap["security_tags"].(*schema.Set); ok {
+		team.SecurityTags = make([]string, tagSet.Len())
+		for index, tag := range tagSet.List() {
+			team.SecurityTags[index] = tag.(string)
+		}
+	}
 	team.ID = teamMap["id"].(string)
 	team.Name = teamMap["name"].(string)
 	team.PolicyIds = make([]string, teamMap["policy_ids"].(*schema.Set).Len())

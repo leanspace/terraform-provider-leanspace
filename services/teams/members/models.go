@@ -10,6 +10,11 @@ type Member struct {
 	CreatedBy      string   `json:"createdBy"`
 	LastModifiedAt string   `json:"lastModifiedAt"`
 	LastModifiedBy string   `json:"lastModifiedBy"`
+	SecurityTags   []string `json:"-"`
 }
 
 func (member *Member) GetID() string { return member.ID }
+
+func (member *Member) GetSecurityTags() []string { return member.SecurityTags }
+
+func (member *Member) SetSecurityTags(tags []string) { member.SecurityTags = tags }

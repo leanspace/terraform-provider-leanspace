@@ -13,9 +13,14 @@ type AccessPolicy struct {
 	CreatedBy      string                     `json:"createdBy"`
 	LastModifiedAt string                     `json:"lastModifiedAt"`
 	LastModifiedBy string                     `json:"lastModifiedBy"`
+	SecurityTags   []string                   `json:"-"`
 }
 
 func (policy *AccessPolicy) GetID() string { return policy.ID }
+
+func (policy *AccessPolicy) GetSecurityTags() []string { return policy.SecurityTags }
+
+func (policy *AccessPolicy) SetSecurityTags(tags []string) { policy.SecurityTags = tags }
 
 type Statement struct {
 	SecurityTags []string `json:"securityTags,omitempty"`
