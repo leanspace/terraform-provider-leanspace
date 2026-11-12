@@ -2,9 +2,18 @@ package command_states
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/leanspace/terraform-provider-leanspace/helper"
 	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
 )
+
+var reservedLeanspaceStates = []string{"DRAFT", "STAGED", "QUEUED", "POPPED", "ABORTED"}
+
+func validateStateName(value interface{}, key string) ([]string, []error) {
+	stateNameWarnings, stateNameErrors := helper.IsValidStateName(value, key)
+	reservedStateWarnings, reservedStateErrors := validation.StringNotInSlice(reservedLeanspaceStates, false)(value, key)
+	return append(stateNameWarnings, reservedStateWarnings...), append(stateNameErrors, reservedStateErrors...)
+}
 
 var commandStateSchema = map[string]*schema.Schema{
 	"id": {
@@ -14,7 +23,7 @@ var commandStateSchema = map[string]*schema.Schema{
 	"name": {
 		Type:         schema.TypeString,
 		Required:     true,
-		ValidateFunc: helper.IsValidStateName,
+		ValidateFunc: validateStateName,
 	},
 	"read_only": {
 		Type:     schema.TypeBool,
