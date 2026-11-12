@@ -39,7 +39,7 @@ else
 	ifneq ($(filter aarch6%,$(UNAME_M)),)
 		ARCHITECTURE=arm64
 	endif
-	ifeq ($(UNAME_M),arm)
+	ifneq ($(filter arm arm64,$(UNAME_M)),)
 		ARCHITECTURE=arm64
 	endif
 endif
