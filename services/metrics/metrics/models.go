@@ -14,9 +14,14 @@ type Metric[T any] struct {
 	Tags           []general_objects.KeyValue             `json:"tags,omitempty"`
 	Attributes     general_objects.DefinitionAttribute[T] `json:"attributes"`
 	Calibration    *Calibration                           `json:"calibration"`
+	SecurityTags   []string                               `json:"-"`
 }
 
 func (metric *Metric[T]) GetID() string { return metric.ID }
+
+func (metric *Metric[T]) GetSecurityTags() []string { return metric.SecurityTags }
+
+func (metric *Metric[T]) SetSecurityTags(tags []string) { metric.SecurityTags = tags }
 
 type CalibrationType string
 

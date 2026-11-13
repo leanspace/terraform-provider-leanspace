@@ -30,9 +30,10 @@ data "leanspace_metrics" "all" {
 }
 
 resource "leanspace_metrics" "test_numeric" {
-  name        = "Terraform Number Metric"
-  description = "A numeric metric, entirely created under terraform."
-  node_id     = var.node_id
+  name          = "Terraform Number Metric"
+  description   = "A numeric metric, entirely created under terraform."
+  node_id       = var.node_id
+  security_tags = ["terraform_mission"]
 
   attributes {
     type    = "NUMERIC"
@@ -41,18 +42,20 @@ resource "leanspace_metrics" "test_numeric" {
 }
 
 resource "leanspace_metrics" "test_text" {
-  name        = "Terraform Text Metric"
-  description = "A text metric, entirely created under terraform."
-  node_id     = var.node_id
+  name          = "Terraform Text Metric"
+  description   = "A text metric, entirely created under terraform."
+  node_id       = var.node_id
+  security_tags = ["terraform_mission", "terraform_mission_2"]
   attributes {
     type = "TEXT"
   }
 }
 
 resource "leanspace_metrics" "test_bool" {
-  name        = "Terraform Boolean Metric"
-  description = "A boolean metric, entirely created under terraform."
-  node_id     = var.node_id
+  name          = "Terraform Boolean Metric"
+  description   = "A boolean metric, entirely created under terraform."
+  node_id       = var.node_id
+  security_tags = []
   attributes {
     type = "BOOLEAN"
   }
