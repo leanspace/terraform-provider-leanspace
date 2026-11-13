@@ -22,6 +22,9 @@ func (metric *Metric[T]) ToMap() map[string]any {
 		metricMap["calibration"] = []map[string]any{metric.Calibration.ToMap()}
 	}
 	metricMap["tags"] = helper.ParseToMaps(metric.Tags)
+	if metric.SecurityTags != nil {
+		metricMap["security_tags"] = metric.SecurityTags
+	}
 	return metricMap
 }
 
@@ -49,6 +52,12 @@ func (metric *Metric[T]) FromMap(metricMap map[string]any) error {
 		return err
 	} else {
 		metric.Tags = tags
+	}
+	if securityTagSet, ok := metricMap["security_tags"].(*schema.Set); ok {
+		metric.SecurityTags = make([]string, securityTagSet.Len())
+		for index, securityTag := range securityTagSet.List() {
+			metric.SecurityTags[index] = securityTag.(string)
+		}
 	}
 	return nil
 }

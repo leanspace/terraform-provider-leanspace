@@ -1,14 +1,14 @@
 package metrics
 
 import (
-	"github.com/leanspace/terraform-provider-leanspace/helper"
-	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/leanspace/terraform-provider-leanspace/helper"
+	"github.com/leanspace/terraform-provider-leanspace/helper/general_objects"
+	"github.com/leanspace/terraform-provider-leanspace/provider"
 )
 
-var metricSchema = map[string]*schema.Schema{
+var metricSchema = provider.WithSecurityTagsSchema(map[string]*schema.Schema{
 	"id": {
 		Type:     schema.TypeString,
 		Computed: true,
@@ -70,7 +70,7 @@ var metricSchema = map[string]*schema.Schema{
 		Computed:    true,
 		Description: "Who modified it the last",
 	},
-}
+})
 
 var dataSourceFilterSchema = map[string]*schema.Schema{
 	"node_ids": {
