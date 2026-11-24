@@ -29,17 +29,17 @@ else
 	ifeq ($(UNAME_S),Darwin)
 		PLATFORM=darwin
 	endif
-	UNAME_P := $(shell uname -p)
-	ifeq ($(UNAME_P),x86_64)
+	UNAME_M := $(shell uname -m)
+	ifeq ($(UNAME_M),x86_64)
 		ARCHITECTURE=amd64
 	endif
-	ifeq ($(UNAME_P),i386)
+	ifeq ($(UNAME_M),i386)
 		ARCHITECTURE=amd64
 	endif
-	ifneq ($(filter aarch6%,$(UNAME_P)),)
+	ifneq ($(filter aarch6%,$(UNAME_M)),)
 		ARCHITECTURE=arm64
 	endif
-	ifeq ($(UNAME_P),arm)
+	ifeq ($(UNAME_M),arm)
 		ARCHITECTURE=arm64
 	endif
 endif
