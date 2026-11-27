@@ -9,9 +9,10 @@ variable "unit_id" {
 }
 
 resource "leanspace_metrics" "test_numeric" {
-  name        = "Terra Number Metric"
-  description = "A numeric metric, entirely created under terraform."
-  node_id     = var.node_id
+  name          = "Terra Number Metric"
+  description   = "A numeric metric, entirely created under terraform."
+  node_id       = var.node_id
+  security_tags = ["terraform_mission"]
 
   attributes {
     type    = "NUMERIC"
@@ -20,18 +21,20 @@ resource "leanspace_metrics" "test_numeric" {
 }
 
 resource "leanspace_metrics" "test_text" {
-  name        = "Terra Text Metric"
-  description = "A text metric, entirely created under terraform."
-  node_id     = var.node_id
+  name          = "Terra Text Metric"
+  description   = "A text metric, entirely created under terraform."
+  node_id       = var.node_id
+  security_tags = ["terraform_mission", "terraform_mission_2"]
   attributes {
     type = "TEXT"
   }
 }
 
 resource "leanspace_metrics" "test_bool" {
-  name        = "Terra Boolean Metric"
-  description = "A boolean metric, entirely created under terraform."
-  node_id     = var.node_id
+  name          = "Terra Boolean Metric"
+  description   = "A boolean metric, entirely created under terraform."
+  node_id       = var.node_id
+  security_tags = []
   attributes {
     type = "BOOLEAN"
   }
